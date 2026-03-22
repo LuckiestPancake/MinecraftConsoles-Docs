@@ -1,0 +1,137 @@
+var namespace_server_runtime =
+[
+    [ "Access", "namespace_server_runtime_1_1_access.html", "namespace_server_runtime_1_1_access" ],
+    [ "AccessStorageUtils", "namespace_server_runtime_1_1_access_storage_utils.html", [
+      [ "BuildPathFromBaseDirectory", "namespace_server_runtime_1_1_access_storage_utils.html#a66773e4f08aaa746caa729134d42c2fb", null ],
+      [ "EnsureJsonListFileExists", "namespace_server_runtime_1_1_access_storage_utils.html#ab77d0cd9c58163acfe002a1378cc8742", null ],
+      [ "IsRegularFile", "namespace_server_runtime_1_1_access_storage_utils.html#ad534a16b46e71e9e933a4740d7f8bc3c", null ],
+      [ "NormalizeXuid", "namespace_server_runtime_1_1_access_storage_utils.html#a27bc49ae35cf2760361272cc5e1dd2f5", null ],
+      [ "TryGetStringField", "namespace_server_runtime_1_1_access_storage_utils.html#a7c6233e390cd88fdb6124767f8eb1368", null ]
+    ] ],
+    [ "FileUtils", "namespace_server_runtime_1_1_file_utils.html", [
+      [ "GetCurrentUtcFileTime", "namespace_server_runtime_1_1_file_utils.html#ac7bf93ee003a2d67d39ef021f8c8b693", null ],
+      [ "ReadTextFile", "namespace_server_runtime_1_1_file_utils.html#a14067ab1f7312558e9f5c7c8a829e85d", null ],
+      [ "WriteTextFileAtomic", "namespace_server_runtime_1_1_file_utils.html#a05f91615231db95617851f9a621e4069", null ]
+    ] ],
+    [ "NetworkUtils", "namespace_server_runtime_1_1_network_utils.html", [
+      [ "IsIpLiteral", "namespace_server_runtime_1_1_network_utils.html#ae75aac4e1647158dd851828ac0709d6c", null ],
+      [ "NormalizeIpToken", "namespace_server_runtime_1_1_network_utils.html#a600b860870ca8fb5126b7ae62aff7af1", null ]
+    ] ],
+    [ "StringUtils", "namespace_server_runtime_1_1_string_utils.html", [
+      [ "GetCurrentUtcTimestampIso8601", "namespace_server_runtime_1_1_string_utils.html#a1b773dac19d306ccc2e3dfa0e3a5987a", null ],
+      [ "JoinTokens", "namespace_server_runtime_1_1_string_utils.html#aafc94f79888f09a2961b2fcf908bc4df", null ],
+      [ "StartsWithIgnoreCase", "namespace_server_runtime_1_1_string_utils.html#a84f912b74a6297e89374bb71b850f5ae", null ],
+      [ "StripUtf8Bom", "namespace_server_runtime_1_1_string_utils.html#a2833caa3a9b1373a095de2ac07866c3f", null ],
+      [ "ToLowerAscii", "namespace_server_runtime_1_1_string_utils.html#a5659674ecf09348686afcee671932cce", null ],
+      [ "TrimAscii", "namespace_server_runtime_1_1_string_utils.html#a4b5407a60f704748a4c67b5cbba12ce2", null ],
+      [ "TryParseUnsignedLongLong", "namespace_server_runtime_1_1_string_utils.html#a7b3e3e12111b9c6f756ee5aa62ac657e", null ],
+      [ "Utf8ToWide", "namespace_server_runtime_1_1_string_utils.html#adcb2e3a69592c883faa9049c9b730756", null ],
+      [ "Utf8ToWide", "namespace_server_runtime_1_1_string_utils.html#a4d6a8246cd8d71deddc66b6a7c128e1d", null ],
+      [ "WideToUtf8", "namespace_server_runtime_1_1_string_utils.html#a2d940afc106d1a397e2077009458d3b9", null ]
+    ] ],
+    [ "CommandParsing", "namespace_server_runtime_1_1_command_parsing.html", [
+      [ "TryParseInt", "namespace_server_runtime_1_1_command_parsing.html#af98cc78c83dfb7d564700a9570c7bc61", null ]
+    ] ],
+    [ "ServerLogManager", "namespace_server_runtime_1_1_server_log_manager.html", [
+      [ "ELoginRejectReason", "namespace_server_runtime_1_1_server_log_manager.html#a2e12e14c2ace95671a80422a0b4ffe38", [
+        [ "eLoginRejectReason_BannedXuid", "namespace_server_runtime_1_1_server_log_manager.html#a2e12e14c2ace95671a80422a0b4ffe38ab3adb5815d92731e99c24c3e07eefcf4", null ],
+        [ "eLoginRejectReason_NotWhitelisted", "namespace_server_runtime_1_1_server_log_manager.html#a2e12e14c2ace95671a80422a0b4ffe38a1bd2c4601492b2d1477a648cf65b6cc2", null ],
+        [ "eLoginRejectReason_DuplicateXuid", "namespace_server_runtime_1_1_server_log_manager.html#a2e12e14c2ace95671a80422a0b4ffe38aaec8371ae530319fb54267fdff3f7c29", null ],
+        [ "eLoginRejectReason_DuplicateName", "namespace_server_runtime_1_1_server_log_manager.html#a2e12e14c2ace95671a80422a0b4ffe38ab616a71e2a3636379aeda815649088b9", null ]
+      ] ],
+      [ "ETcpRejectReason", "namespace_server_runtime_1_1_server_log_manager.html#a4ed0b09b350feef28709bb1c83cc4c1f", [
+        [ "eTcpRejectReason_BannedIp", "namespace_server_runtime_1_1_server_log_manager.html#a4ed0b09b350feef28709bb1c83cc4c1fa06006851784f680d6079286b0d0548cd", null ],
+        [ "eTcpRejectReason_GameNotReady", "namespace_server_runtime_1_1_server_log_manager.html#a4ed0b09b350feef28709bb1c83cc4c1fa7826720fcbcc8252ead834c6aafcaf1e", null ],
+        [ "eTcpRejectReason_ServerFull", "namespace_server_runtime_1_1_server_log_manager.html#a4ed0b09b350feef28709bb1c83cc4c1fa0082c5b28e0e4bc6e11867d6968df4a8", null ]
+      ] ],
+      [ "ClearConnection", "namespace_server_runtime_1_1_server_log_manager.html#a2fdc4c7b1465c269e66219dee80d308d", null ],
+      [ "ForwardClientAppDebugLogV", "namespace_server_runtime_1_1_server_log_manager.html#a2a0c75f09da5819b050d81dce81779bd", null ],
+      [ "ForwardClientDebugSpewLogV", "namespace_server_runtime_1_1_server_log_manager.html#ad5a26605f7b88c9f92c1f757aecbe0aa", null ],
+      [ "ForwardClientUserDebugLogV", "namespace_server_runtime_1_1_server_log_manager.html#ae0c1d23c1fe08d5c9fcb33c118abae7c", null ],
+      [ "Initialize", "namespace_server_runtime_1_1_server_log_manager.html#af56b08da02e48de7640c775d95322850", null ],
+      [ "OnAcceptedPlayerLogin", "namespace_server_runtime_1_1_server_log_manager.html#aef65d679c061e92a4c555b725cc692cc", null ],
+      [ "OnAcceptedTcpConnection", "namespace_server_runtime_1_1_server_log_manager.html#ac25fbcdab2cff2528a2320f4df88ef52", null ],
+      [ "OnIncomingTcpConnection", "namespace_server_runtime_1_1_server_log_manager.html#a2f5918c69979a03db766ea8883e5b955", null ],
+      [ "OnPlayerDisconnected", "namespace_server_runtime_1_1_server_log_manager.html#a9f72aff032ce8b7cdf7918a9a17d76cc", null ],
+      [ "OnRejectedPlayerLogin", "namespace_server_runtime_1_1_server_log_manager.html#a61f1ed396aff0f018f1903a57334f350", null ],
+      [ "OnRejectedTcpConnection", "namespace_server_runtime_1_1_server_log_manager.html#a3f11c7e5476c3d0b7429533e12f1d2df", null ],
+      [ "ShouldForwardClientDebugLogs", "namespace_server_runtime_1_1_server_log_manager.html#add8a72101e02f8439e595514d43193c8", null ],
+      [ "Shutdown", "namespace_server_runtime_1_1_server_log_manager.html#a0cc710ecc87aebaa09078f0d2730e4cb", null ],
+      [ "TryGetConnectionRemoteIp", "namespace_server_runtime_1_1_server_log_manager.html#a47c88c85d2faf27b56abf10872cad0ae", null ]
+    ] ],
+    [ "CliCommandBanIp", "class_server_runtime_1_1_cli_command_ban_ip.html", "class_server_runtime_1_1_cli_command_ban_ip" ],
+    [ "CliCommandBanList", "class_server_runtime_1_1_cli_command_ban_list.html", "class_server_runtime_1_1_cli_command_ban_list" ],
+    [ "CliCommandBan", "class_server_runtime_1_1_cli_command_ban.html", "class_server_runtime_1_1_cli_command_ban" ],
+    [ "CliCommandDefaultGamemode", "class_server_runtime_1_1_cli_command_default_gamemode.html", "class_server_runtime_1_1_cli_command_default_gamemode" ],
+    [ "CliCommandEnchant", "class_server_runtime_1_1_cli_command_enchant.html", "class_server_runtime_1_1_cli_command_enchant" ],
+    [ "CliCommandExperience", "class_server_runtime_1_1_cli_command_experience.html", "class_server_runtime_1_1_cli_command_experience" ],
+    [ "CliCommandGamemode", "class_server_runtime_1_1_cli_command_gamemode.html", "class_server_runtime_1_1_cli_command_gamemode" ],
+    [ "CliCommandGive", "class_server_runtime_1_1_cli_command_give.html", "class_server_runtime_1_1_cli_command_give" ],
+    [ "CliCommandHelp", "class_server_runtime_1_1_cli_command_help.html", "class_server_runtime_1_1_cli_command_help" ],
+    [ "IServerCliCommand", "class_server_runtime_1_1_i_server_cli_command.html", "class_server_runtime_1_1_i_server_cli_command" ],
+    [ "CliCommandKill", "class_server_runtime_1_1_cli_command_kill.html", "class_server_runtime_1_1_cli_command_kill" ],
+    [ "CliCommandList", "class_server_runtime_1_1_cli_command_list.html", "class_server_runtime_1_1_cli_command_list" ],
+    [ "CliCommandPardonIp", "class_server_runtime_1_1_cli_command_pardon_ip.html", "class_server_runtime_1_1_cli_command_pardon_ip" ],
+    [ "CliCommandPardon", "class_server_runtime_1_1_cli_command_pardon.html", "class_server_runtime_1_1_cli_command_pardon" ],
+    [ "CliCommandStop", "class_server_runtime_1_1_cli_command_stop.html", "class_server_runtime_1_1_cli_command_stop" ],
+    [ "CliCommandTime", "class_server_runtime_1_1_cli_command_time.html", "class_server_runtime_1_1_cli_command_time" ],
+    [ "CliCommandTp", "class_server_runtime_1_1_cli_command_tp.html", "class_server_runtime_1_1_cli_command_tp" ],
+    [ "CliCommandWeather", "class_server_runtime_1_1_cli_command_weather.html", "class_server_runtime_1_1_cli_command_weather" ],
+    [ "CliCommandWhitelist", "class_server_runtime_1_1_cli_command_whitelist.html", "class_server_runtime_1_1_cli_command_whitelist" ],
+    [ "ServerCli", "class_server_runtime_1_1_server_cli.html", "class_server_runtime_1_1_server_cli" ],
+    [ "ServerCliEngine", "class_server_runtime_1_1_server_cli_engine.html", "class_server_runtime_1_1_server_cli_engine" ],
+    [ "ServerCliInput", "class_server_runtime_1_1_server_cli_input.html", "class_server_runtime_1_1_server_cli_input" ],
+    [ "ServerCliParsedLine", "struct_server_runtime_1_1_server_cli_parsed_line.html", "struct_server_runtime_1_1_server_cli_parsed_line" ],
+    [ "ServerCliCompletionContext", "struct_server_runtime_1_1_server_cli_completion_context.html", "struct_server_runtime_1_1_server_cli_completion_context" ],
+    [ "ServerCliParser", "class_server_runtime_1_1_server_cli_parser.html", null ],
+    [ "ServerCliRegistry", "class_server_runtime_1_1_server_cli_registry.html", "class_server_runtime_1_1_server_cli_registry" ],
+    [ "ServerPropertyDefault", "struct_server_runtime_1_1_server_property_default.html", "struct_server_runtime_1_1_server_property_default" ],
+    [ "ServerPropertiesConfig", "struct_server_runtime_1_1_server_properties_config.html", "struct_server_runtime_1_1_server_properties_config" ],
+    [ "SaveInfoQueryContext", "struct_server_runtime_1_1_save_info_query_context.html", "struct_server_runtime_1_1_save_info_query_context" ],
+    [ "SaveDataLoadContext", "struct_server_runtime_1_1_save_data_load_context.html", "struct_server_runtime_1_1_save_data_load_context" ],
+    [ "WorldBootstrapResult", "struct_server_runtime_1_1_world_bootstrap_result.html", "struct_server_runtime_1_1_world_bootstrap_result" ],
+    [ "WorldManagerHandleActionsProc", "namespace_server_runtime.html#a9b8aadaa18b0147090a310ec2e86c8e5", null ],
+    [ "WorldManagerTickProc", "namespace_server_runtime.html#a58d64524134994b63a0fd9071140eda4", null ],
+    [ "EServerLogLevel", "namespace_server_runtime.html#a594a548fec739070824f9a584ba4ded4", [
+      [ "eServerLogLevel_Debug", "namespace_server_runtime.html#a594a548fec739070824f9a584ba4ded4a688e1bf7bb60e4e8b130cd2cb40b8f8f", null ],
+      [ "eServerLogLevel_Info", "namespace_server_runtime.html#a594a548fec739070824f9a584ba4ded4a00515b521a7bd2b7f527f09030636cef", null ],
+      [ "eServerLogLevel_Warn", "namespace_server_runtime.html#a594a548fec739070824f9a584ba4ded4a9dc417484e537ec6149b3a04d0fca6fa", null ],
+      [ "eServerLogLevel_Error", "namespace_server_runtime.html#a594a548fec739070824f9a584ba4ded4ab6ddca4b8bef582cf87ceae8a6b33a9b", null ]
+    ] ],
+    [ "EWorldBootstrapStatus", "namespace_server_runtime.html#a8c3e42100464d883828ccfd03ad84755", [
+      [ "eWorldBootstrap_Loaded", "namespace_server_runtime.html#a8c3e42100464d883828ccfd03ad84755a42c5bb9f8db91bd708ecf45c252833fd", null ],
+      [ "eWorldBootstrap_CreatedNew", "namespace_server_runtime.html#a8c3e42100464d883828ccfd03ad84755a0844d8e440bc9000f9a1935f9d256366", null ],
+      [ "eWorldBootstrap_Failed", "namespace_server_runtime.html#a8c3e42100464d883828ccfd03ad84755a299b7af7331a5844a74a1a6f5086ed3f", null ]
+    ] ],
+    [ "EWorldSaveLoadResult", "namespace_server_runtime.html#a8eb0f1f89c90edfa71d5c7ea96f14ab1", [
+      [ "eWorldSaveLoad_Loaded", "namespace_server_runtime.html#a8eb0f1f89c90edfa71d5c7ea96f14ab1aea7f539106ff0cf5ae8ee35d07a6d97f", null ],
+      [ "eWorldSaveLoad_NotFound", "namespace_server_runtime.html#a8eb0f1f89c90edfa71d5c7ea96f14ab1affda8293174ca70a1893300b33e83ec9", null ],
+      [ "eWorldSaveLoad_Failed", "namespace_server_runtime.html#a8eb0f1f89c90edfa71d5c7ea96f14ab1affc5944e2287171bb90e71f503dbad04", null ]
+    ] ],
+    [ "BootstrapWorldForServer", "namespace_server_runtime.html#a8c44ae7d0d833e6d86ff0c87932128fb", null ],
+    [ "GetServerLogLevel", "namespace_server_runtime.html#a49110b0338c4bc1ed92ca13d3dc545af", null ],
+    [ "LoadServerPropertiesConfig", "namespace_server_runtime.html#ac8490b313a587bb21427e8f4e306f5da", null ],
+    [ "LogDebug", "namespace_server_runtime.html#aa41088bdf5bbb4fb52728413c86c926a", null ],
+    [ "LogDebugf", "namespace_server_runtime.html#a05c70c22e29e6f2a38d9431f2eecae0a", null ],
+    [ "LogError", "namespace_server_runtime.html#a39f080ac7b9e7090f81b8823f7920655", null ],
+    [ "LogErrorf", "namespace_server_runtime.html#a12182c5c96eecfcfbe426bcc97eb29ad", null ],
+    [ "LogInfo", "namespace_server_runtime.html#ac3802dee40d331a02f5d8fbc38bee04c", null ],
+    [ "LogInfof", "namespace_server_runtime.html#a27b5f62791fd5c61710ede777fb91b57", null ],
+    [ "LogStartupStep", "namespace_server_runtime.html#a1fb9d1fe9e19c0485419b2e7a63bae0c", null ],
+    [ "LogWarn", "namespace_server_runtime.html#a75985b6b27a3e2b9f496b84ccccc262b", null ],
+    [ "LogWarnf", "namespace_server_runtime.html#a7a4113b5b4ee3e0eb11d1d8447359ef8", null ],
+    [ "LogWorldIO", "namespace_server_runtime.html#a1a74f4df0581b2bcbdf7a36291cf27f6", null ],
+    [ "LogWorldName", "namespace_server_runtime.html#aa097dcd7b8885565d00589fa44586fcd", null ],
+    [ "RequestDedicatedServerShutdown", "namespace_server_runtime.html#a1f5d74fa42b9c1441b202a4f9cf29d40", null ],
+    [ "SaveServerPropertiesConfig", "namespace_server_runtime.html#a85c299aee8bf056de8ac22a3116a0825", null ],
+    [ "SetServerLogLevel", "namespace_server_runtime.html#a35619f65be2e711bb7c690925acf6653", null ],
+    [ "StripUtf8Bom", "namespace_server_runtime.html#a2833caa3a9b1373a095de2ac07866c3f", null ],
+    [ "ToLowerAscii", "namespace_server_runtime.html#a5659674ecf09348686afcee671932cce", null ],
+    [ "TrimAscii", "namespace_server_runtime.html#a4b5407a60f704748a4c67b5cbba12ce2", null ],
+    [ "TryParseServerLogLevel", "namespace_server_runtime.html#a357666329832dcb87a61a8d01db2ffb7", null ],
+    [ "Utf8ToWide", "namespace_server_runtime.html#adcb2e3a69592c883faa9049c9b730756", null ],
+    [ "Utf8ToWide", "namespace_server_runtime.html#adcb2e3a69592c883faa9049c9b730756", null ],
+    [ "WaitForWorldActionIdle", "namespace_server_runtime.html#a33299fb35de9bef3838082e26af674a5", null ],
+    [ "WideToUtf8", "namespace_server_runtime.html#a2d940afc106d1a397e2077009458d3b9", null ],
+    [ "WideToUtf8", "namespace_server_runtime.html#a2d940afc106d1a397e2077009458d3b9", null ]
+];

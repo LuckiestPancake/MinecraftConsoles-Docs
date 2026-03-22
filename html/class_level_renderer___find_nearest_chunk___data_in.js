@@ -1,0 +1,25 @@
+var class_level_renderer___find_nearest_chunk___data_in =
+[
+    [ "PlayerData", "class_level_renderer___find_nearest_chunk___data_in_1_1_player_data.html", "class_level_renderer___find_nearest_chunk___data_in_1_1_player_data" ],
+    [ "ClipChunk", "class_level_renderer___find_nearest_chunk___data_in_1_1_clip_chunk.html", "class_level_renderer___find_nearest_chunk___data_in_1_1_clip_chunk" ],
+    [ "AABB", "class_level_renderer___find_nearest_chunk___data_in_1_1_a_a_b_b.html", null ],
+    [ "MultiplayerChunkCache", "class_level_renderer___find_nearest_chunk___data_in_1_1_multiplayer_chunk_cache.html", "class_level_renderer___find_nearest_chunk___data_in_1_1_multiplayer_chunk_cache" ],
+    [ "CompressedTileStorage", "class_level_renderer___find_nearest_chunk___data_in_1_1_compressed_tile_storage.html", "class_level_renderer___find_nearest_chunk___data_in_1_1_compressed_tile_storage" ],
+    [ "Chunk", "class_level_renderer___find_nearest_chunk___data_in_1_1_chunk.html", "class_level_renderer___find_nearest_chunk___data_in_1_1_chunk" ],
+    [ "chunkLengths", "class_level_renderer___find_nearest_chunk___data_in.html#aeb8636f078c95944a52993afb67d7078", null ],
+    [ "chunks", "class_level_renderer___find_nearest_chunk___data_in.html#a26cd6e2a4677b18478a89b38cd382cf1", null ],
+    [ "level", "class_level_renderer___find_nearest_chunk___data_in.html#a71a3a7d4fdbbff2799a8acd1d4b89ffe", null ],
+    [ "lowerOffset", "class_level_renderer___find_nearest_chunk___data_in.html#a1c6892db449b609d329c24acae47fb5a", null ],
+    [ "multiplayerChunkCache", "class_level_renderer___find_nearest_chunk___data_in.html#a9a82983123d6029297e80a836f62bc38", null ],
+    [ "nearChunk", "class_level_renderer___find_nearest_chunk___data_in.html#aa9700a17ce690d13cf1655fb3baf282d", null ],
+    [ "numGlobalChunks", "class_level_renderer___find_nearest_chunk___data_in.html#a24ac80709c557808b43ab3959c864f6a", null ],
+    [ "onlyRebuild", "class_level_renderer___find_nearest_chunk___data_in.html#acd3b66928e48d93809cabf5f5f483524", null ],
+    [ "padding", "class_level_renderer___find_nearest_chunk___data_in.html#a313b895f972c8ac18d24363c59483627", null ],
+    [ "pGlobalChunkFlags", "class_level_renderer___find_nearest_chunk___data_in.html#ad3df9a74e1743bbb54043ce6d713ce98", null ],
+    [ "playerData", "class_level_renderer___find_nearest_chunk___data_in.html#a9351da7c9927e3c5d94b4efb3eb64864", null ],
+    [ "upperOffset", "class_level_renderer___find_nearest_chunk___data_in.html#a461d88fb996f2635f463d16308442bc4", null ],
+    [ "veryNearCount", "class_level_renderer___find_nearest_chunk___data_in.html#a83207c83889bbda588f16d9279d94df0", null ],
+    [ "xChunks", "class_level_renderer___find_nearest_chunk___data_in.html#a178d1fd81c58e13ffe1c335ae389d1b9", null ],
+    [ "yChunks", "class_level_renderer___find_nearest_chunk___data_in.html#ab0df07a1246945728b2d1af7f2e56e40", null ],
+    [ "zChunks", "class_level_renderer___find_nearest_chunk___data_in.html#a95e58658515bbda62fe4e65660a8194c", null ]
+];

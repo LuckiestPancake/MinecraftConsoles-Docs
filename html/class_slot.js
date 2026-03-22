@@ -1,0 +1,27 @@
+var class_slot =
+[
+    [ "Slot", "class_slot.html#a1deae6e0001511d54776f3163e7a5379", null ],
+    [ "~Slot", "class_slot.html#a873c73cbd8264fe0fbaa400b5deeff9c", null ],
+    [ "checkTakeAchievements", "class_slot.html#a4fb2c3e1b50cbbf2dc58a88fb7c2289f", null ],
+    [ "combine", "class_slot.html#a942df074707df34d1e7f8bf81cda9732", null ],
+    [ "getItem", "class_slot.html#ae2a25b4df2ecdfd6b604874c0ba9e98d", null ],
+    [ "getMaxStackSize", "class_slot.html#a149bb46fffea62cd09db5872ccc69b3a", null ],
+    [ "getNoItemIcon", "class_slot.html#ac0388847e17f301641e315924431ff55", null ],
+    [ "hasItem", "class_slot.html#a1b95613946cbffe42bf95db1e40102bd", null ],
+    [ "isActive", "class_slot.html#a47ec9e50cfe7101d60d14c45d4ecb6bc", null ],
+    [ "isAt", "class_slot.html#a9367927ec9f3f370ae92f3f82db8f516", null ],
+    [ "mayCombine", "class_slot.html#a46631b55d645af3ca47e374a77635f83", null ],
+    [ "mayPickup", "class_slot.html#aced920296ecac2b41bc3e54a45a66399", null ],
+    [ "mayPlace", "class_slot.html#a0aa96359fd61a9268993a43eb4db9c06", null ],
+    [ "onQuickCraft", "class_slot.html#ac631ff1a111d944f7fe17f36d6dc2687", null ],
+    [ "onQuickCraft", "class_slot.html#ad5b221ad67ba928e86cf9b9a164c83dd", null ],
+    [ "onTake", "class_slot.html#ac9fc791534438bdff7a9c39feee8fe91", null ],
+    [ "remove", "class_slot.html#af811e9bb19f73e38e9463675f17e28d4", null ],
+    [ "set", "class_slot.html#a7b87d4186feda3cda5a9dc52d66b481c", null ],
+    [ "setChanged", "class_slot.html#afd4cc729df224468678f7bd971448bc1", null ],
+    [ "swap", "class_slot.html#a035e8650aeb7d6fa04815e951f77a317", null ],
+    [ "container", "class_slot.html#aa5562fde28845c4283dd0ff6d6c16c41", null ],
+    [ "index", "class_slot.html#a7d7ae06da19e3af297d089a009948f23", null ],
+    [ "x", "class_slot.html#a1c2b14185215b5146636377caaa19484", null ],
+    [ "y", "class_slot.html#aa8b36f61018875b2ea9664987e61fc37", null ]
+];

@@ -1,0 +1,532 @@
+\doxysection{Multi\+Player\+Game\+Mode.\+cpp}
+\hypertarget{_multi_player_game_mode_8cpp_source}{}\label{_multi_player_game_mode_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/MultiPlayerGameMode.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/MultiPlayerGameMode.cpp}}
+\doxymbox{\hyperlink{_multi_player_game_mode_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_client_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_multi_player_game_mode_8h}{MultiPlayerGameMode.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_creative_mode_8h}{CreativeMode.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_multi_player_local_player_8h}{MultiPlayerLocalPlayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_multi_player_level_8h}{MultiPlayerLevel.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8h}{Minecraft.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_client_connection_8h}{ClientConnection.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_level_renderer_8h}{LevelRenderer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_game_network_manager_8h}{Common\(\backslash\)Network\(\backslash\)GameNetworkManager.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8player_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.player.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8tile_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.tile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8inventory_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.inventory.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00017}\doxymbox{\hyperlink{class_multi_player_game_mode_acdb0011847be9eda973be73609e4a859}{00017}}\ \doxymbox{\hyperlink{class_multi_player_game_mode_acdb0011847be9eda973be73609e4a859}{MultiPlayerGameMode::MultiPlayerGameMode}}(\doxymbox{\hyperlink{class_minecraft}{Minecraft}}\ *\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}},\ \doxymbox{\hyperlink{class_client_connection}{ClientConnection}}\ *connection)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00018}00018\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00019}00019\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ added\ initialisers}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00020}00020\ \ \ \ \ xDestroyBlock\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00021}00021\ \ \ \ \ yDestroyBlock\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00022}00022\ \ \ \ \ zDestroyBlock\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00023}00023\ \ \ \ \ destroyingItem\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00024}00024\ \ \ \ \ destroyProgress\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00025}00025\ \ \ \ \ destroyTicks\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00026}00026\ \ \ \ \ destroyDelay\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00027}00027\ \ \ \ \ isDestroying\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00028}00028\ \ \ \ \ carriedItem\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00029}00029\ \ \ \ \ localPlayerMode\ =\ \doxymbox{\hyperlink{class_game_type_a57b9cd855412c6c9713df32d7297b332}{GameType::SURVIVAL}};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00030}00030\ \ \ \ \ this-\/>minecraft\ =\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00031}00031\ \ \ \ \ this-\/>connection\ =\ connection;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00032}00032\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00034}\doxymbox{\hyperlink{class_multi_player_game_mode_a202bb753c72f016329d2e2355742119a}{00034}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a202bb753c72f016329d2e2355742119a}{MultiPlayerGameMode::creativeDestroyBlock}}(\doxymbox{\hyperlink{class_minecraft}{Minecraft}}\ *\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}},\ \doxymbox{\hyperlink{class_multi_player_game_mode_acdb0011847be9eda973be73609e4a859}{MultiPlayerGameMode}}\ *gameMode,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ face)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00035}00035\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00036}00036\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>level-\/>extinguishFire(\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player,\ x,\ y,\ z,\ face))}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00037}00037\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ gameMode-\/>\doxymbox{\hyperlink{class_multi_player_game_mode_a41a3370fa6003f2f0746a0f380d05e6c}{destroyBlock}}(x,\ y,\ z,\ face);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00039}00039\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00040}00040\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00042}\doxymbox{\hyperlink{class_multi_player_game_mode_aeb319ef2c953ef3801b5ee308bc0f967}{00042}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_game_mode_aeb319ef2c953ef3801b5ee308bc0f967}{MultiPlayerGameMode::adjustPlayer}}(shared\_ptr<Player>\ player)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00043}00043\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00044}00044\ \ \ \ \ localPlayerMode-\/>updatePlayerAbilities(\&player-\/>abilities);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00045}00045\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00047}\doxymbox{\hyperlink{class_multi_player_game_mode_a58c8dcc6e1e94425200406e3c6c45b69}{00047}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a58c8dcc6e1e94425200406e3c6c45b69}{MultiPlayerGameMode::isCutScene}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00048}00048\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00049}00049\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00050}00050\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00052}\doxymbox{\hyperlink{class_multi_player_game_mode_ac4716a8da1f6a8ebae05b898f9e784e5}{00052}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_game_mode_ac4716a8da1f6a8ebae05b898f9e784e5}{MultiPlayerGameMode::setLocalMode}}(\doxymbox{\hyperlink{class_game_type}{GameType}}\ *mode)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00053}00053\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00054}00054\ \ \ \ \ localPlayerMode\ =\ mode;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00055}00055\ \ \ \ \ localPlayerMode-\/>\doxymbox{\hyperlink{class_game_type_a91ee121a8a90628a5bb791755e0c9a48}{updatePlayerAbilities}}(\&\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>abilities);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00056}00056\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00058}\doxymbox{\hyperlink{class_multi_player_game_mode_a8d7ad00d3effc8366d4bff744c37cebe}{00058}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a8d7ad00d3effc8366d4bff744c37cebe}{MultiPlayerGameMode::initPlayer}}(shared\_ptr<Player>\ player)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00059}00059\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00060}00060\ \ \ \ \ player-\/>yRot\ =\ -\/180;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00061}00061\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00063}\doxymbox{\hyperlink{class_multi_player_game_mode_ad5e60d35f24734b1487e1ec63f8973eb}{00063}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_game_mode_ad5e60d35f24734b1487e1ec63f8973eb}{MultiPlayerGameMode::canHurtPlayer}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00064}00064\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00065}00065\ \ \ \ \ \textcolor{keywordflow}{return}\ localPlayerMode-\/>isSurvival();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00066}00066\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00068}\doxymbox{\hyperlink{class_multi_player_game_mode_a41a3370fa6003f2f0746a0f380d05e6c}{00068}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a41a3370fa6003f2f0746a0f380d05e6c}{MultiPlayerGameMode::destroyBlock}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ face)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00069}00069\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{if}\ (localPlayerMode-\/>isAdventureRestricted())\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>mayDestroyBlockAt(x,\ y,\ z))\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00074}00074\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00076}00076\ \ \ \ \ \textcolor{keywordflow}{if}\ (localPlayerMode-\/>isCreative())}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00077}00077\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>getCarriedItem()\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \textcolor{keyword}{dynamic\_cast<}\doxymbox{\hyperlink{class_weapon_item}{WeaponItem}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>getCarriedItem()-\/>getItem())\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00082}00082\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00084}00084\ \ \ \ \ \doxymbox{\hyperlink{class_level}{Level}}\ *level\ =\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>level;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00085}00085\ \ \ \ \ \doxymbox{\hyperlink{class_tile}{Tile}}\ *oldTile\ =\ \doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[level-\/>\doxymbox{\hyperlink{class_level_af6c291e6d410b3b40ae101dbf1f41fac}{getTile}}(x,\ y,\ z)];}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00087}00087\ \ \ \ \ \textcolor{keywordflow}{if}\ (oldTile\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00089}00089\ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a79502e4d436bc0a34c1a34b830049b23}{levelEvent}}(\doxymbox{\hyperlink{class_level_event_a378410f78e6c08eff5f775b30691f5c3}{LevelEvent::PARTICLES\_DESTROY\_BLOCK}},\ x,\ y,\ z,\ oldTile-\/>\doxymbox{\hyperlink{class_tile_a32d00999ec6ae098a2db62bf4c2c5e7c}{id}}\ +\ (level-\/>\doxymbox{\hyperlink{class_level_af9e4edf3d6817cf582e4bec75232445c}{getData}}(x,\ y,\ z)\ <<\ \doxymbox{\hyperlink{class_tile_aef7dc7ea7ea2efb56d6b4c2afe23e3c4}{Tile::TILE\_NUM\_SHIFT}}));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00091}00091\ \ \ \ \ \textcolor{keywordtype}{int}\ data\ =\ level-\/>\doxymbox{\hyperlink{class_level_af9e4edf3d6817cf582e4bec75232445c}{getData}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00092}00092\ \ \ \ \ \textcolor{keywordtype}{bool}\ changed\ =\ level-\/>\doxymbox{\hyperlink{class_level_a0f55b96d60f7a3e6a44e4e1754f734b4}{removeTile}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00093}00093\ \ \ \ \ \textcolor{keywordflow}{if}\ (changed)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00094}00094\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ oldTile-\/>\doxymbox{\hyperlink{class_tile_af95852a68d09d1c9c84a615523315dcd}{destroy}}(level,\ x,\ y,\ z,\ data);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00096}00096\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00097}00097\ \ \ \ \ yDestroyBlock\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00099}00099\ \ \ \ \ \textcolor{keywordflow}{if}\ (!localPlayerMode-\/>isCreative())}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00100}00100\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>getSelectedItem();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>mineBlock(level,\ oldTile-\/>\doxymbox{\hyperlink{class_tile_a32d00999ec6ae098a2db62bf4c2c5e7c}{id}},\ x,\ y,\ z,\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>removeSelectedItem();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00110}00110\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00112}00112\ \ \ \ \ \textcolor{keywordflow}{return}\ changed;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00113}00113\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00115}\doxymbox{\hyperlink{class_multi_player_game_mode_a0ef5532bee3e1fe2419a6b67dc51ad6f}{00115}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a0ef5532bee3e1fe2419a6b67dc51ad6f}{MultiPlayerGameMode::startDestroyBlock}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ face)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00116}00116\ \{\ \ \ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00117}00117\ \ \ \ \ \textcolor{keywordflow}{if}(!\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>isAllowedToMine())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00119}00119\ \ \ \ \ \textcolor{keywordflow}{if}\ (localPlayerMode-\/>isAdventureRestricted())}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00120}00120\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>mayDestroyBlockAt(x,\ y,\ z))}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00125}00125\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00127}00127\ \ \ \ \ \textcolor{keywordflow}{if}\ (localPlayerMode-\/>isCreative())}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00128}00128\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Skip\ if\ we\ just\ broke\ a\ block\ —\ prevents\ double-\/break\ on\ single\ clicks}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (destroyDelay\ >\ 0)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ connection-\/>send(std::make\_shared<PlayerActionPacket>(\doxymbox{\hyperlink{class_player_action_packet_a8a4d3def4e3dc5d0f727319d1caca358}{PlayerActionPacket::START\_DESTROY\_BLOCK}},\ x,\ y,\ z,\ face));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_game_mode_a202bb753c72f016329d2e2355742119a}{creativeDestroyBlock}}(\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}},\ \textcolor{keyword}{this},\ x,\ y,\ z,\ face);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ destroyDelay\ =\ 5;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00135}00135\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00136}00136\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (!isDestroying\ ||\ !sameDestroyTarget(x,\ y,\ z))}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00137}00137\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isDestroying)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ connection-\/>send(std::make\_shared<PlayerActionPacket>(\doxymbox{\hyperlink{class_player_action_packet_a8e3f461b0435d7745751281fa9f67ae6}{PlayerActionPacket::ABORT\_DESTROY\_BLOCK}},\ xDestroyBlock,\ yDestroyBlock,\ zDestroyBlock,\ face));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ connection-\/>send(std::make\_shared<PlayerActionPacket>(\doxymbox{\hyperlink{class_player_action_packet_a8a4d3def4e3dc5d0f727319d1caca358}{PlayerActionPacket::START\_DESTROY\_BLOCK}},\ x,\ y,\ z,\ face));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ t\ =\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>level-\/>getTile(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t\ >\ 0\ \&\&\ destroyProgress\ ==\ 0)\ \doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t]-\/>attack(\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>level,\ x,\ y,\ z,\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t\ >\ 0\ \&\&}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ (\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t]-\/>getDestroyProgress(\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player,\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>level,\ x,\ y,\ z)\ >=\ 1}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ||(app.DebugSettingsOn()\ \&\&\ app.GetGameSettingsDebugMask(ProfileManager.GetPrimaryPad())\&(1L<<eDebugSetting\_InstantDestroy))}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_game_mode_a41a3370fa6003f2f0746a0f380d05e6c}{destroyBlock}}(x,\ y,\ z,\ face);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ isDestroying\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ xDestroyBlock\ =\ x;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ yDestroyBlock\ =\ y;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ zDestroyBlock\ =\ z;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ destroyingItem\ =\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>getCarriedItem();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ destroyProgress\ =\ 0;\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ destroyTicks\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>level-\/>destroyTileProgress(\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>entityId,\ xDestroyBlock,\ yDestroyBlock,\ zDestroyBlock,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(destroyProgress\ *\ 10)\ -\/\ 1);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00164}00164\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00166}00166\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00168}\doxymbox{\hyperlink{class_multi_player_game_mode_ab691f1220096d220e1366eea3de5f7e7}{00168}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_game_mode_ab691f1220096d220e1366eea3de5f7e7}{MultiPlayerGameMode::stopDestroyBlock}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00169}00169\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00170}00170\ \ \ \ \ \textcolor{keywordflow}{if}\ (isDestroying)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00171}00171\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ connection-\/>send(std::make\_shared<PlayerActionPacket>(\doxymbox{\hyperlink{class_player_action_packet_a8e3f461b0435d7745751281fa9f67ae6}{PlayerActionPacket::ABORT\_DESTROY\_BLOCK}},\ xDestroyBlock,\ yDestroyBlock,\ zDestroyBlock,\ -\/1));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00173}00173\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00175}00175\ \ \ \ \ isDestroying\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00176}00176\ \ \ \ \ destroyProgress\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00177}00177\ \ \ \ \ destroyDelay\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00178}00178\ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>level-\/>destroyTileProgress(\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>entityId,\ xDestroyBlock,\ yDestroyBlock,\ zDestroyBlock,\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00179}00179\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00181}\doxymbox{\hyperlink{class_multi_player_game_mode_a6516d6d1e3da6969647370a6af1d2e3b}{00181}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a6516d6d1e3da6969647370a6af1d2e3b}{MultiPlayerGameMode::continueDestroyBlock}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ face)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00182}00182\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00183}00183\ \ \ \ \ \textcolor{keywordflow}{if}(!\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>isAllowedToMine())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00184}00184\ \ \ \ \ ensureHasSentCarriedItem();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00185}00185\ \textcolor{comment}{//\ \ \ \ \ \ \ \ connection.send(new\ PlayerActionPacket(PlayerActionPacket.CONTINUE\_DESTROY\_BLOCK,\ x,\ y,\ z,\ face));}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00187}00187\ \ \ \ \ \textcolor{keywordflow}{if}\ (destroyDelay\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00188}00188\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ destroyDelay-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00191}00191\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00193}00193\ \ \ \ \ \textcolor{keywordflow}{if}\ (localPlayerMode-\/>isCreative())}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00194}00194\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ destroyDelay\ =\ 5;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ connection-\/>send(std::make\_shared<PlayerActionPacket>(\doxymbox{\hyperlink{class_player_action_packet_a8a4d3def4e3dc5d0f727319d1caca358}{PlayerActionPacket::START\_DESTROY\_BLOCK}},\ x,\ y,\ z,\ face));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_game_mode_a202bb753c72f016329d2e2355742119a}{creativeDestroyBlock}}(\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}},\ \textcolor{keyword}{this},\ x,\ y,\ z,\ face);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00199}00199\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00201}00201\ \ \ \ \ \textcolor{keywordflow}{if}\ (sameDestroyTarget(x,\ y,\ z))}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00202}00202\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ t\ =\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>level-\/>getTile(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ isDestroying\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tile}{Tile}}\ *tile\ =\ \doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t];}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ destroyProgress\ +=\ tile-\/>\doxymbox{\hyperlink{class_tile_af47ca7849237120e55a9a9852aa92a02}{getDestroyProgress}}(\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player,\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>level,\ x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (destroyTicks\ \%\ 4\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tile\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ iStepSound=tile-\/>\doxymbox{\hyperlink{class_tile_a18e4fab262c9da9d5c3a50f090340f8a}{soundType}}-\/>\doxymbox{\hyperlink{class_tile_1_1_sound_type_a809bdfcc64ed7f4259bb8559ac9cc954}{getStepSound}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00218}00218\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>soundEngine-\/>play(iStepSound,\ x\ +\ 0.5f,\ y\ +\ 0.5f,\ z\ +\ 0.5f,\ (tile-\/>\doxymbox{\hyperlink{class_tile_a18e4fab262c9da9d5c3a50f090340f8a}{soundType}}-\/>\doxymbox{\hyperlink{class_tile_1_1_sound_type_a083974179f68b5d791cd3f2e5ed9bc2e}{getVolume}}()\ +\ 1)\ /\ 8,\ tile-\/>\doxymbox{\hyperlink{class_tile_a18e4fab262c9da9d5c3a50f090340f8a}{soundType}}-\/>\doxymbox{\hyperlink{class_tile_1_1_sound_type_a87671d85689790088c1deb6f208920de}{getPitch}}()\ *\ 0.5f);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00222}00222\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ destroyTicks++;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00224}00224\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (destroyProgress\ >=\ 1)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ isDestroying\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ connection-\/>send(std::make\_shared<PlayerActionPacket>(\doxymbox{\hyperlink{class_player_action_packet_ae9db187e11cb18322d2bef31d329fa17}{PlayerActionPacket::STOP\_DESTROY\_BLOCK}},\ x,\ y,\ z,\ face));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_game_mode_a41a3370fa6003f2f0746a0f380d05e6c}{destroyBlock}}(x,\ y,\ z,\ face);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ destroyProgress\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ destroyTicks\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ destroyDelay\ =\ 5;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00234}00234\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>level-\/>destroyTileProgress(\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>entityId,\ xDestroyBlock,\ yDestroyBlock,\ zDestroyBlock,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(destroyProgress\ *\ 10)\ -\/\ 1);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00236}00236\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00237}00237\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00238}00238\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00239}00239\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_game_mode_a0ef5532bee3e1fe2419a6b67dc51ad6f}{startDestroyBlock}}(x,\ y,\ z,\ face);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00240}00240\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00242}00242\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00244}\doxymbox{\hyperlink{class_multi_player_game_mode_aa840acd5435c8e016294a82fb54e3a3b}{00244}}\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_multi_player_game_mode_aa840acd5435c8e016294a82fb54e3a3b}{MultiPlayerGameMode::getPickRange}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00245}00245\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00246}00246\ \ \ \ \ \textcolor{keywordflow}{if}\ (localPlayerMode-\/>isCreative())}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00247}00247\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 5.0f;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00249}00249\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00250}00250\ \ \ \ \ \textcolor{keywordflow}{return}\ 4.5f;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00251}00251\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00252}00252\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00253}\doxymbox{\hyperlink{class_multi_player_game_mode_a92cb56bfe8a179ff90f189e81f5cb0a5}{00253}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a92cb56bfe8a179ff90f189e81f5cb0a5}{MultiPlayerGameMode::tick}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00254}00254\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00255}00255\ \ \ \ \ ensureHasSentCarriedItem();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00256}00256\ \ \ \ \ \textcolor{comment}{//minecraft-\/>soundEngine-\/>playMusicTick();}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00257}00257\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00258}00258\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00259}00259\ \textcolor{keywordtype}{bool}\ MultiPlayerGameMode::sameDestroyTarget(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00260}00260\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00261}00261\ \ \ \ \ shared\_ptr<ItemInstance>\ selected\ =\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>\doxymbox{\hyperlink{class_minecraft_a369e606ca6b08329abda590514caab5b}{player}}-\/>getCarriedItem();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00262}00262\ \ \ \ \ \textcolor{keywordtype}{bool}\ sameItems\ =\ destroyingItem\ ==\ \textcolor{keyword}{nullptr}\ \&\&\ selected\ ==\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00263}00263\ \ \ \ \ \textcolor{keywordflow}{if}\ (destroyingItem\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ selected\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00264}00264\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00265}00265\ \ \ \ \ \ \ \ \ sameItems\ =\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ selected-\/>id\ ==\ destroyingItem-\/>id\ \&\&}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item_instance_a58ff33b81ac1017fa4f8376c40cc8edc}{ItemInstance::tagMatches}}(selected,\ destroyingItem)\ \&\&}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ (selected-\/>isDamageableItem()\ ||\ selected-\/>getAuxValue()\ ==\ destroyingItem-\/>getAuxValue());}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00269}00269\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00270}00270\ \ \ \ \ \textcolor{keywordflow}{return}\ x\ ==\ xDestroyBlock\ \&\&\ y\ ==\ yDestroyBlock\ \&\&\ z\ ==\ zDestroyBlock\ \&\&\ sameItems;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00271}00271\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00273}00273\ \textcolor{keywordtype}{void}\ MultiPlayerGameMode::ensureHasSentCarriedItem()}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00274}00274\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00275}00275\ \ \ \ \ \textcolor{keywordtype}{int}\ newItem\ =\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>inventory-\/>selected;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00276}00276\ \ \ \ \ \textcolor{keywordflow}{if}\ (newItem\ !=\ carriedItem)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00277}00277\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ carriedItem\ =\ newItem;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ connection-\/>send(std::make\_shared<SetCarriedItemPacket>(carriedItem));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00280}00280\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00281}00281\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00283}\doxymbox{\hyperlink{class_multi_player_game_mode_a7656dd42eb10d42c2d2cfe5e93af6f71}{00283}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a7656dd42eb10d42c2d2cfe5e93af6f71}{MultiPlayerGameMode::useItemOn}}(shared\_ptr<Player>\ player,\ \doxymbox{\hyperlink{class_level}{Level}}\ *level,\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ face,\ \doxymbox{\hyperlink{class_vec3}{Vec3}}\ *hit,\ \textcolor{keywordtype}{bool}\ bTestUseOnly,\ \textcolor{keywordtype}{bool}\ *pbUsedItem)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00284}00284\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00285}00285\ \ \ \ \ \textcolor{keywordflow}{if}(\ pbUsedItem\ )\ *pbUsedItem\ =\ \textcolor{keyword}{false};\ \ \ \textcolor{comment}{//\ Did\ we\ actually\ use\ the\ held\ item?}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00287}00287\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ Adding\ a\ test\ only\ version\ to\ allow\ tooltips\ to\ be\ displayed}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00288}00288\ \ \ \ \ \textcolor{keywordflow}{if}(!bTestUseOnly)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00289}00289\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00290}00290\ \ \ \ \ \ \ \ \ ensureHasSentCarriedItem();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00291}00291\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00292}00292\ \ \ \ \ \textcolor{keywordtype}{float}\ clickX\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(hit-\/>\doxymbox{\hyperlink{class_vec3_ad1de31784f9099476ea9fe389ce79dea}{x}})\ -\/\ x;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00293}00293\ \ \ \ \ \textcolor{keywordtype}{float}\ clickY\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(hit-\/>\doxymbox{\hyperlink{class_vec3_a3f7a04fbd01d126678d0d243b3edd1bc}{y}})\ -\/\ y;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00294}00294\ \ \ \ \ \textcolor{keywordtype}{float}\ clickZ\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(hit-\/>\doxymbox{\hyperlink{class_vec3_a026f60dd196479ab2a26bb6408289f3a}{z}})\ -\/\ z;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00295}00295\ \ \ \ \ \textcolor{keywordtype}{bool}\ didSomething\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00297}00297\ \ \ \ \ \textcolor{keywordflow}{if}\ (!player-\/>isSneaking()\ ||\ player-\/>getCarriedItem()\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00298}00298\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ t\ =\ level-\/>\doxymbox{\hyperlink{class_level_af6c291e6d410b3b40ae101dbf1f41fac}{getTile}}(x,\ y,\ z);\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t\ >\ 0\ \&\&\ player-\/>isAllowedToUse(\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t]))}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(bTestUseOnly)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}(t)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_tile_afdbed98e927208b5da02e2505d97cc85}{Tile::jukebox\_Id}}:\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_tile_aed1aae6471067236860adec2a7b23761}{Tile::bed\_Id}}:\ \textcolor{comment}{//\ special\ case\ for\ a\ bed}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t]-\/>TestUse(level,\ x,\ y,\ z,\ player\ ))\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (t==\doxymbox{\hyperlink{class_tile_aed1aae6471067236860adec2a7b23761}{Tile::bed\_Id}})\ \textcolor{comment}{//\ 4J-\/JEV:\ You\ can\ still\ use\ items\ on\ record\ players\ (ie.\ set\ fire\ to\ them).}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ bed\ is\ too\ far\ away,\ or\ something}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t]-\/>TestUse())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t]-\/>use(level,\ x,\ y,\ z,\ player,\ face,\ clickX,\ clickY,\ clickZ))\ didSomething\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00328}00328\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00329}00329\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00330}00330\ \ \ \ \ \textcolor{keywordflow}{if}\ (!didSomething\ \&\&\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \textcolor{keyword}{dynamic\_cast<}\doxymbox{\hyperlink{class_tile_item}{TileItem}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getItem()))}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00331}00331\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tile_item}{TileItem}}\ *tile\ =\ \textcolor{keyword}{dynamic\_cast<}\doxymbox{\hyperlink{class_tile_item}{TileItem}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getItem());}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!tile-\/>\doxymbox{\hyperlink{class_tile_item_aa080d9631b1efe0b04510b413ab68769}{mayPlace}}(level,\ x,\ y,\ z,\ face,\ player,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00334}00334\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00336}00336\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ In\ Java\ we\ send\ the\ use\ packet\ before\ the\ above\ check\ for\ item\ being\ nullptr}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00337}00337\ \ \ \ \ \textcolor{comment}{//\ so\ the\ following\ never\ gets\ executed\ but\ the\ packet\ still\ gets\ sent\ (for\ opening\ chests\ etc)}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00338}00338\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00339}00339\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!didSomething\ \&\&\ player-\/>isAllowedToUse(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}))}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (localPlayerMode-\/>isCreative())}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ aux\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getAuxValue();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ count\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ didSomething\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>useOn(player,\ level,\ x,\ y,\ z,\ face,\ clickX,\ clickY,\ clickZ,\ bTestUseOnly);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>setAuxValue(aux);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count\ =\ count;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ didSomething\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>useOn(player,\ level,\ x,\ y,\ z,\ face,\ clickX,\ clickY,\ clickZ,\ bTestUseOnly);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ didSomething\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ pbUsedItem\ )\ *pbUsedItem\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00359}00359\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00360}00360\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00361}00361\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ t\ =\ level-\/>\doxymbox{\hyperlink{class_level_af6c291e6d410b3b40ae101dbf1f41fac}{getTile}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ Bit\ of\ a\ hack,\ however\ seems\ preferable\ to\ any\ larger\ changes\ which\ would\ have\ more\ chance\ of\ causing\ unwanted\ side\ effects.\ }}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00364}00364\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ we\ aren't\ going\ to\ be\ actually\ performing\ the\ use\ method\ locally,\ then\ call\ this\ method\ with\ its\ "{}soundOnly"{}\ parameter\ set\ to\ true.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ is\ an\ addition\ from\ the\ java\ version,\ and\ as\ its\ name\ suggests,\ doesn't\ actually\ perform\ the\ use\ locally\ but\ just\ makes\ any\ sounds\ that}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ are\ meant\ to\ be\ directly\ caused\ by\ this.\ If\ we\ don't\ do\ this,\ then\ the\ sounds\ never\ happen\ as\ the\ tile's\ use\ method\ is\ only\ called\ on\ the}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ server,\ and\ that\ won't\ allow\ any\ sounds\ that\ are\ directly\ made,\ or\ broadcast\ back\ level\ events\ to\ us\ that\ would\ make\ the\ sound,\ since\ we\ are}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ source\ of\ the\ event.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ call\ soundOnly\ version\ if\ we\ didn't\ already\ call\ the\ tile's\ use\ method\ above}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !didSomething\ \&\&\ (\ t\ >\ 0\ )\ \&\&\ (\ !bTestUseOnly\ )\ \&\&\ player-\/>isAllowedToUse(\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t])\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t]-\/>use(level,\ x,\ y,\ z,\ player,\ face,\ clickX,\ clickY,\ clickZ,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00374}00374\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00375}00375\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00376}00376\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00377}00377\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Do\ the\ action\ before\ we\ send\ the\ packet,\ so\ that\ our\ predicted\ count\ is\ sent\ in\ the\ packet\ and\ the\ server\ }}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00378}00378\ \ \ \ \ \textcolor{comment}{//\ doesn't\ think\ it\ has\ to\ update\ us}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00379}00379\ \ \ \ \ \textcolor{comment}{//\ Fix\ for\ \#7904\ -\/\ Gameplay:\ Players\ can\ dupe\ torches\ by\ throwing\ them\ repeatedly\ into\ water.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00380}00380\ \ \ \ \ \textcolor{keywordflow}{if}(!bTestUseOnly)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00381}00381\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00382}00382\ \ \ \ \ \ \ \ \ connection-\/>send(std::make\_shared<UseItemPacket>(x,\ y,\ z,\ face,\ player-\/>inventory-\/>getSelected(),\ clickX,\ clickY,\ clickZ));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00383}00383\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00384}00384\ \ \ \ \ \textcolor{keywordflow}{return}\ didSomething;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00385}00385\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00386}00386\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00387}\doxymbox{\hyperlink{class_multi_player_game_mode_ac287819008d150d0e9848fcc388e9d8f}{00387}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_game_mode_ac287819008d150d0e9848fcc388e9d8f}{MultiPlayerGameMode::useItem}}(shared\_ptr<Player>\ player,\ \doxymbox{\hyperlink{class_level}{Level}}\ *level,\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \textcolor{keywordtype}{bool}\ bTestUseOnly)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00388}00388\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00389}00389\ \ \ \ \ \textcolor{keywordflow}{if}(!player-\/>isAllowedToUse(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00390}00390\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00391}00391\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ Adding\ a\ test\ only\ version\ to\ allow\ tooltips\ to\ be\ displayed}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00392}00392\ \ \ \ \ \textcolor{keywordflow}{if}(!bTestUseOnly)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00393}00393\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00394}00394\ \ \ \ \ \ \ \ \ ensureHasSentCarriedItem();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00395}00395\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00396}00396\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00397}00397\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Do\ the\ action\ before\ we\ send\ the\ packet,\ so\ that\ our\ predicted\ count\ is\ sent\ in\ the\ packet\ and\ the\ server\ }}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00398}00398\ \ \ \ \ \textcolor{comment}{//\ doesn't\ think\ it\ has\ to\ update\ us,\ or\ can\ update\ us\ if\ we\ are\ wrong}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00399}00399\ \ \ \ \ \textcolor{comment}{//\ Fix\ for\ \#13120\ -\/\ Using\ a\ bucket\ of\ water\ or\ lava\ in\ the\ spawn\ area\ (centre\ of\ the\ map)\ causes\ the\ inventory\ to\ get\ out\ of\ sync}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00400}00400\ \ \ \ \ \textcolor{keywordtype}{bool}\ result\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00401}00401\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00402}00402\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ added\ for\ tooltips\ to\ test\ use\ only}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00403}00403\ \ \ \ \ \textcolor{keywordflow}{if}(bTestUseOnly)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00404}00404\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00405}00405\ \ \ \ \ \ \ \ \ result\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>TestUse(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ level,\ player);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00406}00406\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00407}00407\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00408}00408\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00409}00409\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ oldCount\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00410}00410\ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ itemInstance\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>use(level,\ player);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00411}00411\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((itemInstance\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ itemInstance\ !=\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}})\ ||\ (itemInstance\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ itemInstance-\/>count\ !=\ oldCount))}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00412}00412\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00413}00413\ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>inventory-\/>items[player-\/>inventory-\/>selected]\ =\ itemInstance;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (itemInstance-\/>count\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00416}00416\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>inventory-\/>items[player-\/>inventory-\/>selected]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00417}00417\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00418}00418\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00419}00419\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00420}00420\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00421}00421\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00422}00422\ \ \ \ \ \textcolor{keywordflow}{if}(!bTestUseOnly)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00423}00423\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00424}00424\ \ \ \ \ \ \ \ \ connection-\/>send(std::make\_shared<UseItemPacket>(-\/1,\ -\/1,\ -\/1,\ 255,\ player-\/>inventory-\/>getSelected(),\ 0,\ 0,\ 0));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00425}00425\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00426}00426\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00427}00427\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00428}00428\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00429}\doxymbox{\hyperlink{class_multi_player_game_mode_a479699df19eae359e712d1c60596fbb8}{00429}}\ shared\_ptr<MultiplayerLocalPlayer>\ \doxymbox{\hyperlink{class_multi_player_game_mode_a479699df19eae359e712d1c60596fbb8}{MultiPlayerGameMode::createPlayer}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00430}00430\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00431}00431\ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<MultiplayerLocalPlayer>(\doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}},\ level,\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>user,\ connection);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00432}00432\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00433}00433\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00434}\doxymbox{\hyperlink{class_multi_player_game_mode_a85a1a5210deb3c9596d818d5ce463332}{00434}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a85a1a5210deb3c9596d818d5ce463332}{MultiPlayerGameMode::attack}}(shared\_ptr<Player>\ player,\ shared\_ptr<Entity>\ entity)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00435}00435\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00436}00436\ \ \ \ \ ensureHasSentCarriedItem();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00437}00437\ \ \ \ \ connection-\/>send(std::make\_shared<InteractPacket>(player-\/>entityId,\ entity-\/>entityId,\ \doxymbox{\hyperlink{class_interact_packet_ad9b3efeb67e797eb2938168ee7207d0f}{InteractPacket::ATTACK}}));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00438}00438\ \ \ \ \ player-\/>attack(entity);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00439}00439\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00440}00440\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00441}\doxymbox{\hyperlink{class_multi_player_game_mode_af83a8145864311c654520cdd0448076c}{00441}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_game_mode_af83a8145864311c654520cdd0448076c}{MultiPlayerGameMode::interact}}(shared\_ptr<Player>\ player,\ shared\_ptr<Entity>\ entity)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00442}00442\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00443}00443\ \ \ \ \ ensureHasSentCarriedItem();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00444}00444\ \ \ \ \ connection-\/>send(std::make\_shared<InteractPacket>(player-\/>entityId,\ entity-\/>entityId,\ \doxymbox{\hyperlink{class_interact_packet_a52ee03c3b855dab151ab3bdb8ece9adf}{InteractPacket::INTERACT}}));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00445}00445\ \ \ \ \ \textcolor{keywordflow}{return}\ player-\/>interact(entity);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00446}00446\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00447}00447\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00448}\doxymbox{\hyperlink{class_multi_player_game_mode_aa5d00369d26e1216d80eee86911b4b49}{00448}}\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{class_multi_player_game_mode_aa5d00369d26e1216d80eee86911b4b49}{MultiPlayerGameMode::handleInventoryMouseClick}}(\textcolor{keywordtype}{int}\ containerId,\ \textcolor{keywordtype}{int}\ slotNum,\ \textcolor{keywordtype}{int}\ buttonNum,\ \textcolor{keywordtype}{bool}\ quickKeyHeld,\ shared\_ptr<Player>\ player)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00449}00449\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00450}00450\ \ \ \ \ \textcolor{keywordtype}{short}\ changeUid\ =\ player-\/>containerMenu-\/>backup(player-\/>inventory);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00451}00451\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00452}00452\ \ \ \ \ shared\_ptr<ItemInstance>\ clicked\ =\ player-\/>containerMenu-\/>clicked(slotNum,\ buttonNum,\ quickKeyHeld?\doxymbox{\hyperlink{class_abstract_container_menu_a10834873a022e00bf2208361bd184af6}{AbstractContainerMenu::CLICK\_QUICK\_MOVE}}:\doxymbox{\hyperlink{class_abstract_container_menu_af957caebda34490fbab5a086df7cd4d5}{AbstractContainerMenu::CLICK\_PICKUP}},\ player);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00453}00453\ \ \ \ \ connection-\/>send(std::make\_shared<ContainerClickPacket>(containerId,\ slotNum,\ buttonNum,\ quickKeyHeld,\ clicked,\ changeUid));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00454}00454\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00455}00455\ \ \ \ \ \textcolor{keywordflow}{return}\ clicked;}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00456}00456\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00457}00457\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00458}\doxymbox{\hyperlink{class_multi_player_game_mode_affeee1c64e0ca2f1687d198175adca19}{00458}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_game_mode_affeee1c64e0ca2f1687d198175adca19}{MultiPlayerGameMode::handleInventoryButtonClick}}(\textcolor{keywordtype}{int}\ containerId,\ \textcolor{keywordtype}{int}\ buttonId)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00459}00459\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00460}00460\ \ \ \ \ connection-\/>send(std::make\_shared<ContainerButtonClickPacket>(containerId,\ buttonId));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00461}00461\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00462}00462\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00463}\doxymbox{\hyperlink{class_multi_player_game_mode_a49cb68540461c7ef8ac58b2e344c7552}{00463}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a49cb68540461c7ef8ac58b2e344c7552}{MultiPlayerGameMode::handleCreativeModeItemAdd}}(shared\_ptr<ItemInstance>\ clicked,\ \textcolor{keywordtype}{int}\ slot)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00464}00464\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00465}00465\ \ \ \ \ \textcolor{keywordflow}{if}\ (localPlayerMode-\/>isCreative())}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00466}00466\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00467}00467\ \ \ \ \ \ \ \ \ connection-\/>send(std::make\_shared<SetCreativeModeSlotPacket>(slot,\ clicked));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00468}00468\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00469}00469\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00470}00470\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00471}\doxymbox{\hyperlink{class_multi_player_game_mode_a63f854f09e14c6fbbef83f33328ab5b8}{00471}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a63f854f09e14c6fbbef83f33328ab5b8}{MultiPlayerGameMode::handleCreativeModeItemDrop}}(shared\_ptr<ItemInstance>\ clicked)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00472}00472\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00473}00473\ \ \ \ \ \textcolor{keywordflow}{if}\ (localPlayerMode-\/>isCreative()\ \&\&\ clicked\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00474}00474\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00475}00475\ \ \ \ \ \ \ \ \ connection-\/>send(std::make\_shared<SetCreativeModeSlotPacket>(-\/1,\ clicked));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00476}00476\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00477}00477\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00478}00478\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00479}\doxymbox{\hyperlink{class_multi_player_game_mode_a490077566da7a8272d6bdc5ac4ec64cc}{00479}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a490077566da7a8272d6bdc5ac4ec64cc}{MultiPlayerGameMode::releaseUsingItem}}(shared\_ptr<Player>\ player)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00480}00480\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00481}00481\ \ \ \ \ ensureHasSentCarriedItem();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00482}00482\ \ \ \ \ connection-\/>send(std::make\_shared<PlayerActionPacket>(\doxymbox{\hyperlink{class_player_action_packet_ada1df2cc22be80d3076812f90bdf2895}{PlayerActionPacket::RELEASE\_USE\_ITEM}},\ 0,\ 0,\ 0,\ 255));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00483}00483\ \ \ \ \ player-\/>releaseUsingItem();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00484}00484\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00485}00485\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00486}\doxymbox{\hyperlink{class_multi_player_game_mode_a8a1f379126558c8abb16996729eb17b7}{00486}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a8a1f379126558c8abb16996729eb17b7}{MultiPlayerGameMode::hasExperience}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00487}00487\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00488}00488\ \ \ \ \ \textcolor{keywordflow}{return}\ localPlayerMode-\/>isSurvival();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00489}00489\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00490}00490\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00491}\doxymbox{\hyperlink{class_multi_player_game_mode_a81e1c672bf0501825009deb89b0ce972}{00491}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a81e1c672bf0501825009deb89b0ce972}{MultiPlayerGameMode::hasMissTime}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00492}00492\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00493}00493\ \ \ \ \ \textcolor{keywordflow}{return}\ !localPlayerMode-\/>isCreative();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00494}00494\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00495}00495\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00496}\doxymbox{\hyperlink{class_multi_player_game_mode_a1d6a857f7109de5cfece352221468816}{00496}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a1d6a857f7109de5cfece352221468816}{MultiPlayerGameMode::hasInfiniteItems}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00497}00497\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00498}00498\ \ \ \ \ \textcolor{keywordflow}{return}\ localPlayerMode-\/>isCreative();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00499}00499\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00500}00500\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00501}\doxymbox{\hyperlink{class_multi_player_game_mode_aea95655c3029199bd63197a3b0820ec9}{00501}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_game_mode_aea95655c3029199bd63197a3b0820ec9}{MultiPlayerGameMode::hasFarPickRange}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00502}00502\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00503}00503\ \ \ \ \ \textcolor{keywordflow}{return}\ localPlayerMode-\/>isCreative();}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00504}00504\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00505}00505\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00506}00506\ \textcolor{comment}{//\ Returns\ true\ when\ the\ inventory\ is\ opened\ from\ the\ server-\/side.\ Currently}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00507}00507\ \textcolor{comment}{//\ only\ happens\ when\ the\ player\ is\ riding\ a\ horse.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00508}\doxymbox{\hyperlink{class_multi_player_game_mode_a03b22a5426d06154ceecc740ae86bc38}{00508}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a03b22a5426d06154ceecc740ae86bc38}{MultiPlayerGameMode::isServerControlledInventory}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00509}00509\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00510}00510\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>isRiding()\ \&\&\ \doxymbox{\hyperlink{class_multi_player_game_mode_a3af84d7c2c82a5d842ca5f87359032e9}{minecraft}}-\/>player-\/>riding-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a2ca20373fc269b96107dd4a07d8dcdf3}{eTYPE\_HORSE}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00511}00511\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00512}00512\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00513}\doxymbox{\hyperlink{class_multi_player_game_mode_ae65d0038c382c64e5cf189af7577e1f8}{00513}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_game_mode_ae65d0038c382c64e5cf189af7577e1f8}{MultiPlayerGameMode::handleCraftItem}}(\textcolor{keywordtype}{int}\ recipe,\ shared\_ptr<Player>\ player)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00514}00514\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00515}00515\ \ \ \ \ \textcolor{keywordtype}{short}\ changeUid\ =\ player-\/>containerMenu-\/>backup(player-\/>inventory);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00516}00516\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00517}00517\ \ \ \ \ connection-\/>send(std::make\_shared<CraftItemPacket>(recipe,\ changeUid));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00518}00518\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00519}00519\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00520}00520\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00521}00521\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00522}\doxymbox{\hyperlink{class_multi_player_game_mode_a92e7e8c570d91e123f63a1834f5be30f}{00522}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_game_mode_a92e7e8c570d91e123f63a1834f5be30f}{MultiPlayerGameMode::handleDebugOptions}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ uiVal,\ shared\_ptr<Player>\ player)}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00523}00523\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00524}00524\ \ \ \ \ player-\/>SetDebugOptions(uiVal);}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00525}00525\ \ \ \ \ connection-\/>send(std::make\_shared<DebugOptionsPacket>(uiVal));}
+\DoxyCodeLine{\Hypertarget{_multi_player_game_mode_8cpp_source_l00526}00526\ \}}
+
+\end{DoxyCode}

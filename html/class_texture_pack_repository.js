@@ -1,0 +1,26 @@
+var class_texture_pack_repository =
+[
+    [ "TexturePackRepository", "class_texture_pack_repository.html#a474f395e7d8a5bf78ee157afbf1e7b95", null ],
+    [ "addDebugPacks", "class_texture_pack_repository.html#a1f44d6f3388ea856728ce6e198000201", null ],
+    [ "addTexturePackFromDLC", "class_texture_pack_repository.html#a1716f659202c87d6e14e9e19f02b29c4", null ],
+    [ "canUseWebSkin", "class_texture_pack_repository.html#a670e7fbfe15aa1e1b592c4db007e5fe3", null ],
+    [ "clearInvalidTexturePacks", "class_texture_pack_repository.html#a71841bf14b6a27cabfe04dd911e7f7aa", null ],
+    [ "getAll", "class_texture_pack_repository.html#aa2e5c0368f751783779f14667f657f91", null ],
+    [ "getDefault", "class_texture_pack_repository.html#a923adbe005730d128195a0238e1b2924", null ],
+    [ "getSelected", "class_texture_pack_repository.html#a55e21ca7bdf92ef2b268bdee424a80f5", null ],
+    [ "getTexturePackById", "class_texture_pack_repository.html#a850b3aa63d921b3918f2db7c18884d5e", null ],
+    [ "getTexturePackByIndex", "class_texture_pack_repository.html#afd6815f2176074a662dd42ab9efc5acd", null ],
+    [ "getTexturePackCount", "class_texture_pack_repository.html#a2f9c6e608d54d614531dd282ea8af4ec", null ],
+    [ "getTexturePackIdNames", "class_texture_pack_repository.html#a73dce1ff92671049a98c9642cd3de894", null ],
+    [ "getTexturePackIndex", "class_texture_pack_repository.html#a9539a4c6d35bd407a8b985a368ba1929", null ],
+    [ "isUsingDefaultSkin", "class_texture_pack_repository.html#a9804d45fb83862bac7ed8d46a9985714", null ],
+    [ "isUsingWebSkin", "class_texture_pack_repository.html#a6f78f88576bfd421208461c43725485e", null ],
+    [ "needsUIUpdate", "class_texture_pack_repository.html#a29777a5c4b69f8c8e2b3301e546db467", null ],
+    [ "resetWebSkin", "class_texture_pack_repository.html#aa72723a6468ffc2ea734ed7a49f00de9", null ],
+    [ "selectSkin", "class_texture_pack_repository.html#af02d1c99f120e678ae9d4f81b9acc527", null ],
+    [ "selectTexturePackById", "class_texture_pack_repository.html#a01bea020fba02bb7819956334c28cc41", null ],
+    [ "selectWebSkin", "class_texture_pack_repository.html#a5706f8eb22da82bce80d2ecc43390e11", null ],
+    [ "shouldPromptForWebSkin", "class_texture_pack_repository.html#a15493ef77b821a02ede97ae072dd4edf", null ],
+    [ "updateList", "class_texture_pack_repository.html#add0b326b8aa2128c692526aa76af7513", null ],
+    [ "updateUI", "class_texture_pack_repository.html#ae36d9ea52b4b4487f7760607050b8bf7", null ]
+];

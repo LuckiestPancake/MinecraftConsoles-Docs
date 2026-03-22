@@ -1,0 +1,26 @@
+var class_game_rule_definition =
+[
+    [ "GameRuleDefinition", "class_game_rule_definition.html#a1850a2a63c2f18610f4fa0ca01d9cd52", null ],
+    [ "addAttribute", "class_game_rule_definition.html#a8a6a6da766848d473adc78e67ef9d981", null ],
+    [ "addChild", "class_game_rule_definition.html#ab82635f59722c9096c21f434ee209e55", null ],
+    [ "enumerate", "class_game_rule_definition.html#afef6332833881140f88aad9298e0f3d6", null ],
+    [ "enumerateMap", "class_game_rule_definition.html#a276fb204f6ca33791045ff7312c39b6f", null ],
+    [ "getActionType", "class_game_rule_definition.html#aa6352b2f7d124676da2da810f172f7b8", null ],
+    [ "getAuxValue", "class_game_rule_definition.html#a8843669ed127ce2668aa0226eb4dfec7", null ],
+    [ "getChildren", "class_game_rule_definition.html#a542f3196f1ca234ec5158ea4ebef7702", null ],
+    [ "getComplete", "class_game_rule_definition.html#abac18a3e1b7ab6d965e44092410de67e", null ],
+    [ "getGoal", "class_game_rule_definition.html#ab9202c773252238d41a4ef0e496ca553", null ],
+    [ "getIcon", "class_game_rule_definition.html#a1c78b963e09163db0f2211d24ef5c9e0", null ],
+    [ "getProgress", "class_game_rule_definition.html#a8750582fc0cbd9fcb364bff8020bf267", null ],
+    [ "onCollectItem", "class_game_rule_definition.html#a4a7f3c4ce03ce23c38341769a986a44a", null ],
+    [ "onUseTile", "class_game_rule_definition.html#a76ec337878d536bf3055fa275785291d", null ],
+    [ "populateGameRule", "class_game_rule_definition.html#a58624289b2e7feaafc34d45584fac40c", null ],
+    [ "postProcessPlayer", "class_game_rule_definition.html#aa04707241642a63eb395b2fe198e0b6f", null ],
+    [ "setComplete", "class_game_rule_definition.html#a530cf6a22ab7e1f77988a12c4e57104b", null ],
+    [ "setOwnerType", "class_game_rule_definition.html#a26ad2ad203bf04f761124bdbdd64c93c", null ],
+    [ "write", "class_game_rule_definition.html#a1641ed0c7b912f6ffcc21c30dc6f2f80", null ],
+    [ "writeAttributes", "class_game_rule_definition.html#a769dc157b9603c87e8af6a4e603df05a", null ],
+    [ "m_4JDataValue", "class_game_rule_definition.html#a36589037074ca7f9ad37e1141a3a28ae", null ],
+    [ "m_descriptionId", "class_game_rule_definition.html#a5ccd30a3a36a18cb5b6e26a6dae80f68", null ],
+    [ "m_promptId", "class_game_rule_definition.html#a326d280a0a833240e3f5d5460faa55cb", null ]
+];

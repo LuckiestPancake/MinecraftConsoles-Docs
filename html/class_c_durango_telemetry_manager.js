@@ -1,0 +1,26 @@
+var class_c_durango_telemetry_manager =
+[
+    [ "CDurangoTelemetryManager", "class_c_durango_telemetry_manager.html#a85430dd5acf55c3803c92da55fbab2d7", null ],
+    [ "durangoStats", "class_c_durango_telemetry_manager.html#a10abb67c96c1f0d2e03751f88f096ca8", null ],
+    [ "guid2str", "class_c_durango_telemetry_manager.html#abba6ae8ad2845e5fb6d86b48b43d1c45", null ],
+    [ "RecordAchievementUnlocked", "class_c_durango_telemetry_manager.html#a0489aa5dcd178e8e55c1f87fe01b6648", null ],
+    [ "RecordBanLevel", "class_c_durango_telemetry_manager.html#a2a8cb0a7c139d98ea0c404554534ee8f", null ],
+    [ "RecordEnemyKilledOrOvercome", "class_c_durango_telemetry_manager.html#a7af418ca42c6c0e568ae2e02a7fa5943", null ],
+    [ "RecordLevelExit", "class_c_durango_telemetry_manager.html#a6e84847eb0875e888aae9a36b2352d87", null ],
+    [ "RecordLevelResume", "class_c_durango_telemetry_manager.html#aec6d8f87d5a3f62e7844f76592e0f08e", null ],
+    [ "RecordLevelSaveOrCheckpoint", "class_c_durango_telemetry_manager.html#ad8165643de1237db158ae6492af8c360", null ],
+    [ "RecordLevelStart", "class_c_durango_telemetry_manager.html#a34a2e0295471624d1442b30bb80fadd1", null ],
+    [ "RecordMediaShareUpload", "class_c_durango_telemetry_manager.html#a569fa2615cae986c9df3ea5176d29cf6", null ],
+    [ "RecordMenuShown", "class_c_durango_telemetry_manager.html#a57814a8a964b2ce9e557332542ab429d", null ],
+    [ "RecordPauseOrInactive", "class_c_durango_telemetry_manager.html#a83e272e64767df44cc32db150d0533a4", null ],
+    [ "RecordPlayerDiedOrFailed", "class_c_durango_telemetry_manager.html#af49884712717b4efce3a52bf97ca1fae", null ],
+    [ "RecordPlayerSessionExit", "class_c_durango_telemetry_manager.html#a649291d4c2723c20a04a183a3a8986bb", null ],
+    [ "RecordPlayerSessionStart", "class_c_durango_telemetry_manager.html#a6ae56968ecddd70e67b88f771282cbc3", null ],
+    [ "RecordSkinChanged", "class_c_durango_telemetry_manager.html#ab808b4017975a96975a822ccf779f709", null ],
+    [ "RecordTexturePackLoaded", "class_c_durango_telemetry_manager.html#ac3609f0f3c4a6d62c6499bce917c03c9", null ],
+    [ "RecordUnBanLevel", "class_c_durango_telemetry_manager.html#aa46cd756b09090abd7ad86074733cc02", null ],
+    [ "RecordUnpauseOrActive", "class_c_durango_telemetry_manager.html#a01d1b497643366eb146652d585622280", null ],
+    [ "RecordUpsellPresented", "class_c_durango_telemetry_manager.html#a766dd518b7b80a294fb477259129b34a", null ],
+    [ "RecordUpsellResponded", "class_c_durango_telemetry_manager.html#a08bfb723d6d9b95c7da85b71c2128229", null ],
+    [ "m_multiplayerRoundStartTimes", "class_c_durango_telemetry_manager.html#af94349c4c223200705c9a1490ee2e866", null ]
+];

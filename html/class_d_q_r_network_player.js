@@ -1,0 +1,35 @@
+var class_d_q_r_network_player =
+[
+    [ "eDQRNetworkPlayerType", "class_d_q_r_network_player.html#adbe1755a2c2e7d770d6cab27f7633972", [
+      [ "DNP_TYPE_HOST", "class_d_q_r_network_player.html#adbe1755a2c2e7d770d6cab27f7633972a5d8740d257b5c2254c7f5e1bf10dedb0", null ],
+      [ "DNP_TYPE_LOCAL", "class_d_q_r_network_player.html#adbe1755a2c2e7d770d6cab27f7633972ab36d3ec5b2ce44117f0bb35ea36562b8", null ],
+      [ "DNP_TYPE_REMOTE", "class_d_q_r_network_player.html#adbe1755a2c2e7d770d6cab27f7633972a89c2a5e7d3ae8b998f93fad68d76911c", null ]
+    ] ],
+    [ "DQRNetworkPlayer", "class_d_q_r_network_player.html#a75af7401de33374626ed7c0f9616486f", null ],
+    [ "DQRNetworkPlayer", "class_d_q_r_network_player.html#a59d168dab439a22be1dd11d17054a52b", null ],
+    [ "~DQRNetworkPlayer", "class_d_q_r_network_player.html#a8e68a1202ba92c44115a9bb5f8098feb", null ],
+    [ "GetCustomDataValue", "class_d_q_r_network_player.html#a3c2a5e50953e7394cceda15763120d9a", null ],
+    [ "GetDisplayName", "class_d_q_r_network_player.html#ae8d7f5166d0489d66f25cb0a3f082192", null ],
+    [ "GetGamertag", "class_d_q_r_network_player.html#ab621aaae33f998ac81735ba5a62c7637", null ],
+    [ "GetLocalPlayerIndex", "class_d_q_r_network_player.html#ada82fb73bf2510c14722bc89b55010a6", null ],
+    [ "GetName", "class_d_q_r_network_player.html#a19e78d9abaa3ccf43e1afb46bccb9af7", null ],
+    [ "GetSendQueueSizeBytes", "class_d_q_r_network_player.html#a01f6b9c15fb071982be806619046d5cc", null ],
+    [ "GetSendQueueSizeMessages", "class_d_q_r_network_player.html#ace9c20c779fde0227667395d9d5fb005", null ],
+    [ "GetSessionIndex", "class_d_q_r_network_player.html#a40cf83ea2201d659a0a328a0bbdd64f6", null ],
+    [ "GetSmallId", "class_d_q_r_network_player.html#aeae5b383be701a1a3d6af433820f8aab", null ],
+    [ "GetUID", "class_d_q_r_network_player.html#a38e86343f8eb1022d5de3448921c5473", null ],
+    [ "HasCamera", "class_d_q_r_network_player.html#a86505d07314e7958f206d136ef8b67ac", null ],
+    [ "HasVoice", "class_d_q_r_network_player.html#aa27e3194eb60a32bd8e08cf2c037e99d", null ],
+    [ "IsHost", "class_d_q_r_network_player.html#ab7f6600cbe13ff01c78fc9df6776a066", null ],
+    [ "IsLocal", "class_d_q_r_network_player.html#ab3f8ac68f78b6c97dcdb87fb73f9084a", null ],
+    [ "IsRemote", "class_d_q_r_network_player.html#a10e1423ed567296ba03f850d95e623d4", null ],
+    [ "IsSameSystem", "class_d_q_r_network_player.html#a295da005945b03e46e8769da993c5785", null ],
+    [ "IsTalking", "class_d_q_r_network_player.html#aff448219857a892969dce53877dc2c52", null ],
+    [ "SendData", "class_d_q_r_network_player.html#a7bb912b7402ce7a35fc50b186b37f1ab", null ],
+    [ "SetCustomDataValue", "class_d_q_r_network_player.html#a75716458523fb9f7f057d76524b4873c", null ],
+    [ "SetDisplayName", "class_d_q_r_network_player.html#abe8c4d97447b59a926962969faebe12a", null ],
+    [ "SetName", "class_d_q_r_network_player.html#a4c91a34fb1b6eeb43b871aeefe1ae0f5", null ],
+    [ "SetSmallId", "class_d_q_r_network_player.html#a426fe173b5ecbf039c65335b7f777dd2", null ],
+    [ "SetUID", "class_d_q_r_network_player.html#a065abcc3ababf2338f0a461feeb808e3", null ],
+    [ "DQRNetworkManager", "class_d_q_r_network_player.html#afd2f7367b9dab5f9cd9cbe4797943613", null ]
+];

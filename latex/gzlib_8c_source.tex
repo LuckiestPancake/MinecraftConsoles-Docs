@@ -1,0 +1,615 @@
+\doxysection{gzlib.\+c}
+\hypertarget{gzlib_8c_source}{}\label{gzlib_8c_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/zlib/gzlib.c@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/zlib/gzlib.c}}
+\doxymbox{\hyperlink{gzlib_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00001}00001\ \textcolor{comment}{/*\ gzlib.c\ -\/-\/\ zlib\ functions\ common\ to\ reading\ and\ writing\ gzip\ files}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00002}00002\ \textcolor{comment}{\ *\ Copyright\ (C)\ 2004-\/2026\ Mark\ Adler}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00003}00003\ \textcolor{comment}{\ *\ For\ conditions\ of\ distribution\ and\ use,\ see\ copyright\ notice\ in\ zlib.h}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00004}00004\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{gzguts_8h}{gzguts.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00008}00008\ \textcolor{preprocessor}{\#if\ defined(\_\_DJGPP\_\_)}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00009}00009\ \textcolor{preprocessor}{\#\ \ define\ LSEEK\ llseek}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00010}00010\ \textcolor{preprocessor}{\#elif\ defined(\_WIN32)\ \&\&\ !defined(\_\_BORLANDC\_\_)\ \&\&\ !defined(UNDER\_CE)}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00011}00011\ \textcolor{preprocessor}{\#\ \ define\ LSEEK\ \_lseeki64}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00012}00012\ \textcolor{preprocessor}{\#elif\ defined(\_LARGEFILE64\_SOURCE)\ \&\&\ \_LFS64\_LARGEFILE-\/0}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00013}00013\ \textcolor{preprocessor}{\#\ \ define\ LSEEK\ lseek64}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00014}00014\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00015}\doxymbox{\hyperlink{gzlib_8c_ad9ef8c774e19ef27832f682082179824}{00015}}\ \textcolor{preprocessor}{\#\ \ define\ LSEEK\ lseek}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00016}00016\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00018}00018\ \textcolor{preprocessor}{\#if\ defined\ UNDER\_CE}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00020}00020\ \textcolor{comment}{/*\ Map\ the\ Windows\ error\ number\ in\ ERROR\ to\ a\ locale-\/dependent\ error\ message}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00021}00021\ \textcolor{comment}{\ \ \ string\ and\ return\ a\ pointer\ to\ it.\ \ Typically,\ the\ values\ for\ ERROR\ come}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00022}00022\ \textcolor{comment}{\ \ \ from\ GetLastError.}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00023}00023\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00024}00024\ \textcolor{comment}{\ \ \ The\ string\ pointed\ to\ shall\ not\ be\ modified\ by\ the\ application,\ but\ may\ be}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00025}00025\ \textcolor{comment}{\ \ \ overwritten\ by\ a\ subsequent\ call\ to\ gz\_strwinerror}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00026}00026\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00027}00027\ \textcolor{comment}{\ \ \ The\ gz\_strwinerror\ function\ does\ not\ change\ the\ current\ setting\ of}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00028}00028\ \textcolor{comment}{\ \ \ GetLastError.\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00029}00029\ \textcolor{keywordtype}{char}\ \doxymbox{\hyperlink{compress_8c_a59d4d7ef4d73655c759211ec33a5d44f}{ZLIB\_INTERNAL}}\ *gz\_strwinerror(\doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ error)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00030}00030\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}[1024];}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00032}00032\ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ *msgbuf;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00033}00033\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ lasterr\ =\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a150d4c72936fc456260278e24be1221c}{GetLastError}}();}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00034}00034\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ chars\ =\ FormatMessage(FORMAT\_MESSAGE\_FROM\_SYSTEM}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00035}00035\ \ \ \ \ \ \ \ \ |\ FORMAT\_MESSAGE\_ALLOCATE\_BUFFER,}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00036}00036\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}},}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00037}00037\ \ \ \ \ \ \ \ \ error,}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00038}00038\ \ \ \ \ \ \ \ \ 0,\ \textcolor{comment}{/*\ Default\ language\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00039}00039\ \ \ \ \ \ \ \ \ (\doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}})\&msgbuf,}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00040}00040\ \ \ \ \ \ \ \ \ 0,}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00041}00041\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}});}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00042}00042\ \ \ \ \ \textcolor{keywordflow}{if}\ (chars\ !=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00043}00043\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ If\ there\ is\ an\ \(\backslash\)r\(\backslash\)n\ appended,\ zap\ it.\ \ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (chars\ >=\ 2}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \&\&\ msgbuf[chars\ -\/\ 2]\ ==\ \textcolor{charliteral}{'\(\backslash\)r'}\ \&\&\ msgbuf[chars\ -\/\ 1]\ ==\ \textcolor{charliteral}{'\(\backslash\)n'})\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ chars\ -\/=\ 2;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ msgbuf[chars]\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00048}00048\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (chars\ >\ \textcolor{keyword}{sizeof}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}})\ -\/\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ chars\ =\ \textcolor{keyword}{sizeof}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}})\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ msgbuf[chars]\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00053}00053\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00055}00055\ \ \ \ \ \ \ \ \ wcstombs(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ msgbuf,\ chars\ +\ 1);\ \ \ \ \ \ \ \textcolor{comment}{/*\ assumes\ buf\ is\ big\ enough\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00056}00056\ \ \ \ \ \ \ \ \ LocalFree(msgbuf);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00057}00057\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00058}00058\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00059}00059\ \ \ \ \ \ \ \ \ sprintf(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ \textcolor{stringliteral}{"{}unknown\ win32\ error\ (\%ld)"{}},\ error);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00060}00060\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00062}00062\ \ \ \ \ SetLastError(lasterr);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00063}00063\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00064}00064\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00066}00066\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ UNDER\_CE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00068}00068\ \textcolor{comment}{/*\ Reset\ gzip\ file\ state\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00069}\doxymbox{\hyperlink{gzlib_8c_adf90cf73d89c3f60170da1831a818adc}{00069}}\ \doxymbox{\hyperlink{gzguts_8h_a08023ea6765c99d60a6a3840cd07156e}{local}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{gzlib_8c_adf90cf73d89c3f60170da1831a818adc}{gz\_reset}}(\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00070}00070\ \ \ \ \ state-\/>x.have\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ no\ output\ data\ available\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00071}00071\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ ==\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}})\ \{\ \ \ \textcolor{comment}{/*\ for\ reading\ ...\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00072}00072\ \ \ \ \ \ \ \ \ state-\/>eof\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ not\ at\ end\ of\ file\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00073}00073\ \ \ \ \ \ \ \ \ state-\/>past\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ have\ not\ read\ past\ end\ yet\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00074}00074\ \ \ \ \ \ \ \ \ state-\/>how\ =\ \doxymbox{\hyperlink{gzguts_8h_a6d13af6430ff1d6f44ece076ff35b04f}{LOOK}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ look\ for\ gzip\ header\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00075}00075\ \ \ \ \ \ \ \ \ state-\/>junk\ =\ -\/1;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ mark\ first\ member\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00076}00076\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{else}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ for\ writing\ ...\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00078}00078\ \ \ \ \ \ \ \ \ state-\/>reset\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ no\ deflateReset\ pending\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00079}00079\ \ \ \ \ state-\/>again\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ no\ stalled\ i/o\ yet\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00080}00080\ \ \ \ \ state-\/>skip\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ no\ seek\ request\ pending\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00081}00081\ \ \ \ \ \doxymbox{\hyperlink{gzlib_8c_abfa9d832c83a5f58ad064e1a617ae910}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}},\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}});\ \ \ \ \textcolor{comment}{/*\ clear\ error\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00082}00082\ \ \ \ \ state-\/>x.pos\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ no\ uncompressed\ data\ yet\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00083}00083\ \ \ \ \ state-\/>strm.avail\_in\ =\ 0;\ \ \ \ \ \ \ \textcolor{comment}{/*\ no\ input\ data\ yet\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00084}00084\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00086}00086\ \textcolor{comment}{/*\ Open\ a\ gzip\ file\ either\ by\ name\ or\ file\ descriptor.\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00087}\doxymbox{\hyperlink{gzlib_8c_a2e2bb313b16c67d77fd58e03f3ffac2d}{00087}}\ \doxymbox{\hyperlink{gzguts_8h_a08023ea6765c99d60a6a3840cd07156e}{local}}\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ \doxymbox{\hyperlink{gzlib_8c_a2e2bb313b16c67d77fd58e03f3ffac2d}{gz\_open}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *path,\ \textcolor{keywordtype}{int}\ fd,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mode)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00088}00088\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00089}00089\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ len;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00090}00090\ \ \ \ \ \textcolor{keywordtype}{int}\ oflag\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00091}00091\ \textcolor{preprocessor}{\#ifdef\ O\_EXCL}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00092}00092\ \ \ \ \ \textcolor{keywordtype}{int}\ exclusive\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00093}00093\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00095}00095\ \ \ \ \ \textcolor{comment}{/*\ check\ input\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00096}00096\ \ \ \ \ \textcolor{keywordflow}{if}\ (path\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ ||\ mode\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00099}00099\ \ \ \ \ \textcolor{comment}{/*\ allocate\ gzFile\ structure\ to\ return\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00100}00100\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})\doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(\textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{structgz__state}{gz\_state}}));}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00101}00101\ \ \ \ \ \textcolor{keywordflow}{if}\ (state\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00103}00103\ \ \ \ \ state-\/>size\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ no\ buffers\ allocated\ yet\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00104}00104\ \ \ \ \ state-\/>want\ =\ \doxymbox{\hyperlink{gzguts_8h_ac7601d319250861159389e68594fd72e}{GZBUFSIZE}};\ \ \ \ \textcolor{comment}{/*\ requested\ buffer\ size\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00105}00105\ \ \ \ \ state-\/>err\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ no\ error\ yet\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00106}00106\ \ \ \ \ state-\/>msg\ =\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ no\ error\ message\ yet\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00108}00108\ \ \ \ \ \textcolor{comment}{/*\ interpret\ mode\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00109}00109\ \ \ \ \ state-\/>mode\ =\ \doxymbox{\hyperlink{gzguts_8h_afe4b4578cd8417c83de400ece282ac3b}{GZ\_NONE}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00110}00110\ \ \ \ \ state-\/>level\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_af5387baee05124298e431ebe6fe96b17}{Z\_DEFAULT\_COMPRESSION}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00111}00111\ \ \ \ \ state-\/>strategy\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a580d7c2527e653ddd783109271750849}{Z\_DEFAULT\_STRATEGY}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00112}00112\ \ \ \ \ state-\/>direct\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00113}00113\ \ \ \ \ \textcolor{keywordflow}{while}\ (*mode)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00114}00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (*mode\ >=\ \textcolor{charliteral}{'0'}\ \&\&\ *mode\ <=\ \textcolor{charliteral}{'9'})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>level\ =\ *mode\ -\/\ \textcolor{charliteral}{'0'};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00116}00116\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (*mode)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'r'}:}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>mode\ =\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00121}00121\ \textcolor{preprocessor}{\#ifndef\ NO\_GZCOMPRESS}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'w'}:}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>mode\ =\ \doxymbox{\hyperlink{gzguts_8h_a357c4f5723c26966ed9d68c9bd6490c0}{GZ\_WRITE}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'a'}:}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>mode\ =\ \doxymbox{\hyperlink{gzguts_8h_aae0a1795746b0a2cb7989d2898280a19}{GZ\_APPEND}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00128}00128\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'+'}:\ \ \ \ \ \ \ \textcolor{comment}{/*\ can't\ read\ and\ write\ at\ the\ same\ time\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'b'}:\ \ \ \ \ \ \ \textcolor{comment}{/*\ ignore\ -\/-\/\ will\ request\ binary\ anyway\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00134}00134\ \textcolor{preprocessor}{\#ifdef\ O\_CLOEXEC}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'e'}:}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ oflag\ |=\ O\_CLOEXEC;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00138}00138\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00139}00139\ \textcolor{preprocessor}{\#ifdef\ O\_EXCL}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'x'}:}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ exclusive\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00143}00143\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'f'}:}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>strategy\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_af01ccb5a9db8d415cde987d9553ad200}{Z\_FILTERED}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'h'}:}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>strategy\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a1eec3d3720ba91fd54fa08d2757c1785}{Z\_HUFFMAN\_ONLY}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'R'}:}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>strategy\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_af52c1220e7193d2da78332d75f9251ea}{Z\_RLE}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'F'}:}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>strategy\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_aaa5c996fbc985d5ec43f99112c0ac4a6}{Z\_FIXED}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'G'}:}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>direct\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00159}00159\ \textcolor{preprocessor}{\#ifdef\ O\_NONBLOCK}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'N'}:}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ oflag\ |=\ O\_NONBLOCK;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00163}00163\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{charliteral}{'T'}:}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>direct\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ could\ consider\ as\ an\ error,\ but\ just\ ignore\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00170}00170\ \ \ \ \ \ \ \ \ mode++;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00171}00171\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00173}00173\ \ \ \ \ \textcolor{comment}{/*\ must\ provide\ an\ "{}r"{},\ "{}w"{},\ or\ "{}a"{}\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00174}00174\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ ==\ \doxymbox{\hyperlink{gzguts_8h_afe4b4578cd8417c83de400ece282ac3b}{GZ\_NONE}})\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00175}00175\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00176}00176\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00177}00177\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00178}00178\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00179}00179\ \ \ \ \ \textcolor{comment}{/*\ direct\ is\ 0,\ 1\ if\ "{}T"{},\ or\ -\/1\ if\ "{}G"{}\ (last\ "{}G"{}\ or\ "{}T"{}\ wins)\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00180}00180\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ ==\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}})\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00181}00181\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>direct\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ can't\ force\ a\ transparent\ read\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00185}00185\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00186}00186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>direct\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ default\ when\ reading\ is\ auto-\/detect\ of\ gzip\ vs.\ transparent\ -\/-\/}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00188}00188\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ start\ with\ a\ transparent\ assumption\ in\ case\ of\ an\ empty\ file\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>direct\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00190}00190\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00191}00191\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (state-\/>direct\ ==\ -\/1)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00192}00192\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ "{}G"{}\ has\ no\ meaning\ when\ writing\ -\/-\/\ disallow\ it\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00193}00193\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00194}00194\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00195}00195\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00196}00196\ \ \ \ \ \textcolor{comment}{/*\ if\ reading,\ direct\ ==\ 1\ for\ auto-\/detect,\ -\/1\ for\ gzip\ only;\ if\ writing\ or}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00197}00197\ \textcolor{comment}{\ \ \ \ \ \ \ appending,\ direct\ ==\ 0\ for\ gzip,\ 1\ for\ transparent\ (copy\ in\ to\ out)\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00199}00199\ \ \ \ \ \textcolor{comment}{/*\ save\ the\ path\ name\ for\ error\ messages\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00200}00200\ \textcolor{preprocessor}{\#ifdef\ WIDECHAR}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00201}00201\ \ \ \ \ \textcolor{keywordflow}{if}\ (fd\ ==\ -\/2)}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00202}00202\ \ \ \ \ \ \ \ \ len\ =\ wcstombs(\doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}},\ path,\ 0);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00203}00203\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00204}00204\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00205}00205\ \ \ \ \ \ \ \ \ len\ =\ strlen((\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *)path);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00206}00206\ \ \ \ \ state-\/>path\ =\ (\textcolor{keywordtype}{char}\ *)\doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(len\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00207}00207\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>path\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00208}00208\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00209}00209\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00210}00210\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00211}00211\ \textcolor{preprocessor}{\#ifdef\ WIDECHAR}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00212}00212\ \ \ \ \ \textcolor{keywordflow}{if}\ (fd\ ==\ -\/2)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00213}00213\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (len)}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ wcstombs(state-\/>path,\ path,\ len\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00215}00215\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ *(state-\/>path)\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00217}00217\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00218}00218\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00219}00219\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00220}00220\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00221}00221\ \textcolor{preprocessor}{\#if\ !defined(NO\_snprintf)\ \&\&\ !defined(NO\_vsnprintf)}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00222}00222\ \ \ \ \ \ \ \ \ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}})snprintf(state-\/>path,\ len\ +\ 1,\ \textcolor{stringliteral}{"{}\%s"{}},\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *)path);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00223}00223\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00224}00224\ \ \ \ \ \ \ \ \ strcpy(state-\/>path,\ path);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00225}00225\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00226}00226\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00227}00227\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00228}00228\ \ \ \ \ \textcolor{comment}{/*\ compute\ the\ flags\ for\ open()\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00229}00229\ \ \ \ \ oflag\ |=}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00230}00230\ \textcolor{preprocessor}{\#ifdef\ O\_LARGEFILE}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00231}00231\ \ \ \ \ \ \ \ \ O\_LARGEFILE\ |}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00232}00232\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00233}00233\ \textcolor{preprocessor}{\#ifdef\ O\_BINARY}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00234}00234\ \ \ \ \ \ \ \ \ O\_BINARY\ |}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00235}00235\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00236}00236\ \ \ \ \ \ \ \ \ (state-\/>mode\ ==\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}}\ ?}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00237}00237\ \ \ \ \ \ \ \ \ \ O\_RDONLY\ :}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00238}00238\ \ \ \ \ \ \ \ \ \ (O\_WRONLY\ |\ O\_CREAT\ |}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00239}00239\ \textcolor{preprocessor}{\#ifdef\ O\_EXCL}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ (exclusive\ ?\ O\_EXCL\ :\ 0)\ |}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00241}00241\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ (state-\/>mode\ ==\ \doxymbox{\hyperlink{gzguts_8h_a357c4f5723c26966ed9d68c9bd6490c0}{GZ\_WRITE}}\ ?}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ O\_TRUNC\ :}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ O\_APPEND)));}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00245}00245\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00246}00246\ \ \ \ \ \textcolor{comment}{/*\ open\ the\ file\ with\ the\ appropriate\ flags\ (or\ just\ use\ fd)\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00247}00247\ \ \ \ \ \textcolor{keywordflow}{if}\ (fd\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00248}00248\ \ \ \ \ \ \ \ \ state-\/>fd\ =\ open((\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *)path,\ oflag,\ 0666);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00249}00249\ \textcolor{preprocessor}{\#ifdef\ WIDECHAR}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00250}00250\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (fd\ ==\ -\/2)}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00251}00251\ \ \ \ \ \ \ \ \ state-\/>fd\ =\ \_wopen(path,\ oflag,\ \_S\_IREAD\ |\ \_S\_IWRITE);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00252}00252\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00253}00253\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00254}00254\ \textcolor{preprocessor}{\#ifdef\ O\_NONBLOCK}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00255}00255\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (oflag\ \&\ O\_NONBLOCK)}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ fcntl(fd,\ F\_SETFL,\ fcntl(fd,\ F\_GETFL)\ |\ O\_NONBLOCK);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00257}00257\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00258}00258\ \textcolor{preprocessor}{\#ifdef\ O\_CLOEXEC}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00259}00259\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (oflag\ \&\ O\_CLOEXEC)}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ fcntl(fd,\ F\_SETFD,\ fcntl(fd,\ F\_GETFD)\ |\ O\_CLOEXEC);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00261}00261\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00262}00262\ \ \ \ \ \ \ \ \ state-\/>fd\ =\ fd;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00263}00263\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00264}00264\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>fd\ ==\ -\/1)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00265}00265\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state-\/>path);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00266}00266\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00267}00267\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00268}00268\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00269}00269\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ ==\ \doxymbox{\hyperlink{gzguts_8h_aae0a1795746b0a2cb7989d2898280a19}{GZ\_APPEND}})\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00270}00270\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzlib_8c_ad9ef8c774e19ef27832f682082179824}{LSEEK}}(state-\/>fd,\ 0,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ad2a2e6c114780c3071efd24f16c7f7d8}{SEEK\_END}});\ \ \textcolor{comment}{/*\ so\ gzoffset()\ is\ correct\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00271}00271\ \ \ \ \ \ \ \ \ state-\/>mode\ =\ \doxymbox{\hyperlink{gzguts_8h_a357c4f5723c26966ed9d68c9bd6490c0}{GZ\_WRITE}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ simplify\ later\ checks\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00272}00272\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00273}00273\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00274}00274\ \ \ \ \ \textcolor{comment}{/*\ save\ the\ current\ position\ for\ rewinding\ (only\ if\ reading)\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00275}00275\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ ==\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}})\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00276}00276\ \ \ \ \ \ \ \ \ state-\/>start\ =\ \doxymbox{\hyperlink{gzlib_8c_ad9ef8c774e19ef27832f682082179824}{LSEEK}}(state-\/>fd,\ 0,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a4c8d0b76b470ba65a43ca46a88320f39}{SEEK\_CUR}});}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00277}00277\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>start\ ==\ -\/1)\ state-\/>start\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00278}00278\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00279}00279\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00280}00280\ \ \ \ \ \textcolor{comment}{/*\ initialize\ stream\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00281}00281\ \ \ \ \ \doxymbox{\hyperlink{gzlib_8c_adf90cf73d89c3f60170da1831a818adc}{gz\_reset}}(state);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00283}00283\ \ \ \ \ \textcolor{comment}{/*\ return\ stream\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00284}00284\ \ \ \ \ \textcolor{keywordflow}{return}\ (\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}})state;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00285}00285\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00287}00287\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00288}\doxymbox{\hyperlink{gzlib_8c_ac4000b37811f67258e70d68bf5108332}{00288}}\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzlib_8c_ac4000b37811f67258e70d68bf5108332}{gzopen}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mode)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00289}00289\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{gzlib_8c_a2e2bb313b16c67d77fd58e03f3ffac2d}{gz\_open}}(path,\ -\/1,\ mode);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00290}00290\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00291}00291\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00292}00292\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00293}\doxymbox{\hyperlink{gzguts_8h_ad5712df8179e28aba0999ff1bcefe73c}{00293}}\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzlib_8c_a6ef81131bcc66eef4183431c814e6905}{gzopen64}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mode)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00294}00294\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{gzlib_8c_a2e2bb313b16c67d77fd58e03f3ffac2d}{gz\_open}}(path,\ -\/1,\ mode);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00295}00295\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00297}00297\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00298}\doxymbox{\hyperlink{gzlib_8c_a8f2a01545223ba6b825118addb6f1534}{00298}}\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzlib_8c_a8f2a01545223ba6b825118addb6f1534}{gzdopen}}(\textcolor{keywordtype}{int}\ fd,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mode)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00299}00299\ \ \ \ \ \textcolor{keywordtype}{char}\ *path;\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ identifier\ for\ error\ messages\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00300}00300\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ gz;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00301}00301\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00302}00302\ \ \ \ \ \textcolor{keywordflow}{if}\ (fd\ ==\ -\/1\ ||\ (path\ =\ (\textcolor{keywordtype}{char}\ *)\doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(7\ +\ 3\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})))\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00303}00303\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00304}00304\ \textcolor{preprocessor}{\#if\ !defined(NO\_snprintf)\ \&\&\ !defined(NO\_vsnprintf)}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00305}00305\ \ \ \ \ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}})snprintf(path,\ 7\ +\ 3\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}),\ \textcolor{stringliteral}{"{}<fd:\%d>"{}},\ fd);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00306}00306\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00307}00307\ \ \ \ \ sprintf(path,\ \textcolor{stringliteral}{"{}<fd:\%d>"{}},\ fd);\ \ \ \textcolor{comment}{/*\ for\ debugging\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00308}00308\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00309}00309\ \ \ \ \ gz\ =\ \doxymbox{\hyperlink{gzlib_8c_a2e2bb313b16c67d77fd58e03f3ffac2d}{gz\_open}}(path,\ fd,\ mode);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00310}00310\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(path);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00311}00311\ \ \ \ \ \textcolor{keywordflow}{return}\ gz;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00312}00312\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00314}00314\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00315}00315\ \textcolor{preprocessor}{\#ifdef\ WIDECHAR}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00316}00316\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ gzopen\_w(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *path,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mode)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00317}00317\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{gzlib_8c_a2e2bb313b16c67d77fd58e03f3ffac2d}{gz\_open}}(path,\ -\/2,\ mode);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00318}00318\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00319}00319\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00320}00320\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00321}00321\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00322}\doxymbox{\hyperlink{gzlib_8c_adf4445db10e759b98f48f08826f1aa29}{00322}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzlib_8c_adf4445db10e759b98f48f08826f1aa29}{gzbuffer}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file,\ \textcolor{keywordtype}{unsigned}\ size)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00323}00323\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00324}00324\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00325}00325\ \ \ \ \ \textcolor{comment}{/*\ get\ internal\ structure\ and\ check\ integrity\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00326}00326\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00327}00327\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00328}00328\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00329}00329\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}}\ \&\&\ state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a357c4f5723c26966ed9d68c9bd6490c0}{GZ\_WRITE}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00330}00330\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00331}00331\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00332}00332\ \ \ \ \ \textcolor{comment}{/*\ make\ sure\ we\ haven't\ already\ allocated\ memory\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00333}00333\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>size\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00334}00334\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00336}00336\ \ \ \ \ \textcolor{comment}{/*\ check\ and\ set\ requested\ size\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00337}00337\ \ \ \ \ \textcolor{keywordflow}{if}\ ((size\ <<\ 1)\ <\ size)}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00338}00338\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ need\ to\ be\ able\ to\ double\ it\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00339}00339\ \ \ \ \ \textcolor{keywordflow}{if}\ (size\ <\ 8)}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00340}00340\ \ \ \ \ \ \ \ \ size\ =\ 8;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ needed\ to\ behave\ well\ with\ flushing\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00341}00341\ \ \ \ \ state-\/>want\ =\ size;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00342}00342\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00343}00343\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00344}00344\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00345}00345\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00346}\doxymbox{\hyperlink{gzlib_8c_a3b6bca34940a55ff52fba6f099d065c0}{00346}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzlib_8c_a3b6bca34940a55ff52fba6f099d065c0}{gzrewind}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00347}00347\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00348}00348\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00349}00349\ \ \ \ \ \textcolor{comment}{/*\ get\ internal\ structure\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00350}00350\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00351}00351\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00352}00352\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00353}00353\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00354}00354\ \ \ \ \ \textcolor{comment}{/*\ check\ that\ we're\ reading\ and\ that\ there's\ no\ error\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00355}00355\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}}\ ||}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ (state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}}\ \&\&\ state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a425e2f0664e1b1f75bf2bffab88d353d}{Z\_BUF\_ERROR}}))}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00357}00357\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00358}00358\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00359}00359\ \ \ \ \ \textcolor{comment}{/*\ back\ up\ and\ start\ over\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00360}00360\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{gzlib_8c_ad9ef8c774e19ef27832f682082179824}{LSEEK}}(state-\/>fd,\ state-\/>start,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a0d112bae8fd35be772185b6ec6bcbe64}{SEEK\_SET}})\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00361}00361\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00362}00362\ \ \ \ \ \doxymbox{\hyperlink{gzlib_8c_adf90cf73d89c3f60170da1831a818adc}{gz\_reset}}(state);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00363}00363\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00364}00364\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00365}00365\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00366}00366\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00367}\doxymbox{\hyperlink{gzguts_8h_aa9d816886e0716dcb68d926bbe287325}{00367}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzlib_8c_a0b826c4ce1c145c4bd5437fc04e83a6b}{gzseek64}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}}\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}},\ \textcolor{keywordtype}{int}\ whence)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00368}00368\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00369}00369\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}}\ ret;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00370}00370\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00371}00371\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00372}00372\ \ \ \ \ \textcolor{comment}{/*\ get\ internal\ structure\ and\ check\ integrity\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00373}00373\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00374}00374\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00375}00375\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00376}00376\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}}\ \&\&\ state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a357c4f5723c26966ed9d68c9bd6490c0}{GZ\_WRITE}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00377}00377\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00378}00378\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00379}00379\ \ \ \ \ \textcolor{comment}{/*\ check\ that\ there's\ no\ error\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00380}00380\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}}\ \&\&\ state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a425e2f0664e1b1f75bf2bffab88d353d}{Z\_BUF\_ERROR}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00381}00381\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00383}00383\ \ \ \ \ \textcolor{comment}{/*\ can\ only\ seek\ from\ start\ or\ relative\ to\ current\ position\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00384}00384\ \ \ \ \ \textcolor{keywordflow}{if}\ (whence\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a0d112bae8fd35be772185b6ec6bcbe64}{SEEK\_SET}}\ \&\&\ whence\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a4c8d0b76b470ba65a43ca46a88320f39}{SEEK\_CUR}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00385}00385\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00386}00386\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00387}00387\ \ \ \ \ \textcolor{comment}{/*\ normalize\ offset\ to\ a\ SEEK\_CUR\ specification\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00388}00388\ \ \ \ \ \textcolor{keywordflow}{if}\ (whence\ ==\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a0d112bae8fd35be772185b6ec6bcbe64}{SEEK\_SET}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00389}00389\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ -\/=\ state-\/>x.pos;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00390}00390\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00391}00391\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ +=\ state-\/>past\ ?\ 0\ :\ state-\/>skip;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00392}00392\ \ \ \ \ \ \ \ \ state-\/>skip\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00393}00393\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00394}00394\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00395}00395\ \ \ \ \ \textcolor{comment}{/*\ if\ within\ raw\ area\ while\ reading,\ just\ go\ there\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00396}00396\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ ==\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}}\ \&\&\ state-\/>how\ ==\ \doxymbox{\hyperlink{gzguts_8h_a9e77d621548de2a80bc9c5909bfa2b8a}{COPY}}\ \&\&}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00397}00397\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>x.pos\ +\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ >=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00398}00398\ \ \ \ \ \ \ \ \ ret\ =\ \doxymbox{\hyperlink{gzlib_8c_ad9ef8c774e19ef27832f682082179824}{LSEEK}}(state-\/>fd,\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ -\/\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}})state-\/>x.have,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a4c8d0b76b470ba65a43ca46a88320f39}{SEEK\_CUR}});}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00399}00399\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00401}00401\ \ \ \ \ \ \ \ \ state-\/>x.have\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00402}00402\ \ \ \ \ \ \ \ \ state-\/>eof\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00403}00403\ \ \ \ \ \ \ \ \ state-\/>past\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00404}00404\ \ \ \ \ \ \ \ \ state-\/>skip\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00405}00405\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzlib_8c_abfa9d832c83a5f58ad064e1a617ae910}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}},\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}});}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00406}00406\ \ \ \ \ \ \ \ \ state-\/>strm.avail\_in\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00407}00407\ \ \ \ \ \ \ \ \ state-\/>x.pos\ +=\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00408}00408\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ state-\/>x.pos;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00409}00409\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00410}00410\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00411}00411\ \ \ \ \ \textcolor{comment}{/*\ calculate\ skip\ amount,\ rewinding\ if\ needed\ for\ back\ seek\ when\ reading\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00412}00412\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ <\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00413}00413\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}})\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ writing\ -\/-\/\ can't\ go\ backwards\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00415}00415\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ +=\ state-\/>x.pos;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00416}00416\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ <\ 0)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ before\ start\ of\ file!\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00417}00417\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00418}00418\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{gzlib_8c_a3b6bca34940a55ff52fba6f099d065c0}{gzrewind}}(file)\ ==\ -\/1)\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ rewind,\ then\ skip\ to\ offset\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00420}00420\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00421}00421\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00422}00422\ \ \ \ \ \textcolor{comment}{/*\ if\ reading,\ skip\ what's\ in\ output\ buffer\ (one\ less\ gzgetc()\ check)\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00423}00423\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ ==\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}})\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00424}00424\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ =\ \doxymbox{\hyperlink{gzguts_8h_a87ad28552e786eaa1c31fed1950fdff4}{GT\_OFF}}(state-\/>x.have)\ ||\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}})state-\/>x.have\ >\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ ?}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00425}00425\ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned})\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ :\ state-\/>x.have;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00426}00426\ \ \ \ \ \ \ \ \ state-\/>x.have\ -\/=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00427}00427\ \ \ \ \ \ \ \ \ state-\/>x.next\ +=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00428}00428\ \ \ \ \ \ \ \ \ state-\/>x.pos\ +=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00429}00429\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ -\/=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00430}00430\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00431}00431\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00432}00432\ \ \ \ \ \textcolor{comment}{/*\ request\ skip\ (if\ not\ zero)\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00433}00433\ \ \ \ \ state-\/>skip\ =\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00434}00434\ \ \ \ \ \textcolor{keywordflow}{return}\ state-\/>x.pos\ +\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00435}00435\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00436}00436\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00437}00437\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00438}\doxymbox{\hyperlink{gzlib_8c_a65f5382f62fce418f110877c817b27b7}{00438}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a8cf4661a88ec12823d7cbdd3fa629eb0}{z\_off\_t}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzlib_8c_a65f5382f62fce418f110877c817b27b7}{gzseek}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a8cf4661a88ec12823d7cbdd3fa629eb0}{z\_off\_t}}\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}},\ \textcolor{keywordtype}{int}\ whence)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00439}00439\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}}\ ret;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00440}00440\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00441}00441\ \ \ \ \ ret\ =\ \doxymbox{\hyperlink{gzlib_8c_a0b826c4ce1c145c4bd5437fc04e83a6b}{gzseek64}}(file,\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}})\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}},\ whence);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00442}00442\ \ \ \ \ \textcolor{keywordflow}{return}\ ret\ ==\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a8cf4661a88ec12823d7cbdd3fa629eb0}{z\_off\_t}})ret\ ?\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a8cf4661a88ec12823d7cbdd3fa629eb0}{z\_off\_t}})ret\ :\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00443}00443\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00444}00444\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00445}00445\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00446}\doxymbox{\hyperlink{gzguts_8h_a71de31f164d4b95da8b23004fd67277e}{00446}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzlib_8c_a4e4262939145f46bee50a7913354a7e8}{gztell64}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00447}00447\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00448}00448\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00449}00449\ \ \ \ \ \textcolor{comment}{/*\ get\ internal\ structure\ and\ check\ integrity\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00450}00450\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00451}00451\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00452}00452\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00453}00453\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}}\ \&\&\ state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a357c4f5723c26966ed9d68c9bd6490c0}{GZ\_WRITE}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00454}00454\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00455}00455\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00456}00456\ \ \ \ \ \textcolor{comment}{/*\ return\ position\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00457}00457\ \ \ \ \ \textcolor{keywordflow}{return}\ state-\/>x.\doxymbox{\hyperlink{structgz_file__s_a98038b7edb4ab55ee321fa388afb687e}{pos}}\ +\ (state-\/>past\ ?\ 0\ :\ state-\/>skip);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00458}00458\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00459}00459\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00460}00460\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00461}\doxymbox{\hyperlink{gzlib_8c_ad3f4308666663c0a2510b0c6be031ad8}{00461}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a8cf4661a88ec12823d7cbdd3fa629eb0}{z\_off\_t}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzlib_8c_ad3f4308666663c0a2510b0c6be031ad8}{gztell}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00462}00462\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}}\ ret;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00463}00463\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00464}00464\ \ \ \ \ ret\ =\ \doxymbox{\hyperlink{gzlib_8c_a4e4262939145f46bee50a7913354a7e8}{gztell64}}(file);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00465}00465\ \ \ \ \ \textcolor{keywordflow}{return}\ ret\ ==\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a8cf4661a88ec12823d7cbdd3fa629eb0}{z\_off\_t}})ret\ ?\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a8cf4661a88ec12823d7cbdd3fa629eb0}{z\_off\_t}})ret\ :\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00466}00466\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00467}00467\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00468}00468\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00469}\doxymbox{\hyperlink{gzguts_8h_a9eccefebab7b24da0e3af6c774414c4e}{00469}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzlib_8c_a94ed0b2a86e8f1bfd619a5348688c56c}{gzoffset64}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00470}00470\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}}\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00471}00471\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00472}00472\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00473}00473\ \ \ \ \ \textcolor{comment}{/*\ get\ internal\ structure\ and\ check\ integrity\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00474}00474\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00475}00475\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00476}00476\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00477}00477\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}}\ \&\&\ state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a357c4f5723c26966ed9d68c9bd6490c0}{GZ\_WRITE}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00478}00478\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00479}00479\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00480}00480\ \ \ \ \ \textcolor{comment}{/*\ compute\ and\ return\ effective\ offset\ in\ file\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00481}00481\ \ \ \ \ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ =\ \doxymbox{\hyperlink{gzlib_8c_ad9ef8c774e19ef27832f682082179824}{LSEEK}}(state-\/>fd,\ 0,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a4c8d0b76b470ba65a43ca46a88320f39}{SEEK\_CUR}});}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00482}00482\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00483}00483\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00484}00484\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ ==\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}})\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ reading\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00485}00485\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ -\/=\ state-\/>strm.avail\_in;\ \ \ \ \ \textcolor{comment}{/*\ don't\ count\ buffered\ input\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00486}00486\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00487}00487\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00488}00488\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00489}00489\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00490}\doxymbox{\hyperlink{gzlib_8c_a9d6d48220841221fda5cf17ffc7b0164}{00490}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a8cf4661a88ec12823d7cbdd3fa629eb0}{z\_off\_t}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzlib_8c_a9d6d48220841221fda5cf17ffc7b0164}{gzoffset}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00491}00491\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}}\ ret;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00492}00492\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00493}00493\ \ \ \ \ ret\ =\ \doxymbox{\hyperlink{gzlib_8c_a94ed0b2a86e8f1bfd619a5348688c56c}{gzoffset64}}(file);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00494}00494\ \ \ \ \ \textcolor{keywordflow}{return}\ ret\ ==\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a8cf4661a88ec12823d7cbdd3fa629eb0}{z\_off\_t}})ret\ ?\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a8cf4661a88ec12823d7cbdd3fa629eb0}{z\_off\_t}})ret\ :\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00495}00495\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00496}00496\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00497}00497\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00498}\doxymbox{\hyperlink{gzlib_8c_a824d669e463e728eccc79c6ce57674a0}{00498}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzlib_8c_a824d669e463e728eccc79c6ce57674a0}{gzeof}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00499}00499\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00500}00500\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00501}00501\ \ \ \ \ \textcolor{comment}{/*\ get\ internal\ structure\ and\ check\ integrity\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00502}00502\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00503}00503\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00504}00504\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00505}00505\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}}\ \&\&\ state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a357c4f5723c26966ed9d68c9bd6490c0}{GZ\_WRITE}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00506}00506\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00507}00507\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00508}00508\ \ \ \ \ \textcolor{comment}{/*\ return\ end-\/of-\/file\ state\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00509}00509\ \ \ \ \ \textcolor{keywordflow}{return}\ state-\/>mode\ ==\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}}\ ?\ state-\/>past\ :\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00510}00510\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00511}00511\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00512}00512\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00513}\doxymbox{\hyperlink{gzlib_8c_a99b0d0657ed0d5995dc2a7064ced576e}{00513}}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzlib_8c_a99b0d0657ed0d5995dc2a7064ced576e}{gzerror}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file,\ \textcolor{keywordtype}{int}\ *errnum)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00514}00514\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00515}00515\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00516}00516\ \ \ \ \ \textcolor{comment}{/*\ get\ internal\ structure\ and\ check\ integrity\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00517}00517\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00518}00518\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00519}00519\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00520}00520\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}}\ \&\&\ state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a357c4f5723c26966ed9d68c9bd6490c0}{GZ\_WRITE}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00521}00521\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00522}00522\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00523}00523\ \ \ \ \ \textcolor{comment}{/*\ return\ error\ information\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00524}00524\ \ \ \ \ \textcolor{keywordflow}{if}\ (errnum\ !=\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00525}00525\ \ \ \ \ \ \ \ \ *errnum\ =\ state-\/>err;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00526}00526\ \ \ \ \ \textcolor{keywordflow}{return}\ state-\/>err\ ==\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ae2be6be871e377c6e2c25a7296ce320c}{Z\_MEM\_ERROR}}\ ?\ \textcolor{stringliteral}{"{}out\ of\ memory"{}}\ :}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (state-\/>msg\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ ?\ \textcolor{stringliteral}{"{}"{}}\ :\ state-\/>msg);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00528}00528\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00529}00529\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00530}00530\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00531}\doxymbox{\hyperlink{gzlib_8c_a00cdd679373c2efd7d1720e3b9f7bfd0}{00531}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzlib_8c_a00cdd679373c2efd7d1720e3b9f7bfd0}{gzclearerr}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00532}00532\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00533}00533\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00534}00534\ \ \ \ \ \textcolor{comment}{/*\ get\ internal\ structure\ and\ check\ integrity\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00535}00535\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00536}00536\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00537}00537\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00538}00538\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}}\ \&\&\ state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a357c4f5723c26966ed9d68c9bd6490c0}{GZ\_WRITE}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00539}00539\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00540}00540\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00541}00541\ \ \ \ \ \textcolor{comment}{/*\ clear\ error\ and\ end-\/of-\/file\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00542}00542\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ ==\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}})\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00543}00543\ \ \ \ \ \ \ \ \ state-\/>eof\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00544}00544\ \ \ \ \ \ \ \ \ state-\/>past\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00545}00545\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00546}00546\ \ \ \ \ \doxymbox{\hyperlink{gzlib_8c_abfa9d832c83a5f58ad064e1a617ae910}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}},\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}});}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00547}00547\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00548}00548\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00549}00549\ \textcolor{comment}{/*\ Create\ an\ error\ message\ in\ allocated\ memory\ and\ set\ state-\/>err\ and}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00550}00550\ \textcolor{comment}{\ \ \ state-\/>msg\ accordingly.\ \ Free\ any\ previous\ error\ message\ already\ there.\ \ Do}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00551}00551\ \textcolor{comment}{\ \ \ not\ try\ to\ free\ or\ allocate\ space\ if\ the\ error\ is\ Z\_MEM\_ERROR\ (out\ of}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00552}00552\ \textcolor{comment}{\ \ \ memory).\ \ Simply\ save\ the\ error\ message\ as\ a\ static\ string.\ \ If\ there\ is\ an}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00553}00553\ \textcolor{comment}{\ \ \ allocation\ failure\ constructing\ the\ error\ message,\ then\ convert\ the\ error\ to}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00554}00554\ \textcolor{comment}{\ \ \ out\ of\ memory.\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00555}\doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{00555}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{compress_8c_a59d4d7ef4d73655c759211ec33a5d44f}{ZLIB\_INTERNAL}}\ \doxymbox{\hyperlink{gzlib_8c_abfa9d832c83a5f58ad064e1a617ae910}{gz\_error}}(\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state,\ \textcolor{keywordtype}{int}\ err,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *msg)\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00556}00556\ \ \ \ \ \textcolor{comment}{/*\ free\ previously\ allocated\ message\ and\ clear\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00557}00557\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>msg\ !=\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00558}00558\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ae2be6be871e377c6e2c25a7296ce320c}{Z\_MEM\_ERROR}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00559}00559\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state-\/>msg);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00560}00560\ \ \ \ \ \ \ \ \ state-\/>msg\ =\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00561}00561\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00562}00562\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00563}00563\ \ \ \ \ \textcolor{comment}{/*\ if\ fatal,\ set\ state-\/>x.have\ to\ 0\ so\ that\ the\ gzgetc()\ macro\ fails\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00564}00564\ \ \ \ \ \textcolor{keywordflow}{if}\ (err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}}\ \&\&\ err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a425e2f0664e1b1f75bf2bffab88d353d}{Z\_BUF\_ERROR}}\ \&\&\ !state-\/>again)}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00565}00565\ \ \ \ \ \ \ \ \ state-\/>x.have\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00566}00566\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00567}00567\ \ \ \ \ \textcolor{comment}{/*\ set\ error\ code,\ and\ if\ no\ message,\ then\ done\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00568}00568\ \ \ \ \ state-\/>err\ =\ err;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00569}00569\ \ \ \ \ \textcolor{keywordflow}{if}\ (msg\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00570}00570\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00571}00571\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00572}00572\ \ \ \ \ \textcolor{comment}{/*\ for\ an\ out\ of\ memory\ error,\ return\ literal\ string\ when\ requested\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00573}00573\ \ \ \ \ \textcolor{keywordflow}{if}\ (err\ ==\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ae2be6be871e377c6e2c25a7296ce320c}{Z\_MEM\_ERROR}})}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00574}00574\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00575}00575\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00576}00576\ \ \ \ \ \textcolor{comment}{/*\ construct\ error\ message\ with\ path\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00577}00577\ \ \ \ \ \textcolor{keywordflow}{if}\ ((state-\/>msg\ =\ (\textcolor{keywordtype}{char}\ *)\doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(strlen(state-\/>path)\ +\ strlen(msg)\ +\ 3))\ ==}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00579}00579\ \ \ \ \ \ \ \ \ state-\/>err\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ae2be6be871e377c6e2c25a7296ce320c}{Z\_MEM\_ERROR}};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00580}00580\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00581}00581\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00582}00582\ \textcolor{preprocessor}{\#if\ !defined(NO\_snprintf)\ \&\&\ !defined(NO\_vsnprintf)}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00583}00583\ \ \ \ \ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}})snprintf(state-\/>msg,\ strlen(state-\/>path)\ +\ strlen(msg)\ +\ 3,}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00584}00584\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\%s\%s\%s"{}},\ state-\/>path,\ \textcolor{stringliteral}{"{}:\ "{}},\ msg);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00585}00585\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00586}00586\ \ \ \ \ strcpy(state-\/>msg,\ state-\/>path);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00587}00587\ \ \ \ \ strcat(state-\/>msg,\ \textcolor{stringliteral}{"{}:\ "{}});}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00588}00588\ \ \ \ \ strcat(state-\/>msg,\ msg);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00589}00589\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00590}00590\ \}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00591}00591\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00592}00592\ \textcolor{comment}{/*\ portably\ return\ maximum\ value\ for\ an\ int\ (when\ limits.h\ presumed\ not}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00593}00593\ \textcolor{comment}{\ \ \ available)\ -\/-\/\ we\ need\ to\ do\ this\ to\ cover\ cases\ where\ 2's\ complement\ not}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00594}00594\ \textcolor{comment}{\ \ \ used,\ since\ C\ standard\ permits\ 1's\ complement\ and\ sign-\/bit\ representations,}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00595}00595\ \textcolor{comment}{\ \ \ otherwise\ we\ could\ just\ use\ ((unsigned)-\/1)\ >>\ 1\ */}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00596}\doxymbox{\hyperlink{gzguts_8h_aa07235be00592e0af8582c73b52e7ee5}{00596}}\ \textcolor{keywordtype}{unsigned}\ \doxymbox{\hyperlink{compress_8c_a59d4d7ef4d73655c759211ec33a5d44f}{ZLIB\_INTERNAL}}\ \doxymbox{\hyperlink{gzlib_8c_aa07235be00592e0af8582c73b52e7ee5}{gz\_intmax}}(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00597}00597\ \textcolor{preprocessor}{\#ifdef\ INT\_MAX}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00598}00598\ \ \ \ \ \textcolor{keywordflow}{return}\ INT\_MAX;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00599}00599\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00600}00600\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ p\ =\ 1,\ q;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00601}00601\ }
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00602}00602\ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00603}00603\ \ \ \ \ \ \ \ \ q\ =\ p;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00604}00604\ \ \ \ \ \ \ \ \ p\ <<=\ 1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00605}00605\ \ \ \ \ \ \ \ \ p++;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00606}00606\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (p\ >\ q);}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00607}00607\ \ \ \ \ \textcolor{keywordflow}{return}\ q\ >>\ 1;}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00608}00608\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzlib_8c_source_l00609}00609\ \}}
+
+\end{DoxyCode}

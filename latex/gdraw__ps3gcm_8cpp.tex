@@ -1,0 +1,617 @@
+\doxysection{C:\+/\+\+Users/\+\+Administrator/\+\+Documents/\+\+Git\+Hub/\+\+Minecraft\+Consoles/\+\+Minecraft.Client/\+\+PS3/\+\+Iggy/\+gdraw/\+gdraw\+\_\+ps3gcm.cpp File Reference}
+\hypertarget{gdraw__ps3gcm_8cpp}{}\label{gdraw__ps3gcm_8cpp}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/Iggy/gdraw/gdraw\_ps3gcm.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/Iggy/gdraw/gdraw\_ps3gcm.cpp}}
+{\ttfamily \+\#include "{}stdafx.\+h"{}}\newline
+{\ttfamily \+\#include $<$string.\+h$>$}\newline
+{\ttfamily \+\#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \+\#include $<$cell/\+gcm.\+h$>$}\newline
+{\ttfamily \+\#include $<$cell/\+gcm/\+gcm\+\_\+method\+\_\+data.\+h$>$}\newline
+{\ttfamily \+\#include $<$ppu\+\_\+asm\+\_\+intrinsics.\+h$>$}\newline
+{\ttfamily \+\#include $<$math.\+h$>$}\newline
+{\ttfamily \+\#include "{}gdraw.\+h"{}}\newline
+{\ttfamily \+\#include "{}iggy.\+h"{}}\newline
+{\ttfamily \+\#include "{}gdraw\+\_\+ps3gcm.\+h"{}}\newline
+{\ttfamily \+\#include "{}gdraw\+\_\+shared.\+inl"{}}\newline
+{\ttfamily \+\#include "{}gdraw\+\_\+ps3gcm\+\_\+shaders.\+inl"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+union \doxymbox{\hyperlink{union_g_draw_native_handle}{GDraw\+Native\+Handle}}
+\item 
+struct \doxymbox{\hyperlink{struct_g_draw_framebuffer_state}{GDraw\+Framebuffer\+State}}
+\item 
+struct \doxymbox{\hyperlink{struct_program_with_cached_variable_locations}{Program\+With\+Cached\+Variable\+Locations}}
+\item 
+struct \doxymbox{\hyperlink{struct_gcm_texture}{Gcm\+Texture}}
+\item 
+struct \doxymbox{\hyperlink{struct_g_draw}{GDraw}}
+\item 
+struct \doxymbox{\hyperlink{struct_vec4}{Vec4}}
+\item 
+struct \doxymbox{\hyperlink{struct_vertex_vars}{Vertex\+Vars}}
+\item 
+struct \doxymbox{\hyperlink{struct_command_data}{Command\+Data}}
+\item 
+struct {\bfseries gdraw\+\_\+gcm\+\_\+blendspec}
+\item 
+struct \doxymbox{\hyperlink{structgdraw__gcm__vformat__desc}{gdraw\+\_\+gcm\+\_\+vformat\+\_\+desc}}
+\item 
+struct \doxymbox{\hyperlink{struct_g_draw_resource_mem}{GDraw\+Resource\+Mem}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a167222b805aa833163c2708285e59091}{GDRAW\+\_\+\+ASSERTS}}
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a22ead1d720ea2c34377e5d79a8c9e8dc}{GDRAW\+\_\+\+MANAGE\+\_\+\+MEM}}
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a48de3c928bf1a9886b7c6705a90b37af}{GDRAW\+\_\+\+DEFRAGMENT}}
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a5c6f97b460bb1cbbda98f5f9de06411b}{GDRAW\+\_\+\+BUFFER\+\_\+\+RING}}
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a8bdc8a62229463904dc858d8204431da}{GDRAW\+\_\+\+MIN\+\_\+\+FREE\+\_\+\+AMOUNT}}~(64\texorpdfstring{$\ast$}{*}1024)
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a6c0d6ed60da3672990f32d0c6d2d9ce9}{MAX\+\_\+\+RENDER\+\_\+\+STACK\+\_\+\+DEPTH}}~8
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a39839712ffdbdaa3cd85a4a6e65bb751}{MAX\+\_\+\+SAMPLERS}}~3
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_add0000ff1ce0aad52e0b2c4e775fe2f3}{AATEX\+\_\+\+SAMPLER}}~7
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_abd062b285c46283eb9f1e5ea13a36b35}{FENCE\+\_\+\+BATCH\+\_\+\+INTERVAL}}~64
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_ab356db1433db442ecf935c2d10bc37c7}{CHAN\+\_\+A}}~0
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_acfecbdd318ba2b32c090eae2eba75776}{CHAN\+\_\+R}}~1
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a5caebe15b4c0baaa9a9361cbc43d800a}{CHAN\+\_\+G}}~2
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_afea2c61b0ba683df0771b9c40ac326de}{CHAN\+\_\+B}}~3
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_ad650dbd2f6754067804a841c92678520}{TEXREMAP}}(chan,  out,  \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a709eae6871138aac345fffa9fcefced0}{in}})
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a66713b6dce60c20c007d9c3c3172c498}{COLOR\+\_\+\+MASK\+\_\+\+ALL}}~(CELL\+\_\+\+GCM\+\_\+\+COLOR\+\_\+\+MASK\+\_\+R \texorpdfstring{$\vert$}{|} CELL\+\_\+\+GCM\+\_\+\+COLOR\+\_\+\+MASK\+\_\+G \texorpdfstring{$\vert$}{|} CELL\+\_\+\+GCM\+\_\+\+COLOR\+\_\+\+MASK\+\_\+B \texorpdfstring{$\vert$}{|} CELL\+\_\+\+GCM\+\_\+\+COLOR\+\_\+\+MASK\+\_\+A)
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a6d254fab1d84103f4f2995d01e0592a7}{VVAR\+\_\+world}}~0
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_ac04c29c9ce2bc0049c1946d00bc29a0e}{VVAR\+\_\+count\+\_\+worldonly}}~2
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a7076a068530780215fc1d58492f43f2c}{VVAR\+\_\+x\+\_\+off}}~2
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_af1ff4a29e08ccee62cd865aaf20d27e9}{VVAR\+\_\+color\+\_\+mul}}~3
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a462937d4e4755aec25f0e8f1070a233b}{VVAR\+\_\+count\+\_\+world\+\_\+and\+\_\+color}}~4
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a67949a5cb61c641c4d3e610799682259}{VVAR\+\_\+tex\+\_\+s}}~4
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a704cba308b063576fbf8ec86a4564b69}{VVAR\+\_\+tex\+\_\+t}}~5
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a824a73b529b6c663f0fdc400e50a8c53}{VVAR\+\_\+count}}~6
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a41873a039dcd4173fb269b257a20acbf}{VVAR\+\_\+viewproj}}~6
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_ae88503800da6e3a5139ed40b8a306c89}{GCCSched\+Barrier}}()
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a2e51ec0ab0fc7d96f04bbb0d96e0f8ff}{MAX\+\_\+\+DEPTH\+\_\+\+VALUE}}~(1 $<$$<$ 13)
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a1bc374ccb19ae2fb90807763b05cb358}{MAKEBLEND}}(src,  dst)
+\item 
+\+\#define \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a72cc7266f456b645625e82aec241b7b0}{copy\+\_\+vec4}}(d,  s)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{_durango_2_iggy_2include_2gdraw_8h_a23385808822b93023e326380d57d17e8}{GDraw\+Texture}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_aa8597d351ecb411a70c5f2ec759a3678}{gdraw\+\_\+\+GCM\+\_\+\+Wrapped\+Texture\+Create}} (Cell\+Gcm\+Texture \texorpdfstring{$\ast$}{*}gcm\+\_\+tex)
+\item 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_ab16c68664c24779878536d1f552e72ab}{gdraw\+\_\+\+GCM\+\_\+\+Wrapped\+Texture\+Change}} (\doxymbox{\hyperlink{_durango_2_iggy_2include_2gdraw_8h_a23385808822b93023e326380d57d17e8}{GDraw\+Texture}} \texorpdfstring{$\ast$}{*}tex, Cell\+Gcm\+Texture \texorpdfstring{$\ast$}{*}gcm\+\_\+tex)
+\item 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a9959b0c4a72572051738746f33971c1a}{gdraw\+\_\+\+GCM\+\_\+\+Wrapped\+Texture\+Destroy}} (\doxymbox{\hyperlink{_durango_2_iggy_2include_2gdraw_8h_a23385808822b93023e326380d57d17e8}{GDraw\+Texture}} \texorpdfstring{$\ast$}{*}tex)
+\item 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_ac7e3dcd2cd14e9797aca4040b43a1656}{gdraw\+\_\+\+GCM\+\_\+\+Set\+Tile\+Origin}} (Cell\+Gcm\+Surface \texorpdfstring{$\ast$}{*}surf, \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}} x, \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}} y)
+\item 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a09d74f62be48116714d17e018f2a84d4}{gdraw\+\_\+\+GCM\+\_\+\+No\+More\+GDraw\+This\+Frame}} (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}})
+\item 
+int \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a036aba0f10feb45c6718ef2216c2c8cd}{gdraw\+\_\+\+GCM\+\_\+\+Set\+Resource\+Memory}} (\doxymbox{\hyperlink{gdraw__ps3gcm_8h_ae70078a7965caf79023a4c73350615b5}{gdraw\+\_\+gcm\+\_\+resourcetype}} type, \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}} num\+\_\+handles, \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \texorpdfstring{$\ast$}{*}\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}}, \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}} num\+\_\+bytes)
+\item 
+int \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_acf69fe3e5b67c903488f3f1bf9c73d99}{gdraw\+\_\+\+GCM\+\_\+\+Set\+Rendertarget\+Memory}} (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \texorpdfstring{$\ast$}{*}\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}}, \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}} num\+\_\+bytes, \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}} width, \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}} height, \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}} pitch)
+\item 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a4037eb7d3a4096d2138176d7f4c06e8e}{gdraw\+\_\+\+GCM\+\_\+\+Reset\+All\+Resource\+Memory}} ()
+\item 
+\doxymbox{\hyperlink{struct_g_draw_functions}{GDraw\+Functions}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a5ad4c4a9d71e457703426939bf360ef8}{gdraw\+\_\+\+GCM\+\_\+\+Create\+Context}} (Cell\+Gcm\+Context\+Data \texorpdfstring{$\ast$}{*}gcm, \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \texorpdfstring{$\ast$}{*}local\+\_\+workmem, \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a4cf449757e2437251edcf54b8d85e36d}{U8}} rsx\+\_\+label\+\_\+index)
+\item 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a6bd9c80a3dcf866fd360119d581bb47b}{gdraw\+\_\+\+GCM\+\_\+\+Destroy\+Context}} (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}})
+\item 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a5cbcf98933a5e2c32dc904a324a91686}{RADLINK}} \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a1316d69cdc56a278ff380112b80726e7}{gdraw\+\_\+\+GCM\+\_\+\+Begin\+Custom\+Draw}} (\doxymbox{\hyperlink{struct_iggy_custom_draw_callback_region}{Iggy\+Custom\+Draw\+Callback\+Region}} \texorpdfstring{$\ast$}{*}region, float \texorpdfstring{$\ast$}{*}matrix)
+\item 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a5cbcf98933a5e2c32dc904a324a91686}{RADLINK}} \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a22940b25919c854cc3b856ea50779a02}{gdraw\+\_\+\+GCM\+\_\+\+Calculate\+Custom\+Draw\+\_\+4J}} (\doxymbox{\hyperlink{struct_iggy_custom_draw_callback_region}{Iggy\+Custom\+Draw\+Callback\+Region}} \texorpdfstring{$\ast$}{*}region, \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_ac8b3131a06a1f6a441b9491f09b9b82e}{F32}} mat\+[16]\+)
+\item 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a5cbcf98933a5e2c32dc904a324a91686}{RADLINK}} \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_af03639a4e21ad5d9c5dde30375078d2f}{gdraw\+\_\+\+GCM\+\_\+\+End\+Custom\+Draw}} (\doxymbox{\hyperlink{struct_iggy_custom_draw_callback_region}{Iggy\+Custom\+Draw\+Callback\+Region}} \texorpdfstring{$\ast$}{*}region)
+\item 
+\doxymbox{\hyperlink{_durango_2_iggy_2include_2gdraw_8h_a23385808822b93023e326380d57d17e8}{GDraw\+Texture}} \texorpdfstring{$\ast$}{*}\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a5cbcf98933a5e2c32dc904a324a91686}{RADLINK}} \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a55d7090c8c3d5769df7a7c3a28c7dda2}{gdraw\+\_\+\+GCM\+\_\+\+Make\+Texture\+From\+Resource}} (\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a4cf449757e2437251edcf54b8d85e36d}{U8}} \texorpdfstring{$\ast$}{*}resource\+\_\+file, \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}} len, \doxymbox{\hyperlink{struct_iggy_file_texture_p_s3}{Iggy\+File\+Texture\+PS3}} \texorpdfstring{$\ast$}{*}texture)
+\item 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a5cbcf98933a5e2c32dc904a324a91686}{RADLINK}} \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_ad46e215922b4902a1bd2fd4598531ce1}{gdraw\+\_\+\+GCM\+\_\+\+Destroy\+Texture\+From\+Resource}} (\doxymbox{\hyperlink{_durango_2_iggy_2include_2gdraw_8h_a23385808822b93023e326380d57d17e8}{GDraw\+Texture}} \texorpdfstring{$\ast$}{*}tex)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structgdraw__gcm__vformat__desc}{gdraw\+\_\+gcm\+\_\+vformat\+\_\+desc}} \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_a1924e198b0b3f2b259fa39f57a19d95c}{vformats}} \+[\doxymbox{\hyperlink{_durango_2_iggy_2include_2gdraw_8h_a879670f2db3c5b2209531ca09ed50b41a58178126ea4f8263e915a31dea117fc4}{GDRAW\+\_\+vformat\+\_\+\+\_\+basic\+\_\+count}}]\+
+\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{gdraw__ps3gcm_8cpp_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{gdraw__ps3gcm_8cpp_add0000ff1ce0aad52e0b2c4e775fe2f3}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!AATEX\_SAMPLER@{AATEX\_SAMPLER}}
+\index{AATEX\_SAMPLER@{AATEX\_SAMPLER}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{AATEX\_SAMPLER}{AATEX\_SAMPLER}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_add0000ff1ce0aad52e0b2c4e775fe2f3} 
+\+\#define AATEX\+\_\+\+SAMPLER~7}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00106}{106}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_ab356db1433db442ecf935c2d10bc37c7}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!CHAN\_A@{CHAN\_A}}
+\index{CHAN\_A@{CHAN\_A}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{CHAN\_A}{CHAN\_A}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_ab356db1433db442ecf935c2d10bc37c7} 
+\+\#define CHAN\+\_\+A~0}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00147}{147}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_afea2c61b0ba683df0771b9c40ac326de}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!CHAN\_B@{CHAN\_B}}
+\index{CHAN\_B@{CHAN\_B}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{CHAN\_B}{CHAN\_B}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_afea2c61b0ba683df0771b9c40ac326de} 
+\+\#define CHAN\+\_\+B~3}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00150}{150}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a5caebe15b4c0baaa9a9361cbc43d800a}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!CHAN\_G@{CHAN\_G}}
+\index{CHAN\_G@{CHAN\_G}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{CHAN\_G}{CHAN\_G}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a5caebe15b4c0baaa9a9361cbc43d800a} 
+\+\#define CHAN\+\_\+G~2}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00149}{149}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_acfecbdd318ba2b32c090eae2eba75776}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!CHAN\_R@{CHAN\_R}}
+\index{CHAN\_R@{CHAN\_R}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{CHAN\_R}{CHAN\_R}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_acfecbdd318ba2b32c090eae2eba75776} 
+\+\#define CHAN\+\_\+R~1}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00148}{148}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a66713b6dce60c20c007d9c3c3172c498}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!COLOR\_MASK\_ALL@{COLOR\_MASK\_ALL}}
+\index{COLOR\_MASK\_ALL@{COLOR\_MASK\_ALL}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{COLOR\_MASK\_ALL}{COLOR\_MASK\_ALL}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a66713b6dce60c20c007d9c3c3172c498} 
+\+\#define COLOR\+\_\+\+MASK\+\_\+\+ALL~(CELL\+\_\+\+GCM\+\_\+\+COLOR\+\_\+\+MASK\+\_\+R \texorpdfstring{$\vert$}{|} CELL\+\_\+\+GCM\+\_\+\+COLOR\+\_\+\+MASK\+\_\+G \texorpdfstring{$\vert$}{|} CELL\+\_\+\+GCM\+\_\+\+COLOR\+\_\+\+MASK\+\_\+B \texorpdfstring{$\vert$}{|} CELL\+\_\+\+GCM\+\_\+\+COLOR\+\_\+\+MASK\+\_\+A)}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00262}{262}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a72cc7266f456b645625e82aec241b7b0}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!copy\_vec4@{copy\_vec4}}
+\index{copy\_vec4@{copy\_vec4}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{copy\_vec4}{copy\_vec4}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a72cc7266f456b645625e82aec241b7b0} 
+\+\#define copy\+\_\+vec4(\begin{DoxyParamCaption}\item[{}]{d}{, }\item[{}]{s}{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_ac8b3131a06a1f6a441b9491f09b9b82e}{F32}}\ x\ =\ s[0];\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_ac8b3131a06a1f6a441b9491f09b9b82e}{F32}}\ y\ =\ s[1];\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_ac8b3131a06a1f6a441b9491f09b9b82e}{F32}}\ z\ =\ s[2];\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_ac8b3131a06a1f6a441b9491f09b9b82e}{F32}}\ w\ =\ s[3];\ d.x\ =\ x;\ d.y\ =\ y;\ d.z\ =\ z;\ d.w\ =\ w;\ \}}
+
+\end{DoxyCode}
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l01769}{1769}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_abd062b285c46283eb9f1e5ea13a36b35}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!FENCE\_BATCH\_INTERVAL@{FENCE\_BATCH\_INTERVAL}}
+\index{FENCE\_BATCH\_INTERVAL@{FENCE\_BATCH\_INTERVAL}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{FENCE\_BATCH\_INTERVAL}{FENCE\_BATCH\_INTERVAL}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_abd062b285c46283eb9f1e5ea13a36b35} 
+\+\#define FENCE\+\_\+\+BATCH\+\_\+\+INTERVAL~64}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00107}{107}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_ae88503800da6e3a5139ed40b8a306c89}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!GCCSchedBarrier@{GCCSchedBarrier}}
+\index{GCCSchedBarrier@{GCCSchedBarrier}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{GCCSchedBarrier}{GCCSchedBarrier}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_ae88503800da6e3a5139ed40b8a306c89} 
+\+\#define GCCSched\+Barrier(\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\_\_asm\_\_\ \textcolor{keyword}{volatile}(\textcolor{stringliteral}{"{}"{}})}
+
+\end{DoxyCode}
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00565}{565}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a167222b805aa833163c2708285e59091}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!GDRAW\_ASSERTS@{GDRAW\_ASSERTS}}
+\index{GDRAW\_ASSERTS@{GDRAW\_ASSERTS}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{GDRAW\_ASSERTS}{GDRAW\_ASSERTS}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a167222b805aa833163c2708285e59091} 
+\+\#define GDRAW\+\_\+\+ASSERTS}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00069}{69}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a5c6f97b460bb1cbbda98f5f9de06411b}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!GDRAW\_BUFFER\_RING@{GDRAW\_BUFFER\_RING}}
+\index{GDRAW\_BUFFER\_RING@{GDRAW\_BUFFER\_RING}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{GDRAW\_BUFFER\_RING}{GDRAW\_BUFFER\_RING}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a5c6f97b460bb1cbbda98f5f9de06411b} 
+\+\#define GDRAW\+\_\+\+BUFFER\+\_\+\+RING}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00098}{98}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a48de3c928bf1a9886b7c6705a90b37af}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!GDRAW\_DEFRAGMENT@{GDRAW\_DEFRAGMENT}}
+\index{GDRAW\_DEFRAGMENT@{GDRAW\_DEFRAGMENT}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{GDRAW\_DEFRAGMENT}{GDRAW\_DEFRAGMENT}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a48de3c928bf1a9886b7c6705a90b37af} 
+\+\#define GDRAW\+\_\+\+DEFRAGMENT}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00097}{97}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a22ead1d720ea2c34377e5d79a8c9e8dc}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!GDRAW\_MANAGE\_MEM@{GDRAW\_MANAGE\_MEM}}
+\index{GDRAW\_MANAGE\_MEM@{GDRAW\_MANAGE\_MEM}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{GDRAW\_MANAGE\_MEM}{GDRAW\_MANAGE\_MEM}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a22ead1d720ea2c34377e5d79a8c9e8dc} 
+\+\#define GDRAW\+\_\+\+MANAGE\+\_\+\+MEM}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00096}{96}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a8bdc8a62229463904dc858d8204431da}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!GDRAW\_MIN\_FREE\_AMOUNT@{GDRAW\_MIN\_FREE\_AMOUNT}}
+\index{GDRAW\_MIN\_FREE\_AMOUNT@{GDRAW\_MIN\_FREE\_AMOUNT}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{GDRAW\_MIN\_FREE\_AMOUNT}{GDRAW\_MIN\_FREE\_AMOUNT}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a8bdc8a62229463904dc858d8204431da} 
+\+\#define GDRAW\+\_\+\+MIN\+\_\+\+FREE\+\_\+\+AMOUNT~(64\texorpdfstring{$\ast$}{*}1024)}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00099}{99}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a1bc374ccb19ae2fb90807763b05cb358}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!MAKEBLEND@{MAKEBLEND}}
+\index{MAKEBLEND@{MAKEBLEND}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{MAKEBLEND}{MAKEBLEND}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a1bc374ccb19ae2fb90807763b05cb358} 
+\+\#define MAKEBLEND(\begin{DoxyParamCaption}\item[{}]{src}{, }\item[{}]{dst}{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{((src\ <<\ 16)\ |\ src),\ ((dst\ <<\ 16)\ |\ dst)}
+
+\end{DoxyCode}
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l01740}{1740}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a2e51ec0ab0fc7d96f04bbb0d96e0f8ff}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!MAX\_DEPTH\_VALUE@{MAX\_DEPTH\_VALUE}}
+\index{MAX\_DEPTH\_VALUE@{MAX\_DEPTH\_VALUE}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{MAX\_DEPTH\_VALUE}{MAX\_DEPTH\_VALUE}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a2e51ec0ab0fc7d96f04bbb0d96e0f8ff} 
+\+\#define MAX\+\_\+\+DEPTH\+\_\+\+VALUE~(1 $<$$<$ 13)}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l01489}{1489}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a6c0d6ed60da3672990f32d0c6d2d9ce9}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!MAX\_RENDER\_STACK\_DEPTH@{MAX\_RENDER\_STACK\_DEPTH}}
+\index{MAX\_RENDER\_STACK\_DEPTH@{MAX\_RENDER\_STACK\_DEPTH}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{MAX\_RENDER\_STACK\_DEPTH}{MAX\_RENDER\_STACK\_DEPTH}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a6c0d6ed60da3672990f32d0c6d2d9ce9} 
+\+\#define MAX\+\_\+\+RENDER\+\_\+\+STACK\+\_\+\+DEPTH~8}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00104}{104}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a39839712ffdbdaa3cd85a4a6e65bb751}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!MAX\_SAMPLERS@{MAX\_SAMPLERS}}
+\index{MAX\_SAMPLERS@{MAX\_SAMPLERS}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{MAX\_SAMPLERS}{MAX\_SAMPLERS}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a39839712ffdbdaa3cd85a4a6e65bb751} 
+\+\#define MAX\+\_\+\+SAMPLERS~3}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00105}{105}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_ad650dbd2f6754067804a841c92678520}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!TEXREMAP@{TEXREMAP}}
+\index{TEXREMAP@{TEXREMAP}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{TEXREMAP}{TEXREMAP}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_ad650dbd2f6754067804a841c92678520} 
+\+\#define TEXREMAP(\begin{DoxyParamCaption}\item[{}]{chan}{, }\item[{}]{out}{, }\item[{}]{\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a709eae6871138aac345fffa9fcefced0}{in}}}{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{((CELL\_GCM\_TEXTURE\_REMAP\_\ \#\#\ out\ <<\ (chan*2\ +\ 8))\ |\ ((CELL\_GCM\_TEXTURE\_REMAP\_\ \#\#\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a709eae6871138aac345fffa9fcefced0}{in}}\ <<\ (chan*2))))}
+
+\end{DoxyCode}
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00151}{151}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_af1ff4a29e08ccee62cd865aaf20d27e9}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!VVAR\_color\_mul@{VVAR\_color\_mul}}
+\index{VVAR\_color\_mul@{VVAR\_color\_mul}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{VVAR\_color\_mul}{VVAR\_color\_mul}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_af1ff4a29e08ccee62cd865aaf20d27e9} 
+\+\#define VVAR\+\_\+color\+\_\+mul~3}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00276}{276}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a824a73b529b6c663f0fdc400e50a8c53}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!VVAR\_count@{VVAR\_count}}
+\index{VVAR\_count@{VVAR\_count}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{VVAR\_count}{VVAR\_count}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a824a73b529b6c663f0fdc400e50a8c53} 
+\+\#define VVAR\+\_\+count~6}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00280}{280}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a462937d4e4755aec25f0e8f1070a233b}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!VVAR\_count\_world\_and\_color@{VVAR\_count\_world\_and\_color}}
+\index{VVAR\_count\_world\_and\_color@{VVAR\_count\_world\_and\_color}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{VVAR\_count\_world\_and\_color}{VVAR\_count\_world\_and\_color}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a462937d4e4755aec25f0e8f1070a233b} 
+\+\#define VVAR\+\_\+count\+\_\+world\+\_\+and\+\_\+color~4}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00277}{277}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_ac04c29c9ce2bc0049c1946d00bc29a0e}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!VVAR\_count\_worldonly@{VVAR\_count\_worldonly}}
+\index{VVAR\_count\_worldonly@{VVAR\_count\_worldonly}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{VVAR\_count\_worldonly}{VVAR\_count\_worldonly}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_ac04c29c9ce2bc0049c1946d00bc29a0e} 
+\+\#define VVAR\+\_\+count\+\_\+worldonly~2}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00274}{274}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a67949a5cb61c641c4d3e610799682259}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!VVAR\_tex\_s@{VVAR\_tex\_s}}
+\index{VVAR\_tex\_s@{VVAR\_tex\_s}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{VVAR\_tex\_s}{VVAR\_tex\_s}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a67949a5cb61c641c4d3e610799682259} 
+\+\#define VVAR\+\_\+tex\+\_\+s~4}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00278}{278}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a704cba308b063576fbf8ec86a4564b69}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!VVAR\_tex\_t@{VVAR\_tex\_t}}
+\index{VVAR\_tex\_t@{VVAR\_tex\_t}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{VVAR\_tex\_t}{VVAR\_tex\_t}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a704cba308b063576fbf8ec86a4564b69} 
+\+\#define VVAR\+\_\+tex\+\_\+t~5}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00279}{279}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a41873a039dcd4173fb269b257a20acbf}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!VVAR\_viewproj@{VVAR\_viewproj}}
+\index{VVAR\_viewproj@{VVAR\_viewproj}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{VVAR\_viewproj}{VVAR\_viewproj}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a41873a039dcd4173fb269b257a20acbf} 
+\+\#define VVAR\+\_\+viewproj~6}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00282}{282}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a6d254fab1d84103f4f2995d01e0592a7}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!VVAR\_world@{VVAR\_world}}
+\index{VVAR\_world@{VVAR\_world}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{VVAR\_world}{VVAR\_world}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a6d254fab1d84103f4f2995d01e0592a7} 
+\+\#define VVAR\+\_\+world~0}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00273}{273}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a7076a068530780215fc1d58492f43f2c}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!VVAR\_x\_off@{VVAR\_x\_off}}
+\index{VVAR\_x\_off@{VVAR\_x\_off}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{VVAR\_x\_off}{VVAR\_x\_off}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a7076a068530780215fc1d58492f43f2c} 
+\+\#define VVAR\+\_\+x\+\_\+off~2}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00275}{275}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+
+
+\label{doc-func-members}
+\Hypertarget{gdraw__ps3gcm_8cpp_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{gdraw__ps3gcm_8cpp_a1316d69cdc56a278ff380112b80726e7}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_BeginCustomDraw@{gdraw\_GCM\_BeginCustomDraw}}
+\index{gdraw\_GCM\_BeginCustomDraw@{gdraw\_GCM\_BeginCustomDraw}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_BeginCustomDraw()}{gdraw\_GCM\_BeginCustomDraw()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a1316d69cdc56a278ff380112b80726e7} 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a5cbcf98933a5e2c32dc904a324a91686}{RADLINK}} gdraw\+\_\+\+GCM\+\_\+\+Begin\+Custom\+Draw (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_iggy_custom_draw_callback_region}{Iggy\+Custom\+Draw\+Callback\+Region}} \texorpdfstring{$\ast$}{*}}]{region}{, }\item[{float \texorpdfstring{$\ast$}{*}}]{matrix}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l02655}{2655}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a22940b25919c854cc3b856ea50779a02}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_CalculateCustomDraw\_4J@{gdraw\_GCM\_CalculateCustomDraw\_4J}}
+\index{gdraw\_GCM\_CalculateCustomDraw\_4J@{gdraw\_GCM\_CalculateCustomDraw\_4J}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_CalculateCustomDraw\_4J()}{gdraw\_GCM\_CalculateCustomDraw\_4J()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a22940b25919c854cc3b856ea50779a02} 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a5cbcf98933a5e2c32dc904a324a91686}{RADLINK}} gdraw\+\_\+\+GCM\+\_\+\+Calculate\+Custom\+Draw\+\_\+4J (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_iggy_custom_draw_callback_region}{Iggy\+Custom\+Draw\+Callback\+Region}} \texorpdfstring{$\ast$}{*}}]{region}{, }\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_ac8b3131a06a1f6a441b9491f09b9b82e}{F32}}}]{mat}{\+[16]\+}\end{DoxyParamCaption})}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l02661}{2661}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a5ad4c4a9d71e457703426939bf360ef8}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_CreateContext@{gdraw\_GCM\_CreateContext}}
+\index{gdraw\_GCM\_CreateContext@{gdraw\_GCM\_CreateContext}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_CreateContext()}{gdraw\_GCM\_CreateContext()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a5ad4c4a9d71e457703426939bf360ef8} 
+\doxymbox{\hyperlink{struct_g_draw_functions}{GDraw\+Functions}} \texorpdfstring{$\ast$}{*} gdraw\+\_\+\+GCM\+\_\+\+Create\+Context (\begin{DoxyParamCaption}\item[{Cell\+Gcm\+Context\+Data \texorpdfstring{$\ast$}{*}}]{gcm}{, }\item[{\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \texorpdfstring{$\ast$}{*}}]{local\+\_\+workmem}{, }\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a4cf449757e2437251edcf54b8d85e36d}{U8}}}]{rsx\+\_\+label\+\_\+index}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l02558}{2558}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a6bd9c80a3dcf866fd360119d581bb47b}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_DestroyContext@{gdraw\_GCM\_DestroyContext}}
+\index{gdraw\_GCM\_DestroyContext@{gdraw\_GCM\_DestroyContext}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_DestroyContext()}{gdraw\_GCM\_DestroyContext()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a6bd9c80a3dcf866fd360119d581bb47b} 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} gdraw\+\_\+\+GCM\+\_\+\+Destroy\+Context (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}}}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l02635}{2635}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_ad46e215922b4902a1bd2fd4598531ce1}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_DestroyTextureFromResource@{gdraw\_GCM\_DestroyTextureFromResource}}
+\index{gdraw\_GCM\_DestroyTextureFromResource@{gdraw\_GCM\_DestroyTextureFromResource}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_DestroyTextureFromResource()}{gdraw\_GCM\_DestroyTextureFromResource()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_ad46e215922b4902a1bd2fd4598531ce1} 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a5cbcf98933a5e2c32dc904a324a91686}{RADLINK}} gdraw\+\_\+\+GCM\+\_\+\+Destroy\+Texture\+From\+Resource (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2gdraw_8h_a23385808822b93023e326380d57d17e8}{GDraw\+Texture}} \texorpdfstring{$\ast$}{*}}]{tex}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l02708}{2708}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_af03639a4e21ad5d9c5dde30375078d2f}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_EndCustomDraw@{gdraw\_GCM\_EndCustomDraw}}
+\index{gdraw\_GCM\_EndCustomDraw@{gdraw\_GCM\_EndCustomDraw}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_EndCustomDraw()}{gdraw\_GCM\_EndCustomDraw()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_af03639a4e21ad5d9c5dde30375078d2f} 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a5cbcf98933a5e2c32dc904a324a91686}{RADLINK}} gdraw\+\_\+\+GCM\+\_\+\+End\+Custom\+Draw (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_iggy_custom_draw_callback_region}{Iggy\+Custom\+Draw\+Callback\+Region}} \texorpdfstring{$\ast$}{*}}]{region}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l02666}{2666}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a55d7090c8c3d5769df7a7c3a28c7dda2}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_MakeTextureFromResource@{gdraw\_GCM\_MakeTextureFromResource}}
+\index{gdraw\_GCM\_MakeTextureFromResource@{gdraw\_GCM\_MakeTextureFromResource}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_MakeTextureFromResource()}{gdraw\_GCM\_MakeTextureFromResource()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a55d7090c8c3d5769df7a7c3a28c7dda2} 
+\doxymbox{\hyperlink{_durango_2_iggy_2include_2gdraw_8h_a23385808822b93023e326380d57d17e8}{GDraw\+Texture}} \texorpdfstring{$\ast$}{*}\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a5cbcf98933a5e2c32dc904a324a91686}{RADLINK}} gdraw\+\_\+\+GCM\+\_\+\+Make\+Texture\+From\+Resource (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a4cf449757e2437251edcf54b8d85e36d}{U8}} \texorpdfstring{$\ast$}{*}}]{resource\+\_\+file}{, }\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}}]{len}{, }\item[{\doxymbox{\hyperlink{struct_iggy_file_texture_p_s3}{Iggy\+File\+Texture\+PS3}} \texorpdfstring{$\ast$}{*}}]{texture}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l02673}{2673}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a09d74f62be48116714d17e018f2a84d4}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_NoMoreGDrawThisFrame@{gdraw\_GCM\_NoMoreGDrawThisFrame}}
+\index{gdraw\_GCM\_NoMoreGDrawThisFrame@{gdraw\_GCM\_NoMoreGDrawThisFrame}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_NoMoreGDrawThisFrame()}{gdraw\_GCM\_NoMoreGDrawThisFrame()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a09d74f62be48116714d17e018f2a84d4} 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} gdraw\+\_\+\+GCM\+\_\+\+No\+More\+GDraw\+This\+Frame (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}}}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l01483}{1483}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a4037eb7d3a4096d2138176d7f4c06e8e}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_ResetAllResourceMemory@{gdraw\_GCM\_ResetAllResourceMemory}}
+\index{gdraw\_GCM\_ResetAllResourceMemory@{gdraw\_GCM\_ResetAllResourceMemory}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_ResetAllResourceMemory()}{gdraw\_GCM\_ResetAllResourceMemory()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a4037eb7d3a4096d2138176d7f4c06e8e} 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} gdraw\+\_\+\+GCM\+\_\+\+Reset\+All\+Resource\+Memory (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l02550}{2550}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_acf69fe3e5b67c903488f3f1bf9c73d99}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_SetRendertargetMemory@{gdraw\_GCM\_SetRendertargetMemory}}
+\index{gdraw\_GCM\_SetRendertargetMemory@{gdraw\_GCM\_SetRendertargetMemory}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_SetRendertargetMemory()}{gdraw\_GCM\_SetRendertargetMemory()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_acf69fe3e5b67c903488f3f1bf9c73d99} 
+int gdraw\+\_\+\+GCM\+\_\+\+Set\+Rendertarget\+Memory (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \texorpdfstring{$\ast$}{*}}]{ptr}{, }\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}}]{num\+\_\+bytes}{, }\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}}]{width}{, }\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}}]{height}{, }\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}}]{pitch}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l02520}{2520}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a036aba0f10feb45c6718ef2216c2c8cd}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_SetResourceMemory@{gdraw\_GCM\_SetResourceMemory}}
+\index{gdraw\_GCM\_SetResourceMemory@{gdraw\_GCM\_SetResourceMemory}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_SetResourceMemory()}{gdraw\_GCM\_SetResourceMemory()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a036aba0f10feb45c6718ef2216c2c8cd} 
+int gdraw\+\_\+\+GCM\+\_\+\+Set\+Resource\+Memory (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{gdraw__ps3gcm_8h_ae70078a7965caf79023a4c73350615b5}{gdraw\+\_\+gcm\+\_\+resourcetype}}}]{type}{, }\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}}]{num\+\_\+handles}{, }\item[{\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} \texorpdfstring{$\ast$}{*}}]{ptr}{, }\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}}]{num\+\_\+bytes}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l02455}{2455}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_ac7e3dcd2cd14e9797aca4040b43a1656}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_SetTileOrigin@{gdraw\_GCM\_SetTileOrigin}}
+\index{gdraw\_GCM\_SetTileOrigin@{gdraw\_GCM\_SetTileOrigin}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_SetTileOrigin()}{gdraw\_GCM\_SetTileOrigin()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_ac7e3dcd2cd14e9797aca4040b43a1656} 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} gdraw\+\_\+\+GCM\+\_\+\+Set\+Tile\+Origin (\begin{DoxyParamCaption}\item[{Cell\+Gcm\+Surface \texorpdfstring{$\ast$}{*}}]{surf}{, }\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}}]{x}{, }\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}}]{y}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l01395}{1395}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_ab16c68664c24779878536d1f552e72ab}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_WrappedTextureChange@{gdraw\_GCM\_WrappedTextureChange}}
+\index{gdraw\_GCM\_WrappedTextureChange@{gdraw\_GCM\_WrappedTextureChange}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_WrappedTextureChange()}{gdraw\_GCM\_WrappedTextureChange()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_ab16c68664c24779878536d1f552e72ab} 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} gdraw\+\_\+\+GCM\+\_\+\+Wrapped\+Texture\+Change (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2gdraw_8h_a23385808822b93023e326380d57d17e8}{GDraw\+Texture}} \texorpdfstring{$\ast$}{*}}]{tex}{, }\item[{Cell\+Gcm\+Texture \texorpdfstring{$\ast$}{*}}]{gcm\+\_\+tex}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00780}{780}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_aa8597d351ecb411a70c5f2ec759a3678}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_WrappedTextureCreate@{gdraw\_GCM\_WrappedTextureCreate}}
+\index{gdraw\_GCM\_WrappedTextureCreate@{gdraw\_GCM\_WrappedTextureCreate}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_WrappedTextureCreate()}{gdraw\_GCM\_WrappedTextureCreate()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_aa8597d351ecb411a70c5f2ec759a3678} 
+\doxymbox{\hyperlink{_durango_2_iggy_2include_2gdraw_8h_a23385808822b93023e326380d57d17e8}{GDraw\+Texture}} \texorpdfstring{$\ast$}{*} gdraw\+\_\+\+GCM\+\_\+\+Wrapped\+Texture\+Create (\begin{DoxyParamCaption}\item[{Cell\+Gcm\+Texture \texorpdfstring{$\ast$}{*}}]{gcm\+\_\+tex}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00769}{769}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+\Hypertarget{gdraw__ps3gcm_8cpp_a9959b0c4a72572051738746f33971c1a}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!gdraw\_GCM\_WrappedTextureDestroy@{gdraw\_GCM\_WrappedTextureDestroy}}
+\index{gdraw\_GCM\_WrappedTextureDestroy@{gdraw\_GCM\_WrappedTextureDestroy}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{gdraw\_GCM\_WrappedTextureDestroy()}{gdraw\_GCM\_WrappedTextureDestroy()}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a9959b0c4a72572051738746f33971c1a} 
+\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}} gdraw\+\_\+\+GCM\+\_\+\+Wrapped\+Texture\+Destroy (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{_durango_2_iggy_2include_2gdraw_8h_a23385808822b93023e326380d57d17e8}{GDraw\+Texture}} \texorpdfstring{$\ast$}{*}}]{tex}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [extern]}}
+
+
+
+Definition at line \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source_l00795}{795}} of file \doxymbox{\hyperlink{gdraw__ps3gcm_8cpp_source}{gdraw\+\_\+ps3gcm.\+cpp}}.
+
+
+
+\label{doc-var-members}
+\Hypertarget{gdraw__ps3gcm_8cpp_doc-var-members}
+\doxysubsection{Variable Documentation}
+\Hypertarget{gdraw__ps3gcm_8cpp_a1924e198b0b3f2b259fa39f57a19d95c}\index{gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}!vformats@{vformats}}
+\index{vformats@{vformats}!gdraw\_ps3gcm.cpp@{gdraw\_ps3gcm.cpp}}
+\doxysubsubsection{\texorpdfstring{vformats}{vformats}}
+{\footnotesize\ttfamily \label{gdraw__ps3gcm_8cpp_a1924e198b0b3f2b259fa39f57a19d95c} 
+struct \doxymbox{\hyperlink{structgdraw__gcm__vformat__desc}{gdraw\+\_\+gcm\+\_\+vformat\+\_\+desc}} vformats\+[\doxymbox{\hyperlink{_durango_2_iggy_2include_2gdraw_8h_a879670f2db3c5b2209531ca09ed50b41a58178126ea4f8263e915a31dea117fc4}{GDRAW\+\_\+vformat\+\_\+\+\_\+basic\+\_\+count}}]\+}
+
+{\bfseries Initial value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=\ \{}
+\DoxyCodeLine{\ \ \ }
+\DoxyCodeLine{\ \ \ \{\ \ 8,\ \ \ \ \ \ 0,\ (\ 8\ <<\ 8)\ |\ (2\ <<\ 4)\ |\ CELL\_GCM\_VERTEX\_F,\ (\ 0\ <<\ 8)\ |\ (0\ <<\ 4)\ |\ CELL\_GCM\_VERTEX\_F\ \ \ \ \},\ }
+\DoxyCodeLine{\ \ \ \{\ 16,\ \ \ \ \ \ 8,\ (16\ <<\ 8)\ |\ (2\ <<\ 4)\ |\ CELL\_GCM\_VERTEX\_F,\ (16\ <<\ 8)\ |\ (4\ <<\ 4)\ |\ CELL\_GCM\_VERTEX\_S32K\ \},\ }
+\DoxyCodeLine{\ \ \ \{\ 16,\ \ \ \ \ \ 8,\ (16\ <<\ 8)\ |\ (2\ <<\ 4)\ |\ CELL\_GCM\_VERTEX\_F,\ (16\ <<\ 8)\ |\ (2\ <<\ 4)\ |\ CELL\_GCM\_VERTEX\_F\ \ \ \ \},\ }
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

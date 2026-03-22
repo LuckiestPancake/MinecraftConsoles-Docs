@@ -1,0 +1,95 @@
+\doxysection{Renderer\+\_\+\+Texture\+Update.\+cpp}
+\hypertarget{_renderer___texture_update_8cpp_source}{}\label{_renderer___texture_update_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/SPU\_Tasks/Renderer\_TextureUpdate/Renderer\_TextureUpdate.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/SPU\_Tasks/Renderer\_TextureUpdate/Renderer\_TextureUpdate.cpp}}
+\doxymbox{\hyperlink{_renderer___texture_update_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00001}00001\ \textcolor{comment}{/*\ SCE\ CONFIDENTIAL}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00002}00002\ \textcolor{comment}{PlayStation(R)3\ Programmer\ Tool\ Runtime\ Library\ 430.001}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00003}00003\ \textcolor{comment}{*\ Copyright\ (C)\ 2007\ Sony\ Computer\ Entertainment\ Inc.}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00004}00004\ \textcolor{comment}{*\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00005}00005\ \textcolor{comment}{*/}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00007}00007\ \textcolor{comment}{/*\ common\ headers\ */}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ <alloca.h>}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <spu\_intrinsics.h>}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <cell/spurs.h>}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <cell/dma.h>}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <cell/spurs/job\_queue.h>}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_renderer___texture_update_8h}{Renderer\_TextureUpdate.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00017}00017\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_dma_data_8h}{..\(\backslash\)Common\(\backslash\)DmaData.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00018}00018\ \textcolor{preprocessor}{\#include\ <vectormath/c/vectormath\_aos\_v.h>}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00022}00022\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ sc\_verbose\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00024}\doxymbox{\hyperlink{_renderer___texture_update_8cpp_a306b5fcc0cae50a7195b460bb38e364a}{00024}}\ CellSpursJobContext2*\ \doxymbox{\hyperlink{task_8cpp_a306b5fcc0cae50a7195b460bb38e364a}{g\_pSpursJobContext}};}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00027}\doxymbox{\hyperlink{_renderer___texture_update_8cpp_a7442810a596b0c31f5fcbdd029fb2b98}{00027}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_renderer___texture_update_8cpp_a7442810a596b0c31f5fcbdd029fb2b98}{CopyPPUMemory}}(\textcolor{keywordtype}{void}*\ pSrc,\ \textcolor{keywordtype}{void}*\ pDst,\ \textcolor{keywordtype}{int}\ size)}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00028}00028\ \{}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00029}00029\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ bufferSize\ =\ 16384;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00030}00030\ \ \ \ \ \textcolor{keywordtype}{char}\ spuBuffer[bufferSize];}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00031}00031\ \ \ \ \ \textcolor{keywordtype}{int}\ dataLeft\ =\ size;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00032}00032\ \ \ \ \ \textcolor{keywordtype}{char}*\ pSrcPos\ =\ (\textcolor{keywordtype}{char}*)pSrc;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00033}00033\ \ \ \ \ \textcolor{keywordtype}{char}*\ pDstPos\ =\ (\textcolor{keywordtype}{char}*)pDst;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00034}00034\ \ \ \ \ \textcolor{keywordflow}{while}(dataLeft\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00035}00035\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ sizeToDma\ =\ dataLeft;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sizeToDma\ >\ bufferSize)}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ sizeToDma\ =\ bufferSize;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_dma_data___s_p_u_a554786827d16a48f76f0d06f2112bbb4}{DmaData\_SPU::getAndWait}}(spuBuffer,\ (uintptr\_t)pSrcPos,\ sizeToDma);}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00041}00041\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_dma_data___s_p_u_a7857a22b3871edd93cd9ee5e24f120fa}{DmaData\_SPU::putAndWait}}(spuBuffer,\ (uintptr\_t)pDstPos,\ sizeToDma);}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ pSrcPos\ +=\ sizeToDma;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ pDstPos\ +=\ sizeToDma;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ dataLeft\ -\/=\ sizeToDma;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00045}00045\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00046}00046\ \}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00049}\doxymbox{\hyperlink{_renderer___texture_update_8cpp_a6cbc0bc4fb7843fbd04848a38c4a1083}{00049}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_renderer___texture_update_8cpp_a6cbc0bc4fb7843fbd04848a38c4a1083}{TextureDataUpdate}}(\textcolor{keywordtype}{int}\ xoffset,\ \textcolor{keywordtype}{int}\ yoffset,\ \textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height,\ \textcolor{keywordtype}{int}\ pitch,\ \textcolor{keywordtype}{void}\ *pSrcData,\ \textcolor{keywordtype}{void}*\ pDstData,\ \textcolor{keywordtype}{int}\ level)}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00050}00050\ \{}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00051}00051\ \ \ \ \ \textcolor{keywordtype}{int}\ colourDepth\ =\ 4;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{keywordtype}{char}*\ pTexData\ =\ (\textcolor{keywordtype}{char}*)pDstData;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00053}00053\ \ \ \ \ \textcolor{keywordtype}{char}*\ pSrc\ =\ (\textcolor{keywordtype}{char}*)\ pSrcData;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00054}00054\ \ \ \ \ \textcolor{keywordtype}{int}\ srcOffset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00055}00055\ \ \ \ \ \textcolor{keywordtype}{int}\ dstOffset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00056}00056\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}=0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}<height;\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00057}00057\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00058}00058\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_renderer___texture_update_8cpp_a7442810a596b0c31f5fcbdd029fb2b98}{CopyPPUMemory}}(\&pSrc[srcOffset],\ \&pTexData[dstOffset],\ pitch*colourDepth);}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ srcOffset\ +=\ width*colourDepth;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ dstOffset\ +=\ pitch;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00061}00061\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00062}00062\ \}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00065}\doxymbox{\hyperlink{_renderer___texture_update_8cpp_a3f174bec6854ffe9e8b1e7bb4aafc9f6}{00065}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_renderer___texture_update_8cpp_a3f174bec6854ffe9e8b1e7bb4aafc9f6}{cellSpursJobQueueMain}}(CellSpursJobContext2\ *pContext,\ CellSpursJob256\ *pJob)}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00066}00066\ \{}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00067}00067\ \ \ \ \ \textcolor{comment}{//\ \ CellSpursTaskId\ idTask\ =\ cellSpursGetTaskId();}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00068}00068\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ idSpu\ =\ cellSpursGetCurrentSpuId();}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{if}(sc\_verbose)}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{spu__assert_8h_ab76445a0b56d3f47e494565f40a3f43f}{spu\_print}}(\textcolor{stringliteral}{"{}LevelRenderer\_cull\ [SPU\#\%u]\ start\(\backslash\)n"{}},\ idSpu);}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00073}00073\ \ \ \ \ \doxymbox{\hyperlink{task_8cpp_a306b5fcc0cae50a7195b460bb38e364a}{g\_pSpursJobContext}}\ =\ pContext;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00074}00074\ \ \ \ \ uint32\_t\ eaDataIn\ =\ pJob-\/>workArea.userData[0];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00075}00075\ \textcolor{comment}{//\ \ uint32\_t\ eaDataOut\ =pJob-\/>workArea.userData[1];}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00077}00077\ \ \ \ \ \doxymbox{\hyperlink{class_renderer___texture_update___data_in}{Renderer\_TextureUpdate\_DataIn}}\ dataIn;}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00078}00078\ \ \ \ \ \doxymbox{\hyperlink{class_dma_data___s_p_u_a554786827d16a48f76f0d06f2112bbb4}{DmaData\_SPU::getAndWait}}(\&dataIn,\ eaDataIn,\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{class_renderer___texture_update___data_in}{Renderer\_TextureUpdate\_DataIn}}));}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00080}00080\ \ \ \ \ \textcolor{keywordflow}{if}(sc\_verbose)}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{spu__assert_8h_ab76445a0b56d3f47e494565f40a3f43f}{spu\_print}}(\textcolor{stringliteral}{"{}Renderer\_TextureDataUpdate\ [SPU\#\%u]\ \(\backslash\)n"{}},\ idSpu);}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00083}00083\ \ \ \ \ \doxymbox{\hyperlink{_renderer___texture_update_8cpp_a6cbc0bc4fb7843fbd04848a38c4a1083}{TextureDataUpdate}}(dataIn.\doxymbox{\hyperlink{class_renderer___texture_update___data_in_a2ac4b82575ee2d427837e330eeab3719}{xoffset}},\ dataIn.\doxymbox{\hyperlink{class_renderer___texture_update___data_in_ab5c27ecb88e5535e93f00a85c154671e}{yoffset}},\ dataIn.\doxymbox{\hyperlink{class_renderer___texture_update___data_in_a97809ec1403422540595ecaf3e0ef733}{width}},\ dataIn.\doxymbox{\hyperlink{class_renderer___texture_update___data_in_a44a499e7fd030a3c7fc26da54aa5e37b}{height}},\ dataIn.\doxymbox{\hyperlink{class_renderer___texture_update___data_in_acf4d41a1cda3005bf334a4cae01c737c}{pitch}},\ dataIn.\doxymbox{\hyperlink{class_renderer___texture_update___data_in_a47a7d0fa47273ace8ce9dd06508c6f61}{pSrcData}},\ dataIn.\doxymbox{\hyperlink{class_renderer___texture_update___data_in_a3e48707704ad10ab540068cb33aca611}{pDstData}},\ dataIn.\doxymbox{\hyperlink{class_renderer___texture_update___data_in_a1cc2b1572a78fef94f8050d58a1e221d}{level}}\ );}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00086}00086\ \ \ \ \ \textcolor{keywordflow}{if}(sc\_verbose)}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{spu__assert_8h_ab76445a0b56d3f47e494565f40a3f43f}{spu\_print}}(\textcolor{stringliteral}{"{}Renderer\_TextureDataUpdate\ [SPU\#\%u]\ exit\(\backslash\)n"{}},\ idSpu);}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00088}00088\ \}}
+\DoxyCodeLine{\Hypertarget{_renderer___texture_update_8cpp_source_l00089}00089\ }
+
+\end{DoxyCode}

@@ -1,0 +1,1046 @@
+\doxysection{Minecart.\+cpp}
+\hypertarget{_minecart_8cpp_source}{}\label{_minecart_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/Minecart.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/Minecart.cpp}}
+\doxymbox{\hyperlink{_minecart_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8dimension_8h}{net.minecraft.world.level.dimension.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8h}{net.minecraft.world.level.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8tile_8h}{net.minecraft.world.level.tile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8phys_8h}{net.minecraft.world.phys.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8h}{net.minecraft.world.entity.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8item_8h}{net.minecraft.world.entity.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8player_8h}{net.minecraft.world.entity.player.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8animal_8h}{net.minecraft.world.entity.animal.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8h}{net.minecraft.world.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8damagesource_8h}{net.minecraft.world.damagesource.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_server_8h}{..\(\backslash\)Minecraft.Client\(\backslash\)MinecraftServer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_level_8h}{..\(\backslash\)Minecraft.Client\(\backslash\)ServerLevel.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{com_8mojang_8nbt_8h}{com.mojang.nbt.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecart_8h}{Minecart.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_shared_constants_8h}{SharedConstants.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00020}00020\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ Minecart::EXITS[][2][3]\ =\ \{\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00021}00021\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00022}00022\ \ \ \ \ \{\{+0,\ +0,\ -\/1\},\ \{+0,\ +0,\ +1\}\},\ \textcolor{comment}{//\ 0}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00023}00023\ \ \ \ \ \{\{-\/1,\ +0,\ +0\},\ \{+1,\ +0,\ +0\}\},\ \textcolor{comment}{//\ 1}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00024}00024\ \ \ \ \ \{\{-\/1,\ -\/1,\ +0\},\ \{+1,\ +0,\ +0\}\},\ \textcolor{comment}{//\ 2}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00025}00025\ \ \ \ \ \{\{-\/1,\ +0,\ +0\},\ \{+1,\ -\/1,\ +0\}\},\ \textcolor{comment}{//\ 3}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00026}00026\ \ \ \ \ \{\{+0,\ +0,\ -\/1\},\ \{+0,\ -\/1,\ +1\}\},\ \textcolor{comment}{//\ 4}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00027}00027\ \ \ \ \ \{\{+0,\ -\/1,\ -\/1\},\ \{+0,\ +0,\ +1\}\},\ \textcolor{comment}{//\ 5}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00029}00029\ \ \ \ \ \{\{+0,\ +0,\ +1\},\ \{+1,\ +0,\ +0\}\},\ \textcolor{comment}{//\ 6}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00030}00030\ \ \ \ \ \{\{+0,\ +0,\ +1\},\ \{-\/1,\ +0,\ +0\}\},\ \textcolor{comment}{//\ 7}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00031}00031\ \ \ \ \ \{\{+0,\ +0,\ -\/1\},\ \{-\/1,\ +0,\ +0\}\},\ \textcolor{comment}{//\ 8}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00032}00032\ \ \ \ \ \{\{+0,\ +0,\ -\/1\},\ \{+1,\ +0,\ +0\}\},\ \textcolor{comment}{//\ 9}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00033}00033\ \};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00035}\doxymbox{\hyperlink{class_minecart_ab4a1df599d43b90a58b49140e2719625}{00035}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_ab4a1df599d43b90a58b49140e2719625}{Minecart::\_init}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00036}00036\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00037}00037\ \ \ \ \ flipped\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00039}00039\ \ \ \ \ lSteps\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00040}00040\ \ \ \ \ lx\ =\ ly\ =\ lz\ =\ lyr\ =\ lxr\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00041}00041\ \ \ \ \ lxd\ =\ lyd\ =\ lzd\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00043}00043\ \ \ \ \ \textcolor{comment}{//\ Java\ default\ ctor}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00044}00044\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a1fff50a18b392169a97eb560dc01d94b}{blocksBuilding}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00045}00045\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a85711f517f9752908a0f28ee366655db}{setSize}}(0.98f,\ 0.7f);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00046}00046\ \ \ \ \ \doxymbox{\hyperlink{class_entity_ae61404c4fdc0f8558fb011ba2f93475b}{heightOffset}}\ =\ \doxymbox{\hyperlink{class_entity_ac9bc686604e12af0c3fc68e67badecb2}{bbHeight}}\ /\ 2.0f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00047}00047\ \ \ \ \ soundUpdater\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00048}00048\ \ \ \ \ name\ =\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00049}00049\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00051}00051\ \ \ \ \ \textcolor{comment}{//\ 4J\ Added}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00052}00052\ \ \ \ \ \doxymbox{\hyperlink{class_minecart_a5ab0923dc3ac896867885cedf5d1db3b}{m\_bHasPushedCartThisTick}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00053}00053\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00055}\doxymbox{\hyperlink{class_minecart_af083ba55a110bf536cc11e656f3dedaf}{00055}}\ \doxymbox{\hyperlink{class_minecart_af083ba55a110bf536cc11e656f3dedaf}{Minecart::Minecart}}(\doxymbox{\hyperlink{class_level}{Level}}\ *\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}})\ :\ \doxymbox{\hyperlink{class_entity_a7b9de0a383739738a4a67d272303bc9b}{Entity}}(\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}\ )}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00056}00056\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00057}00057\ \ \ \ \ \doxymbox{\hyperlink{class_minecart_ab4a1df599d43b90a58b49140e2719625}{\_init}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00059}00059\ \ \ \ \ \textcolor{comment}{//soundUpdater\ =\ level\ !=\ nullptr\ ?\ level-\/>makeSoundUpdater(this)\ :\ nullptr;}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00060}00060\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00062}\doxymbox{\hyperlink{class_minecart_a2306926d60511d0de05ddfe341f11823}{00062}}\ \doxymbox{\hyperlink{class_minecart_a2306926d60511d0de05ddfe341f11823}{Minecart::\string~Minecart}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00063}00063\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00064}00064\ \ \ \ \ \textcolor{keyword}{delete}\ soundUpdater;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00065}00065\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00067}\doxymbox{\hyperlink{class_minecart_a511ef7de67b716b3f7b6054c0161510d}{00067}}\ shared\_ptr<Minecart>\ \doxymbox{\hyperlink{class_minecart_a511ef7de67b716b3f7b6054c0161510d}{Minecart::createMinecart}}(\doxymbox{\hyperlink{class_level}{Level}}\ *\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}},\ \textcolor{keywordtype}{int}\ type)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00068}00068\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00069}00069\ \ \ \ \ \textcolor{keywordflow}{switch}\ (type)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00070}00070\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00071}00071\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_minecart_a2ec01c7eb62456dcd63e7a4ba7f16c2d}{TYPE\_CHEST}}:}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<MinecartChest>(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}},\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00073}00073\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_minecart_a2a3466d356986793c3182028a972a866}{TYPE\_FURNACE}}:}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<MinecartFurnace>(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}},\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00075}00075\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_minecart_aadbfc933b147e93d8873e8617056971c}{TYPE\_TNT}}:}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<MinecartTNT>(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}},\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_minecart_a3a878ef6fb7b725f384408559d9f2f18}{TYPE\_SPAWNER}}:}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<MinecartSpawner>(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}},\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00079}00079\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_minecart_a9876b56ad3c4e48679914696dc83c683}{TYPE\_HOPPER}}:}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<MinecartHopper>(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}},\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<MinecartRideable>(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}},\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00083}00083\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00084}00084\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00086}\doxymbox{\hyperlink{class_minecart_a204f9a0d02be6e2cc7c1d3a461a404f2}{00086}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_minecart_a204f9a0d02be6e2cc7c1d3a461a404f2}{Minecart::makeStepSound}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00087}00087\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00088}00088\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00089}00089\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00091}\doxymbox{\hyperlink{class_minecart_ae7aa34a47b2f15a1d1a698db3f848a12}{00091}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_ae7aa34a47b2f15a1d1a698db3f848a12}{Minecart::defineSynchedData}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00092}00092\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00093}00093\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>define(DATA\_ID\_HURT,\ 0);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00094}00094\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>define(DATA\_ID\_HURTDIR,\ 1);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00095}00095\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>define(DATA\_ID\_DAMAGE,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00096}00096\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>define(DATA\_ID\_DISPLAY\_TILE,\ 0);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00097}00097\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>define(DATA\_ID\_DISPLAY\_OFFSET,\ 6);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00098}00098\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>define(DATA\_ID\_CUSTOM\_DISPLAY,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(0));}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00099}00099\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00102}\doxymbox{\hyperlink{class_minecart_acad530e2bb446a0a7bfe1e6f64491494}{00102}}\ \doxymbox{\hyperlink{class_a_a_b_b}{AABB}}\ *\doxymbox{\hyperlink{class_minecart_acad530e2bb446a0a7bfe1e6f64491494}{Minecart::getCollideAgainstBox}}(shared\_ptr<Entity>\ entity)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00103}00103\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00104}00104\ \ \ \ \ \textcolor{keywordflow}{if}\ (entity-\/>isPushable())}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00105}00105\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ entity-\/>bb;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00107}00107\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00108}00108\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00109}00109\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00111}\doxymbox{\hyperlink{class_minecart_a3468a267b5f08a0e36728b36cd7628a4}{00111}}\ \doxymbox{\hyperlink{class_a_a_b_b}{AABB}}\ *\doxymbox{\hyperlink{class_minecart_a3468a267b5f08a0e36728b36cd7628a4}{Minecart::getCollideBox}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00112}00112\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00113}00113\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00114}00114\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00116}\doxymbox{\hyperlink{class_minecart_a2f849c500ad15e488a283b3fbdd6d281}{00116}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_minecart_a2f849c500ad15e488a283b3fbdd6d281}{Minecart::isPushable}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00117}00117\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00118}00118\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00119}00119\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00121}\doxymbox{\hyperlink{class_minecart_a2c25fd9c0fc5506f37d813964b696dde}{00121}}\ \doxymbox{\hyperlink{class_minecart_af083ba55a110bf536cc11e656f3dedaf}{Minecart::Minecart}}(\doxymbox{\hyperlink{class_level}{Level}}\ *\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}})\ :\ \doxymbox{\hyperlink{class_entity_a7b9de0a383739738a4a67d272303bc9b}{Entity}}(\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}\ )}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00122}00122\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00124}00124\ \ \ \ \ \doxymbox{\hyperlink{class_minecart_ab4a1df599d43b90a58b49140e2719625}{\_init}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00125}00125\ \ \ \ \ \doxymbox{\hyperlink{class_entity_ae5a85d03ef139cb9c96480ac52ace729}{setPos}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00127}00127\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00128}00128\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00129}00129\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00131}00131\ \ \ \ \ \doxymbox{\hyperlink{class_entity_accbdd527336f87abd64091a5840adbae}{xo}}\ =\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00132}00132\ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab72de80e29791fac08e1c3b42bad66a7}{yo}}\ =\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00133}00133\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a8684b270bac6810e3e97dfa91fe04fe0}{zo}}\ =\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00134}00134\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00136}\doxymbox{\hyperlink{class_minecart_aed2ec0edb2346f562146bb0cebe2fab4}{00136}}\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_minecart_aed2ec0edb2346f562146bb0cebe2fab4}{Minecart::getRideHeight}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00137}00137\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00138}00138\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_entity_ac9bc686604e12af0c3fc68e67badecb2}{bbHeight}}\ *\ 0.0\ -\/\ 0.3f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00139}00139\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00140}00140\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00141}\doxymbox{\hyperlink{class_minecart_afd495e89136accebb2f6c696d2566403}{00141}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_minecart_afd495e89136accebb2f6c696d2566403}{Minecart::hurt}}(\doxymbox{\hyperlink{class_damage_source}{DamageSource}}\ *source,\ \textcolor{keywordtype}{float}\ hurtDamage)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00142}00142\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00143}00143\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>isClientSide\ ||\ \doxymbox{\hyperlink{class_entity_a563e8cd1374bcdd6dd5f12a6afa7ef9f}{removed}})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00144}00144\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_a6bd0a3a921afec681bba8bb88128d097}{isInvulnerable}}())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00145}00145\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00146}00146\ \ \ \ \ \textcolor{comment}{//\ 4J-\/JEV:\ Fix\ for\ \#88212,}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00147}00147\ \ \ \ \ \textcolor{comment}{//\ Untrusted\ players\ shouldn't\ be\ able\ to\ damage\ minecarts\ or\ boats.}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00148}00148\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{dynamic\_cast<}\doxymbox{\hyperlink{class_entity_damage_source}{EntityDamageSource}}\ *\textcolor{keyword}{>}(source)\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00149}00149\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ shared\_ptr<Entity>\ attacker\ =\ source-\/>\doxymbox{\hyperlink{class_damage_source_ac3964a455e54b586f0a056412d078639}{getDirectEntity}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ attacker-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a81976c0b62a5e1b5bb0e672101ce8358}{eTYPE\_PLAYER}})\ \&\&\ !dynamic\_pointer\_cast<Player>(attacker)-\/>isAllowedToHurtEntity(\ shared\_from\_this()\ ))}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00156}00156\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00158}00158\ \ \ \ \ \doxymbox{\hyperlink{class_minecart_acaaa9a2cb00a5054b586fd9d2bb12d45}{setHurtDir}}(-\/\doxymbox{\hyperlink{class_minecart_ae4b4ddaa5dbc4ff1256a72351a623545}{getHurtDir}}());}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00159}00159\ \ \ \ \ \doxymbox{\hyperlink{class_minecart_af7f5fbd3a88751283cf56bb74b8deb39}{setHurtTime}}(10);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00160}00160\ \ \ \ \ \doxymbox{\hyperlink{class_entity_abb12b7704a2868318cc6b6da17f1d576}{markHurt}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00161}00161\ \ \ \ \ \doxymbox{\hyperlink{class_minecart_a6280c8238aafdf251badc82592486e32}{setDamage}}(\doxymbox{\hyperlink{class_minecart_afacf36ad4d7414475877d22e3d241449}{getDamage}}()\ +\ (hurtDamage\ *\ 10));}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00163}00163\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ If\ someone\ is\ riding\ in\ this,\ then\ it\ can\ tick\ multiple\ times\ which\ causes\ the\ damage\ to}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00164}00164\ \ \ \ \ \textcolor{comment}{//\ decrease\ too\ quickly.\ So\ just\ make\ the\ damage\ a\ bit\ higher\ to\ start\ with\ for\ similar\ behaviour}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00165}00165\ \ \ \ \ \textcolor{comment}{//\ to\ an\ unridden\ one.\ Only\ do\ this\ change\ if\ the\ riding\ player\ is\ attacking\ it.}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00166}00166\ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock()\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock()\ ==\ source-\/>\doxymbox{\hyperlink{class_damage_source_a21d279882a9f658847e0a3fba91c1a0d}{getEntity}}()\ )\ hurtDamage\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00168}00168\ \ \ \ \ \textcolor{keywordtype}{bool}\ creativePlayer\ =\ source-\/>\doxymbox{\hyperlink{class_damage_source_a21d279882a9f658847e0a3fba91c1a0d}{getEntity}}()\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ source-\/>\doxymbox{\hyperlink{class_damage_source_a21d279882a9f658847e0a3fba91c1a0d}{getEntity}}()-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a81976c0b62a5e1b5bb0e672101ce8358}{eTYPE\_PLAYER}})\ \&\&\ dynamic\_pointer\_cast<Player>(source-\/>\doxymbox{\hyperlink{class_damage_source_a21d279882a9f658847e0a3fba91c1a0d}{getEntity}}())-\/>abilities.instabuild;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00169}00169\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00170}00170\ \ \ \ \ \textcolor{keywordflow}{if}\ (creativePlayer\ ||\ \doxymbox{\hyperlink{class_minecart_afacf36ad4d7414475877d22e3d241449}{getDamage}}()\ >\ 20\ *\ 2)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00171}00171\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ HEG\ -\/\ Fixed\ issue\ with\ player\ falling\ through\ the\ ground\ on\ destroying\ a\ minecart\ while\ riding\ (issue\ \#160607)}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock()\ !=\ \textcolor{keyword}{nullptr})\ \doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock()-\/>ride(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!creativePlayer\ ||\ \doxymbox{\hyperlink{class_minecart_a48dd9d92e6e7cf5c9f3ac69a63fb7bb1}{hasCustomName}}())}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecart_a4cd70555df98df8ea2d171f83129118a}{destroy}}(source);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecart_aca326138a3192cc853be25c58350a84b}{remove}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00183}00183\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00184}00184\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00185}00185\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00187}\doxymbox{\hyperlink{class_minecart_a4cd70555df98df8ea2d171f83129118a}{00187}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_a4cd70555df98df8ea2d171f83129118a}{Minecart::destroy}}(\doxymbox{\hyperlink{class_damage_source}{DamageSource}}\ *source)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00188}00188\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00189}00189\ \ \ \ \ \doxymbox{\hyperlink{class_minecart_aca326138a3192cc853be25c58350a84b}{remove}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00190}00190\ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ std::make\_shared<ItemInstance>(\doxymbox{\hyperlink{class_item_af359f6e1015c09f24b1746a27f6de155}{Item::minecart}},\ 1);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00191}00191\ \ \ \ \ \textcolor{keywordflow}{if}\ (!name.empty())\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>setHoverName(name);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00192}00192\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a23c9c2b2b9299d1818e7515220ff3815}{spawnAtLocation}}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ 0);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00193}00193\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00195}\doxymbox{\hyperlink{class_minecart_a1015ae003bf8b358cec2a34953fe1794}{00195}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_a1015ae003bf8b358cec2a34953fe1794}{Minecart::animateHurt}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00196}00196\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00197}00197\ \ \ \ \ \doxymbox{\hyperlink{class_minecart_acaaa9a2cb00a5054b586fd9d2bb12d45}{setHurtDir}}(-\/\doxymbox{\hyperlink{class_minecart_ae4b4ddaa5dbc4ff1256a72351a623545}{getHurtDir}}());}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00198}00198\ \ \ \ \ \doxymbox{\hyperlink{class_minecart_af7f5fbd3a88751283cf56bb74b8deb39}{setHurtTime}}(10);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00199}00199\ \ \ \ \ \doxymbox{\hyperlink{class_minecart_a6280c8238aafdf251badc82592486e32}{setDamage}}(\doxymbox{\hyperlink{class_minecart_afacf36ad4d7414475877d22e3d241449}{getDamage}}()\ +\ (\doxymbox{\hyperlink{class_minecart_afacf36ad4d7414475877d22e3d241449}{getDamage}}()\ *\ 10));}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00200}00200\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00201}00201\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00202}\doxymbox{\hyperlink{class_minecart_af1dfceeb45a8f7839ec05fdeb88eb981}{00202}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_minecart_af1dfceeb45a8f7839ec05fdeb88eb981}{Minecart::isPickable}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00203}00203\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00204}00204\ \ \ \ \ \textcolor{keywordflow}{return}\ !\doxymbox{\hyperlink{class_entity_a563e8cd1374bcdd6dd5f12a6afa7ef9f}{removed}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00205}00205\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00206}00206\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00207}\doxymbox{\hyperlink{class_minecart_aca326138a3192cc853be25c58350a84b}{00207}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_aca326138a3192cc853be25c58350a84b}{Minecart::remove}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00208}00208\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00209}00209\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa84c32a5d1baceccefec62568edc0a4f}{Entity::remove}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00210}00210\ \ \ \ \ \textcolor{comment}{//if\ (soundUpdater\ !=\ nullptr)\ soundUpdater-\/>tick();}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00211}00211\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00213}\doxymbox{\hyperlink{class_minecart_a494520fd72dbba5292972a3ca730ff1e}{00213}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_a494520fd72dbba5292972a3ca730ff1e}{Minecart::tick}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00214}00214\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00215}00215\ \ \ \ \ \textcolor{comment}{//if\ (soundUpdater\ !=\ nullptr)\ soundUpdater-\/>tick();}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00216}00216\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ make\ minecarts\ (server-\/side)\ tick\ twice,\ to\ put\ things\ back\ to\ how\ they\ were\ when\ we\ were\ accidently\ ticking\ them\ twice}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00217}00217\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 2;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00218}00218\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_minecart_a035a7e212e481e27f69ced91d3503e1c}{getHurtTime}}()\ >\ 0)\ \doxymbox{\hyperlink{class_minecart_af7f5fbd3a88751283cf56bb74b8deb39}{setHurtTime}}(\doxymbox{\hyperlink{class_minecart_a035a7e212e481e27f69ced91d3503e1c}{getHurtTime}}()\ -\/\ 1);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_minecart_afacf36ad4d7414475877d22e3d241449}{getDamage}}()\ >\ 0)\ \doxymbox{\hyperlink{class_minecart_a6280c8238aafdf251badc82592486e32}{setDamage}}(\doxymbox{\hyperlink{class_minecart_afacf36ad4d7414475877d22e3d241449}{getDamage}}()\ -\/\ 1);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ <\ -\/64)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_acbf28a6fb2bac26e37ce517bd2c79703}{outOfWorld}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00225}00225\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>isClientSide\ \&\&\ \textcolor{keyword}{dynamic\_cast<}\doxymbox{\hyperlink{class_server_level}{ServerLevel}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}})\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecraft_server}{MinecraftServer}}\ *server\ =\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_server_level}{ServerLevel}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}})-\/>getServer();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ waitTime\ =\ \doxymbox{\hyperlink{class_entity_a1108100d5bb85e9728278c90e61647a4}{getPortalWaitTime}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_a87dfc4a11648602b67779d963dc9a5e3}{isInsidePortal}})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (server-\/>\doxymbox{\hyperlink{class_minecraft_server_ab2392b7a7adca80e6320e06da91da30a}{isNetherEnabled}}())}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_a2a2a35071ba8da575c60f802345188c4}{riding}}\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_a970ff8cc120463c9a45891c77d4a06d3}{portalTime}}++\ >=\ waitTime)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a970ff8cc120463c9a45891c77d4a06d3}{portalTime}}\ =\ waitTime;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a27b15cfe0fb04b77dd1741d6bbc5b7be}{changingDimensionDelay}}\ =\ \doxymbox{\hyperlink{class_entity_a3ca26aff60697e74da244bd008ac5592}{getDimensionChangingDelay}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ targetDimension;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>dimension-\/>id\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ targetDimension\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ targetDimension\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00252}00252\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a9da38e87a6448cee62eb97c703823fc3}{changeDimension}}(targetDimension);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a87dfc4a11648602b67779d963dc9a5e3}{isInsidePortal}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_a970ff8cc120463c9a45891c77d4a06d3}{portalTime}}\ >\ 0)\ \doxymbox{\hyperlink{class_entity_a970ff8cc120463c9a45891c77d4a06d3}{portalTime}}\ -\/=\ 4;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_a970ff8cc120463c9a45891c77d4a06d3}{portalTime}}\ <\ 0)\ \doxymbox{\hyperlink{class_entity_a970ff8cc120463c9a45891c77d4a06d3}{portalTime}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_a27b15cfe0fb04b77dd1741d6bbc5b7be}{changingDimensionDelay}}\ >\ 0)\ \doxymbox{\hyperlink{class_entity_a27b15cfe0fb04b77dd1741d6bbc5b7be}{changingDimensionDelay}}-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00265}00265\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Fix\ for\ \#8284\ -\/\ Gameplay:\ Collision:\ Minecart\ clips\ into/\ through\ blocks\ at\ the\ end\ of\ the\ track,\ prevents\ player\ from\ riding}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>isClientSide)\ \textcolor{comment}{//\ \&\&\ lSteps\ >\ 0)}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (lSteps\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xt\ =\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ +\ (lx\ -\/\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}})\ /\ lSteps;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ yt\ =\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ +\ (ly\ -\/\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}})\ /\ lSteps;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ zt\ =\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ +\ (lz\ -\/\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}})\ /\ lSteps;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00275}00275\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ yrd\ =\ \doxymbox{\hyperlink{class_mth_a0f480bf28fa5b25abdf268df18dd5917}{Mth::wrapDegrees}}(lyr\ -\/\ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ +=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}((yrd)\ /\ lSteps);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}}\ +=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}((lxr\ -\/\ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}})\ /\ lSteps);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00280}00280\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lSteps-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ae5a85d03ef139cb9c96480ac52ace729}{setPos}}(xt,\ yt,\ zt);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a8939bc96191c784588208e3191b164ae}{setRot}}(\doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}},\ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00284}00284\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00286}00286\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ae5a85d03ef139cb9c96480ac52ace729}{setPos}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00288}00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a8939bc96191c784588208e3191b164ae}{setRot}}(\doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}},\ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00290}00290\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};\ \textcolor{comment}{//\ 4J\ -\/\ return\ here\ stops\ the\ client-\/side\ version\ of\ this\ from\ ticking\ twice}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00292}00292\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00293}00293\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_accbdd527336f87abd64091a5840adbae}{xo}}\ =\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab72de80e29791fac08e1c3b42bad66a7}{yo}}\ =\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a8684b270bac6810e3e97dfa91fe04fe0}{zo}}\ =\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ -\/=\ 0.04f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00298}00298\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ yt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ zt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_base_rail_tile_a9112181b59e180baed60f113c17d43c2}{BaseRailTile::isRail}}(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}},\ xt,\ yt\ -\/\ 1,\ zt))}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ yt-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00306}00306\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ max\ =\ 0.4;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00308}00308\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00309}00309\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ slideSpeed\ =\ 1\ /\ 128.0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tile\ =\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>getTile(xt,\ yt,\ zt);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_base_rail_tile_a9112181b59e180baed60f113c17d43c2}{BaseRailTile::isRail}}(tile))}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ data\ =\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>getData(xt,\ yt,\ zt);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecart_acbecf78d16f2f964e9295517fe3a2972}{moveAlongTrack}}(xt,\ yt,\ zt,\ max,\ slideSpeed,\ tile,\ data);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00315}00315\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tile\ ==\ \doxymbox{\hyperlink{class_tile_a79b00ae40678c178c683210dd9ea8f43}{Tile::activatorRail\_Id}})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecart_a4ad5c5c3e0bf8166bb563cb5f7c914a0}{activateMinecart}}(xt,\ yt,\ zt,\ (data\ \&\ \doxymbox{\hyperlink{class_base_rail_tile_af6eede88009579ec43867efd99952d93}{BaseRailTile::RAIL\_DATA\_BIT}})\ !=\ 0);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecart_a14943f778f03f9da2738531f3f9a7386}{comeOffTrack}}(max);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00325}00325\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a8f81dc3e4facb341369118e1b2975da1}{checkInsideTiles}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00327}00327\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00328}00328\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00329}00329\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xDiff\ =\ \doxymbox{\hyperlink{class_entity_accbdd527336f87abd64091a5840adbae}{xo}}\ -\/\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ zDiff\ =\ \doxymbox{\hyperlink{class_entity_a8684b270bac6810e3e97dfa91fe04fe0}{zo}}\ -\/\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (xDiff\ *\ xDiff\ +\ zDiff\ *\ zDiff\ >\ 0.001)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(atan2(zDiff,\ xDiff)\ *\ 180\ /\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (flipped)\ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ +=\ 180;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00336}00336\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ rotDiff\ =\ \doxymbox{\hyperlink{class_mth_a0f480bf28fa5b25abdf268df18dd5917}{Mth::wrapDegrees}}(\doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ -\/\ \doxymbox{\hyperlink{class_entity_afe674281fdd06c9d0aa174ba4fb06f20}{yRotO}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00338}00338\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rotDiff\ <\ -\/170\ ||\ rotDiff\ >=\ 170)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ +=\ 180;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ flipped\ =\ !flipped;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00344}00344\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a8939bc96191c784588208e3191b164ae}{setRot}}(\doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}},\ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00345}00345\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ vector<shared\_ptr<Entity>\ >\ *entities\ =\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>getEntities(shared\_from\_this(),\ \doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>grow(0.2f,\ 0,\ 0.2f));}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (entities\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ !entities-\/>empty())}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ e\ :\ *entities)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ e\ \&\&\ e\ !=\ \doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock()\ \&\&\ e-\/>isPushable()\ \&\&\ e-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a6ef4616061249b0069a8324df6fb652b}{eTYPE\_MINECART}}))}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<Minecart>\ cart\ =\ dynamic\_pointer\_cast<Minecart>(e);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cart-\/>m\_bHasPushedCartThisTick\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cart-\/>push(shared\_from\_this());}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00356}00356\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Added\ -\/\ We\ should\ only\ be\ pushed\ by\ one\ minecart\ per\ tick,\ the\ closest\ one}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Fix\ for\ \#46937\ -\/\ TU5:\ Gameplay:\ Crash/Freeze\ occurs\ when\ a\ minecart\ with\ an\ animal\ inside\ will\ be\ forced\ to\ despawn}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ cart-\/>m\_bHasPushedCartThisTick\ )\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00363}00363\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00364}00364\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock()\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock()-\/>removed)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock()-\/>riding\ ==\ shared\_from\_this())}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock()-\/>riding\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}\ =\ weak\_ptr<Entity>();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00374}00374\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00375}00375\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00376}00376\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00377}00377\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00378}\doxymbox{\hyperlink{class_minecart_a4ad5c5c3e0bf8166bb563cb5f7c914a0}{00378}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_a4ad5c5c3e0bf8166bb563cb5f7c914a0}{Minecart::activateMinecart}}(\textcolor{keywordtype}{int}\ xt,\ \textcolor{keywordtype}{int}\ yt,\ \textcolor{keywordtype}{int}\ zt,\ \textcolor{keywordtype}{bool}\ state)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00379}00379\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00380}00380\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00381}00381\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00382}\doxymbox{\hyperlink{class_minecart_a14943f778f03f9da2738531f3f9a7386}{00382}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_a14943f778f03f9da2738531f3f9a7386}{Minecart::comeOffTrack}}(\textcolor{keywordtype}{double}\ maxSpeed)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00383}00383\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00384}00384\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ <\ -\/maxSpeed)\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ =\ -\/maxSpeed;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00385}00385\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ >\ +maxSpeed)\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ =\ +maxSpeed;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00386}00386\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ <\ -\/maxSpeed)\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ =\ -\/maxSpeed;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00387}00387\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ >\ +maxSpeed)\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ =\ +maxSpeed;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00388}00388\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_aaea9f07bff66b8596dc389c0a5355bfe}{onGround}})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00389}00389\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00391}00391\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ *=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00392}00392\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00393}00393\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00394}00394\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a263971a1af8088aff7449ac940e18abb}{move}}(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}},\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}},\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00395}00395\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00396}00396\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_entity_aaea9f07bff66b8596dc389c0a5355bfe}{onGround}})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00397}00397\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00398}00398\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *=\ 0.95f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00399}00399\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ *=\ 0.95f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00400}00400\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *=\ 0.95f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00401}00401\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00402}00402\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00403}00403\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00404}\doxymbox{\hyperlink{class_minecart_acbecf78d16f2f964e9295517fe3a2972}{00404}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_acbecf78d16f2f964e9295517fe3a2972}{Minecart::moveAlongTrack}}(\textcolor{keywordtype}{int}\ xt,\ \textcolor{keywordtype}{int}\ yt,\ \textcolor{keywordtype}{int}\ zt,\ \textcolor{keywordtype}{double}\ maxSpeed,\ \textcolor{keywordtype}{double}\ slideSpeed,\ \textcolor{keywordtype}{int}\ tile,\ \textcolor{keywordtype}{int}\ data)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00405}00405\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00406}00406\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aacd6eeb5e642b9ab6cf4d9b801de5cbf}{fallDistance}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00407}00407\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00408}00408\ \ \ \ \ \doxymbox{\hyperlink{class_vec3}{Vec3}}\ *oldPos\ =\ \doxymbox{\hyperlink{class_minecart_a9e9b8d1c138f9e6a34de2c98faf00562}{getPos}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00409}00409\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ =\ yt;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00410}00410\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00411}00411\ \ \ \ \ \textcolor{keywordtype}{bool}\ powerTrack\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00412}00412\ \ \ \ \ \textcolor{keywordtype}{bool}\ haltTrack\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00413}00413\ \ \ \ \ \textcolor{keywordflow}{if}\ (tile\ ==\ \doxymbox{\hyperlink{class_tile_aa6b7144697872bd0e2474f296622602d}{Tile::goldenRail\_Id}})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00414}00414\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00415}00415\ \ \ \ \ \ \ \ \ powerTrack\ =\ (data\ \&\ \doxymbox{\hyperlink{class_base_rail_tile_af6eede88009579ec43867efd99952d93}{BaseRailTile::RAIL\_DATA\_BIT}})\ !=\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00416}00416\ \ \ \ \ \ \ \ \ haltTrack\ =\ !powerTrack;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00417}00417\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00418}00418\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_base_rail_tile}{BaseRailTile}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[tile])-\/>isUsesDataBit())}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00419}00419\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00420}00420\ \ \ \ \ \ \ \ \ data\ \&=\ \doxymbox{\hyperlink{class_base_rail_tile_ac67dc488e7a9661533020114046689f7}{BaseRailTile::RAIL\_DIRECTION\_MASK}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00421}00421\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00422}00422\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00423}00423\ \ \ \ \ \textcolor{keywordflow}{if}\ (data\ >=\ 2\ \&\&\ data\ <=\ 5)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00424}00424\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00425}00425\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ =\ yt\ +\ 1;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00426}00426\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00427}00427\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00428}00428\ \ \ \ \ \textcolor{keywordflow}{if}\ (data\ ==\ 2)\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ -\/=\ slideSpeed;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00429}00429\ \ \ \ \ \textcolor{keywordflow}{if}\ (data\ ==\ 3)\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +=\ slideSpeed;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00430}00430\ \ \ \ \ \textcolor{keywordflow}{if}\ (data\ ==\ 4)\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ +=\ slideSpeed;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00431}00431\ \ \ \ \ \textcolor{keywordflow}{if}\ (data\ ==\ 5)\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ -\/=\ slideSpeed;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00432}00432\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00433}00433\ \ \ \ \ \textcolor{keywordtype}{int}\ exits[2][3];}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00434}00434\ \ \ \ \ memcpy(\ exits,\ EXITS[data],\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ *\ 2\ *\ 3);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00435}00435\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00436}00436\ \ \ \ \ \textcolor{keywordtype}{double}\ xD\ =\ exits[1][0]\ -\/\ exits[0][0];}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00437}00437\ \ \ \ \ \textcolor{keywordtype}{double}\ zD\ =\ exits[1][2]\ -\/\ exits[0][2];}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00438}00438\ \ \ \ \ \textcolor{keywordtype}{double}\ dd\ =\ sqrt(xD\ *\ xD\ +\ zD\ *\ zD);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00439}00439\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00440}00440\ \ \ \ \ \textcolor{keywordtype}{double}\ flip\ =\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *\ xD\ +\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *\ zD;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00441}00441\ \ \ \ \ \textcolor{keywordflow}{if}\ (flip\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00442}00442\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00443}00443\ \ \ \ \ \ \ \ \ xD\ =\ -\/xD;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00444}00444\ \ \ \ \ \ \ \ \ zD\ =\ -\/zD;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00445}00445\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00446}00446\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00447}00447\ \ \ \ \ \textcolor{keywordtype}{double}\ pow\ =\ sqrt(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00448}00448\ \ \ \ \ \textcolor{keywordflow}{if}\ (pow\ >\ 2)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00449}00449\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00450}00450\ \ \ \ \ \ \ \ \ pow\ =\ 2;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00451}00451\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00452}00452\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00453}00453\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ =\ pow\ *\ xD\ /\ dd;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00454}00454\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ =\ pow\ *\ zD\ /\ dd;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00455}00455\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00456}00456\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00457}00457\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock()\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock()-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aa0f4114708dacc2fc855b18a33863402}{eTYPE\_LIVINGENTITY}})\ )}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00458}00458\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00459}00459\ \ \ \ \ \ \ \ \ shared\_ptr<LivingEntity>\ living\ =\ dynamic\_pointer\_cast<LivingEntity>(\doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock());}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00460}00460\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ forward\ =\ living-\/>yya;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00462}00462\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00463}00463\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (forward\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00464}00464\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ riderXd\ =\ -\/sin(living-\/>yRot\ *\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}\ /\ 180);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00466}00466\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ riderZd\ =\ cos(living-\/>yRot\ *\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}\ /\ 180);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00467}00467\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00468}00468\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ ownDist\ =\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00469}00469\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00470}00470\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ownDist\ <\ 0.01)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00471}00471\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +=\ riderXd\ *\ 0.1;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ +=\ riderZd\ *\ 0.1;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00474}00474\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00475}00475\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ haltTrack\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00477}00477\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00478}00478\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00479}00479\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00480}00480\ \ \ \ \ \textcolor{comment}{//\ on\ golden\ rails\ without\ power,\ stop\ the\ cart}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00481}00481\ \ \ \ \ \textcolor{keywordflow}{if}\ (haltTrack)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00482}00482\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00483}00483\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ speedLength\ =\ sqrt(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00484}00484\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (speedLength\ <\ .03)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00485}00485\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *=\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ *=\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *=\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00489}00489\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00490}00490\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00491}00491\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ *=\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00495}00495\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00496}00496\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00497}00497\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00498}00498\ \ \ \ \ \textcolor{keywordtype}{double}\ progress\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00499}00499\ \ \ \ \ \textcolor{keywordtype}{double}\ x0\ =\ xt\ +\ 0.5\ +\ exits[0][0]\ *\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00500}00500\ \ \ \ \ \textcolor{keywordtype}{double}\ z0\ =\ zt\ +\ 0.5\ +\ exits[0][2]\ *\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00501}00501\ \ \ \ \ \textcolor{keywordtype}{double}\ x1\ =\ xt\ +\ 0.5\ +\ exits[1][0]\ *\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00502}00502\ \ \ \ \ \textcolor{keywordtype}{double}\ z1\ =\ zt\ +\ 0.5\ +\ exits[1][2]\ *\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00503}00503\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00504}00504\ \ \ \ \ xD\ =\ x1\ -\/\ x0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00505}00505\ \ \ \ \ zD\ =\ z1\ -\/\ z0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00506}00506\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00507}00507\ \ \ \ \ \textcolor{keywordflow}{if}\ (xD\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00508}00508\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00509}00509\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ =\ xt\ +\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00510}00510\ \ \ \ \ \ \ \ \ progress\ =\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ -\/\ zt;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00511}00511\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00512}00512\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (zD\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00513}00513\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00514}00514\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ =\ zt\ +\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00515}00515\ \ \ \ \ \ \ \ \ progress\ =\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ -\/\ xt;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00516}00516\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00517}00517\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00518}00518\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00519}00519\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00520}00520\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xx\ =\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ -\/\ x0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00521}00521\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ zz\ =\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ -\/\ z0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00522}00522\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00523}00523\ \ \ \ \ \ \ \ \ progress\ =\ (xx\ *\ xD\ +\ zz\ *\ zD)\ *\ 2;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00524}00524\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00525}00525\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00526}00526\ \ \ \ \ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ =\ x0\ +\ xD\ *\ progress;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00527}00527\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ =\ z0\ +\ zD\ *\ progress;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00528}00528\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00529}00529\ \ \ \ \ \doxymbox{\hyperlink{class_entity_ae5a85d03ef139cb9c96480ac52ace729}{setPos}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ +\ \doxymbox{\hyperlink{class_entity_ae61404c4fdc0f8558fb011ba2f93475b}{heightOffset}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00530}00530\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00531}00531\ \ \ \ \ \textcolor{keywordtype}{double}\ xdd\ =\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00532}00532\ \ \ \ \ \textcolor{keywordtype}{double}\ zdd\ =\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00533}00533\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock()\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00534}00534\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00535}00535\ \ \ \ \ \ \ \ \ xdd\ *=\ 0.75;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00536}00536\ \ \ \ \ \ \ \ \ zdd\ *=\ 0.75;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00537}00537\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00538}00538\ \ \ \ \ \textcolor{keywordflow}{if}\ (xdd\ <\ -\/maxSpeed)\ xdd\ =\ -\/maxSpeed;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00539}00539\ \ \ \ \ \textcolor{keywordflow}{if}\ (xdd\ >\ +maxSpeed)\ xdd\ =\ +maxSpeed;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00540}00540\ \ \ \ \ \textcolor{keywordflow}{if}\ (zdd\ <\ -\/maxSpeed)\ zdd\ =\ -\/maxSpeed;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00541}00541\ \ \ \ \ \textcolor{keywordflow}{if}\ (zdd\ >\ +maxSpeed)\ zdd\ =\ +maxSpeed;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00542}00542\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00543}00543\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a263971a1af8088aff7449ac940e18abb}{move}}(xdd,\ 0,\ zdd);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00544}00544\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00545}00545\ \ \ \ \ \textcolor{keywordflow}{if}\ (exits[0][1]\ !=\ 0\ \&\&\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}})\ -\/\ xt\ ==\ exits[0][0]\ \&\&\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}})\ -\/\ zt\ ==\ exits[0][2])}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00546}00546\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00547}00547\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ae5a85d03ef139cb9c96480ac52ace729}{setPos}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ +\ exits[0][1],\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00548}00548\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00549}00549\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (exits[1][1]\ !=\ 0\ \&\&\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}})\ -\/\ xt\ ==\ exits[1][0]\ \&\&\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}})\ -\/\ zt\ ==\ exits[1][2])}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00550}00550\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00551}00551\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ae5a85d03ef139cb9c96480ac52ace729}{setPos}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ +\ exits[1][1],\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00552}00552\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00553}00553\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00554}00554\ \ \ \ \ \doxymbox{\hyperlink{class_minecart_a4717e93215904a5274c8d793f2f76808}{applyNaturalSlowdown}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00555}00555\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00556}00556\ \ \ \ \ \doxymbox{\hyperlink{class_vec3}{Vec3}}\ *newPos\ =\ \doxymbox{\hyperlink{class_minecart_a9e9b8d1c138f9e6a34de2c98faf00562}{getPos}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00557}00557\ \ \ \ \ \textcolor{keywordflow}{if}\ (newPos\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ oldPos\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00558}00558\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00559}00559\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ speed\ =\ (oldPos-\/>\doxymbox{\hyperlink{class_vec3_a3f7a04fbd01d126678d0d243b3edd1bc}{y}}\ -\/\ newPos-\/>\doxymbox{\hyperlink{class_vec3_a3f7a04fbd01d126678d0d243b3edd1bc}{y}})\ *\ 0.05;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00560}00560\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00561}00561\ \ \ \ \ \ \ \ \ pow\ =\ sqrt(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00562}00562\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pow\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00563}00563\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00564}00564\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ =\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ /\ pow\ *\ (pow\ +\ speed);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00565}00565\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ =\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ /\ pow\ *\ (pow\ +\ speed);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00566}00566\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00567}00567\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ae5a85d03ef139cb9c96480ac52ace729}{setPos}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ newPos-\/>\doxymbox{\hyperlink{class_vec3_a3f7a04fbd01d126678d0d243b3edd1bc}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00568}00568\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00569}00569\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00570}00570\ \ \ \ \ \textcolor{keywordtype}{int}\ xn\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00571}00571\ \ \ \ \ \textcolor{keywordtype}{int}\ zn\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00572}00572\ \ \ \ \ \textcolor{keywordflow}{if}\ (xn\ !=\ xt\ ||\ zn\ !=\ zt)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00573}00573\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00574}00574\ \ \ \ \ \ \ \ \ pow\ =\ sqrt(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00575}00575\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00576}00576\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ =\ pow\ *\ (xn\ -\/\ xt);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00577}00577\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ =\ pow\ *\ (zn\ -\/\ zt);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00578}00578\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00579}00579\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00580}00580\ \ \ \ \ \textcolor{comment}{//\ if\ on\ golden\ rail\ with\ power,\ increase\ speed}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00581}00581\ \ \ \ \ \textcolor{keywordflow}{if}\ (powerTrack)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00582}00582\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00583}00583\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ speedLength\ =\ sqrt(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00584}00584\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (speedLength\ >\ .01)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00585}00585\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00586}00586\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ speed\ =\ 0.06;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00587}00587\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +=\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ /\ speedLength\ *\ speed;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00588}00588\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ +=\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ /\ speedLength\ *\ speed;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00589}00589\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00590}00590\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00591}00591\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ the\ minecart\ is\ standing\ still,\ accelerate\ it\ away\ from}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00593}00593\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ potential\ walls}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00594}00594\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (data\ ==\ \doxymbox{\hyperlink{class_base_rail_tile_ae0f1a7d71aaad067b99fb1c9900778e3}{BaseRailTile::DIR\_FLAT\_X}})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00595}00595\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00596}00596\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>isSolidBlockingTile(xt\ -\/\ 1,\ yt,\ zt))}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00597}00597\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00598}00598\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ =\ .02;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00599}00599\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00600}00600\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>isSolidBlockingTile(xt\ +\ 1,\ yt,\ zt))}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00601}00601\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00602}00602\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ =\ -\/.02;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00603}00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00604}00604\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00605}00605\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (data\ ==\ \doxymbox{\hyperlink{class_base_rail_tile_a5f1932a4d80dc3382b78417b7e89582c}{BaseRailTile::DIR\_FLAT\_Z}})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>isSolidBlockingTile(xt,\ yt,\ zt\ -\/\ 1))}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00608}00608\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00609}00609\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ =\ .02;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00610}00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00611}00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>isSolidBlockingTile(xt,\ yt,\ zt\ +\ 1))}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00612}00612\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00613}00613\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ =\ -\/.02;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00614}00614\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00615}00615\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00616}00616\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00617}00617\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00618}00618\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00619}00619\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00620}\doxymbox{\hyperlink{class_minecart_a4717e93215904a5274c8d793f2f76808}{00620}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_a4717e93215904a5274c8d793f2f76808}{Minecart::applyNaturalSlowdown}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00621}00621\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00622}00622\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock()\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00623}00623\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00624}00624\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *=\ 0.997f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00625}00625\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ *=\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00626}00626\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *=\ 0.997f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00627}00627\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00628}00628\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00629}00629\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00630}00630\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *=\ 0.96f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00631}00631\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ *=\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00632}00632\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *=\ 0.96f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00633}00633\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00634}00634\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00635}00635\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00636}\doxymbox{\hyperlink{class_minecart_a327c5bb36fbae09d219b2e60adaabb0a}{00636}}\ \doxymbox{\hyperlink{class_vec3}{Vec3}}\ *\doxymbox{\hyperlink{class_minecart_a327c5bb36fbae09d219b2e60adaabb0a}{Minecart::getPosOffs}}(\textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}},\ \textcolor{keywordtype}{double}\ offs)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00637}00637\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00638}00638\ \ \ \ \ \textcolor{keywordtype}{int}\ xt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00639}00639\ \ \ \ \ \textcolor{keywordtype}{int}\ yt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00640}00640\ \ \ \ \ \textcolor{keywordtype}{int}\ zt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00641}00641\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_base_rail_tile_a9112181b59e180baed60f113c17d43c2}{BaseRailTile::isRail}}(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}},\ xt,\ yt\ -\/\ 1,\ zt))}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00642}00642\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00643}00643\ \ \ \ \ \ \ \ \ yt-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00644}00644\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00645}00645\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00646}00646\ \ \ \ \ \textcolor{keywordtype}{int}\ tile\ =\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>getTile(xt,\ yt,\ zt);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00647}00647\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_base_rail_tile_a9112181b59e180baed60f113c17d43c2}{BaseRailTile::isRail}}(tile))}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00648}00648\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00649}00649\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ data\ =\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>getData(xt,\ yt,\ zt);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00650}00650\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00651}00651\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_base_rail_tile}{BaseRailTile}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[tile])-\/>isUsesDataBit())}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00652}00652\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00653}00653\ \ \ \ \ \ \ \ \ \ \ \ \ data\ \&=\ \doxymbox{\hyperlink{class_base_rail_tile_ac67dc488e7a9661533020114046689f7}{BaseRailTile::RAIL\_DIRECTION\_MASK}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00654}00654\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00655}00655\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00656}00656\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ =\ yt;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00657}00657\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (data\ >=\ 2\ \&\&\ data\ <=\ 5)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00658}00658\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00659}00659\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ =\ yt\ +\ 1;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00660}00660\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00661}00661\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00662}00662\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ TODO\ Is\ this\ a\ good\ way\ to\ copy\ the\ bit\ of\ the\ array\ that\ we\ need?}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00663}00663\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ exits[2][3];}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00664}00664\ \ \ \ \ \ \ \ \ memcpy(\ \&exits,\ (\textcolor{keywordtype}{void}\ *)EXITS[data],\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ *\ 2\ *\ 3);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00665}00665\ \ \ \ \ \ \ \ \ \textcolor{comment}{//int\ exits[2][3]\ =\ EXITS[data];}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00666}00666\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00667}00667\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xD\ =\ exits[1][0]\ -\/\ exits[0][0];}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00668}00668\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ zD\ =\ exits[1][2]\ -\/\ exits[0][2];}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00669}00669\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dd\ =\ sqrt(xD\ *\ xD\ +\ zD\ *\ zD);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00670}00670\ \ \ \ \ \ \ \ \ xD\ /=\ dd;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00671}00671\ \ \ \ \ \ \ \ \ zD\ /=\ dd;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00672}00672\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00673}00673\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ +=\ xD\ *\ offs;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00674}00674\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ +=\ zD\ *\ offs;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00675}00675\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00676}00676\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (exits[0][1]\ !=\ 0\ \&\&\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}})\ -\/\ xt\ ==\ exits[0][0]\ \&\&\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}})\ -\/\ zt\ ==\ exits[0][2])}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00677}00677\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00678}00678\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ +=\ exits[0][1];}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00679}00679\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00680}00680\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (exits[1][1]\ !=\ 0\ \&\&\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}})\ -\/\ xt\ ==\ exits[1][0]\ \&\&\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}})\ -\/\ zt\ ==\ exits[1][2])}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00681}00681\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00682}00682\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ +=\ exits[1][1];}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00683}00683\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00684}00684\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00685}00685\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_minecart_a9e9b8d1c138f9e6a34de2c98faf00562}{getPos}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00686}00686\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00687}00687\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00688}00688\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00689}00689\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00690}\doxymbox{\hyperlink{class_minecart_a9e9b8d1c138f9e6a34de2c98faf00562}{00690}}\ \doxymbox{\hyperlink{class_vec3}{Vec3}}\ *\doxymbox{\hyperlink{class_minecart_a9e9b8d1c138f9e6a34de2c98faf00562}{Minecart::getPos}}(\textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00691}00691\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00692}00692\ \ \ \ \ \textcolor{keywordtype}{int}\ xt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00693}00693\ \ \ \ \ \textcolor{keywordtype}{int}\ yt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00694}00694\ \ \ \ \ \textcolor{keywordtype}{int}\ zt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00695}00695\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_base_rail_tile_a9112181b59e180baed60f113c17d43c2}{BaseRailTile::isRail}}(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}},\ xt,\ yt\ -\/\ 1,\ zt))}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00696}00696\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00697}00697\ \ \ \ \ \ \ \ \ yt-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00698}00698\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00699}00699\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00700}00700\ \ \ \ \ \textcolor{keywordtype}{int}\ tile\ =\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>getTile(xt,\ yt,\ zt);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00701}00701\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_base_rail_tile_a9112181b59e180baed60f113c17d43c2}{BaseRailTile::isRail}}(tile))}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00702}00702\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00703}00703\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ data\ =\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>getData(xt,\ yt,\ zt);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00704}00704\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ =\ yt;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00705}00705\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00706}00706\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_base_rail_tile}{BaseRailTile}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[tile])-\/>isUsesDataBit())}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00707}00707\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00708}00708\ \ \ \ \ \ \ \ \ \ \ \ \ data\ \&=\ \doxymbox{\hyperlink{class_base_rail_tile_ac67dc488e7a9661533020114046689f7}{BaseRailTile::RAIL\_DIRECTION\_MASK}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00709}00709\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00710}00710\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00711}00711\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (data\ >=\ 2\ \&\&\ data\ <=\ 5)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00712}00712\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00713}00713\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ =\ yt\ +\ 1;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00714}00714\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00715}00715\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00716}00716\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ TODO\ Is\ this\ a\ good\ way\ to\ copy\ the\ bit\ of\ the\ array\ that\ we\ need?}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00717}00717\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ exits[2][3];}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00718}00718\ \ \ \ \ \ \ \ \ memcpy(\ \&exits,\ (\textcolor{keywordtype}{void}\ *)EXITS[data],\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ *\ 2\ *\ 3);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00719}00719\ \ \ \ \ \ \ \ \ \textcolor{comment}{//int\ exits[2][3]\ =\ EXITS[data];}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00720}00720\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00721}00721\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ progress\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00722}00722\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ x0\ =\ xt\ +\ 0.5\ +\ exits[0][0]\ *\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00723}00723\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ y0\ =\ yt\ +\ 0.5\ +\ exits[0][1]\ *\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00724}00724\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ z0\ =\ zt\ +\ 0.5\ +\ exits[0][2]\ *\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00725}00725\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ x1\ =\ xt\ +\ 0.5\ +\ exits[1][0]\ *\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00726}00726\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ y1\ =\ yt\ +\ 0.5\ +\ exits[1][1]\ *\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00727}00727\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ z1\ =\ zt\ +\ 0.5\ +\ exits[1][2]\ *\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00728}00728\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00729}00729\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xD\ =\ x1\ -\/\ x0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00730}00730\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ yD\ =\ (y1\ -\/\ y0)\ *\ 2;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00731}00731\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ zD\ =\ z1\ -\/\ z0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00732}00732\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00733}00733\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (xD\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00734}00734\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00735}00735\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ =\ xt\ +\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00736}00736\ \ \ \ \ \ \ \ \ \ \ \ \ progress\ =\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ -\/\ zt;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00737}00737\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00738}00738\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (zD\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00739}00739\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00740}00740\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ =\ zt\ +\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00741}00741\ \ \ \ \ \ \ \ \ \ \ \ \ progress\ =\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ -\/\ xt;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00742}00742\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00743}00743\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00744}00744\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00745}00745\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00746}00746\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xx\ =\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ -\/\ x0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00747}00747\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ zz\ =\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ -\/\ z0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00748}00748\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00749}00749\ \ \ \ \ \ \ \ \ \ \ \ \ progress\ =\ (xx\ *\ xD\ +\ zz\ *\ zD)\ *\ 2;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00750}00750\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00751}00751\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00752}00752\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ =\ x0\ +\ xD\ *\ progress;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00753}00753\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ =\ y0\ +\ yD\ *\ progress;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00754}00754\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ =\ z0\ +\ zD\ *\ progress;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00755}00755\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (yD\ <\ 0)\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00756}00756\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (yD\ >\ 0)\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ +=\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00757}00757\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_vec3_a7952cb27b6b21d23081f9ea420306c26}{Vec3::newTemp}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00758}00758\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00759}00759\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00760}00760\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00761}00761\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00762}\doxymbox{\hyperlink{class_minecart_a2b42415f323bd863cae158120c4bf5a3}{00762}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_a2b42415f323bd863cae158120c4bf5a3}{Minecart::readAdditionalSaveData}}(\doxymbox{\hyperlink{class_compound_tag}{CompoundTag}}\ *tag)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00763}00763\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00764}00764\ \ \ \ \ \textcolor{keywordflow}{if}\ (tag-\/>\doxymbox{\hyperlink{class_compound_tag_a1348286477e4ebb985d34e9b6ea3f534}{getBoolean}}(L\textcolor{stringliteral}{"{}CustomDisplayTile"{}}))}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00765}00765\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00766}00766\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecart_ad6b5da889671881b25e34cd3093e30af}{setDisplayTile}}(tag-\/>\doxymbox{\hyperlink{class_compound_tag_a8efa86997e6f00c3d459928f57331b5c}{getInt}}(L\textcolor{stringliteral}{"{}DisplayTile"{}}));}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00767}00767\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecart_aea8172c1301fa8dc5584a6747e0cba55}{setDisplayData}}(tag-\/>\doxymbox{\hyperlink{class_compound_tag_a8efa86997e6f00c3d459928f57331b5c}{getInt}}(L\textcolor{stringliteral}{"{}DisplayData"{}}));}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00768}00768\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecart_a7a6b01688545ad4036c82c7360407f27}{setDisplayOffset}}(tag-\/>\doxymbox{\hyperlink{class_compound_tag_a8efa86997e6f00c3d459928f57331b5c}{getInt}}(L\textcolor{stringliteral}{"{}DisplayOffset"{}}));}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00769}00769\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00770}00770\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00771}00771\ \ \ \ \ \textcolor{keywordflow}{if}\ (tag-\/>\doxymbox{\hyperlink{class_compound_tag_abfd5a4d5c417b71cdb916da5b4324d70}{contains}}(L\textcolor{stringliteral}{"{}CustomName"{}})\ \&\&\ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a69a1b0e544ed62548e8681a8a079073f}{getString}}(L\textcolor{stringliteral}{"{}CustomName"{}}).length()\ >\ 0)\ name\ =\ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a69a1b0e544ed62548e8681a8a079073f}{getString}}(L\textcolor{stringliteral}{"{}CustomName"{}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00772}00772\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00773}00773\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00774}\doxymbox{\hyperlink{class_minecart_aaf8ace968378ba7f6f32150ba31a5aac}{00774}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_aaf8ace968378ba7f6f32150ba31a5aac}{Minecart::addAdditonalSaveData}}(\doxymbox{\hyperlink{class_compound_tag}{CompoundTag}}\ *tag)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00775}00775\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00776}00776\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_minecart_a3ba22d67805da86235fe584b77f47326}{hasCustomDisplay}}())}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00777}00777\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00778}00778\ \ \ \ \ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a6ec7415af61e27b760acf33bef6e0e9c}{putBoolean}}(L\textcolor{stringliteral}{"{}CustomDisplayTile"{}},\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00779}00779\ \ \ \ \ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a73ac6bf6b8ff94a00f8fde1e094072b6}{putInt}}(L\textcolor{stringliteral}{"{}DisplayTile"{}},\ \doxymbox{\hyperlink{class_minecart_aa7cb3c5202b2d34c205b39015e65bd40}{getDisplayTile}}()\ ==\ \textcolor{keyword}{nullptr}\ ?\ 0\ :\ \doxymbox{\hyperlink{class_minecart_aa7cb3c5202b2d34c205b39015e65bd40}{getDisplayTile}}()-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00780}00780\ \ \ \ \ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a73ac6bf6b8ff94a00f8fde1e094072b6}{putInt}}(L\textcolor{stringliteral}{"{}DisplayData"{}},\ \doxymbox{\hyperlink{class_minecart_a06c260061ea355be83477dd02ccc1c66}{getDisplayData}}());}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00781}00781\ \ \ \ \ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a73ac6bf6b8ff94a00f8fde1e094072b6}{putInt}}(L\textcolor{stringliteral}{"{}DisplayOffset"{}},\ \doxymbox{\hyperlink{class_minecart_afd10314189218cdc2906bb1d5eb8ad1a}{getDisplayOffset}}());}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00782}00782\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00783}00783\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00784}00784\ \ \ \ \ \textcolor{keywordflow}{if}\ (!name.empty())\ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a97966da17b3254a7d048151d6398f293}{putString}}(L\textcolor{stringliteral}{"{}CustomName"{}},\ name);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00785}00785\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00786}00786\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00787}\doxymbox{\hyperlink{class_minecart_a1513abece6464ea8d7062c4df24bf752}{00787}}\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_minecart_a1513abece6464ea8d7062c4df24bf752}{Minecart::getShadowHeightOffs}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00788}00788\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00789}00789\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00790}00790\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00791}00791\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00792}\doxymbox{\hyperlink{class_minecart_aa2ce289a1e0b82830b44b3177cc4fda6}{00792}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_aa2ce289a1e0b82830b44b3177cc4fda6}{Minecart::push}}(shared\_ptr<Entity>\ e)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00793}00793\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00794}00794\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>isClientSide)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00795}00795\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00796}00796\ \ \ \ \ \textcolor{keywordflow}{if}\ (e\ ==\ \doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00797}00797\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ e-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aa0f4114708dacc2fc855b18a33863402}{eTYPE\_LIVINGENTITY}})\ \&\&\ !e-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a81976c0b62a5e1b5bb0e672101ce8358}{eTYPE\_PLAYER}})\ \&\&\ !e-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a039b93843bf38998385ba73dfb33b940}{eTYPE\_VILLAGERGOLEM}})\ \&\&\ (\doxymbox{\hyperlink{class_minecart_ad585d8b3c56c6ca05aa2aa1501014a77}{getType}}()\ ==\ \doxymbox{\hyperlink{class_minecart_a32631e9265e05acac42e0d776a7b8423}{TYPE\_RIDEABLE}})\ \&\&\ (\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ >\ 0.01)\ )}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00798}00798\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00799}00799\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ (\doxymbox{\hyperlink{class_entity_ad88a3171f6b8cf3ad9368bb0d74c7b8b}{rider}}.lock()\ ==\ \textcolor{keyword}{nullptr})\ \&\&\ (e-\/>riding\ ==\ \textcolor{keyword}{nullptr})\ )}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00800}00800\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00801}00801\ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>ride(\ shared\_from\_this()\ );}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00802}00802\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00803}00803\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00804}00804\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00805}00805\ \ \ \ \ \textcolor{keywordtype}{double}\ xa\ =\ e-\/>x\ -\/\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00806}00806\ \ \ \ \ \textcolor{keywordtype}{double}\ za\ =\ e-\/>z\ -\/\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00807}00807\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00808}00808\ \ \ \ \ \textcolor{keywordtype}{double}\ dd\ =\ xa\ *\ xa\ +\ za\ *\ za;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00809}00809\ \ \ \ \ \textcolor{keywordflow}{if}\ (dd\ >=\ 0.0001f)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00810}00810\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00811}00811\ \ \ \ \ \ \ \ \ dd\ =\ sqrt(dd);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00812}00812\ \ \ \ \ \ \ \ \ xa\ /=\ dd;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00813}00813\ \ \ \ \ \ \ \ \ za\ /=\ dd;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00814}00814\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ pow\ =\ 1\ /\ dd;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00815}00815\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pow\ >\ 1)\ pow\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00816}00816\ \ \ \ \ \ \ \ \ xa\ *=\ pow;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00817}00817\ \ \ \ \ \ \ \ \ za\ *=\ pow;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00818}00818\ \ \ \ \ \ \ \ \ xa\ *=\ 0.1f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00819}00819\ \ \ \ \ \ \ \ \ za\ *=\ 0.1f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00820}00820\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00821}00821\ \ \ \ \ \ \ \ \ xa\ *=\ 1\ -\/\ \doxymbox{\hyperlink{class_entity_a36ce34c5949e242feb0874b118cc3e7c}{pushthrough}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00822}00822\ \ \ \ \ \ \ \ \ za\ *=\ 1\ -\/\ \doxymbox{\hyperlink{class_entity_a36ce34c5949e242feb0874b118cc3e7c}{pushthrough}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00823}00823\ \ \ \ \ \ \ \ \ xa\ *=\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00824}00824\ \ \ \ \ \ \ \ \ za\ *=\ 0.5;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00825}00825\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00826}00826\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (e-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a6ef4616061249b0069a8324df6fb652b}{eTYPE\_MINECART}}))}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00827}00827\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00828}00828\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_accbdd527336f87abd64091a5840adbae}{xo}}\ =\ e-\/>x\ -\/\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00829}00829\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a8684b270bac6810e3e97dfa91fe04fe0}{zo}}\ =\ e-\/>z\ -\/\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00830}00830\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00831}00831\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//4J\ Stu\ -\/\ Brought\ forward\ changes\ to\ fix\ minecarts\ pushing\ each\ other}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00832}00832\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Fix\ for\ \#38882\ -\/\ TU5:\ Gameplay:\ Minecart\ with\ furnace\ is\ not\ able\ to\ move\ another\ minecart\ on\ the\ rail.}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00833}00833\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_vec3}{Vec3}}\ *dir\ =\ \doxymbox{\hyperlink{class_vec3_a7952cb27b6b21d23081f9ea420306c26}{Vec3::newTemp}}(\doxymbox{\hyperlink{class_entity_accbdd527336f87abd64091a5840adbae}{xo}},\ 0,\ \doxymbox{\hyperlink{class_entity_a8684b270bac6810e3e97dfa91fe04fe0}{zo}})-\/>\doxymbox{\hyperlink{class_vec3_a7dad783156e7ee53c713bb7965b489e5}{normalize}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00834}00834\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_vec3}{Vec3}}\ *facing\ =\ \doxymbox{\hyperlink{class_vec3_a7952cb27b6b21d23081f9ea420306c26}{Vec3::newTemp}}(cos(\doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ *\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}\ /\ 180),\ 0,\ sin(\doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ *\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}\ /\ 180))-\/>\doxymbox{\hyperlink{class_vec3_a7dad783156e7ee53c713bb7965b489e5}{normalize}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00835}00835\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00836}00836\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dot\ =\ abs(dir-\/>\doxymbox{\hyperlink{class_vec3_af2ebc013bfff82269e0fa121dfa86b8e}{dot}}(facing));}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00837}00837\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00838}00838\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dot\ <\ 0.8f)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00839}00839\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00840}00840\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00841}00841\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00842}00842\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00843}00843\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xdd\ =\ (e-\/>xd\ +\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00844}00844\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ zdd\ =\ (e-\/>zd\ +\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00845}00845\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00846}00846\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<Minecart>\ cart\ =\ dynamic\_pointer\_cast<Minecart>(e);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00847}00847\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cart\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ cart-\/>getType()\ ==\ \doxymbox{\hyperlink{class_minecart_a2a3466d356986793c3182028a972a866}{TYPE\_FURNACE}}\ \&\&\ \doxymbox{\hyperlink{class_minecart_ad585d8b3c56c6ca05aa2aa1501014a77}{getType}}()\ !=\ \doxymbox{\hyperlink{class_minecart_a2a3466d356986793c3182028a972a866}{TYPE\_FURNACE}})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00848}00848\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00849}00849\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *=\ 0.2f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00850}00850\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *=\ 0.2f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00851}00851\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecart_aa2ce289a1e0b82830b44b3177cc4fda6}{push}}(\ e-\/>xd\ -\/\ xa,\ 0,\ e-\/>zd\ -\/\ za);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00852}00852\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>xd\ *=\ 0.95f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00853}00853\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>zd\ *=\ 0.95f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00854}00854\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecart_a5ab0923dc3ac896867885cedf5d1db3b}{m\_bHasPushedCartThisTick}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00855}00855\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00856}00856\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (cart\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ cart-\/>getType()\ !=\ \doxymbox{\hyperlink{class_minecart_a2a3466d356986793c3182028a972a866}{TYPE\_FURNACE}}\ \&\&\ \doxymbox{\hyperlink{class_minecart_ad585d8b3c56c6ca05aa2aa1501014a77}{getType}}()\ ==\ \doxymbox{\hyperlink{class_minecart_a2a3466d356986793c3182028a972a866}{TYPE\_FURNACE}})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00857}00857\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00858}00858\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>xd\ *=\ 0.2f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00859}00859\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>zd\ *=\ 0.2f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00860}00860\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>push(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +\ xa,\ 0,\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ +\ za);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00861}00861\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *=\ 0.95f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00862}00862\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *=\ 0.95f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00863}00863\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecart_a5ab0923dc3ac896867885cedf5d1db3b}{m\_bHasPushedCartThisTick}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00864}00864\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00865}00865\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00866}00866\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00867}00867\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ xdd\ /=\ 2;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00868}00868\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ zdd\ /=\ 2;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00869}00869\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *=\ 0.2f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00870}00870\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *=\ 0.2f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00871}00871\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecart_aa2ce289a1e0b82830b44b3177cc4fda6}{push}}(xdd\ -\/\ xa,\ 0,\ zdd\ -\/\ za);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00872}00872\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>xd\ *=\ 0.2f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00873}00873\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>zd\ *=\ 0.2f;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00874}00874\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>push(xdd\ +\ xa,\ 0,\ zdd\ +\ za);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00875}00875\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecart_a5ab0923dc3ac896867885cedf5d1db3b}{m\_bHasPushedCartThisTick}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00876}00876\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00877}00877\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Fix\ for\ \#46937\ -\/\ TU5:\ Gameplay:\ Crash/Freeze\ occurs\ when\ a\ minecart\ with\ an\ animal\ inside\ will\ be\ forced\ to\ despawn}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00878}00878\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Minecarts\ can\ end\ up\ stuck\ inside\ each\ other,\ so\ if\ they\ are\ too\ close\ then\ they\ should\ separate\ quickly}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00879}00879\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ modifier\ =\ 1.0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00880}00880\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ abs(\doxymbox{\hyperlink{class_entity_accbdd527336f87abd64091a5840adbae}{xo}})\ <\ 1\ \&\&\ abs(\doxymbox{\hyperlink{class_entity_a8684b270bac6810e3e97dfa91fe04fe0}{zo}})\ <\ 1)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00881}00881\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00882}00882\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ modifier\ +=\ 1-\/(\ (abs(\doxymbox{\hyperlink{class_entity_accbdd527336f87abd64091a5840adbae}{xo}})\ +\ abs(\doxymbox{\hyperlink{class_entity_a8684b270bac6810e3e97dfa91fe04fe0}{zo}}))/2);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00883}00883\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00884}00884\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Decelerate\ the\ cart\ that\ is\ pushing\ this\ one\ if\ they\ are\ too\ close}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00885}00885\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>xd\ /=\ modifier;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00886}00886\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>zd\ /=\ modifier;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00887}00887\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00888}00888\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Backup\ fix\ for\ QNAN}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00889}00889\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}==\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}})\ )\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00890}00890\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !(\doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}==\doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}})\ )\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00891}00891\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !(e-\/>xd\ ==\ e-\/>xd)\ )\ e-\/>xd\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00892}00892\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !(e-\/>zd\ ==\ e-\/>zd)\ )\ e-\/>zd\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00893}00893\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00894}00894\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00895}00895\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00896}00896\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00897}00897\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00898}00898\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecart_aa2ce289a1e0b82830b44b3177cc4fda6}{push}}(-\/xa,\ 0,\ -\/za);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00899}00899\ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>push(xa\ /\ 4,\ 0,\ za\ /\ 4);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00900}00900\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00901}00901\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00902}00902\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00903}00903\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00904}\doxymbox{\hyperlink{class_minecart_aacbe8ab0d31c1712958593f0138e570d}{00904}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_aacbe8ab0d31c1712958593f0138e570d}{Minecart::lerpTo}}(\textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}},\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}},\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}},\ \textcolor{keywordtype}{int}\ steps)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00905}00905\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00906}00906\ \ \ \ \ lx\ =\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00907}00907\ \ \ \ \ ly\ =\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00908}00908\ \ \ \ \ lz\ =\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00909}00909\ \ \ \ \ lyr\ =\ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00910}00910\ \ \ \ \ lxr\ =\ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00911}00911\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00912}00912\ \ \ \ \ lSteps\ =\ steps\ +\ 2;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00913}00913\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00914}00914\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ =\ lxd;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00915}00915\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ =\ lyd;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00916}00916\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ =\ lzd;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00917}00917\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00918}00918\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00919}\doxymbox{\hyperlink{class_minecart_afe242d614a87fd4d994f17d03f389673}{00919}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_afe242d614a87fd4d994f17d03f389673}{Minecart::lerpMotion}}(\textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00920}00920\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00921}00921\ \ \ \ \ lxd\ =\ this-\/>xd\ =\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00922}00922\ \ \ \ \ lyd\ =\ this-\/>yd\ =\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00923}00923\ \ \ \ \ lzd\ =\ this-\/>zd\ =\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00924}00924\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00925}00925\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00926}\doxymbox{\hyperlink{class_minecart_a6280c8238aafdf251badc82592486e32}{00926}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_a6280c8238aafdf251badc82592486e32}{Minecart::setDamage}}(\textcolor{keywordtype}{float}\ damage)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00927}00927\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00928}00928\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>set(DATA\_ID\_DAMAGE,\ damage);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00929}00929\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00930}00930\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00931}\doxymbox{\hyperlink{class_minecart_afacf36ad4d7414475877d22e3d241449}{00931}}\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_minecart_afacf36ad4d7414475877d22e3d241449}{Minecart::getDamage}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00932}00932\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00933}00933\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>getFloat(DATA\_ID\_DAMAGE);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00934}00934\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00935}00935\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00936}\doxymbox{\hyperlink{class_minecart_af7f5fbd3a88751283cf56bb74b8deb39}{00936}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_af7f5fbd3a88751283cf56bb74b8deb39}{Minecart::setHurtTime}}(\textcolor{keywordtype}{int}\ hurtTime)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00937}00937\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00938}00938\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>set(DATA\_ID\_HURT,\ hurtTime);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00939}00939\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00940}00940\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00941}\doxymbox{\hyperlink{class_minecart_a035a7e212e481e27f69ced91d3503e1c}{00941}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_minecart_a035a7e212e481e27f69ced91d3503e1c}{Minecart::getHurtTime}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00942}00942\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00943}00943\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>getInteger(DATA\_ID\_HURT);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00944}00944\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00945}00945\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00946}\doxymbox{\hyperlink{class_minecart_acaaa9a2cb00a5054b586fd9d2bb12d45}{00946}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_acaaa9a2cb00a5054b586fd9d2bb12d45}{Minecart::setHurtDir}}(\textcolor{keywordtype}{int}\ hurtDir)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00947}00947\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00948}00948\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>set(DATA\_ID\_HURTDIR,\ hurtDir);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00949}00949\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00950}00950\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00951}\doxymbox{\hyperlink{class_minecart_ae4b4ddaa5dbc4ff1256a72351a623545}{00951}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_minecart_ae4b4ddaa5dbc4ff1256a72351a623545}{Minecart::getHurtDir}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00952}00952\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00953}00953\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>getInteger(DATA\_ID\_HURTDIR);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00954}00954\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00955}00955\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00956}\doxymbox{\hyperlink{class_minecart_aa7cb3c5202b2d34c205b39015e65bd40}{00956}}\ \doxymbox{\hyperlink{class_tile}{Tile}}\ *\doxymbox{\hyperlink{class_minecart_aa7cb3c5202b2d34c205b39015e65bd40}{Minecart::getDisplayTile}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00957}00957\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00958}00958\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_minecart_a3ba22d67805da86235fe584b77f47326}{hasCustomDisplay}}())\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_minecart_add60c4c18ba021f719b9288d93b0b33b}{getDefaultDisplayTile}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00959}00959\ \ \ \ \ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ =\ \doxymbox{\hyperlink{class_entity_ab07a7bf0f8d625eb9d3cd3594d623a35}{getEntityData}}()-\/>getInteger(DATA\_ID\_DISPLAY\_TILE)\ \&\ 0xFFFF;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00960}00960\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keywordtype}{id}\ >\ 0\ \&\&\ \textcolor{keywordtype}{id}\ <\ \doxymbox{\hyperlink{class_tile_ab02dc766c352ae28540fcf13e93d58e1}{Tile::TILE\_NUM\_COUNT}}\ ?\ \doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[id]\ :\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00961}00961\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00962}00962\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00963}\doxymbox{\hyperlink{class_minecart_add60c4c18ba021f719b9288d93b0b33b}{00963}}\ \doxymbox{\hyperlink{class_tile}{Tile}}\ *\doxymbox{\hyperlink{class_minecart_add60c4c18ba021f719b9288d93b0b33b}{Minecart::getDefaultDisplayTile}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00964}00964\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00965}00965\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00966}00966\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00967}00967\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00968}\doxymbox{\hyperlink{class_minecart_a06c260061ea355be83477dd02ccc1c66}{00968}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_minecart_a06c260061ea355be83477dd02ccc1c66}{Minecart::getDisplayData}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00969}00969\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00970}00970\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_minecart_a3ba22d67805da86235fe584b77f47326}{hasCustomDisplay}}())\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_minecart_aecad9d1af0af6980a405d1f3f853f051}{getDefaultDisplayData}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00971}00971\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_entity_ab07a7bf0f8d625eb9d3cd3594d623a35}{getEntityData}}()-\/>getInteger(DATA\_ID\_DISPLAY\_TILE)\ >>\ 16;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00972}00972\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00973}00973\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00974}\doxymbox{\hyperlink{class_minecart_aecad9d1af0af6980a405d1f3f853f051}{00974}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_minecart_aecad9d1af0af6980a405d1f3f853f051}{Minecart::getDefaultDisplayData}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00975}00975\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00976}00976\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00977}00977\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00978}00978\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00979}\doxymbox{\hyperlink{class_minecart_afd10314189218cdc2906bb1d5eb8ad1a}{00979}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_minecart_afd10314189218cdc2906bb1d5eb8ad1a}{Minecart::getDisplayOffset}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00980}00980\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00981}00981\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_minecart_a3ba22d67805da86235fe584b77f47326}{hasCustomDisplay}}())\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_minecart_a532e4d165e6ac5f7957cfefd01328b72}{getDefaultDisplayOffset}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00982}00982\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_entity_ab07a7bf0f8d625eb9d3cd3594d623a35}{getEntityData}}()-\/>getInteger(DATA\_ID\_DISPLAY\_OFFSET);}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00983}00983\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00984}00984\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00985}\doxymbox{\hyperlink{class_minecart_a532e4d165e6ac5f7957cfefd01328b72}{00985}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_minecart_a532e4d165e6ac5f7957cfefd01328b72}{Minecart::getDefaultDisplayOffset}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00986}00986\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00987}00987\ \ \ \ \ \textcolor{keywordflow}{return}\ 6;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00988}00988\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00989}00989\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00990}\doxymbox{\hyperlink{class_minecart_ad6b5da889671881b25e34cd3093e30af}{00990}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_ad6b5da889671881b25e34cd3093e30af}{Minecart::setDisplayTile}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00991}00991\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00992}00992\ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab07a7bf0f8d625eb9d3cd3594d623a35}{getEntityData}}()-\/>set(DATA\_ID\_DISPLAY\_TILE,\ (\textcolor{keywordtype}{id}\ \&\ 0xFFFF)\ |\ (\doxymbox{\hyperlink{class_minecart_a06c260061ea355be83477dd02ccc1c66}{getDisplayData}}()\ <<\ 16));}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00993}00993\ \ \ \ \ \doxymbox{\hyperlink{class_minecart_a072cb8e0078d0ee97c69240606a808d3}{setCustomDisplay}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00994}00994\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00995}00995\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00996}\doxymbox{\hyperlink{class_minecart_aea8172c1301fa8dc5584a6747e0cba55}{00996}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_aea8172c1301fa8dc5584a6747e0cba55}{Minecart::setDisplayData}}(\textcolor{keywordtype}{int}\ data)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00997}00997\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00998}00998\ \ \ \ \ \doxymbox{\hyperlink{class_tile}{Tile}}\ *tile\ =\ \doxymbox{\hyperlink{class_minecart_aa7cb3c5202b2d34c205b39015e65bd40}{getDisplayTile}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l00999}00999\ \ \ \ \ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ =\ tile\ ==\ \textcolor{keyword}{nullptr}\ ?\ 0\ :\ tile-\/>\doxymbox{\hyperlink{class_tile_a32d00999ec6ae098a2db62bf4c2c5e7c}{id}};}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01000}01000\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01001}01001\ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab07a7bf0f8d625eb9d3cd3594d623a35}{getEntityData}}()-\/>set(DATA\_ID\_DISPLAY\_TILE,\ (\textcolor{keywordtype}{id}\ \&\ 0xFFFF)\ |\ (data\ <<\ 16));}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01002}01002\ \ \ \ \ \doxymbox{\hyperlink{class_minecart_a072cb8e0078d0ee97c69240606a808d3}{setCustomDisplay}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01003}01003\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01004}01004\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01005}\doxymbox{\hyperlink{class_minecart_a7a6b01688545ad4036c82c7360407f27}{01005}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_a7a6b01688545ad4036c82c7360407f27}{Minecart::setDisplayOffset}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}})}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01006}01006\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01007}01007\ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab07a7bf0f8d625eb9d3cd3594d623a35}{getEntityData}}()-\/>set(DATA\_ID\_DISPLAY\_OFFSET,\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01008}01008\ \ \ \ \ \doxymbox{\hyperlink{class_minecart_a072cb8e0078d0ee97c69240606a808d3}{setCustomDisplay}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01009}01009\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01010}01010\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01011}\doxymbox{\hyperlink{class_minecart_a3ba22d67805da86235fe584b77f47326}{01011}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_minecart_a3ba22d67805da86235fe584b77f47326}{Minecart::hasCustomDisplay}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01012}01012\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01013}01013\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_entity_ab07a7bf0f8d625eb9d3cd3594d623a35}{getEntityData}}()-\/>getByte(DATA\_ID\_CUSTOM\_DISPLAY)\ ==\ 1;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01014}01014\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01015}01015\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01016}\doxymbox{\hyperlink{class_minecart_a072cb8e0078d0ee97c69240606a808d3}{01016}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_a072cb8e0078d0ee97c69240606a808d3}{Minecart::setCustomDisplay}}(\textcolor{keywordtype}{bool}\ value)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01017}01017\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01018}01018\ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab07a7bf0f8d625eb9d3cd3594d623a35}{getEntityData}}()-\/>set(DATA\_ID\_CUSTOM\_DISPLAY,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(value\ ?\ 1\ :\ 0));}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01019}01019\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01020}01020\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01021}\doxymbox{\hyperlink{class_minecart_a2f542299a9d9b9d45468af77e22433eb}{01021}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minecart_a2f542299a9d9b9d45468af77e22433eb}{Minecart::setCustomName}}(\textcolor{keyword}{const}\ wstring\ \&name)}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01022}01022\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01023}01023\ \ \ \ \ this-\/>name\ =\ name;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01024}01024\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01025}01025\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01026}\doxymbox{\hyperlink{class_minecart_acc8add9090d4b9d04e40c70b3a2b2cc4}{01026}}\ wstring\ \doxymbox{\hyperlink{class_minecart_acc8add9090d4b9d04e40c70b3a2b2cc4}{Minecart::getAName}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01027}01027\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01028}01028\ \ \ \ \ \textcolor{keywordflow}{if}\ (!name.empty())\ \textcolor{keywordflow}{return}\ name;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01029}01029\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_entity_ae7e310b395ab39c29550b209a8d27bd1}{Entity::getAName}}();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01030}01030\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01031}01031\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01032}\doxymbox{\hyperlink{class_minecart_a48dd9d92e6e7cf5c9f3ac69a63fb7bb1}{01032}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_minecart_a48dd9d92e6e7cf5c9f3ac69a63fb7bb1}{Minecart::hasCustomName}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01033}01033\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01034}01034\ \ \ \ \ \textcolor{keywordflow}{return}\ !name.empty();}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01035}01035\ \}}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01036}01036\ }
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01037}\doxymbox{\hyperlink{class_minecart_a41f512635ee1f370291e046b6e4e1edb}{01037}}\ wstring\ \doxymbox{\hyperlink{class_minecart_a41f512635ee1f370291e046b6e4e1edb}{Minecart::getCustomName}}()}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01038}01038\ \{}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01039}01039\ \ \ \ \ \textcolor{keywordflow}{return}\ name;}
+\DoxyCodeLine{\Hypertarget{_minecart_8cpp_source_l01040}01040\ \}}
+
+\end{DoxyCode}

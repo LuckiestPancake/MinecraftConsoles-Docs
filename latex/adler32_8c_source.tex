@@ -1,0 +1,170 @@
+\doxysection{adler32.\+c}
+\hypertarget{adler32_8c_source}{}\label{adler32_8c_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/zlib/adler32.c@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/zlib/adler32.c}}
+\doxymbox{\hyperlink{adler32_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00001}00001\ \textcolor{comment}{/*\ adler32.c\ -\/-\/\ compute\ the\ Adler-\/32\ checksum\ of\ a\ data\ stream}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00002}00002\ \textcolor{comment}{\ *\ Copyright\ (C)\ 1995-\/2011,\ 2016\ Mark\ Adler}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00003}00003\ \textcolor{comment}{\ *\ For\ conditions\ of\ distribution\ and\ use,\ see\ copyright\ notice\ in\ zlib.h}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00004}00004\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00006}00006\ \textcolor{comment}{/*\ @(\#)\ \$Id\$\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{zutil_8h}{zutil.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00010}\doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{00010}}\ \textcolor{preprocessor}{\#define\ BASE\ 65521U\ \ \ \ \ }\textcolor{comment}{/*\ largest\ prime\ smaller\ than\ 65536\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00011}\doxymbox{\hyperlink{adler32_8c_a5de5d183f9a6a8d53316f743e1ca6dc2}{00011}}\ \textcolor{preprocessor}{\#define\ NMAX\ 5552}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00012}00012\ \textcolor{comment}{/*\ NMAX\ is\ the\ largest\ n\ such\ that\ 255n(n+1)/2\ +\ (n+1)(BASE-\/1)\ <=\ 2\string^32-\/1\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00014}\doxymbox{\hyperlink{adler32_8c_a465ff70ce96dfc2e84b0e87548b4ecb4}{00014}}\ \textcolor{preprocessor}{\#define\ DO1(buf,i)\ \ \{adler\ +=\ (buf)[i];\ sum2\ +=\ adler;\}}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00015}\doxymbox{\hyperlink{adler32_8c_a3d7044f8ea7e75164fe5108048fd87eb}{00015}}\ \textcolor{preprocessor}{\#define\ DO2(buf,i)\ \ DO1(buf,i);\ DO1(buf,i+1);}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00016}\doxymbox{\hyperlink{adler32_8c_aef9bafc8b3d89e98b6e26320f99b9e31}{00016}}\ \textcolor{preprocessor}{\#define\ DO4(buf,i)\ \ DO2(buf,i);\ DO2(buf,i+2);}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00017}\doxymbox{\hyperlink{adler32_8c_a9aafc447614bf5c4dc0d484aba9edb89}{00017}}\ \textcolor{preprocessor}{\#define\ DO8(buf,i)\ \ DO4(buf,i);\ DO4(buf,i+4);}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00018}\doxymbox{\hyperlink{adler32_8c_a6912c3e78e2b797f42f214d1b508aa0c}{00018}}\ \textcolor{preprocessor}{\#define\ DO16(buf)\ \ \ DO8(buf,0);\ DO8(buf,8);}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00020}00020\ \textcolor{comment}{/*\ use\ NO\_DIVIDE\ if\ your\ processor\ does\ not\ do\ division\ in\ hardware\ -\/-\/}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00021}00021\ \textcolor{comment}{\ \ \ try\ it\ both\ ways\ to\ see\ which\ is\ faster\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00022}00022\ \textcolor{preprocessor}{\#ifdef\ NO\_DIVIDE}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00023}00023\ \textcolor{comment}{/*\ note\ that\ this\ assumes\ BASE\ is\ 65521,\ where\ 65536\ \%\ 65521\ ==\ 15}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00024}00024\ \textcolor{comment}{\ \ \ (thank\ you\ to\ John\ Reiser\ for\ pointing\ this\ out)\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00025}00025\ \textcolor{preprocessor}{\#\ \ define\ CHOP(a)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00026}00026\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00027}00027\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ unsigned\ long\ tmp\ =\ a\ >>\ 16;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00028}00028\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ a\ \&=\ 0xffffUL;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00029}00029\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ a\ +=\ (tmp\ <<\ 4)\ -\/\ tmp;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00030}00030\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00031}00031\ \textcolor{preprocessor}{\#\ \ define\ MOD28(a)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00032}00032\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00033}00033\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ CHOP(a);\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00034}00034\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (a\ >=\ BASE)\ a\ -\/=\ BASE;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00035}00035\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00036}00036\ \textcolor{preprocessor}{\#\ \ define\ MOD(a)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00037}00037\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00038}00038\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ CHOP(a);\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00039}00039\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ MOD28(a);\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00040}00040\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00041}00041\ \textcolor{preprocessor}{\#\ \ define\ MOD63(a)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00042}00042\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ }\textcolor{comment}{/*\ this\ assumes\ a\ is\ not\ negative\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00043}00043\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ z\_off64\_t\ tmp\ =\ a\ >>\ 32;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00044}00044\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ a\ \&=\ 0xffffffffL;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00045}00045\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ a\ +=\ (tmp\ <<\ 8)\ -\/\ (tmp\ <<\ 5)\ +\ tmp;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00046}00046\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ tmp\ =\ a\ >>\ 16;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00047}00047\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ a\ \&=\ 0xffffL;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00048}00048\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ a\ +=\ (tmp\ <<\ 4)\ -\/\ tmp;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00049}00049\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ tmp\ =\ a\ >>\ 16;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00050}00050\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ a\ \&=\ 0xffffL;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00051}00051\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ a\ +=\ (tmp\ <<\ 4)\ -\/\ tmp;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00052}00052\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ if\ (a\ >=\ BASE)\ a\ -\/=\ BASE;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00053}00053\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00054}00054\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00055}\doxymbox{\hyperlink{adler32_8c_aa1e26f19f1e6cf348e41511e7db90881}{00055}}\ \textcolor{preprocessor}{\#\ \ define\ MOD(a)\ a\ \%=\ BASE}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00056}\doxymbox{\hyperlink{adler32_8c_a24f911eb19c0c08f2e4323ae5829a6b1}{00056}}\ \textcolor{preprocessor}{\#\ \ define\ MOD28(a)\ a\ \%=\ BASE}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00057}\doxymbox{\hyperlink{adler32_8c_a86e81b1e1c063cd8d10a1b6ddb82552e}{00057}}\ \textcolor{preprocessor}{\#\ \ define\ MOD63(a)\ a\ \%=\ BASE}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00058}00058\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00060}00060\ \textcolor{comment}{/*\ =========================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00061}\doxymbox{\hyperlink{adler32_8c_a7065f3c3659a7560bc0493c33e27ea74}{00061}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{adler32_8c_a7065f3c3659a7560bc0493c33e27ea74}{adler32\_z}}(\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ adler,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aeb722a888064be47e12d05f692e0f407}{Bytef}}\ *\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ len)\ \{}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00062}00062\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ sum2;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00063}00063\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00065}00065\ \ \ \ \ \textcolor{comment}{/*\ split\ Adler-\/32\ into\ component\ sums\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00066}00066\ \ \ \ \ sum2\ =\ (adler\ >>\ 16)\ \&\ 0xffff;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00067}00067\ \ \ \ \ adler\ \&=\ 0xffff;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00069}00069\ \ \ \ \ \textcolor{comment}{/*\ in\ case\ user\ likes\ doing\ a\ byte\ at\ a\ time,\ keep\ it\ fast\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{if}\ (len\ ==\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00071}00071\ \ \ \ \ \ \ \ \ adler\ +=\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}[0];}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (adler\ >=\ \doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}})}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ adler\ -\/=\ \doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}};}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00074}00074\ \ \ \ \ \ \ \ \ sum2\ +=\ adler;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (sum2\ >=\ \doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}})}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ sum2\ -\/=\ \doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}};}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ adler\ |\ (sum2\ <<\ 16);}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00078}00078\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00080}00080\ \ \ \ \ \textcolor{comment}{/*\ initial\ Adler-\/32\ value\ (deferred\ check\ for\ len\ ==\ 1\ speed)\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}\ ==\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ad15afa2776b41b2f4d8582dd152bd736}{Z\_NULL}})}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1L;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00084}00084\ \ \ \ \ \textcolor{comment}{/*\ in\ case\ short\ lengths\ are\ provided,\ keep\ it\ somewhat\ fast\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00085}00085\ \ \ \ \ \textcolor{keywordflow}{if}\ (len\ <\ 16)\ \{}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (len-\/-\/)\ \{}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ adler\ +=\ *\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}++;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ sum2\ +=\ adler;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00089}00089\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (adler\ >=\ \doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}})}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ adler\ -\/=\ \doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}};}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00092}00092\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{adler32_8c_a24f911eb19c0c08f2e4323ae5829a6b1}{MOD28}}(sum2);\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ only\ added\ so\ many\ BASE's\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ adler\ |\ (sum2\ <<\ 16);}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00094}00094\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00096}00096\ \ \ \ \ \textcolor{comment}{/*\ do\ length\ NMAX\ blocks\ -\/-\/\ requires\ just\ one\ modulo\ operation\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00097}00097\ \ \ \ \ \textcolor{keywordflow}{while}\ (len\ >=\ \doxymbox{\hyperlink{adler32_8c_a5de5d183f9a6a8d53316f743e1ca6dc2}{NMAX}})\ \{}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00098}00098\ \ \ \ \ \ \ \ \ len\ -\/=\ \doxymbox{\hyperlink{adler32_8c_a5de5d183f9a6a8d53316f743e1ca6dc2}{NMAX}};}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00099}00099\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ =\ \doxymbox{\hyperlink{adler32_8c_a5de5d183f9a6a8d53316f743e1ca6dc2}{NMAX}}\ /\ 16;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ NMAX\ is\ divisible\ by\ 16\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00100}00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{adler32_8c_a6912c3e78e2b797f42f214d1b508aa0c}{DO16}}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}});\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 16\ sums\ unrolled\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}\ +=\ 16;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00103}00103\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (-\/-\/\doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}});}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00104}00104\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{adler32_8c_aa1e26f19f1e6cf348e41511e7db90881}{MOD}}(adler);}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00105}00105\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{adler32_8c_aa1e26f19f1e6cf348e41511e7db90881}{MOD}}(sum2);}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00106}00106\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00108}00108\ \ \ \ \ \textcolor{comment}{/*\ do\ remaining\ bytes\ (less\ than\ NMAX,\ still\ just\ one\ modulo)\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00109}00109\ \ \ \ \ \textcolor{keywordflow}{if}\ (len)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ avoid\ modulos\ if\ none\ remaining\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (len\ >=\ 16)\ \{}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ len\ -\/=\ 16;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{adler32_8c_a6912c3e78e2b797f42f214d1b508aa0c}{DO16}}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}});}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}\ +=\ 16;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00114}00114\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00115}00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (len-\/-\/)\ \{}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ adler\ +=\ *\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}++;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ sum2\ +=\ adler;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00118}00118\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00119}00119\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{adler32_8c_aa1e26f19f1e6cf348e41511e7db90881}{MOD}}(adler);}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00120}00120\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{adler32_8c_aa1e26f19f1e6cf348e41511e7db90881}{MOD}}(sum2);}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00121}00121\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00123}00123\ \ \ \ \ \textcolor{comment}{/*\ return\ recombined\ sums\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00124}00124\ \ \ \ \ \textcolor{keywordflow}{return}\ adler\ |\ (sum2\ <<\ 16);}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00125}00125\ \}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00127}00127\ \textcolor{comment}{/*\ =========================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00128}\doxymbox{\hyperlink{adler32_8c_a86607743a4b76949b24cf5cc2f01a40d}{00128}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{adler32_8c_a86607743a4b76949b24cf5cc2f01a40d}{adler32}}(\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ adler,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aeb722a888064be47e12d05f692e0f407}{Bytef}}\ *\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ len)\ \{}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00129}00129\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{adler32_8c_a7065f3c3659a7560bc0493c33e27ea74}{adler32\_z}}(adler,\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ len);}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00130}00130\ \}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00132}00132\ \textcolor{comment}{/*\ =========================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00133}\doxymbox{\hyperlink{adler32_8c_adca6931a2239061c7a6d2c0a05600a05}{00133}}\ \doxymbox{\hyperlink{gzguts_8h_a08023ea6765c99d60a6a3840cd07156e}{local}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ \doxymbox{\hyperlink{adler32_8c_adca6931a2239061c7a6d2c0a05600a05}{adler32\_combine\_}}(\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ adler1,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ adler2,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}}\ len2)\ \{}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00134}00134\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ sum1;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00135}00135\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ sum2;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00136}00136\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ rem;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00138}00138\ \ \ \ \ \textcolor{comment}{/*\ for\ negative\ len,\ return\ invalid\ adler32\ as\ a\ clue\ for\ debugging\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00139}00139\ \ \ \ \ \textcolor{keywordflow}{if}\ (len2\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00140}00140\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0xffffffffUL;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00142}00142\ \ \ \ \ \textcolor{comment}{/*\ the\ derivation\ of\ this\ formula\ is\ left\ as\ an\ exercise\ for\ the\ reader\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00143}00143\ \ \ \ \ \doxymbox{\hyperlink{adler32_8c_a86e81b1e1c063cd8d10a1b6ddb82552e}{MOD63}}(len2);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ assumes\ len2\ >=\ 0\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00144}00144\ \ \ \ \ rem\ =\ (unsigned)len2;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00145}00145\ \ \ \ \ sum1\ =\ adler1\ \&\ 0xffff;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00146}00146\ \ \ \ \ sum2\ =\ rem\ *\ sum1;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00147}00147\ \ \ \ \ \doxymbox{\hyperlink{adler32_8c_aa1e26f19f1e6cf348e41511e7db90881}{MOD}}(sum2);}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00148}00148\ \ \ \ \ sum1\ +=\ (adler2\ \&\ 0xffff)\ +\ \doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}}\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00149}00149\ \ \ \ \ sum2\ +=\ ((adler1\ >>\ 16)\ \&\ 0xffff)\ +\ ((adler2\ >>\ 16)\ \&\ 0xffff)\ +\ \doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}}\ -\/\ rem;}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00150}00150\ \ \ \ \ \textcolor{keywordflow}{if}\ (sum1\ >=\ \doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}})\ sum1\ -\/=\ \doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}};}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00151}00151\ \ \ \ \ \textcolor{keywordflow}{if}\ (sum1\ >=\ \doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}})\ sum1\ -\/=\ \doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}};}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00152}00152\ \ \ \ \ \textcolor{keywordflow}{if}\ (sum2\ >=\ ((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long})\doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}}\ <<\ 1))\ sum2\ -\/=\ ((\textcolor{keywordtype}{unsigned}\ long)\doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}}\ <<\ 1);}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00153}00153\ \ \ \ \ \textcolor{keywordflow}{if}\ (sum2\ >=\ \doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}})\ sum2\ -\/=\ \doxymbox{\hyperlink{adler32_8c_a79bcfb6bde984f42d1124b068a509af7}{BASE}};}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00154}00154\ \ \ \ \ \textcolor{keywordflow}{return}\ sum1\ |\ (sum2\ <<\ 16);}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00155}00155\ \}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00157}00157\ \textcolor{comment}{/*\ =========================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00158}\doxymbox{\hyperlink{adler32_8c_af4a8b45f615e831c56b08da530870e59}{00158}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{adler32_8c_af4a8b45f615e831c56b08da530870e59}{adler32\_combine}}(\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ adler1,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ adler2,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a8cf4661a88ec12823d7cbdd3fa629eb0}{z\_off\_t}}\ len2)\ \{}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00159}00159\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{adler32_8c_adca6931a2239061c7a6d2c0a05600a05}{adler32\_combine\_}}(adler1,\ adler2,\ len2);}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00160}00160\ \}}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00162}\doxymbox{\hyperlink{adler32_8c_a02d5e6475de540c47e56fe0c37178c22}{00162}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{adler32_8c_a02d5e6475de540c47e56fe0c37178c22}{adler32\_combine64}}(\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ adler1,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ adler2,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}}\ len2)\ \{}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00163}00163\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{adler32_8c_adca6931a2239061c7a6d2c0a05600a05}{adler32\_combine\_}}(adler1,\ adler2,\ len2);}
+\DoxyCodeLine{\Hypertarget{adler32_8c_source_l00164}00164\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,745 @@
+\doxysection{Font.\+cpp}
+\hypertarget{_font_8cpp_source}{}\label{_font_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Font.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Font.cpp}}
+\doxymbox{\hyperlink{_font_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_client_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_textures_8h}{Textures.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_font_8h}{Font.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_options_8h}{Options.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_tesselator_8h}{Tesselator.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_resource_location_8h}{ResourceLocation.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_int_buffer_8h}{..\(\backslash\)Minecraft.World\(\backslash\)IntBuffer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_helpers_8h}{..\(\backslash\)Minecraft.World\(\backslash\)StringHelpers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_random_8h}{..\(\backslash\)Minecraft.World\(\backslash\)Random.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00012}\doxymbox{\hyperlink{class_font_a562f22ace9c7f198a3a778e584ec4324}{00012}}\ \doxymbox{\hyperlink{class_font_a562f22ace9c7f198a3a778e584ec4324}{Font::Font}}(\doxymbox{\hyperlink{class_options}{Options}}\ *options,\ \textcolor{keyword}{const}\ wstring\&\ name,\ \doxymbox{\hyperlink{class_textures}{Textures}}*\ textures,\ \textcolor{keywordtype}{bool}\ enforceUnicode,\ \doxymbox{\hyperlink{class_resource_location}{ResourceLocation}}\ *textureLocation,\ \textcolor{keywordtype}{int}\ cols,\ \textcolor{keywordtype}{int}\ rows,\ \textcolor{keywordtype}{int}\ charWidth,\ \textcolor{keywordtype}{int}\ charHeight,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ charMap[]\textcolor{comment}{/*\ =\ nullptr\ */})\ :\ textures(textures)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00013}00013\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00014}00014\ \ \ \ \ \textcolor{keywordtype}{int}\ charC\ =\ cols\ *\ rows;\ \textcolor{comment}{//\ Number\ of\ characters\ in\ the\ font}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00016}00016\ \ \ \ \ charWidths\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{int}[charC];}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00018}00018\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ added\ initialisers}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00019}00019\ \ \ \ \ memset(charWidths,\ 0,\ charC);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00021}00021\ \ \ \ \ enforceUnicodeSheet\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00022}00022\ \ \ \ \ bidirectional\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00023}00023\ \ \ \ \ xPos\ =\ yPos\ =\ 0.0f;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00024}00024\ \ \ \ \ m\_bold\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00025}00025\ \ \ \ \ m\_italic\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00026}00026\ \ \ \ \ m\_underline\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00027}00027\ \ \ \ \ m\_strikethrough\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00029}00029\ \ \ \ \ \textcolor{comment}{//\ Set\ up\ member\ variables}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00030}00030\ \ \ \ \ m\_cols\ =\ cols;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00031}00031\ \ \ \ \ m\_rows\ =\ rows;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00032}00032\ \ \ \ \ m\_charWidth\ =\ charWidth;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00033}00033\ \ \ \ \ m\_charHeight\ =\ charHeight;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00034}00034\ \ \ \ \ m\_textureLocation\ =\ textureLocation;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00036}00036\ \ \ \ \ \textcolor{comment}{//\ Build\ character\ map}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00037}00037\ \ \ \ \ \textcolor{keywordflow}{if}\ (charMap\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00038}00038\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ charC;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ m\_charMap.insert(std::make\_pair(charMap[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}],\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}));}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00043}00043\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00045}00045\ \ \ \ \ \doxymbox{\hyperlink{class_font_a24d842c0e3ec809eb18512f157555fd6}{random}}\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_random}{Random}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00047}00047\ \ \ \ \ \textcolor{comment}{//\ Load\ the\ image}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00048}00048\ \ \ \ \ \doxymbox{\hyperlink{class_buffered_image}{BufferedImage}}\ *img\ =\ textures-\/>readImage(textureLocation-\/>\doxymbox{\hyperlink{class_resource_location_ab952cadcae546b742f97df530abd80d1}{getTexture}}(),\ name);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00050}00050\ \ \ \ \ \textcolor{comment}{/*\ -\/\ 4J\ -\/\ TODO}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00051}00051\ \textcolor{comment}{\ \ \ \ try\ \{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00052}00052\ \textcolor{comment}{\ \ \ \ \ \ \ \ img\ =\ ImageIO.read(Textures.class.getResourceAsStream(name));}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00053}00053\ \textcolor{comment}{\ \ \ \ \}\ catch\ (IOException\ e)\ \{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00054}00054\ \textcolor{comment}{\ \ \ \ \ \ \ \ throw\ new\ RuntimeException(e);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00055}00055\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00056}00056\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00058}00058\ \ \ \ \ \textcolor{keywordtype}{int}\ w\ =\ img-\/>\doxymbox{\hyperlink{class_buffered_image_a124ce0ed58ac716e178079ac4e670fed}{getWidth}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00059}00059\ \ \ \ \ \textcolor{keywordtype}{int}\ h\ =\ img-\/>\doxymbox{\hyperlink{class_buffered_image_a1c284ccadea74ad1459efcb300f28062}{getHeight}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00060}00060\ \ \ \ \ \doxymbox{\hyperlink{_array_with_length_8h_a5f64a90f12b834c164105b12c7396999}{intArray}}\ rawPixels(w\ *\ h);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00061}00061\ \ \ \ \ img-\/>\doxymbox{\hyperlink{class_buffered_image_adfa5fb3d7f8d7c171e73c7270eca1d44}{getRGB}}(0,\ 0,\ w,\ h,\ rawPixels,\ 0,\ w);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00063}00063\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ charC;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00064}00064\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00065}00065\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xt\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ \%\ m\_cols;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ yt\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ /\ m\_cols;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ x\ =\ 7;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ x\ >=\ 0;\ x-\/-\/)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xPixel\ =\ xt\ *\ 8\ +\ x;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ emptyColumn\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ y\ =\ 0;\ y\ <\ 8\ \&\&\ emptyColumn;\ y++)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ yPixel\ =\ (yt\ *\ 8\ +\ y)\ *\ w;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ emptyPixel\ =\ (rawPixels[xPixel\ +\ yPixel]\ >>\ 24)\ ==\ 0;\ \textcolor{comment}{//\ Check\ the\ alpha\ value}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!emptyPixel)\ emptyColumn\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!emptyColumn)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ ==\ \textcolor{charliteral}{'\ '})\ x\ =\ 4\ -\/\ 2;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ charWidths[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ x\ +\ 2;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00087}00087\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00089}00089\ \ \ \ \ \textcolor{keyword}{delete}\ img;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00091}00091\ \ \ \ \ \textcolor{comment}{//\ calculate\ colors}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00092}00092\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ colorN\ =\ 0;\ colorN\ <\ 32;\ ++colorN)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00093}00093\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ var10\ =\ (colorN\ >>\ 3\ \&\ 1)\ *\ 85;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ red\ =\ (colorN\ >>\ 2\ \&\ 1)\ *\ 170\ +\ var10;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ green\ =\ (colorN\ >>\ 1\ \&\ 1)\ *\ 170\ +\ var10;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ blue\ =\ (colorN\ >>\ 0\ \&\ 1)\ *\ 170\ +\ var10;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (colorN\ ==\ 6)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ red\ +=\ 85;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (options-\/>\doxymbox{\hyperlink{class_options_a4f6117be434c30008bf0f756e4bf3c0a}{anaglyph3d}})}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tmpRed\ =\ (red\ *\ 30\ +\ green\ *\ 59\ +\ blue\ *\ 11)\ /\ 100;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tmpGreen\ =\ (red\ *\ 30\ +\ green\ *\ 70)\ /\ 100;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tmpBlue\ =\ (red\ *\ 30\ +\ blue\ *\ 70)\ /\ 100;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ red\ =\ tmpRed;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ green\ =\ tmpGreen;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ blue\ =\ tmpBlue;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (colorN\ >=\ 16)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ red\ /=\ 4;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ green\ /=\ 4;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ blue\ /=\ 4;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ colors[colorN]\ =\ (red\ \&\ 255)\ <<\ 16\ |\ (green\ \&\ 255)\ <<\ 8\ |\ (blue\ \&\ 255);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00122}00122\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00123}00123\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00125}00125\ \textcolor{preprocessor}{\#ifndef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00126}00126\ \textcolor{comment}{//\ 4J\ Stu\ -\/\ This\ dtor\ clashes\ with\ one\ in\ xui!\ We\ never\ delete\ these\ anyway\ so\ take\ it\ out\ for\ now.\ Can\ go\ back\ when\ we\ have\ got\ rid\ of\ XUI}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00127}\doxymbox{\hyperlink{class_font_a134aaa2f78af0c12d3ce504957169768}{00127}}\ \doxymbox{\hyperlink{class_font_a134aaa2f78af0c12d3ce504957169768}{Font::\string~Font}}()}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00128}00128\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00129}00129\ \ \ \ \ \textcolor{keyword}{delete}[]\ charWidths;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00130}00130\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00131}00131\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00133}00133\ \textcolor{keywordtype}{void}\ Font::renderStyleLine(\textcolor{keywordtype}{float}\ x0,\ \textcolor{keywordtype}{float}\ y0,\ \textcolor{keywordtype}{float}\ x1,\ \textcolor{keywordtype}{float}\ y1)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00134}00134\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00135}00135\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator}{Tesselator}}*\ t\ =\ \doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{Tesselator::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00136}00136\ \ \ \ \ \textcolor{keywordtype}{float}\ u\ =\ 0.0f,\ v\ =\ 0.0f;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00137}00137\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00138}00138\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}(u,\ v);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00139}00139\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x0,\ y1,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00140}00140\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}(u,\ v);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00141}00141\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x1,\ y1,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00142}00142\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}(u,\ v);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00143}00143\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x1,\ y0,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00144}00144\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}(u,\ v);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00145}00145\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x0,\ y0,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00146}00146\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00147}00147\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00149}00149\ \textcolor{keywordtype}{void}\ Font::addCharacterQuad(\textcolor{keywordtype}{wchar\_t}\ c)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00150}00150\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00151}00151\ \ \ \ \ \textcolor{keywordtype}{float}\ xOff\ =\ c\ \%\ m\_cols\ *\ m\_charWidth;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00152}00152\ \ \ \ \ \textcolor{keywordtype}{float}\ yOff\ =\ c\ /\ m\_cols\ *\ m\_charHeight;\ \textcolor{comment}{//\ was\ m\_charWidth\ —\ wrong\ when\ glyphs\ aren't\ square}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00153}00153\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}}\ =\ charWidths[c]\ -\/\ .01f;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00154}00154\ \ \ \ \ \textcolor{keywordtype}{float}\ height\ =\ m\_charHeight\ -\/\ .01f;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00155}00155\ \ \ \ \ \textcolor{keywordtype}{float}\ fontWidth\ =\ m\_cols\ *\ m\_charWidth;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00156}00156\ \ \ \ \ \textcolor{keywordtype}{float}\ fontHeight\ =\ m\_rows\ *\ m\_charHeight;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00157}00157\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ shear\ =\ m\_italic\ ?\ (height\ *\ 0.25f)\ :\ 0.0f;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00158}00158\ \ \ \ \ \textcolor{keywordtype}{float}\ x0\ =\ xPos,\ x1\ =\ xPos\ +\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}}\ +\ shear;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00159}00159\ \ \ \ \ \textcolor{keywordtype}{float}\ y0\ =\ yPos,\ y1\ =\ yPos\ +\ height;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00161}00161\ \ \ \ \ Tesselator\ *t\ =\ \doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{Tesselator::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00162}00162\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}(xOff\ /\ fontWidth,\ (yOff\ +\ 7.99f)\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00163}00163\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x0,\ y1,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00164}00164\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}((xOff\ +\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}})\ /\ fontWidth,\ (yOff\ +\ 7.99f)\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00165}00165\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x1,\ y1,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00166}00166\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}((xOff\ +\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}})\ /\ fontWidth,\ yOff\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00167}00167\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x1,\ y0,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00168}00168\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}(xOff\ /\ fontWidth,\ yOff\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00169}00169\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x0,\ y0,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00171}00171\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bold)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00172}00172\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ dx\ =\ 1.0f;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}(xOff\ /\ fontWidth,\ (yOff\ +\ 7.99f)\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x0\ +\ dx,\ y1,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}((xOff\ +\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}})\ /\ fontWidth,\ (yOff\ +\ 7.99f)\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x1\ +\ dx,\ y1,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}((xOff\ +\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}})\ /\ fontWidth,\ yOff\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x1\ +\ dx,\ y0,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}(xOff\ /\ fontWidth,\ yOff\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x0\ +\ dx,\ y0,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00182}00182\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00184}00184\ \ \ \ \ xPos\ +=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(charWidths[c]);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00185}00185\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00187}00187\ \textcolor{keywordtype}{void}\ Font::renderCharacter(\textcolor{keywordtype}{wchar\_t}\ c)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00188}00188\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00189}00189\ \ \ \ \ \textcolor{keywordtype}{float}\ xOff\ =\ c\ \%\ m\_cols\ *\ m\_charWidth;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00190}00190\ \ \ \ \ \textcolor{keywordtype}{float}\ yOff\ =\ c\ /\ m\_cols\ *\ m\_charHeight;\ \textcolor{comment}{//\ was\ m\_charWidth\ —\ wrong\ when\ glyphs\ aren't\ square}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00192}00192\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}}\ =\ charWidths[c]\ -\/\ .01f;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00193}00193\ \ \ \ \ \textcolor{keywordtype}{float}\ height\ =\ m\_charHeight\ -\/\ .01f;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00195}00195\ \ \ \ \ \textcolor{keywordtype}{float}\ fontWidth\ =\ m\_cols\ *\ m\_charWidth;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00196}00196\ \ \ \ \ \textcolor{keywordtype}{float}\ fontHeight\ =\ m\_rows\ *\ m\_charHeight;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00198}00198\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ shear\ =\ m\_italic\ ?\ (height\ *\ 0.25f)\ :\ 0.0f;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00199}00199\ \ \ \ \ \textcolor{keywordtype}{float}\ x0\ =\ xPos,\ x1\ =\ xPos\ +\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}}\ +\ shear;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00200}00200\ \ \ \ \ \textcolor{keywordtype}{float}\ y0\ =\ yPos,\ y1\ =\ yPos\ +\ height;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00201}00201\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00202}00202\ \ \ \ \ Tesselator\ *t\ =\ \doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{Tesselator::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00203}00203\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00204}00204\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}(xOff\ /\ fontWidth,\ (yOff\ +\ 7.99f)\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00205}00205\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x0,\ y1,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00206}00206\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}((xOff\ +\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}})\ /\ fontWidth,\ (yOff\ +\ 7.99f)\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00207}00207\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x1,\ y1,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00208}00208\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}((xOff\ +\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}})\ /\ fontWidth,\ yOff\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00209}00209\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x1,\ y0,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00210}00210\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}(xOff\ /\ fontWidth,\ yOff\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00211}00211\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x0,\ y0,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00212}00212\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00214}00214\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bold)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00215}00215\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ dx\ =\ 1.0f;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}(xOff\ /\ fontWidth,\ (yOff\ +\ 7.99f)\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x0\ +\ dx,\ y1,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}((xOff\ +\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}})\ /\ fontWidth,\ (yOff\ +\ 7.99f)\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x1\ +\ dx,\ y1,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}((xOff\ +\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}})\ /\ fontWidth,\ yOff\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x1\ +\ dx,\ y0,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}(xOff\ /\ fontWidth,\ yOff\ /\ fontHeight);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x0\ +\ dx,\ y0,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00227}00227\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00228}00228\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00229}00229\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_underline)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ renderStyleLine(x0,\ y1\ -\/\ 1.0f,\ xPos\ +\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(charWidths[c]),\ y1);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00231}00231\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00232}00232\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_strikethrough)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00233}00233\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ mid\ =\ y0\ +\ height\ *\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ renderStyleLine(x0,\ mid\ -\/\ 0.5f,\ xPos\ +\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(charWidths[c]),\ mid\ +\ 0.5f);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00236}00236\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00238}00238\ \ \ \ \ xPos\ +=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(charWidths[c]);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00239}00239\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00241}\doxymbox{\hyperlink{class_font_af733947f3a16e052538bc5e238100d3f}{00241}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_font_af733947f3a16e052538bc5e238100d3f}{Font::drawShadow}}(\textcolor{keyword}{const}\ wstring\&\ str,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ color)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00242}00242\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00243}00243\ \ \ \ \ \doxymbox{\hyperlink{class_font_a8c2fe87d47fe38dd939bc3bc8b7223f8}{draw}}(str,\ x\ +\ 1,\ y\ +\ 1,\ color,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00244}00244\ \ \ \ \ \doxymbox{\hyperlink{class_font_a8c2fe87d47fe38dd939bc3bc8b7223f8}{draw}}(str,\ x,\ y,\ color,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00245}00245\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00247}\doxymbox{\hyperlink{class_font_a7fbf24f258eb338a09d56eac15903b95}{00247}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_font_a7fbf24f258eb338a09d56eac15903b95}{Font::drawShadowLiteral}}(\textcolor{keyword}{const}\ wstring\&\ str,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ color)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00248}00248\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00249}00249\ \ \ \ \ \textcolor{keywordtype}{int}\ shadowColor\ =\ (color\ \&\ 0xFCFCFC)\ >>\ 2\ |\ (color\ \&\ 0xFF000000);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00250}00250\ \ \ \ \ drawLiteral(str,\ x\ +\ 1,\ y\ +\ 1,\ shadowColor);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00251}00251\ \ \ \ \ drawLiteral(str,\ x,\ y,\ color);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00252}00252\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00253}00253\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00254}00254\ \textcolor{keywordtype}{void}\ Font::drawLiteral(\textcolor{keyword}{const}\ wstring\&\ str,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ color)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00255}00255\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00256}00256\ \ \ \ \ \textcolor{keywordflow}{if}\ (str.empty())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00257}00257\ \ \ \ \ \textcolor{keywordflow}{if}\ ((color\ \&\ 0xFC000000)\ ==\ 0)\ color\ |=\ 0xFF000000;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00258}00258\ \ \ \ \ textures-\/>\doxymbox{\hyperlink{class_textures_afa6c13e1853cf96eb38fc9a3d7712515}{bindTexture}}(m\_textureLocation);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00259}00259\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}((color\ >>\ 16\ \&\ 255)\ /\ 255.0F,\ (color\ >>\ 8\ \&\ 255)\ /\ 255.0F,\ (color\ \&\ 255)\ /\ 255.0F,\ (color\ >>\ 24\ \&\ 255)\ /\ 255.0F);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00260}00260\ \ \ \ \ xPos\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(x);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00261}00261\ \ \ \ \ yPos\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(y);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00262}00262\ \ \ \ \ wstring\ cleanStr\ =\ \doxymbox{\hyperlink{class_font_a910dd2a4af8e80da170651a172d3e6a4}{sanitize}}(str);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00263}00263\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ cleanStr.length();\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ renderCharacter(cleanStr.at(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}));}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00265}00265\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00267}\doxymbox{\hyperlink{class_font_aa224a841c1aaab7d7466d993fa1d3c88}{00267}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_font_aa224a841c1aaab7d7466d993fa1d3c88}{Font::drawShadowWordWrap}}(\textcolor{keyword}{const}\ wstring\ \&str,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ color,\ \textcolor{keywordtype}{int}\ h)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00268}00268\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00269}00269\ \ \ \ \ drawWordWrapInternal(str,\ x\ +\ 1,\ y\ +\ 1,\ w,\ color,\ \textcolor{keyword}{true},\ h);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00270}00270\ \ \ \ \ drawWordWrapInternal(str,\ x,\ y,\ w,\ color,\ h);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00271}00271\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00273}\doxymbox{\hyperlink{class_font_a8c2fe87d47fe38dd939bc3bc8b7223f8}{00273}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_font_a8c2fe87d47fe38dd939bc3bc8b7223f8}{Font::draw}}(\textcolor{keyword}{const}\ wstring\&\ str,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ color)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00274}00274\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00275}00275\ \ \ \ \ \doxymbox{\hyperlink{class_font_a8c2fe87d47fe38dd939bc3bc8b7223f8}{draw}}(str,\ x,\ y,\ color,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00276}00276\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00278}00278\ wstring\ Font::reorderBidi(\textcolor{keyword}{const}\ wstring\ \&str)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00279}00279\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00280}00280\ \ \ \ \ \textcolor{comment}{//\ 4J\ Not\ implemented}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00281}00281\ \ \ \ \ \textcolor{keywordflow}{return}\ str;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00282}00282\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00284}00284\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ isSectionFormatCode(\textcolor{keywordtype}{wchar\_t}\ ca)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00285}00285\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00286}00286\ \ \ \ \ \textcolor{keywordflow}{if}\ ((ca\ >=\ L\textcolor{charliteral}{'0'}\ \&\&\ ca\ <=\ L\textcolor{charliteral}{'9'})\ ||\ (ca\ >=\ L\textcolor{charliteral}{'a'}\ \&\&\ ca\ <=\ L\textcolor{charliteral}{'f'})\ ||\ (ca\ >=\ L\textcolor{charliteral}{'A'}\ \&\&\ ca\ <=\ L\textcolor{charliteral}{'F'}))}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00287}00287\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00288}00288\ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ l\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{wchar\_t}\textcolor{keyword}{>}(ca\ |\ 32);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00289}00289\ \ \ \ \ \textcolor{keywordflow}{return}\ l\ ==\ L\textcolor{charliteral}{'l'}\ ||\ l\ ==\ L\textcolor{charliteral}{'o'}\ ||\ l\ ==\ L\textcolor{charliteral}{'n'}\ ||\ l\ ==\ L\textcolor{charliteral}{'m'}\ ||\ l\ ==\ L\textcolor{charliteral}{'r'}\ ||\ l\ ==\ L\textcolor{charliteral}{'k'};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00290}00290\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00291}00291\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00292}00292\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_font_a8c2fe87d47fe38dd939bc3bc8b7223f8}{Font::draw}}(\textcolor{keyword}{const}\ wstring\ \&str,\ \textcolor{keywordtype}{bool}\ dropShadow)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00293}00293\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00294}00294\ \ \ \ \ \textcolor{comment}{//\ Bind\ the\ texture}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00295}00295\ \ \ \ \ textures-\/>bindTexture(m\_textureLocation);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00296}00296\ \ \ \ \ \textcolor{keywordtype}{bool}\ noise\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00297}00297\ \ \ \ \ m\_bold\ =\ m\_italic\ =\ m\_underline\ =\ m\_strikethrough\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00298}00298\ \ \ \ \ wstring\ cleanStr\ =\ \doxymbox{\hyperlink{class_font_a910dd2a4af8e80da170651a172d3e6a4}{sanitize}}(str);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00299}00299\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00300}00300\ \ \ \ \ Tesselator\ *t\ =\ \doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{Tesselator::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00301}00301\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00302}00302\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00303}00303\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i\ <\ static\_cast<int>}}(cleanStr.length());\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00304}00304\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Map\ character}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ c\ =\ cleanStr.at(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00307}00307\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ 167\ \&\&\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +\ 1\ <\ cleanStr.length())}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00309}00309\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ ca\ =\ cleanStr[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}+1];}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isSectionFormatCode(ca))}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ renderCharacter(167);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ renderCharacter(ca);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ colorN\ =\ 16;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((\ ca\ >=\ L\textcolor{charliteral}{'0'}\ )\ \&\&\ (ca\ <=\ L\textcolor{charliteral}{'9'}))\ colorN\ =\ ca\ -\/\ L\textcolor{charliteral}{'0'};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}((\ ca\ >=\ L\textcolor{charliteral}{'a'}\ )\ \&\&\ (ca\ <=\ L\textcolor{charliteral}{'f'}))\ colorN\ =\ (ca\ -\/\ L\textcolor{charliteral}{'a'})\ +\ 10;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}((\ ca\ >=\ L\textcolor{charliteral}{'A'}\ )\ \&\&\ (ca\ <=\ L\textcolor{charliteral}{'F'}))\ colorN\ =\ (ca\ -\/\ L\textcolor{charliteral}{'A'})\ +\ 10;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00324}00324\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (colorN\ ==\ 16)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ l\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{wchar\_t}\textcolor{keyword}{>}(ca\ |\ 32);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (l\ ==\ L\textcolor{charliteral}{'l'})\ m\_bold\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (l\ ==\ L\textcolor{charliteral}{'o'})\ m\_italic\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (l\ ==\ L\textcolor{charliteral}{'n'})\ m\_underline\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (l\ ==\ L\textcolor{charliteral}{'m'})\ m\_strikethrough\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (l\ ==\ L\textcolor{charliteral}{'r'})\ m\_bold\ =\ m\_italic\ =\ m\_underline\ =\ m\_strikethrough\ =\ noise\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (l\ ==\ L\textcolor{charliteral}{'k'})\ noise\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ noise\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00338}00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (colorN\ <\ 0\ ||\ colorN\ >\ 15)\ colorN\ =\ 15;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dropShadow)\ colorN\ +=\ 16;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ color\ =\ colors[colorN];}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a59532c894955c2a112042f21f0a9c317}{glColor3f}}((color\ >>\ 16)\ /\ 255.0F,\ ((color\ >>\ 8)\ \&\ 255)\ /\ 255.0F,\ (color\ \&\ 255)\ /\ 255.0F);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ "{}noise"{}\ for\ crazy\ splash\ screen\ message}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (noise)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ newc;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newc\ =\ \doxymbox{\hyperlink{class_font_a24d842c0e3ec809eb18512f157555fd6}{random}}-\/>nextInt(\doxymbox{\hyperlink{class_shared_constants_af2d405c8d8c3efab201d69802c0c8222}{SharedConstants::acceptableLetters}}.length());}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (charWidths[c\ +\ 32]\ !=\ charWidths[newc\ +\ 32]);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ c\ =\ newc;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00357}00357\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ addCharacterQuad(c);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00359}00359\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00360}00360\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00361}00361\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00362}00362\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00363}00363\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00364}00364\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_font_a8c2fe87d47fe38dd939bc3bc8b7223f8}{Font::draw}}(\textcolor{keyword}{const}\ wstring\&\ str,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ color,\ \textcolor{keywordtype}{bool}\ dropShadow)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00365}00365\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00366}00366\ \ \ \ \ \textcolor{keywordflow}{if}\ (!str.empty())}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00367}00367\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((color\ \&\ 0xFC000000)\ ==\ 0)\ color\ |=\ 0xFF000000;\ \textcolor{comment}{//\ force\ alpha}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ not\ set}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dropShadow)\ \textcolor{comment}{//\ divide\ RGB\ by\ 4,\ preserve\ alpha}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ \ \ \ \ color\ =\ (color\ \&\ 0xfcfcfc)\ >>\ 2\ |\ (color\ \&\ (-\/1\ <<\ 24));}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00373}00373\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00374}00374\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}((color\ >>\ 16\ \&\ 255)\ /\ 255.0F,\ (color\ >>\ 8\ \&\ 255)\ /\ 255.0F,\ (color\ \&\ 255)\ /\ 255.0F,\ (color\ >>\ 24\ \&\ 255)\ /\ 255.0F);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00375}00375\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00376}00376\ \ \ \ \ \ \ \ \ xPos\ =\ x;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00377}00377\ \ \ \ \ \ \ \ \ yPos\ =\ y;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00378}00378\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_font_a8c2fe87d47fe38dd939bc3bc8b7223f8}{draw}}(str,\ dropShadow);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00379}00379\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00380}00380\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00381}00381\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00382}\doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{00382}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{Font::width}}(\textcolor{keyword}{const}\ wstring\&\ str)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00383}00383\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00384}00384\ \ \ \ \ wstring\ cleanStr\ =\ \doxymbox{\hyperlink{class_font_a910dd2a4af8e80da170651a172d3e6a4}{sanitize}}(str);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00385}00385\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00386}00386\ \ \ \ \ \textcolor{keywordflow}{if}\ (cleanStr\ ==\ L\textcolor{stringliteral}{"{}"{}})\ \textcolor{keywordflow}{return}\ 0;\ \ \textcolor{comment}{//\ 4J\ -\/\ was\ nullptr\ comparison}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00387}00387\ \ \ \ \ \textcolor{keywordtype}{int}\ len\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00388}00388\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00389}00389\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ cleanStr.length();\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00390}00390\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00391}00391\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ c\ =\ cleanStr.at(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00392}00392\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00393}00393\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ 167)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00394}00394\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +\ 1\ <\ cleanStr.length()\ \&\&\ isSectionFormatCode(cleanStr[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}+1]))}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00397}00397\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00399}00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ len\ +=\ charWidths[167];}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +\ 1\ <\ cleanStr.length())}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ len\ +=\ charWidths[\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\textcolor{keyword}{>}(cleanStr[++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}])];}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00403}00403\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00404}00404\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00405}00405\ \ \ \ \ \ \ \ \ \ \ \ \ len\ +=\ charWidths[c];}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00406}00406\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00407}00407\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00408}00408\ \ \ \ \ \textcolor{keywordflow}{return}\ len;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00409}00409\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00410}00410\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00411}\doxymbox{\hyperlink{class_font_a4b4561bd9336acc70a52eb41015b0701}{00411}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_font_a4b4561bd9336acc70a52eb41015b0701}{Font::widthLiteral}}(\textcolor{keyword}{const}\ wstring\&\ str)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00412}00412\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00413}00413\ \ \ \ \ wstring\ cleanStr\ =\ \doxymbox{\hyperlink{class_font_a910dd2a4af8e80da170651a172d3e6a4}{sanitize}}(str);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00414}00414\ \ \ \ \ \textcolor{keywordflow}{if}\ (cleanStr\ ==\ L\textcolor{stringliteral}{"{}"{}})\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00415}00415\ \ \ \ \ \textcolor{keywordtype}{int}\ len\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00416}00416\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ cleanStr.length();\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00417}00417\ \ \ \ \ \ \ \ \ len\ +=\ charWidths[\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\textcolor{keyword}{>}(cleanStr.at(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}))];}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00418}00418\ \ \ \ \ \textcolor{keywordflow}{return}\ len;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00419}00419\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00420}00420\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00421}\doxymbox{\hyperlink{class_font_a910dd2a4af8e80da170651a172d3e6a4}{00421}}\ wstring\ \doxymbox{\hyperlink{class_font_a910dd2a4af8e80da170651a172d3e6a4}{Font::sanitize}}(\textcolor{keyword}{const}\ wstring\&\ str)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00422}00422\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00423}00423\ \ \ \ \ wstring\ sb\ =\ str;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00424}00424\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00425}00425\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ sb.length();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00426}00426\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00427}00427\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (CharacterExists(sb[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]))}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00428}00428\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ sb[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ MapCharacter(sb[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00430}00430\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00431}00431\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00432}00432\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00433}00433\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ this\ character\ isn't\ supported,\ just\ show\ the\ first\ character\ (empty\ square\ box\ character)}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00434}00434\ \ \ \ \ \ \ \ \ \ \ \ \ sb[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00435}00435\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00436}00436\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00437}00437\ \ \ \ \ \textcolor{keywordflow}{return}\ sb;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00438}00438\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00439}00439\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00440}00440\ \textcolor{keywordtype}{int}\ Font::MapCharacter(\textcolor{keywordtype}{wchar\_t}\ c)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00441}00441\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00442}00442\ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_charMap.empty())}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00443}00443\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00444}00444\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Don't\ map\ space\ character}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00445}00445\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ c\ ==\ \textcolor{charliteral}{'\ '}\ ?\ c\ :\ m\_charMap[c];}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00446}00446\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00447}00447\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00448}00448\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00449}00449\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ c;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00450}00450\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00451}00451\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00452}00452\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00453}00453\ \textcolor{keywordtype}{bool}\ Font::CharacterExists(\textcolor{keywordtype}{wchar\_t}\ c)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00454}00454\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00455}00455\ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_charMap.empty())}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00456}00456\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00457}00457\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_charMap.find(c)\ !=\ m\_charMap.end();}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00458}00458\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00459}00459\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00460}00460\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ c\ >=\ 0\ \&\&\ c\ <=\ m\_rows*m\_cols;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00462}00462\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00463}00463\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00464}00464\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00465}\doxymbox{\hyperlink{class_font_a31158b969a8035dfa5e1ef6a05e90f21}{00465}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_font_a31158b969a8035dfa5e1ef6a05e90f21}{Font::drawWordWrap}}(\textcolor{keyword}{const}\ wstring\ \&\textcolor{keywordtype}{string},\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ h)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00466}00466\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00467}00467\ \ \ \ \ \textcolor{comment}{//if\ (bidirectional)}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00468}00468\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00469}00469\ \ \ \ \ \textcolor{comment}{//\ \ string\ =\ reorderBidi(string);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00470}00470\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00471}00471\ \ \ \ \ drawWordWrapInternal(\textcolor{keywordtype}{string},\ x,\ y,\ w,\ col,\ h);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00472}00472\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00473}00473\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00474}00474\ \textcolor{keywordtype}{void}\ Font::drawWordWrapInternal(\textcolor{keyword}{const}\ wstring\ \&\textcolor{keywordtype}{string},\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ h)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00475}00475\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00476}00476\ \ \ \ \ drawWordWrapInternal(\textcolor{keywordtype}{string},\ x,\ y,\ w,\ col,\ \textcolor{keyword}{false},\ h);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00477}00477\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00478}00478\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00479}\doxymbox{\hyperlink{class_font_a44166933c0222cb31ad89de7b2079265}{00479}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_font_a31158b969a8035dfa5e1ef6a05e90f21}{Font::drawWordWrap}}(\textcolor{keyword}{const}\ wstring\ \&\textcolor{keywordtype}{string},\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{bool}\ darken,\ \textcolor{keywordtype}{int}\ h)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00480}00480\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00481}00481\ \ \ \ \ \textcolor{comment}{//if\ (bidirectional)}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00482}00482\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00483}00483\ \ \ \ \ \textcolor{comment}{//\ \ string\ =\ reorderBidi(string);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00484}00484\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00485}00485\ \ \ \ \ drawWordWrapInternal(\textcolor{keywordtype}{string},\ x,\ y,\ w,\ col,\ darken,\ h);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00486}00486\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00487}00487\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00488}00488\ \textcolor{keywordtype}{void}\ Font::drawWordWrapInternal(\textcolor{keyword}{const}\ wstring\&\ \textcolor{keywordtype}{string},\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{bool}\ darken,\ \textcolor{keywordtype}{int}\ h)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00489}00489\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00490}00490\ \ \ \ \ vector<wstring>lines\ =\ \doxymbox{\hyperlink{_string_helpers_8cpp_aede1ac32e0521476f812ce51c120075b}{stringSplit}}(\textcolor{keywordtype}{string},L\textcolor{charliteral}{'\(\backslash\)n'});}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00491}00491\ \ \ \ \ \textcolor{keywordflow}{if}\ (lines.size()\ >\ 1)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00492}00492\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00493}00493\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\ \textcolor{keyword}{auto}\&\ it\ :\ lines\ )}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00494}00494\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00495}00495\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Don't\ draw\ text\ that\ will\ be\ partially\ cutoff/overlap\ something\ it\ shouldn't}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00496}00496\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (y\ +\ this-\/>\doxymbox{\hyperlink{class_font_a7cf0146fde0d5e024f92b0a9e4c7b362}{wordWrapHeight}}(it,\ w))\ >\ h)\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00497}00497\ \ \ \ \ \ \ \ \ \ \ \ \ drawWordWrapInternal(it,\ x,\ y,\ w,\ col,\ h);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00498}00498\ \ \ \ \ \ \ \ \ \ \ \ \ y\ +=\ this-\/>\doxymbox{\hyperlink{class_font_a7cf0146fde0d5e024f92b0a9e4c7b362}{wordWrapHeight}}(it,\ w);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00499}00499\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00500}00500\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00501}00501\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00502}00502\ \ \ \ \ vector<wstring>\ words\ =\ \doxymbox{\hyperlink{_string_helpers_8cpp_aede1ac32e0521476f812ce51c120075b}{stringSplit}}(\textcolor{keywordtype}{string},L\textcolor{charliteral}{'\ '});}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00503}00503\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ pos\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00504}00504\ \ \ \ \ \textcolor{keywordflow}{while}\ (pos\ <\ words.size())}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00505}00505\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00506}00506\ \ \ \ \ \ \ \ \ wstring\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ =\ words[pos++]\ +\ L\textcolor{stringliteral}{"{}\ "{}};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00507}00507\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (pos\ <\ words.size()\ \&\&\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ +\ words[pos])\ <\ w)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00508}00508\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00509}00509\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ +=\ words[pos++]\ +\ L\textcolor{stringliteral}{"{}\ "{}};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00510}00510\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00511}00511\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (\doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}})\ >\ w)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00512}00512\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00513}00513\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ l\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00514}00514\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (\doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.substr(0,\ l\ +\ 1))\ <=\ w)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00515}00515\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00516}00516\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ l++;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00517}00517\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00518}00518\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_string_helpers_8cpp_a288aaf526d0dfcc7103d6d7f1a481f09}{trimString}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.substr(0,\ l)).length()\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00519}00519\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00520}00520\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_font_a8c2fe87d47fe38dd939bc3bc8b7223f8}{draw}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.substr(0,\ l),\ x,\ y,\ col);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00521}00521\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ y\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00522}00522\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00523}00523\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.substr(l);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00524}00524\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00525}00525\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Don't\ draw\ text\ that\ will\ be\ partially\ cutoff/overlap\ something\ it\ shouldn't}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00526}00526\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (y\ +\ 8)\ >\ h)\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00527}00527\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00528}00528\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Don't\ draw\ text\ that\ will\ be\ partially\ cutoff/overlap\ something\ it\ shouldn't}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00529}00529\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_string_helpers_8cpp_a288aaf526d0dfcc7103d6d7f1a481f09}{trimString}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}).length()\ >\ 0\ \&\&\ !(\ (y\ +\ 8)\ >\ h)\ )}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00530}00530\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00531}00531\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_font_a8c2fe87d47fe38dd939bc3bc8b7223f8}{draw}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}},\ x,\ y,\ col);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00532}00532\ \ \ \ \ \ \ \ \ \ \ \ \ y\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00533}00533\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00534}00534\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00535}00535\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00536}00536\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00537}00537\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00538}\doxymbox{\hyperlink{class_font_a7cf0146fde0d5e024f92b0a9e4c7b362}{00538}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_font_a7cf0146fde0d5e024f92b0a9e4c7b362}{Font::wordWrapHeight}}(\textcolor{keyword}{const}\ wstring\&\ \textcolor{keywordtype}{string},\ \textcolor{keywordtype}{int}\ w)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00539}00539\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00540}00540\ \ \ \ \ vector<wstring>\ lines\ =\ \doxymbox{\hyperlink{_string_helpers_8cpp_aede1ac32e0521476f812ce51c120075b}{stringSplit}}(\textcolor{keywordtype}{string},L\textcolor{charliteral}{'\(\backslash\)n'});}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00541}00541\ \ \ \ \ \textcolor{keywordflow}{if}\ (lines.size()\ >\ 1)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00542}00542\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00543}00543\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ h\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00544}00544\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\ \textcolor{keyword}{auto}\&\ it\ :\ lines\ )}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00545}00545\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00546}00546\ \ \ \ \ \ \ \ \ \ \ \ \ h\ +=\ this-\/>\doxymbox{\hyperlink{class_font_a7cf0146fde0d5e024f92b0a9e4c7b362}{wordWrapHeight}}(it,\ w);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00547}00547\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00548}00548\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ h;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00549}00549\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00550}00550\ \ \ \ \ vector<wstring>\ words\ =\ \doxymbox{\hyperlink{_string_helpers_8cpp_aede1ac32e0521476f812ce51c120075b}{stringSplit}}(\textcolor{keywordtype}{string},L\textcolor{charliteral}{'\ '});}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00551}00551\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ pos\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00552}00552\ \ \ \ \ \textcolor{keywordtype}{int}\ y\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00553}00553\ \ \ \ \ \textcolor{keywordflow}{while}\ (pos\ <\ words.size())}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00554}00554\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00555}00555\ \ \ \ \ \ \ \ \ wstring\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ =\ words[pos++]\ +\ L\textcolor{stringliteral}{"{}\ "{}};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00556}00556\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (pos\ <\ words.size()\ \&\&\ \doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ +\ words[pos])\ <\ w)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00557}00557\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00558}00558\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ +=\ words[pos++]\ +\ L\textcolor{stringliteral}{"{}\ "{}};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00559}00559\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00560}00560\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (\doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}})\ >\ w)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00561}00561\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00562}00562\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ l\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00563}00563\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (\doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.substr(0,\ l\ +\ 1))\ <=\ w)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00564}00564\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00565}00565\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ l++;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00566}00566\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00567}00567\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_string_helpers_8cpp_a288aaf526d0dfcc7103d6d7f1a481f09}{trimString}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.substr(0,\ l)).length()\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00568}00568\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00569}00569\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ y\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00570}00570\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00571}00571\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.substr(l);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00572}00572\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00573}00573\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_string_helpers_8cpp_a288aaf526d0dfcc7103d6d7f1a481f09}{trimString}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}).length()\ >\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00574}00574\ \ \ \ \ \ \ \ \ \ \ \ \ y\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00575}00575\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00576}00576\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00577}00577\ \ \ \ \ \textcolor{keywordflow}{if}\ (y\ <\ 8)\ y\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00578}00578\ \ \ \ \ \textcolor{keywordflow}{return}\ y;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00579}00579\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00580}00580\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00581}00581\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00582}\doxymbox{\hyperlink{class_font_aa16a64120c15864d34305df4d42889fe}{00582}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_font_aa16a64120c15864d34305df4d42889fe}{Font::setEnforceUnicodeSheet}}(\textcolor{keywordtype}{bool}\ enforceUnicodeSheet)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00583}00583\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00584}00584\ \ \ \ \ this-\/>enforceUnicodeSheet\ =\ enforceUnicodeSheet;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00585}00585\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00586}00586\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00587}\doxymbox{\hyperlink{class_font_a976d8fceda82a888e9181be67db4e3a9}{00587}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_font_a976d8fceda82a888e9181be67db4e3a9}{Font::setBidirectional}}(\textcolor{keywordtype}{bool}\ bidirectional)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00588}00588\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00589}00589\ \ \ \ \ this-\/>bidirectional\ =\ bidirectional;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00590}00590\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00591}00591\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00592}\doxymbox{\hyperlink{class_font_a203733fa46664f6db3cd284e42dc6f52}{00592}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_font_a203733fa46664f6db3cd284e42dc6f52}{Font::AllCharactersValid}}(\textcolor{keyword}{const}\ wstring\ \&str)}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00593}00593\ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00594}00594\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i\ <\ static\_cast<int>}}(str.length());\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00595}00595\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00596}00596\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ c\ =\ str.at(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00597}00597\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00598}00598\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ 167\ \&\&\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +\ 1\ <\ str.length())}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00599}00599\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00600}00600\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ skip\ special\ color\ setting}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00601}00601\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00602}00602\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00603}00603\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00604}00604\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00605}00605\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ index\ =\ \doxymbox{\hyperlink{class_shared_constants_af2d405c8d8c3efab201d69802c0c8222}{SharedConstants::acceptableLetters}}.find(c);}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00606}00606\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00607}00607\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((c\ !=\ \textcolor{charliteral}{'\ '})\ \&\&\ !(index\ >\ 0\ \&\&\ !enforceUnicodeSheet))}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00608}00608\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00609}00609\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00610}00610\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00611}00611\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00612}00612\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00613}00613\ \}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00614}00614\ }
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00615}00615\ \textcolor{comment}{//\ Not\ in\ use}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00616}00616\ \textcolor{comment}{/*//\ 4J\ -\/\ this\ code\ is\ lifted\ from\ \#if\ 0\ section\ above,\ so\ that\ we\ can\ directly\ create\ what\ would\ have\ gone\ in\ each\ of\ our\ 256\ +\ 32\ command\ buffers}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00617}00617\ \textcolor{comment}{void\ Font::renderFakeCB(IntBuffer\ *ib)}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00618}00618\ \textcolor{comment}{\{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00619}00619\ \textcolor{comment}{\ \ \ \ Tesselator\ *t\ =\ Tesselator::getInstance();}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00620}00620\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00621}00621\ \textcolor{comment}{\ \ \ \ int\ i;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00622}00622\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00623}00623\ \textcolor{comment}{\ \ \ \ for(unsigned\ int\ j\ =\ 0;\ j\ <\ ib-\/>limit();\ j++)}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00624}00624\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00625}00625\ \textcolor{comment}{\ \ \ \ \ \ \ \ int\ cb\ =\ ib-\/>get(j);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00626}00626\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00627}00627\ \textcolor{comment}{\ \ \ \ \ \ \ \ if(\ cb\ <\ 256\ )}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00628}00628\ \textcolor{comment}{\ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00629}00629\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ i\ =\ cb;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00630}00630\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ t-\/>begin();}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00631}00631\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ int\ ix\ =\ i\ \%\ 16\ *\ 8;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00632}00632\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ int\ iy\ =\ i\ /\ 16\ *\ 8;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00633}00633\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ //\ float\ s\ =\ 7.99f;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00634}00634\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ float\ s\ =\ 7.99f;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00635}00635\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00636}00636\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ float\ uo\ =\ (0.0f)\ /\ 128.0f;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00637}00637\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ float\ vo\ =\ (0.0f)\ /\ 128.0f;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00638}00638\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00639}00639\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ t-\/>vertexUV(static\_cast<float>(0),\ static\_cast<float>(0\ +\ s),\ static\_cast<float>(0),\ static\_cast<float>(ix\ /\ 128.0f\ +\ uo),\ static\_cast<float>((iy\ +\ s)\ /\ 128.0f\ +\ vo));}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00640}00640\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ t-\/>vertexUV(static\_cast<float>(0\ +\ s),\ static\_cast<float>(0\ +\ s),\ static\_cast<float>(0),\ static\_cast<float>((ix\ +\ s)\ /\ 128.0f\ +\ uo),\ static\_cast<float>((iy\ +\ s)\ /\ 128.0f\ +\ vo));}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00641}00641\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ t-\/>vertexUV(static\_cast<float>(0\ +\ s),\ static\_cast<float>(0),\ static\_cast<float>(0),\ static\_cast<float>((ix\ +\ s)\ /\ 128.0f\ +\ uo),\ static\_cast<float>(iy\ /\ 128.0f\ +\ vo));}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00642}00642\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ t-\/>vertexUV(static\_cast<float>(0),\ static\_cast<float>(0),\ static\_cast<float>(0),\ static\_cast<float>(ix\ /\ 128.0f\ +\ uo),\ static\_cast<float>(iy\ /\ 128.0f\ +\ vo));}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00643}00643\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ //\ target.colorBlit(texture,\ x\ +\ xo,\ y,\ color,\ ix,\ iy,}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00644}00644\ \textcolor{comment}{\ \ \ \ \ \ \ \ //\ charWidths[chars[i]],\ 8);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00645}00645\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ t-\/>end();}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00646}00646\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00647}00647\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ glTranslatef(static\_cast<float>(charWidths[i]),\ 0,\ 0);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00648}00648\ \textcolor{comment}{\ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00649}00649\ \textcolor{comment}{\ \ \ \ \ \ \ \ else}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00650}00650\ \textcolor{comment}{\ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00651}00651\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ i\ =\ cb\ -\/\ 256;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00652}00652\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00653}00653\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ int\ br\ =\ ((i\ >>\ 3)\ \&\ 1)\ *\ 0x55;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00654}00654\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ int\ r\ =\ ((i\ >>\ 2)\ \&\ 1)\ *\ 0xaa\ +\ br;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00655}00655\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ int\ g\ =\ ((i\ >>\ 1)\ \&\ 1)\ *\ 0xaa\ +\ br;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00656}00656\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ int\ b\ =\ ((i\ >>\ 0)\ \&\ 1)\ *\ 0xaa\ +\ br;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00657}00657\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ if\ (i\ ==\ 6)}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00658}00658\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00659}00659\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ r\ +=\ 0x55;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00660}00660\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00661}00661\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ bool\ darken\ =\ i\ >=\ 16;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00662}00662\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00663}00663\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ //\ color\ =\ r\ <<\ 16\ |\ g\ <<\ 8\ |\ b;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00664}00664\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ if\ (darken)}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00665}00665\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00666}00666\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ r\ /=\ 4;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00667}00667\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\ /=\ 4;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00668}00668\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ b\ /=\ 4;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00669}00669\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00670}00670\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ glColor3f(r\ /\ 255.0f,\ g\ /\ 255.0f,\ b\ /\ 255.0f);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00671}00671\ \textcolor{comment}{\ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00672}00672\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00673}00673\ \textcolor{comment}{\}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00674}00674\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00675}00675\ \textcolor{comment}{void\ Font::loadUnicodePage(int\ page)}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00676}00676\ \textcolor{comment}{\{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00677}00677\ \textcolor{comment}{\ \ \ \ wchar\_t\ fileName[25];}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00678}00678\ \textcolor{comment}{\ \ \ \ //String\ fileName\ =\ String.format("{}/1\_2\_2/font/glyph\_\%02X.png"{},\ page);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00679}00679\ \textcolor{comment}{\ \ \ \ swprintf(fileName,25,L"{}/1\_2\_2/font/glyph\_\%02X.png"{},page);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00680}00680\ \textcolor{comment}{\ \ \ \ BufferedImage\ *image\ =\ new\ BufferedImage(fileName);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00681}00681\ \textcolor{comment}{\ \ \ \ //try}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00682}00682\ \textcolor{comment}{\ \ \ \ //\{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00683}00683\ \textcolor{comment}{\ \ \ \ //\ \ image\ =\ ImageIO.read(Textures.class.getResourceAsStream(fileName.toString()));}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00684}00684\ \textcolor{comment}{\ \ \ \ //\}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00685}00685\ \textcolor{comment}{\ \ \ \ //catch\ (IOException\ e)}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00686}00686\ \textcolor{comment}{\ \ \ \ //\{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00687}00687\ \textcolor{comment}{\ \ \ \ //\ \ throw\ new\ RuntimeException(e);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00688}00688\ \textcolor{comment}{\ \ \ \ //\}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00689}00689\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00690}00690\ \textcolor{comment}{\ \ \ \ unicodeTexID[page]\ =\ textures-\/>getTexture(image);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00691}00691\ \textcolor{comment}{\ \ \ \ lastBoundTexture\ =\ unicodeTexID[page];}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00692}00692\ \textcolor{comment}{\}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00693}00693\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00694}00694\ \textcolor{comment}{void\ Font::renderUnicodeCharacter(wchar\_t\ c)}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00695}00695\ \textcolor{comment}{\{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00696}00696\ \textcolor{comment}{\ \ \ \ if\ (unicodeWidth[c]\ ==\ 0)}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00697}00697\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00698}00698\ \textcolor{comment}{\ \ \ \ \ \ \ \ //\ System.out.println("{}no-\/width\ char\ "{}\ +\ c);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00699}00699\ \textcolor{comment}{\ \ \ \ \ \ \ \ return;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00700}00700\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00701}00701\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00702}00702\ \textcolor{comment}{\ \ \ \ int\ page\ =\ c\ /\ 256;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00703}00703\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00704}00704\ \textcolor{comment}{\ \ \ \ if\ (unicodeTexID[page]\ ==\ 0)\ loadUnicodePage(page);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00705}00705\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00706}00706\ \textcolor{comment}{\ \ \ \ if\ (lastBoundTexture\ !=\ unicodeTexID[page])}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00707}00707\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00708}00708\ \textcolor{comment}{\ \ \ \ \ \ \ \ glBindTexture(GL\_TEXTURE\_2D,\ unicodeTexID[page]);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00709}00709\ \textcolor{comment}{\ \ \ \ \ \ \ \ lastBoundTexture\ =\ unicodeTexID[page];}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00710}00710\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00711}00711\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00712}00712\ \textcolor{comment}{\ \ \ \ //\ first\ column\ with\ non-\/trans\ pixels}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00713}00713\ \textcolor{comment}{\ \ \ \ int\ firstLeft\ =\ unicodeWidth[c]\ >>\ 4;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00714}00714\ \textcolor{comment}{\ \ \ \ //\ last\ column\ with\ non-\/trans\ pixels}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00715}00715\ \textcolor{comment}{\ \ \ \ int\ firstRight\ =\ unicodeWidth[c]\ \&\ 0xF;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00716}00716\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00717}00717\ \textcolor{comment}{\ \ \ \ float\ left\ =\ firstLeft;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00718}00718\ \textcolor{comment}{\ \ \ \ float\ right\ =\ firstRight\ +\ 1;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00719}00719\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00720}00720\ \textcolor{comment}{\ \ \ \ float\ xOff\ =\ c\ \%\ 16\ *\ 16\ +\ left;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00721}00721\ \textcolor{comment}{\ \ \ \ float\ yOff\ =\ (c\ \&\ 0xFF)\ /\ 16\ *\ 16;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00722}00722\ \textcolor{comment}{\ \ \ \ float\ width\ =\ right\ -\/\ left\ -\/\ .02f;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00723}00723\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00724}00724\ \textcolor{comment}{\ \ \ \ Tesselator\ *t\ =\ Tesselator::getInstance();}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00725}00725\ \textcolor{comment}{\ \ \ \ t-\/>begin(GL\_TRIANGLE\_STRIP);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00726}00726\ \textcolor{comment}{\ \ \ \ t-\/>tex(xOff\ /\ 256.0F,\ yOff\ /\ 256.0F);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00727}00727\ \textcolor{comment}{\ \ \ \ t-\/>vertex(xPos,\ yPos,\ 0.0f);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00728}00728\ \textcolor{comment}{\ \ \ \ t-\/>tex(xOff\ /\ 256.0F,\ (yOff\ +\ 15.98f)\ /\ 256.0F);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00729}00729\ \textcolor{comment}{\ \ \ \ t-\/>vertex(xPos,\ yPos\ +\ 7.99f,\ 0.0f);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00730}00730\ \textcolor{comment}{\ \ \ \ t-\/>tex((xOff\ +\ width)\ /\ 256.0F,\ yOff\ /\ 256.0F);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00731}00731\ \textcolor{comment}{\ \ \ \ t-\/>vertex(xPos\ +\ width\ /\ 2,\ yPos,\ 0.0f);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00732}00732\ \textcolor{comment}{\ \ \ \ t-\/>tex((xOff\ +\ width)\ /\ 256.0F,\ (yOff\ +\ 15.98f)\ /\ 256.0F);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00733}00733\ \textcolor{comment}{\ \ \ \ t-\/>vertex(xPos\ +\ width\ /\ 2,\ yPos\ +\ 7.99f,\ 0.0f);}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00734}00734\ \textcolor{comment}{\ \ \ \ t-\/>end();}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00735}00735\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00736}00736\ \textcolor{comment}{\ \ \ \ xPos\ +=\ (right\ -\/\ left)\ /\ 2\ +\ 1;}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00737}00737\ \textcolor{comment}{\}}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00738}00738\ \textcolor{comment}{*/}}
+\DoxyCodeLine{\Hypertarget{_font_8cpp_source_l00739}00739\ }
+
+\end{DoxyCode}

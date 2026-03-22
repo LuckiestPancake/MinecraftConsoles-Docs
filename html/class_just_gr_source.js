@@ -1,0 +1,28 @@
+var class_just_gr_source =
+[
+    [ "JustGrSource", "class_just_gr_source.html#a43a0e7d7dd0c70a48e7c14f699751943", null ],
+    [ "getBaseSavePath", "class_just_gr_source.html#ae744759089a5b52a24d2b126764aa3cb", null ],
+    [ "getDefaultSaveName", "class_just_gr_source.html#ae61de41b8f48bc07a981049c40e76268", null ],
+    [ "getDisplayName", "class_just_gr_source.html#a3713c2bbb1decbcffe455ef01ea23b9e", null ],
+    [ "getGrfPath", "class_just_gr_source.html#a80c9fe56561476adfc4d3f437df4956b", null ],
+    [ "getRequiredTexturePackId", "class_just_gr_source.html#a3ffafe6a16a30c593c595b33fb27510c", null ],
+    [ "getWorldName", "class_just_gr_source.html#a14f5d77e7cda4ae965e7bc1655324dec", null ],
+    [ "ready", "class_just_gr_source.html#a08a72daaf316d800508a0d28fd81b1da", null ],
+    [ "requiresBaseSave", "class_just_gr_source.html#ac639b549022cec64b52127b981de3c52", null ],
+    [ "requiresTexturePack", "class_just_gr_source.html#afdd256eb62726d9b519ececd1ed25964", null ],
+    [ "setBaseSavePath", "class_just_gr_source.html#a84d5bb00d8cbcb87058339e6f9b483d0", null ],
+    [ "setDefaultSaveName", "class_just_gr_source.html#a70545ff0f604826ace4506ffe0423ef3", null ],
+    [ "setDisplayName", "class_just_gr_source.html#a8c44479102fc335f7806ed5165c4f56c", null ],
+    [ "setGrfPath", "class_just_gr_source.html#ae50d23a10dba04761dd2761f85fb3663", null ],
+    [ "setRequiredTexturePackId", "class_just_gr_source.html#aa38cfbae000c1090e3c4f064a3bc5122", null ],
+    [ "setRequiresTexturePack", "class_just_gr_source.html#af14308aafda6a7947e4d6f64483c97a0", null ],
+    [ "setWorldName", "class_just_gr_source.html#a3d3a577e3780dfb2489d651ac96413c3", null ],
+    [ "m_baseSavePath", "class_just_gr_source.html#a904e75c6239fe5664672dfd61af45601", null ],
+    [ "m_bRequiresBaseSave", "class_just_gr_source.html#a771924001e8cfb0ee99b92e5663ce28e", null ],
+    [ "m_bRequiresTexturePack", "class_just_gr_source.html#acd52b465f61fa8fd3e1b9ef6b258f36d", null ],
+    [ "m_defaultSaveName", "class_just_gr_source.html#a1eb09f99eed6e5f05d07439badc681c1", null ],
+    [ "m_displayName", "class_just_gr_source.html#a1e9f4d5296a7352a592751c064b7cd69", null ],
+    [ "m_grfPath", "class_just_gr_source.html#ad5f70aa041d193bcdab96d978cb1927c", null ],
+    [ "m_requiredTexturePackId", "class_just_gr_source.html#af64ea69d5f4832783ee4088689234abc", null ],
+    [ "m_worldName", "class_just_gr_source.html#a1253c1f9d0ba8a91d7120b359e23e991", null ]
+];

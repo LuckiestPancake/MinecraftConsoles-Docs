@@ -1,0 +1,968 @@
+\doxysection{Multi\+Player\+Level.\+cpp}
+\hypertarget{_multi_player_level_8cpp_source}{}\label{_multi_player_level_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/MultiPlayerLevel.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/MultiPlayerLevel.cpp}}
+\doxymbox{\hyperlink{_multi_player_level_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_client_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_multi_player_level_8h}{MultiPlayerLevel.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_multi_player_local_player_8h}{MultiPlayerLocalPlayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_client_connection_8h}{ClientConnection.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_multi_player_chunk_cache_8h}{MultiPlayerChunkCache.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8storage_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.storage.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8dimension_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.dimension.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_pos_8h}{..\(\backslash\)Minecraft.World\(\backslash\)Pos.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_server_8h}{MinecraftServer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_level_8h}{ServerLevel.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8h}{Minecraft.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_fireworks_particles_8h}{FireworksParticles.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_primed_tnt_8h}{..\(\backslash\)Minecraft.World\(\backslash\)PrimedTnt.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_tile_8h}{..\(\backslash\)Minecraft.World\(\backslash\)Tile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_tile_entity_8h}{..\(\backslash\)Minecraft.World\(\backslash\)TileEntity.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_java_math_8h}{..\(\backslash\)Minecraft.World\(\backslash\)JavaMath.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00018}00018\ MultiPlayerLevel::ResetInfo::ResetInfo(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ tile,\ \textcolor{keywordtype}{int}\ data)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00019}00019\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00020}00020\ \ \ \ \ this-\/>x\ =\ x;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00021}00021\ \ \ \ \ this-\/>y\ =\ y;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00022}00022\ \ \ \ \ this-\/>z\ =\ z;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00023}00023\ \ \ \ \ ticks\ =\ TICKS\_BEFORE\_RESET;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00024}00024\ \ \ \ \ this-\/>tile\ =\ tile;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00025}00025\ \ \ \ \ this-\/>data\ =\ data;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00026}00026\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00028}\doxymbox{\hyperlink{class_multi_player_level_a1919111da96c74f4c806221b6d19804b}{00028}}\ \doxymbox{\hyperlink{class_multi_player_level_a1919111da96c74f4c806221b6d19804b}{MultiPlayerLevel::MultiPlayerLevel}}(\doxymbox{\hyperlink{class_multi_player_level_a57ddb58ac9f33fbc303507690b67add3}{ClientConnection}}\ *connection,\ \doxymbox{\hyperlink{class_level_settings}{LevelSettings}}\ *levelSettings,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}},\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_level_a8a7f4ffd54fb0becda51b525c1ea4035}{difficulty}})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00029}00029\ \ \ \ \ :\ \doxymbox{\hyperlink{class_level_affd01239ba4ad51ebd1a68dc8f085b42}{Level}}(\doxymbox{\hyperlink{namespacestd}{std}}::make\_shared<\doxymbox{\hyperlink{class_mocked_level_storage}{MockedLevelStorage}}>(),\ L\textcolor{stringliteral}{"{}MpServer"{}},\ \doxymbox{\hyperlink{class_dimension}{Dimension}}::getNew(\doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}),\ levelSettings,\ \doxymbox{\hyperlink{gdraw__wgl_8c_a65e9886d74aaee76545e83dd09011727}{false}})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00030}00030\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00031}00031\ \ \ \ \ minecraft\ =\ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00033}00033\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ this\ this\ used\ to\ be\ called\ in\ parent\ ctor\ via\ a\ virtual\ fn}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00034}00034\ \ \ \ \ \doxymbox{\hyperlink{class_level_a35f396b10097b6db71d2bee297bc65a0}{chunkSource}}\ =\ \doxymbox{\hyperlink{class_multi_player_level_a63237216d13df97e961f7f039e688f2c}{createChunkSource}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00035}00035\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ optimisation\ -\/\ keep\ direct\ reference\ of\ underlying\ cache\ here}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00036}00036\ \ \ \ \ \doxymbox{\hyperlink{class_level_aafabbfb0838e1f3b45143c9e04161627}{chunkSourceCache}}\ =\ \doxymbox{\hyperlink{class_level_a35f396b10097b6db71d2bee297bc65a0}{chunkSource}}-\/>getCache();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00037}00037\ \ \ \ \ \doxymbox{\hyperlink{class_level_a6bc2e9e00955f80f85c32a85b7d4066a}{chunkSourceXZSize}}\ =\ \doxymbox{\hyperlink{class_level_a35f396b10097b6db71d2bee297bc65a0}{chunkSource}}-\/>m\_XZSize;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00039}00039\ \ \ \ \ \textcolor{comment}{//\ This\ also\ used\ to\ be\ called\ in\ parent\ ctor,\ but\ can't\ be\ called\ until\ chunkSource\ is\ created.\ Call\ now\ if\ required.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00040}00040\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_level_a2126f0bc9ab076c210f3700f75585bab}{levelData}}-\/>isInitialized())}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00041}00041\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_aeaec57a99dcaf271f7c00185a9e7b1c4}{initializeLevel}}(levelSettings);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a2126f0bc9ab076c210f3700f75585bab}{levelData}}-\/>setInitialized(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00044}00044\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00046}00046\ \ \ \ \ \textcolor{keywordflow}{if}(connection\ !=\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00047}00047\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00048}00048\ \ \ \ \ \ \ \ \ this-\/>connections.push\_back(\ connection\ );}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00049}00049\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00050}00050\ \ \ \ \ this-\/>difficulty\ =\ \doxymbox{\hyperlink{class_level_a8a7f4ffd54fb0becda51b525c1ea4035}{difficulty}};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00051}00051\ \ \ \ \ \textcolor{comment}{//\ Fix\ for\ \#62566\ -\/\ TU7:\ Content:\ Gameplay:\ Compass\ needle\ stops\ pointing\ towards\ the\ original\ spawn\ point,\ once\ the\ player\ has\ entered\ the\ Nether.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ We\ should\ never\ be\ setting\ a\ specific\ spawn\ position\ for\ a\ multiplayer,\ this\ should\ only\ be\ set\ by\ receiving\ a\ packet\ from\ the\ server}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00053}00053\ \ \ \ \ \textcolor{comment}{//\ (which\ happens\ when\ a\ player\ logs\ in)}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00054}00054\ \ \ \ \ \textcolor{comment}{//setSpawnPos(new\ Pos(8,\ 64,\ 8));}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00055}00055\ \ \ \ \ \textcolor{comment}{//\ The\ base\ ctor\ already\ has\ made\ some\ storage,\ so\ need\ to\ delete\ that}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00056}00056\ \ \ \ \ \textcolor{keywordflow}{if}(\ this-\/>\doxymbox{\hyperlink{class_level_a4d64c913a3e1eb2f037b73c7a941d73c}{savedDataStorage}}\ )\ \textcolor{keyword}{delete}\ \doxymbox{\hyperlink{class_level_a4d64c913a3e1eb2f037b73c7a941d73c}{savedDataStorage}};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00057}00057\ \ \ \ \ \textcolor{keywordflow}{if}(connection\ !=\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00058}00058\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a4d64c913a3e1eb2f037b73c7a941d73c}{savedDataStorage}}\ =\ connection-\/>\doxymbox{\hyperlink{class_client_connection_ad268c983f432237bbd80aaff6f871c7d}{savedDataStorage}};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00060}00060\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00061}00061\ \ \ \ \ unshareCheckX\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00062}00062\ \ \ \ \ unshareCheckZ\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00063}00063\ \ \ \ \ compressCheckX\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00064}00064\ \ \ \ \ compressCheckZ\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00066}00066\ \ \ \ \ \textcolor{comment}{//\ 4J\ Added,\ as\ there\ are\ some\ times\ when\ we\ don't\ want\ to\ add\ tile\ updates\ to\ the\ updatesToReset\ vector}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00067}00067\ \ \ \ \ m\_bEnableResetChanges\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00068}00068\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00070}\doxymbox{\hyperlink{class_multi_player_level_ab33f69ea68f14f7863bfa8067bd93347}{00070}}\ \doxymbox{\hyperlink{class_multi_player_level_ab33f69ea68f14f7863bfa8067bd93347}{MultiPlayerLevel::\string~MultiPlayerLevel}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00071}00071\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00072}00072\ \ \ \ \ \textcolor{comment}{//\ Don't\ let\ the\ base\ class\ delete\ this,\ it\ comes\ from\ the\ connection\ for\ multiplayerlevels,\ and\ we'll\ delete\ there}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00073}00073\ \ \ \ \ this-\/>\doxymbox{\hyperlink{class_level_a4d64c913a3e1eb2f037b73c7a941d73c}{savedDataStorage}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00074}00074\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00076}\doxymbox{\hyperlink{class_multi_player_level_a4832973b70b9ddecc539dc5963bc96e3}{00076}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a4832973b70b9ddecc539dc5963bc96e3}{MultiPlayerLevel::unshareChunkAt}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00077}00077\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00078}00078\ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.IsHost()\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00079}00079\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_af93c712c49f87baec2fe17a7b2f55bb8}{Level::getChunkAt}}(x,z)-\/>\doxymbox{\hyperlink{class_level_chunk_a48e3c106406437e078f08af2806e4bf9}{stopSharingTilesAndData}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00081}00081\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00082}00082\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00084}\doxymbox{\hyperlink{class_multi_player_level_a6aff742adfb92fb6e74ce6b0284e097f}{00084}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a6aff742adfb92fb6e74ce6b0284e097f}{MultiPlayerLevel::shareChunkAt}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00085}00085\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00086}00086\ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.IsHost()\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00087}00087\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_af93c712c49f87baec2fe17a7b2f55bb8}{Level::getChunkAt}}(x,z)-\/>\doxymbox{\hyperlink{class_level_chunk_ad014372586c9e38572b97acda8a2dcac}{startSharingTilesAndData}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00089}00089\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00090}00090\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00093}\doxymbox{\hyperlink{class_multi_player_level_aa2466a80fcf1f7e35d2be86de318a944}{00093}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_aa2466a80fcf1f7e35d2be86de318a944}{MultiPlayerLevel::tick}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00094}00094\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00095}00095\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}Sky\ color\ changing"{}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00096}00096\ \ \ \ \ \doxymbox{\hyperlink{class_level_ae4cf20cfd743e57202c631489d8a795c}{setGameTime}}(\doxymbox{\hyperlink{class_level_a9fb30e1adf78c4bc5e37c097d0ae2c76}{getGameTime}}()\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00097}00097\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_level_ad6a335aacb42b0930d0fec0049748ba6}{getGameRules}}()-\/>getBoolean(\doxymbox{\hyperlink{class_game_rules_ac0016615a620383be19157f913011ebc}{GameRules::RULE\_DAYLIGHT}}))}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00098}00098\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J:\ Debug\ setting\ added\ to\ keep\ it\ at\ day\ time}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00100}00100\ \textcolor{preprocessor}{\#ifndef\ \_FINAL\_BUILD}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ freezeTime\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugSettingsOn()\ \&\&\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetGameSettingsDebugMask(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___profile_8h_a027fde7e99d773afa28ec11d244459bf}{ProfileManager}}.GetPrimaryPad())\&(1L<<\doxymbox{\hyperlink{_console___debug__enum_8h_aeb1d54f9dc0d6691887aee6cb5d6fb8fac4bf44f743e6af20591c6219ae4e65e7}{eDebugSetting\_FreezeTime}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!freezeTime)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00103}00103\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_level_a239ee6d4bd8543763926808853b2a433}{setDayTime}}(\doxymbox{\hyperlink{class_level_ac80b0e8e94928c5b5148390c9123d550}{getDayTime}}()\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00107}00107\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00108}00108\ \ \ \ \ \textcolor{comment}{/*\ 4J\ -\/\ change\ brought\ forward\ from\ 1.8.2}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00109}00109\ \textcolor{comment}{\ \ \ \ int\ newDark\ =\ this-\/>getSkyDarken(1);}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00110}00110\ \textcolor{comment}{\ \ \ \ if\ (newDark\ !=\ skyDarken)}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00111}00111\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00112}00112\ \textcolor{comment}{\ \ \ \ skyDarken\ =\ newDark;}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00113}00113\ \textcolor{comment}{\ \ \ \ for\ (unsigned\ int\ i\ =\ 0;\ i\ <\ listeners.size();\ i++)}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00114}00114\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00115}00115\ \textcolor{comment}{\ \ \ \ listeners[i]-\/>skyColorChanged();}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00116}00116\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00117}00117\ \textcolor{comment}{\ \ \ \ \}*/}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00118}00118\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00120}00120\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}Entity\ re-\/entry"{}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00121}00121\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&\doxymbox{\hyperlink{class_level_a906544272e59f215fdb4602a045eca81}{m\_entitiesCS}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00122}00122\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 10\ \&\&\ !reEntries.empty();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00123}00123\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ shared\_ptr<Entity>\ e\ =\ *(reEntries.begin());}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (find(\doxymbox{\hyperlink{class_level_afe0750e2eaaebecb8683480e977c46f6}{entities}}.begin(),\ \doxymbox{\hyperlink{class_level_afe0750e2eaaebecb8683480e977c46f6}{entities}}.end(),\ e)\ ==\ \doxymbox{\hyperlink{class_level_afe0750e2eaaebecb8683480e977c46f6}{entities}}.end()\ )\ \doxymbox{\hyperlink{class_multi_player_level_a008eeaed8bc0505caccdb39577175824}{addEntity}}(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00127}00127\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00128}00128\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&\doxymbox{\hyperlink{class_level_a906544272e59f215fdb4602a045eca81}{m\_entitiesCS}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00129}00129\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00131}00131\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}Connection\ ticking"{}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00132}00132\ \ \ \ \ \textcolor{comment}{//\ 4J\ HEG\ -\/\ Copy\ the\ connections\ vector\ to\ prevent\ crash\ when\ moving\ to\ Nether}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00133}00133\ \ \ \ \ vector<ClientConnection\ *>\ connectionsTemp\ =\ connections;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00134}00134\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ connection\ :\ connectionsTemp\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00135}00135\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ connection\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ connection-\/>tick();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00138}00138\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00139}00139\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00140}00140\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00141}00141\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}Updating\ resets"{}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00142}00142\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ lastIndexToRemove\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00143}00143\ \ \ \ \ \textcolor{keywordtype}{bool}\ eraseElements\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00144}00144\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ updatesToReset.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00145}00145\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ ResetInfo\&\ r\ =\ updatesToReset[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (-\/-\/r.ticks\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a50b42e045b5d452879fe929138c735aa}{Level::setTileAndData}}(r.x,\ r.y,\ r.z,\ r.tile,\ r.data,\ \doxymbox{\hyperlink{class_tile_af81188801a54262811196c375aeaaa21}{Tile::UPDATE\_ALL}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a492e69877b6dee83a1c5c35785240fc7}{Level::sendTileUpdated}}(r.x,\ r.y,\ r.z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//updatesToReset.erase(updatesToReset.begin()+i);}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ eraseElements\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ lastIndexToRemove\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00158}00158\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00159}00159\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ As\ elements\ in\ the\ updatesToReset\ vector\ are\ inserted\ with\ a\ fixed\ initial\ lifetime,\ the\ elements\ at\ the\ front\ should\ always\ be\ the\ oldest}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00160}00160\ \ \ \ \ \textcolor{comment}{//\ Therefore\ we\ can\ always\ remove\ from\ the\ first\ element}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00161}00161\ \ \ \ \ \textcolor{keywordflow}{if}(eraseElements)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00162}00162\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ updatesToReset.erase(updatesToReset.begin(),\ updatesToReset.begin()+lastIndexToRemove);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00164}00164\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00165}00165\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00167}00167\ \ \ \ \ chunkCache-\/>tick();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00168}00168\ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_level_a98237cad112bdef994f9c968e861ddbf}{tickTiles}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00169}00169\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00170}00170\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ added\ this\ section.\ Each\ tick\ we'll\ check\ a\ different\ block,\ and\ force\ it\ to\ share\ data\ if\ it\ has\ been}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00171}00171\ \ \ \ \ \textcolor{comment}{//\ more\ than\ 2\ minutes\ since\ we\ last\ wanted\ to\ unshare\ it.\ This\ shouldn't\ really\ ever\ happen,\ and\ is\ added}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00172}00172\ \ \ \ \ \textcolor{comment}{//\ here\ as\ a\ safe\ guard\ against\ accumulated\ memory\ leaks\ should\ a\ lot\ of\ chunks\ become\ unshared\ over\ time.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00173}00173\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00174}00174\ \ \ \ \ \textcolor{keywordtype}{int}\ ls\ =\ \doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}-\/>getXZSize();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00175}00175\ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.IsHost()\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00176}00176\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{class_level_a23b0dee5af106c367bd4335e6d8171b2}{Level::reallyHasChunk}}(unshareCheckX\ -\/\ (\ ls\ /\ 2),\ unshareCheckZ\ -\/\ (\ ls\ /\ 2\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *lc\ =\ \doxymbox{\hyperlink{class_level_a66ea5848e7ccebd417f04151a5d439af}{Level::getChunk}}(unshareCheckX\ -\/\ (\ ls\ /\ 2),\ unshareCheckZ\ -\/\ (\ ls\ /\ 2\ ));}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.IsHost()\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lc-\/>\doxymbox{\hyperlink{class_level_chunk_ad014372586c9e38572b97acda8a2dcac}{startSharingTilesAndData}}(1000\ *\ 60\ *\ 2);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ unshareCheckX++;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ unshareCheckX\ >=\ ls\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ unshareCheckX\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ unshareCheckZ++;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ unshareCheckZ\ >=\ ls\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ unshareCheckZ\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00196}00196\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00198}00198\ \ \ \ \ \textcolor{comment}{//\ 4J\ added\ -\/\ also\ similar\ thing\ tosee\ if\ we\ can\ compress\ the\ lighting\ in\ any\ of\ these\ chunks.\ This\ is\ slightly\ different}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00199}00199\ \ \ \ \ \textcolor{comment}{//\ as\ it\ does\ try\ to\ make\ sure\ that\ at\ least\ one\ chunk\ has\ something\ done\ to\ it.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00201}00201\ \ \ \ \ \textcolor{comment}{//\ At\ most\ loop\ round\ at\ least\ one\ row\ the\ chunks,\ so\ we\ should\ be\ able\ to\ at\ least\ find\ a\ non-\/empty\ chunk\ to\ do\ something\ with\ in\ 2.7\ seconds\ of\ ticks,\ and\ process\ the\ whole\ thing\ in\ about\ 2.4\ minutes.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00202}00202\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ ls;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00203}00203\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ compressCheckX++;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ compressCheckX\ >=\ ls\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ compressCheckX\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ compressCheckZ++;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ compressCheckZ\ >=\ ls\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ compressCheckZ\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00214}00214\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{class_level_a23b0dee5af106c367bd4335e6d8171b2}{Level::reallyHasChunk}}(compressCheckX\ -\/\ (\ ls\ /\ 2),\ compressCheckZ\ -\/\ (\ ls\ /\ 2\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *lc\ =\ \doxymbox{\hyperlink{class_level_a66ea5848e7ccebd417f04151a5d439af}{Level::getChunk}}(compressCheckX\ -\/\ (\ ls\ /\ 2),\ compressCheckZ\ -\/\ (\ ls\ /\ 2\ ));}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ lc-\/>\doxymbox{\hyperlink{class_level_chunk_afdcc4845a78796c5d721e6ed1d296629}{compressLighting}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ lc-\/>\doxymbox{\hyperlink{class_level_chunk_acfaf8d90df893b60670efe8530b714e8}{compressBlocks}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ lc-\/>\doxymbox{\hyperlink{class_level_chunk_ab977517071f04eb07d596bc82084f698}{compressData}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00223}00223\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00224}00224\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00225}00225\ \textcolor{preprocessor}{\#ifdef\ LIGHT\_COMPRESSION\_STATS}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00226}00226\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ updateTick\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00227}00227\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00228}00228\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ updateTick\ \%\ 60\ )\ ==\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00229}00229\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ totalBLu\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ totalBLl\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ totalSLu\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ totalSLl\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ totalChunks\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ lcs\_x\ =\ 0;\ lcs\_x\ <\ ls;\ lcs\_x++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ lcs\_z\ =\ 0;\ lcs\_z\ <\ ls;\ lcs\_z++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{class_level_a23b0dee5af106c367bd4335e6d8171b2}{Level::reallyHasChunk}}(lcs\_x\ -\/\ (\ ls\ /\ 2),\ lcs\_z\ -\/\ (\ ls\ /\ 2\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *lc\ =\ \doxymbox{\hyperlink{class_level_a66ea5848e7ccebd417f04151a5d439af}{Level::getChunk}}(lcs\_x\ -\/\ (\ ls\ /\ 2),\ lcs\_z\ -\/\ (\ ls\ /\ 2\ ));}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ totalChunks++;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ totalBLu\ +=\ lc-\/>getBlockLightPlanesUpper();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ totalBLl\ +=\ lc-\/>getBlockLightPlanesLower();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ totalSLu\ +=\ lc-\/>getSkyLightPlanesUpper();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ totalSLl\ +=\ lc-\/>getSkyLightPlanesLower();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ totalChunks\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a53a65b22a2420d29a6b38fe0ca8d8eb4}{MEMORYSTATUS}}\ memStat;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_ac7e2cbd6eca0a1196f4c649ca8d5e2b4}{GlobalMemoryStatus}}(\&memStat);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00253}00253\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ totalBL\ =\ totalBLu\ +\ totalBLl;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ totalSL\ =\ totalSLu\ +\ totalSLl;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%d:\ \%d\ chunks,\ \%d\ BL\ (\%d\ +\ \%d),\ \%d\ SL\ (\%d\ +\ \%d\ )\ (out\ of\ \%d)\ -\/\ total\ \%d\ \%\%\ (\%dMB\ mem\ free)\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}-\/>id,\ totalChunks,\ totalBL,\ totalBLu,\ totalBLl,\ totalSL,\ totalSLu,\ totalSLl,\ totalChunks\ *\ 256,\ (\ 100\ *\ (totalBL\ +\ totalSL)\ )\ /\ (\ totalChunks\ *\ 256\ *\ 2),memStat.\doxymbox{\hyperlink{struct___m_e_m_o_r_y_s_t_a_t_u_s_ac777ccf80c67ca88be0f0b3d87f61674}{dwAvailPhys}}/(1024*1024)\ );}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00259}00259\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00260}00260\ \ \ \ \ updateTick++;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00262}00262\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00263}00263\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00264}00264\ \textcolor{preprocessor}{\#ifdef\ DATA\_COMPRESSION\_STATS}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00265}00265\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ updateTick\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00267}00267\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ updateTick\ \%\ 60\ )\ ==\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00268}00268\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ totalData\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ totalChunks\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00271}00271\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ lcs\_x\ =\ 0;\ lcs\_x\ <\ ls;\ lcs\_x++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ lcs\_z\ =\ 0;\ lcs\_z\ <\ ls;\ lcs\_z++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{class_level_a23b0dee5af106c367bd4335e6d8171b2}{Level::reallyHasChunk}}(lcs\_x\ -\/\ (\ ls\ /\ 2),\ lcs\_z\ -\/\ (\ ls\ /\ 2\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *lc\ =\ \doxymbox{\hyperlink{class_level_a66ea5848e7ccebd417f04151a5d439af}{Level::getChunk}}(lcs\_x\ -\/\ (\ ls\ /\ 2),\ lcs\_z\ -\/\ (\ ls\ /\ 2\ ));}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ totalChunks++;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ totalData\ +=\ lc-\/>getDataPlanes();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ totalChunks\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00284}00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a53a65b22a2420d29a6b38fe0ca8d8eb4}{MEMORYSTATUS}}\ memStat;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_ac7e2cbd6eca0a1196f4c649ca8d5e2b4}{GlobalMemoryStatus}}(\&memStat);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%d:\ \%d\ chunks,\ \%d\ data\ (out\ of\ \%d)\ -\/\ total\ \%d\ \%\%\ (\%dMB\ mem\ free)\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00288}00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}-\/>id,\ totalChunks,\ totalData,\ totalChunks\ *\ 128,\ (\ 100\ *\ totalData)/\ (\ totalChunks\ *\ 128),memStat.\doxymbox{\hyperlink{struct___m_e_m_o_r_y_s_t_a_t_u_s_ac777ccf80c67ca88be0f0b3d87f61674}{dwAvailPhys}}/(1024*1024)\ );}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00290}00290\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00291}00291\ \ \ \ \ updateTick++;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00292}00292\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00293}00293\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00294}00294\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00295}00295\ \textcolor{preprocessor}{\#ifdef\ BLOCK\_COMPRESSION\_STATS}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00296}00296\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ updateTick\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00297}00297\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00298}00298\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ updateTick\ \%\ 60\ )\ ==\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00299}00299\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ total\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ totalChunks\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ total0\ =\ 0,\ total1\ =\ 0,\ total2\ =\ 0,\ total4\ =\ 0,\ total8\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00303}00303\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00304}00304\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}*****************************************************************************************************************************************\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}TODO:\ Report\ upper\ chunk\ data\ as\ well\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ lcs\_x\ =\ 0;\ lcs\_x\ <\ ls;\ lcs\_x++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ lcs\_z\ =\ 0;\ lcs\_z\ <\ ls;\ lcs\_z++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{class_level_a23b0dee5af106c367bd4335e6d8171b2}{Level::reallyHasChunk}}(lcs\_x\ -\/\ (\ ls\ /\ 2),\ lcs\_z\ -\/\ (\ ls\ /\ 2\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *lc\ =\ \doxymbox{\hyperlink{class_level_a66ea5848e7ccebd417f04151a5d439af}{Level::getChunk}}(lcs\_x\ -\/\ (\ ls\ /\ 2),\ lcs\_z\ -\/\ (\ ls\ /\ 2\ ));}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ totalChunks++;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ i0,\ i1,\ i2,\ i4,\ i8;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ thisSize\ =\ lc-\/>\doxymbox{\hyperlink{class_level_chunk_adea52e1a5cb897ee5b790e3f92f1de98}{getBlocksAllocatedSize}}(\&i0,\ \&i1,\ \&i2,\ \&i4,\ \&i8);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total0\ +=\ i0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total1\ +=\ i1;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total2\ +=\ i2;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total4\ +=\ i4;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total8\ +=\ i8;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%d\ "{}},thisSize);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ thisSize\ =\ (\ thisSize\ +\ 0xfff\ )\ \&\ 0xfffff000;\ \ \ \ \ \ \ \textcolor{comment}{//\ round\ to\ 4096k\ blocks\ for\ actual\ memory\ consumption}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ total\ +=\ thisSize;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n*****************************************************************************************************************************************\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ totalChunks\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%d\ (0)\ \%d\ (1)\ \%d\ (2)\ \%d\ (4)\ \%d\ (8)\(\backslash\)n"{}},total0/totalChunks,total1/totalChunks,total2/totalChunks,total4/totalChunks,total8/totalChunks);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a53a65b22a2420d29a6b38fe0ca8d8eb4}{MEMORYSTATUS}}\ memStat;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_ac7e2cbd6eca0a1196f4c649ca8d5e2b4}{GlobalMemoryStatus}}(\&memStat);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00331}00331\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%d:\ \%d\ chunks,\ \%d\ KB\ (out\ of\ \%dKB)\ :\ \%d\ \%\%\ (\%dMB\ mem\ free)\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}-\/>id,\ totalChunks,\ total/1024,\ totalChunks\ *\ 32,\ (\ (\ total\ /\ 1024\ )\ *\ 100\ )\ /\ (\ totalChunks\ *\ 32),memStat.\doxymbox{\hyperlink{struct___m_e_m_o_r_y_s_t_a_t_u_s_ac777ccf80c67ca88be0f0b3d87f61674}{dwAvailPhys}}/(1024*1024)\ );}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00335}00335\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00336}00336\ \ \ \ \ updateTick++;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00337}00337\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00338}00338\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00339}00339\ \ \ \ \ \textcolor{comment}{//\ super.tick();}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00340}00340\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00341}00341\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00342}00342\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00343}\doxymbox{\hyperlink{class_multi_player_level_a7fb60916788f6b57a4000101c4e1015a}{00343}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a7fb60916788f6b57a4000101c4e1015a}{MultiPlayerLevel::clearResetRegion}}(\textcolor{keywordtype}{int}\ x0,\ \textcolor{keywordtype}{int}\ y0,\ \textcolor{keywordtype}{int}\ z0,\ \textcolor{keywordtype}{int}\ x1,\ \textcolor{keywordtype}{int}\ y1,\ \textcolor{keywordtype}{int}\ z1)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00344}00344\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00345}00345\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ updatesToReset.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00346}00346\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ ResetInfo\&\ r\ =\ updatesToReset[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (r.x\ >=\ x0\ \&\&\ r.y\ >=\ y0\ \&\&\ r.z\ >=\ z0\ \&\&\ r.x\ <=\ x1\ \&\&\ r.y\ <=\ y1\ \&\&\ r.z\ <=\ z1)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ updatesToReset.erase(updatesToReset.begin()+\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00353}00353\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00354}00354\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00355}00355\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00356}\doxymbox{\hyperlink{class_multi_player_level_a63237216d13df97e961f7f039e688f2c}{00356}}\ \doxymbox{\hyperlink{class_chunk_source}{ChunkSource}}\ *\doxymbox{\hyperlink{class_multi_player_level_a63237216d13df97e961f7f039e688f2c}{MultiPlayerLevel::createChunkSource}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00357}00357\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00358}00358\ \ \ \ \ chunkCache\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_multi_player_chunk_cache}{MultiPlayerChunkCache}}(\textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00359}00359\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00360}00360\ \ \ \ \ \textcolor{keywordflow}{return}\ chunkCache;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00361}00361\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00362}00362\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00363}\doxymbox{\hyperlink{class_multi_player_level_afcbd84f7745cac8a87c5a51c17b05a9d}{00363}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_afcbd84f7745cac8a87c5a51c17b05a9d}{MultiPlayerLevel::validateSpawn}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00364}00364\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00365}00365\ \ \ \ \ \textcolor{comment}{//\ Fix\ for\ \#62566\ -\/\ TU7:\ Content:\ Gameplay:\ Compass\ needle\ stops\ pointing\ towards\ the\ original\ spawn\ point,\ once\ the\ player\ has\ entered\ the\ Nether.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00366}00366\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ We\ should\ never\ be\ setting\ a\ specific\ spawn\ position\ for\ a\ multiplayer,\ this\ should\ only\ be\ set\ by\ receiving\ a\ packet\ from\ the\ server}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00367}00367\ \ \ \ \ \textcolor{comment}{//\ (which\ happens\ when\ a\ player\ logs\ in)}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00368}00368\ \ \ \ \ \textcolor{comment}{//setSpawnPos(new\ Pos(8,\ 64,\ 8));}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00369}00369\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00371}\doxymbox{\hyperlink{class_multi_player_level_a98237cad112bdef994f9c968e861ddbf}{00371}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a98237cad112bdef994f9c968e861ddbf}{MultiPlayerLevel::tickTiles}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00372}00372\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00373}00373\ \ \ \ \ \doxymbox{\hyperlink{class_level_a99263062d4cde103d201a244142df609}{chunksToPoll}}.clear();\ \ \ \textcolor{comment}{//\ 4J\ -\/\ added\ or\ else\ we\ don't\ reset\ this\ set\ at\ all\ in\ a\ multiplayer\ level...\ think\ current\ java\ now\ resets\ in\ buildAndPrepareChunksToPoll\ rather\ than\ the\ calling\ functions}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00374}00374\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00375}00375\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}Ticking\ tiles\ (multiplayer)"{}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00376}00376\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}buildAndPrepareChunksToPoll"{}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00377}00377\ \ \ \ \ \doxymbox{\hyperlink{class_level_ad2c865f2a406d6cd1869467bf35a3788}{Level::tickTiles}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00378}00378\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00379}00379\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00380}00380\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}Ticking\ client\ side\ tiles"{}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00381}00381\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00382}00382\ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ see\ CustomSet.h\ for\ and\ explanation}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00383}00383\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_level_a99263062d4cde103d201a244142df609}{chunksToPoll}}.end();\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +=\ 1\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00384}00384\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}\ cp\ =\ \doxymbox{\hyperlink{class_level_a99263062d4cde103d201a244142df609}{chunksToPoll}}.get(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00386}00386\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00387}00387\ \ \ \ \ \textcolor{keywordflow}{for}\ (\doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}\ cp\ :\ \doxymbox{\hyperlink{class_level_a99263062d4cde103d201a244142df609}{chunksToPoll}})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00388}00388\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00389}00389\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xo\ =\ cp.\doxymbox{\hyperlink{class_chunk_pos_a2100e3c4e03421e42589382b3a1d8af1}{x}}\ *\ 16;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00391}00391\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ zo\ =\ cp.\doxymbox{\hyperlink{class_chunk_pos_a86940ea41fab86944bf550fe83530811}{z}}\ *\ 16;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00392}00392\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00393}00393\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *lc\ =\ \doxymbox{\hyperlink{class_level_a66ea5848e7ccebd417f04151a5d439af}{getChunk}}(cp.\doxymbox{\hyperlink{class_chunk_pos_a2100e3c4e03421e42589382b3a1d8af1}{x}},\ cp.\doxymbox{\hyperlink{class_chunk_pos_a86940ea41fab86944bf550fe83530811}{z}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00394}00394\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a37f342006f2651a61ecd8869b15b67b1}{tickClientSideTiles}}(xo,\ zo,\ lc);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00396}00396\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00397}00397\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00398}00398\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00399}00399\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00400}00400\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00401}\doxymbox{\hyperlink{class_multi_player_level_a1859cd16623ba763742df2dbe0121ae2}{00401}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a1859cd16623ba763742df2dbe0121ae2}{MultiPlayerLevel::setChunkVisible}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{bool}\ visible)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00402}00402\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00403}00403\ \ \ \ \ \textcolor{keywordflow}{if}\ (visible)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00404}00404\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00405}00405\ \ \ \ \ \ \ \ \ chunkCache-\/>create(x,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00406}00406\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00407}00407\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00408}00408\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00409}00409\ \ \ \ \ \ \ \ \ chunkCache-\/>drop(x,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00410}00410\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00411}00411\ \ \ \ \ \textcolor{keywordflow}{if}\ (!visible)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00412}00412\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00413}00413\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_ad8b925386fe16cfa24f3384b94b9e20b}{setTilesDirty}}(x\ *\ 16,\ 0,\ z\ *\ 16,\ x\ *\ 16\ +\ 15,\ \doxymbox{\hyperlink{class_level_a64ac1a792e3476d67c2f3b6f9137428d}{Level::maxBuildHeight}},\ z\ *\ 16\ +\ 15);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00414}00414\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00415}00415\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00416}00416\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00417}00417\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00418}\doxymbox{\hyperlink{class_multi_player_level_a008eeaed8bc0505caccdb39577175824}{00418}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_level_a008eeaed8bc0505caccdb39577175824}{MultiPlayerLevel::addEntity}}(shared\_ptr<Entity>\ e)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00419}00419\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00420}00420\ \ \ \ \ \textcolor{keywordtype}{bool}\ ok\ =\ \doxymbox{\hyperlink{class_level_a2205e602ef4c7aa2a0bde4d2df726ca9}{Level::addEntity}}(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00421}00421\ \ \ \ \ forced.insert(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00422}00422\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00423}00423\ \ \ \ \ \textcolor{keywordflow}{if}\ (!ok)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00424}00424\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00425}00425\ \ \ \ \ \ \ \ \ reEntries.insert(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00426}00426\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00427}00427\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00428}00428\ \ \ \ \ \textcolor{keywordflow}{return}\ ok;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00429}00429\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00430}00430\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00431}\doxymbox{\hyperlink{class_multi_player_level_ad953b97c93fdf384563cff5f1d3bae58}{00431}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_ad953b97c93fdf384563cff5f1d3bae58}{MultiPlayerLevel::removeEntity}}(shared\_ptr<Entity>\ e)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00432}00432\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00433}00433\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Add\ this\ remove\ from\ the\ reEntries\ collection\ to\ stop\ us\ continually\ removing\ and\ re-\/adding\ things,}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00434}00434\ \ \ \ \ \textcolor{comment}{//\ in\ particular\ the\ MultiPlayerLocalPlayer\ when\ they\ die}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00435}00435\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ reEntries.find(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00436}00436\ \ \ \ \ \textcolor{keywordflow}{if}\ (it!=reEntries.end())}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00437}00437\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00438}00438\ \ \ \ \ \ \ \ \ reEntries.erase(it);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00439}00439\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00440}00440\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00441}00441\ \ \ \ \ \doxymbox{\hyperlink{class_level_aa60653624aa203011b9dd0a5fc71d5fe}{Level::removeEntity}}(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00442}00442\ \ \ \ \ forced.erase(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00443}00443\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00444}00444\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00445}\doxymbox{\hyperlink{class_multi_player_level_a12ef50a9558a07220ac22a1d713a4acf}{00445}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a12ef50a9558a07220ac22a1d713a4acf}{MultiPlayerLevel::entityAdded}}(shared\_ptr<Entity>\ e)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00446}00446\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00447}00447\ \ \ \ \ \doxymbox{\hyperlink{class_level_a99dcb5a6d1b55b217c1fb30e9425685a}{Level::entityAdded}}(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00448}00448\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ reEntries.find(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00449}00449\ \ \ \ \ \textcolor{keywordflow}{if}\ (it!=reEntries.end())}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00450}00450\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00451}00451\ \ \ \ \ \ \ \ \ reEntries.erase(it);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00452}00452\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00453}00453\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00454}00454\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00455}\doxymbox{\hyperlink{class_multi_player_level_a2f483713ea6876ca42c77171378320d3}{00455}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a2f483713ea6876ca42c77171378320d3}{MultiPlayerLevel::entityRemoved}}(shared\_ptr<Entity>\ e)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00456}00456\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00457}00457\ \ \ \ \ \doxymbox{\hyperlink{class_level_a915bf21b1aa0d01620091b762061fadd}{Level::entityRemoved}}(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00458}00458\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ forced.find(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00459}00459\ \ \ \ \ \textcolor{keywordflow}{if}\ (it!=forced.end())}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00460}00460\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ reEntries.insert(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00462}00462\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00463}00463\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00464}00464\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00465}\doxymbox{\hyperlink{class_multi_player_level_aebba197f16b2246e2fc1662bed154f50}{00465}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_aebba197f16b2246e2fc1662bed154f50}{MultiPlayerLevel::putEntity}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ shared\_ptr<Entity>\ e)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00466}00466\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00467}00467\ \ \ \ \ shared\_ptr<Entity>\ old\ =\ \doxymbox{\hyperlink{class_multi_player_level_af4995363319a36a069002851ac4d7acd}{getEntity}}(\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00468}00468\ \ \ \ \ \textcolor{keywordflow}{if}\ (old\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00469}00469\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00470}00470\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_level_ad953b97c93fdf384563cff5f1d3bae58}{removeEntity}}(old);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00471}00471\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00472}00472\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00473}00473\ \ \ \ \ forced.insert(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00474}00474\ \ \ \ \ e-\/>entityId\ =\ id;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00475}00475\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_multi_player_level_a008eeaed8bc0505caccdb39577175824}{addEntity}}(e))}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00476}00476\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00477}00477\ \ \ \ \ \ \ \ \ reEntries.insert(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00478}00478\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00479}00479\ \ \ \ \ entitiesById[id]\ =\ e;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00480}00480\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00481}00481\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00482}\doxymbox{\hyperlink{class_multi_player_level_af4995363319a36a069002851ac4d7acd}{00482}}\ shared\_ptr<Entity>\ \doxymbox{\hyperlink{class_multi_player_level_af4995363319a36a069002851ac4d7acd}{MultiPlayerLevel::getEntity}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00483}00483\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00484}00484\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ entitiesById.find(\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00485}00485\ \ \ \ \ \textcolor{keywordflow}{if}(\ it\ ==\ entitiesById.end()\ )\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00486}00486\ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00487}00487\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00488}00488\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00489}\doxymbox{\hyperlink{class_multi_player_level_a7e4a4d76271ac73740e98eed1cf30f5f}{00489}}\ shared\_ptr<Entity>\ \doxymbox{\hyperlink{class_multi_player_level_ad953b97c93fdf384563cff5f1d3bae58}{MultiPlayerLevel::removeEntity}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00490}00490\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00491}00491\ \ \ \ \ shared\_ptr<Entity>\ e;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00492}00492\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ entitiesById.find(\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00493}00493\ \ \ \ \ \textcolor{keywordflow}{if}(\ it\ !=\ entitiesById.end()\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00494}00494\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00495}00495\ \ \ \ \ \ \ \ \ e\ =\ it-\/>second;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00496}00496\ \ \ \ \ \ \ \ \ entitiesById.erase(it);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00497}00497\ \ \ \ \ \ \ \ \ forced.erase(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00498}00498\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_level_ad953b97c93fdf384563cff5f1d3bae58}{removeEntity}}(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00499}00499\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00500}00500\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00501}00501\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00502}00502\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00503}00503\ \ \ \ \ \textcolor{keywordflow}{return}\ e;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00504}00504\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00505}00505\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00506}00506\ \textcolor{comment}{//\ 4J\ Added\ to\ remove\ the\ entities\ from\ the\ forced\ list}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00507}00507\ \textcolor{comment}{//\ This\ gets\ called\ when\ a\ chunk\ is\ unloaded,\ but\ we\ only\ do\ half\ an\ unload\ to\ remove\ entities\ slightly\ differently}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00508}\doxymbox{\hyperlink{class_multi_player_level_ae32d564a519458c2d20e1561fb34f4a3}{00508}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_ae32d564a519458c2d20e1561fb34f4a3}{MultiPlayerLevel::removeEntities}}(vector<shared\_ptr<Entity>\ >\ *list)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00509}00509\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00510}00510\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ list\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00511}00511\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00512}00512\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ e\ :\ *list\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00513}00513\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00514}00514\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ reIt\ =\ reEntries.find(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00515}00515\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (reIt!=reEntries.end())}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00516}00516\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00517}00517\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reEntries.erase(reIt);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00518}00518\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00519}00519\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00520}00520\ \ \ \ \ \ \ \ \ \ \ \ \ forced.erase(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00521}00521\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00522}00522\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_aa60a494ea9f409743df41827047dbd10}{Level::removeEntities}}(list);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00523}00523\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00524}00524\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00525}00525\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00526}\doxymbox{\hyperlink{class_multi_player_level_acaa0285f8dc21458a0dd1022b10a995e}{00526}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_level_acaa0285f8dc21458a0dd1022b10a995e}{MultiPlayerLevel::setData}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ data,\ \textcolor{keywordtype}{int}\ updateFlags,\ \textcolor{keywordtype}{bool}\ forceUpdate\textcolor{comment}{/*=false*/})\ \ \textcolor{comment}{//\ 4J\ added\ forceUpdate)}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00527}00527\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00528}00528\ \ \ \ \ \textcolor{comment}{//\ First\ check\ if\ this\ isn't\ going\ to\ do\ anything,\ because\ if\ it\ isn't\ then\ the\ next\ stage\ (of\ unsharing\ data)\ is\ really\ quite}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00529}00529\ \ \ \ \ \textcolor{comment}{//\ expensive\ so\ far\ better\ to\ early\ out\ here}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00530}00530\ \ \ \ \ \textcolor{keywordtype}{int}\ d\ =\ \doxymbox{\hyperlink{class_level_af9e4edf3d6817cf582e4bec75232445c}{getData}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00531}00531\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00532}00532\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ d\ ==\ data\ )\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00533}00533\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00534}00534\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ we\ early-\/out,\ its\ important\ that\ we\ still\ do\ a\ checkLight\ here\ (which\ would\ otherwise\ have\ happened\ as\ part\ of\ Level::setTileAndDataNoUpdate)}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00535}00535\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ is\ because\ since\ we\ are\ potentially\ sharing\ tile/data\ but\ not\ lighting\ data,\ it\ is\ possible\ that\ the\ server\ might\ tell\ a\ client}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00536}00536\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ of\ a\ lighting\ update\ that\ doesn't\ need\ actioned\ on\ the\ client\ just\ because\ the\ chunk's\ data\ was\ being\ shared\ with\ the\ server\ when\ it\ was\ set.\ However,}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00537}00537\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ lighting\ data\ will\ potentially\ now\ be\ out\ of\ sync\ on\ the\ client.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00538}00538\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_ab01fae8acc88a3a76a06e314d75c7114}{checkLight}}(x,y,z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00539}00539\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00540}00540\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00541}00541\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ added\ -\/\ if\ this\ is\ the\ host,\ then\ stop\ sharing\ block\ data\ with\ the\ server\ at\ this\ point}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00542}00542\ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_level_a4832973b70b9ddecc539dc5963bc96e3}{unshareChunkAt}}(x,z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00543}00543\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00544}00544\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_level_a044de16bc9197a45da77406d3d10fc2d}{Level::setData}}(x,\ y,\ z,\ data,\ updateFlags,\ forceUpdate))}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00545}00545\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00546}00546\ \ \ \ \ \ \ \ \ \textcolor{comment}{//if(m\_bEnableResetChanges)\ updatesToReset.push\_back(ResetInfo(x,\ y,\ z,\ t,\ d));}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00547}00547\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00548}00548\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00549}00549\ \ \ \ \ \textcolor{comment}{//\ Didn't\ actually\ need\ to\ stop\ sharing}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00550}00550\ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_level_a6aff742adfb92fb6e74ce6b0284e097f}{shareChunkAt}}(x,z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00551}00551\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00552}00552\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00553}00553\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00554}\doxymbox{\hyperlink{class_multi_player_level_a80e0bad6717d7ad674448b21baf89f2f}{00554}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_level_a80e0bad6717d7ad674448b21baf89f2f}{MultiPlayerLevel::setTileAndData}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ tile,\ \textcolor{keywordtype}{int}\ data,\ \textcolor{keywordtype}{int}\ updateFlags)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00555}00555\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00556}00556\ \ \ \ \ \textcolor{comment}{//\ First\ check\ if\ this\ isn't\ going\ to\ do\ anything,\ because\ if\ it\ isn't\ then\ the\ next\ stage\ (of\ unsharing\ data)\ is\ really\ quite}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00557}00557\ \ \ \ \ \textcolor{comment}{//\ expensive\ so\ far\ better\ to\ early\ out\ here}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00558}00558\ \ \ \ \ \textcolor{keywordtype}{int}\ t\ =\ \doxymbox{\hyperlink{class_level_af6c291e6d410b3b40ae101dbf1f41fac}{getTile}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00559}00559\ \ \ \ \ \textcolor{keywordtype}{int}\ d\ =\ \doxymbox{\hyperlink{class_level_af9e4edf3d6817cf582e4bec75232445c}{getData}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00560}00560\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00561}00561\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ t\ ==\ tile\ )\ \&\&\ (\ d\ ==\ data\ )\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00562}00562\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00563}00563\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ we\ early-\/out,\ its\ important\ that\ we\ still\ do\ a\ checkLight\ here\ (which\ would\ otherwise\ have\ happened\ as\ part\ of\ Level::setTileAndDataNoUpdate)}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00564}00564\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ is\ because\ since\ we\ are\ potentially\ sharing\ tile/data\ but\ not\ lighting\ data,\ it\ is\ possible\ that\ the\ server\ might\ tell\ a\ client}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00565}00565\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ of\ a\ lighting\ update\ that\ doesn't\ need\ actioned\ on\ the\ client\ just\ because\ the\ chunk's\ data\ was\ being\ shared\ with\ the\ server\ when\ it\ was\ set.\ However,}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00566}00566\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ lighting\ data\ will\ potentially\ now\ be\ out\ of\ sync\ on\ the\ client.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00567}00567\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_ab01fae8acc88a3a76a06e314d75c7114}{checkLight}}(x,y,z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00568}00568\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00569}00569\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00570}00570\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ added\ -\/\ if\ this\ is\ the\ host,\ then\ stop\ sharing\ block\ data\ with\ the\ server\ at\ this\ point}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00571}00571\ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_level_a4832973b70b9ddecc539dc5963bc96e3}{unshareChunkAt}}(x,z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00572}00572\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00573}00573\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_level_a50b42e045b5d452879fe929138c735aa}{Level::setTileAndData}}(x,\ y,\ z,\ tile,\ data,\ updateFlags))}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00574}00574\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00575}00575\ \ \ \ \ \ \ \ \ \textcolor{comment}{//if(m\_bEnableResetChanges)\ updatesToReset.push\_back(ResetInfo(x,\ y,\ z,\ t,\ d));}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00576}00576\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00577}00577\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00578}00578\ \ \ \ \ \textcolor{comment}{//\ Didn't\ actually\ need\ to\ stop\ sharing}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00579}00579\ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_level_a6aff742adfb92fb6e74ce6b0284e097f}{shareChunkAt}}(x,z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00580}00580\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00581}00581\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00582}00582\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00583}00583\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00584}\doxymbox{\hyperlink{class_multi_player_level_ad82ea5812a77b87d3ede69ae7a85faba}{00584}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_level_ad82ea5812a77b87d3ede69ae7a85faba}{MultiPlayerLevel::doSetTileAndData}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ tile,\ \textcolor{keywordtype}{int}\ data)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00585}00585\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00586}00586\ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_level_a7fb60916788f6b57a4000101c4e1015a}{clearResetRegion}}(x,\ y,\ z,\ x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00587}00587\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00588}00588\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ Don't\ bother\ setting\ this\ to\ dirty\ if\ it\ isn't\ going\ to\ visually\ change\ -\/\ we\ get\ a\ lot\ of}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00589}00589\ \ \ \ \ \textcolor{comment}{//\ water\ changing\ from\ static\ to\ dynamic\ for\ instance.\ Note\ that\ this\ is\ only\ called\ from\ a\ client\ connection,}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00590}00590\ \ \ \ \ \textcolor{comment}{//\ and\ so\ the\ thing\ being\ notified\ of\ any\ update\ through\ tileUpdated\ is\ the\ renderer}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00591}00591\ \ \ \ \ \textcolor{keywordtype}{int}\ prevTile\ =\ \doxymbox{\hyperlink{class_level_af6c291e6d410b3b40ae101dbf1f41fac}{getTile}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00592}00592\ \ \ \ \ \textcolor{keywordtype}{bool}\ visuallyImportant\ =\ (!(\ (\ (\ prevTile\ ==\ \doxymbox{\hyperlink{class_tile_a09af14cd1f7fceaf86837603c951e1f7}{Tile::water\_Id}}\ )\ \&\&\ (\ tile\ ==\ \doxymbox{\hyperlink{class_tile_a9d3157ef3fa6d4d2b5d58ca7faac9dbe}{Tile::calmWater\_Id}}\ )\ )\ \ \ ||}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00593}00593\ \ \ \ \ \ \ \ \ (\ (\ prevTile\ ==\ \doxymbox{\hyperlink{class_tile_a9d3157ef3fa6d4d2b5d58ca7faac9dbe}{Tile::calmWater\_Id}}\ )\ \ \&\&\ (\ tile\ ==\ \doxymbox{\hyperlink{class_tile_a09af14cd1f7fceaf86837603c951e1f7}{Tile::water\_Id}}\ )\ )\ \ \ ||}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00594}00594\ \ \ \ \ \ \ \ \ (\ (\ prevTile\ ==\ \doxymbox{\hyperlink{class_tile_aad57bf266b0de7cd819b243a130df786}{Tile::lava\_Id}}\ )\ \ \ \ \ \&\&\ (\ tile\ ==\ \doxymbox{\hyperlink{class_tile_aae66000e91ccfb6ee421c7513de3d681}{Tile::calmLava\_Id}}\ )\ )\ \ ||}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00595}00595\ \ \ \ \ \ \ \ \ (\ (\ prevTile\ ==\ \doxymbox{\hyperlink{class_tile_aae66000e91ccfb6ee421c7513de3d681}{Tile::calmLava\_Id}}\ )\ \ \ \ \ \&\&\ (\ tile\ ==\ \doxymbox{\hyperlink{class_tile_aae66000e91ccfb6ee421c7513de3d681}{Tile::calmLava\_Id}}\ )\ )\ \ ||}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00596}00596\ \ \ \ \ \ \ \ \ (\ (\ prevTile\ ==\ \doxymbox{\hyperlink{class_tile_aae66000e91ccfb6ee421c7513de3d681}{Tile::calmLava\_Id}}\ )\ \&\&\ (\ tile\ ==\ \doxymbox{\hyperlink{class_tile_aad57bf266b0de7cd819b243a130df786}{Tile::lava\_Id}}\ )\ )\ )\ );}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00597}00597\ \ \ \ \ \textcolor{comment}{//\ If\ we're\ the\ host,\ need\ to\ tell\ the\ renderer\ for\ updates\ even\ if\ they\ don't\ change\ things\ as\ the\ host}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00598}00598\ \ \ \ \ \textcolor{comment}{//\ might\ have\ been\ sharing\ data\ and\ so\ set\ it\ already,\ but\ the\ renderer\ won't\ know\ to\ update}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00599}00599\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\doxymbox{\hyperlink{class_level_a50b42e045b5d452879fe929138c735aa}{Level::setTileAndData}}(x,\ y,\ z,\ tile,\ data,\ \doxymbox{\hyperlink{class_tile_af81188801a54262811196c375aeaaa21}{Tile::UPDATE\_ALL}})\ ||\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.IsHost()\ )\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00600}00600\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00601}00601\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.IsHost()\ \&\&\ visuallyImportant\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00602}00602\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00603}00603\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ This\ got\ removed\ from\ the\ tileUpdated\ function\ in\ TU14.\ Adding\ it\ back\ here\ as\ we\ need\ it}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00604}00604\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ to\ handle\ the\ cases\ where\ the\ chunk\ data\ is\ shared\ so\ the\ normal\ paths\ never\ call\ this}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00605}00605\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a492e69877b6dee83a1c5c35785240fc7}{sendTileUpdated}}(x,y,z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00606}00606\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_afe18f3de9b183618b21374986e8d03ec}{tileUpdated}}(x,\ y,\ z,\ tile);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00608}00608\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00609}00609\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00610}00610\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00611}00611\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00612}00612\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00613}00613\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00614}\doxymbox{\hyperlink{class_multi_player_level_ad51db7b95b0b58b706719503cdd9089b}{00614}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_ad51db7b95b0b58b706719503cdd9089b}{MultiPlayerLevel::disconnect}}(\textcolor{keywordtype}{bool}\ sendDisconnect\ \textcolor{comment}{/*=\ true*/})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00615}00615\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00616}00616\ \ \ \ \ \textcolor{keywordflow}{if}(\ sendDisconnect\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00617}00617\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00618}00618\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ it\ :\ connections\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00619}00619\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00620}00620\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ it\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00621}00621\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ it-\/>sendAndDisconnect(std::make\_shared<DisconnectPacket>(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19ae6b04840091bd26a411a8fe94d2b2b15}{DisconnectPacket::eDisconnect\_Quitting}}));}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00622}00622\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00623}00623\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00624}00624\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00625}00625\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00626}00626\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ it\ :\ connections\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00627}00627\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00628}00628\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ it\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00629}00629\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ it-\/>close();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00630}00630\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00631}00631\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00632}00632\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00633}00633\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00634}\doxymbox{\hyperlink{class_multi_player_level_a5f8288ba84023ac267ac347015f36191}{00634}}\ Tickable\ *\doxymbox{\hyperlink{class_multi_player_level_a5f8288ba84023ac267ac347015f36191}{MultiPlayerLevel::makeSoundUpdater}}(shared\_ptr<Minecart>\ minecart)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00635}00635\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00636}00636\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//new\ MinecartSoundUpdater(minecraft-\/>soundEngine,\ minecart,\ minecraft-\/>player);}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00637}00637\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00638}00638\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00639}\doxymbox{\hyperlink{class_multi_player_level_a80e9e988f920ab3ee717439d8b432e55}{00639}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a80e9e988f920ab3ee717439d8b432e55}{MultiPlayerLevel::tickWeather}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00640}00640\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00641}00641\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}-\/>hasCeiling)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00642}00642\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00643}00643\ \ \ \ \ \doxymbox{\hyperlink{class_level_ac9d23f0461930d04d059e785abad77ed}{oRainLevel}}\ =\ \doxymbox{\hyperlink{class_level_a4445c0d1484989b6826ab5c28d0380ee}{rainLevel}};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00644}00644\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_level_a2126f0bc9ab076c210f3700f75585bab}{levelData}}-\/>isRaining())}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00645}00645\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00646}00646\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a4445c0d1484989b6826ab5c28d0380ee}{rainLevel}}\ +=\ 0.01;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00647}00647\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00648}00648\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00649}00649\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00650}00650\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a4445c0d1484989b6826ab5c28d0380ee}{rainLevel}}\ -\/=\ 0.01;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00651}00651\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00652}00652\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_level_a4445c0d1484989b6826ab5c28d0380ee}{rainLevel}}\ <\ 0)\ \doxymbox{\hyperlink{class_level_a4445c0d1484989b6826ab5c28d0380ee}{rainLevel}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00653}00653\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_level_a4445c0d1484989b6826ab5c28d0380ee}{rainLevel}}\ >\ 1)\ \doxymbox{\hyperlink{class_level_a4445c0d1484989b6826ab5c28d0380ee}{rainLevel}}\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00654}00654\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00655}00655\ \ \ \ \ \doxymbox{\hyperlink{class_level_addb927a9f3bd9fd3f7d4581f80930f85}{oThunderLevel}}\ =\ \doxymbox{\hyperlink{class_level_ac69bf36d6a0e33fce7a3d544c0981000}{thunderLevel}};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00656}00656\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_level_a2126f0bc9ab076c210f3700f75585bab}{levelData}}-\/>isThundering())}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00657}00657\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00658}00658\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_ac69bf36d6a0e33fce7a3d544c0981000}{thunderLevel}}\ +=\ 0.01;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00659}00659\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00660}00660\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00661}00661\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00662}00662\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_ac69bf36d6a0e33fce7a3d544c0981000}{thunderLevel}}\ -\/=\ 0.01;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00663}00663\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00664}00664\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_level_ac69bf36d6a0e33fce7a3d544c0981000}{thunderLevel}}\ <\ 0)\ \doxymbox{\hyperlink{class_level_ac69bf36d6a0e33fce7a3d544c0981000}{thunderLevel}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00665}00665\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_level_ac69bf36d6a0e33fce7a3d544c0981000}{thunderLevel}}\ >\ 1)\ \doxymbox{\hyperlink{class_level_ac69bf36d6a0e33fce7a3d544c0981000}{thunderLevel}}\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00666}00666\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00667}00667\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00668}00668\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00669}\doxymbox{\hyperlink{class_multi_player_level_a8d00c518fe9352c4e63bfb53f707e58f}{00669}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a8d00c518fe9352c4e63bfb53f707e58f}{MultiPlayerLevel::animateTick}}(\textcolor{keywordtype}{int}\ xt,\ \textcolor{keywordtype}{int}\ yt,\ \textcolor{keywordtype}{int}\ zt)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00670}00670\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00671}00671\ \ \ \ \ \textcolor{comment}{//\ Get\ 8x8x8\ chunk\ (ie\ not\ like\ the\ renderer\ or\ game\ chunks...\ maybe\ we\ need\ another\ word\ here...)\ that\ the\ player\ is\ in}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00672}00672\ \ \ \ \ \textcolor{comment}{//\ We\ then\ want\ to\ add\ a\ 3x3\ region\ of\ chunks\ into\ a\ set\ that\ we'll\ be\ ticking\ over.\ Set\ is\ stored\ as\ unsigned\ ints\ which\ encode}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00673}00673\ \ \ \ \ \textcolor{comment}{//\ this\ chunk\ position}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00674}00674\ \ \ \ \ \textcolor{keywordtype}{int}\ cx\ =\ xt\ >>\ 3;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00675}00675\ \ \ \ \ \textcolor{keywordtype}{int}\ cy\ =\ yt\ >>\ 3;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00676}00676\ \ \ \ \ \textcolor{keywordtype}{int}\ cz\ =\ zt\ >>\ 3;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00677}00677\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00678}00678\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ xx\ =\ -\/1;\ xx\ <=\ 1;\ xx++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00679}00679\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ yy\ =\ -\/1;\ yy\ <=\ 1;\ yy++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00680}00680\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ zz\ =\ -\/1;\ zz\ <=\ 1;\ zz++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00681}00681\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00682}00682\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ cy\ +\ yy\ )\ <\ 0\ )\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00683}00683\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ cy\ +\ yy\ )\ >\ 15\ )\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00684}00684\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note\ -\/\ LEVEL\_MAX\_WIDTH\ is\ in\ game\ (16)\ tile\ chunks,\ and\ so\ our\ level\ goes\ from\ -\/LEVEL\_MAX\_WIDTH\ to\ LEVEL\_MAX\_WIDTH\ of\ our\ half-\/sized\ chunks}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00685}00685\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ cx\ +\ xx\ )\ >=\ \doxymbox{\hyperlink{_chunk_source_8h_a93f1196c6ada2d01508bd106df857f05}{LEVEL\_MAX\_WIDTH}}\ )\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00686}00686\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ cx\ +\ xx\ )\ <\ -\/\doxymbox{\hyperlink{_chunk_source_8h_a93f1196c6ada2d01508bd106df857f05}{LEVEL\_MAX\_WIDTH}}\ )\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00687}00687\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ cz\ +\ zz\ )\ >=\ \doxymbox{\hyperlink{_chunk_source_8h_a93f1196c6ada2d01508bd106df857f05}{LEVEL\_MAX\_WIDTH}}\ )\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00688}00688\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ cz\ +\ zz\ )\ <\ -\/\doxymbox{\hyperlink{_chunk_source_8h_a93f1196c6ada2d01508bd106df857f05}{LEVEL\_MAX\_WIDTH}}\ )\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00689}00689\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_level_a27284a97997f3edc31e2007a3a7d6599}{chunksToAnimate}}.insert(\ (\ (\ (\ cx\ +\ xx\ )\ \&\ 0xff\ )\ <<\ 16\ )\ |\ (\ (\ (\ cy\ +\ yy\ )\ \&\ 0xff\ )\ <<\ 8\ )\ |\ (\ (\ (\ cz\ +\ zz\ )\ \&\ 0xff\ )\ )\ );}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00690}00690\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00691}00691\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00692}00692\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00693}00693\ \textcolor{comment}{//\ 4J\ -\/\ the\ game\ used\ to\ tick\ 1000\ tiles\ in\ a\ random\ region\ +/-\/\ 16\ units\ round\ the\ player.\ We've\ got\ a\ 3x3\ region\ of\ 8x8x8\ chunks\ round\ each}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00694}00694\ \textcolor{comment}{//\ player.\ So\ the\ original\ game\ was\ ticking\ 1000\ things\ in\ a\ 32x32x32\ region\ ie\ had\ about\ a\ 1\ in\ 32\ chance\ of\ updating\ any\ one\ tile\ per\ tick.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00695}00695\ \textcolor{comment}{//\ We're\ not\ dealing\ with\ quite\ such\ a\ big\ region\ round\ each\ player\ (24x24x24)\ but\ potentially\ we've\ got\ 4\ players.\ Ultimately,\ we\ could\ end}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00696}00696\ \textcolor{comment}{//\ up\ ticking\ anywhere\ between\ 432\ and\ 1728\ tiles\ depending\ on\ how\ many\ players\ we've\ got,\ which\ seems\ like\ a\ good\ tradeoff\ from\ the\ original.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00697}\doxymbox{\hyperlink{class_multi_player_level_a08b79867aa8bd78d486e614e6b1aa2e1}{00697}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a08b79867aa8bd78d486e614e6b1aa2e1}{MultiPlayerLevel::animateTickDoWork}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00698}00698\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00699}00699\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ticksPerChunk\ =\ 16;\ \ \ \ \ \ \ \textcolor{comment}{//\ This\ ought\ to\ give\ us\ roughly\ the\ same\ 1000/32768\ chance\ of\ a\ tile\ being\ animated\ as\ the\ original}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00700}00700\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00701}00701\ \ \ \ \ \textcolor{comment}{//\ Horrible\ hack\ to\ communicate\ with\ the\ level\ renderer,\ which\ is\ just\ attached\ as\ a\ listener\ to\ this\ level.\ This\ let's\ the\ particle}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00702}00702\ \ \ \ \ \textcolor{comment}{//\ rendering\ know\ to\ use\ this\ level\ (rather\ than\ try\ to\ work\ it\ out\ from\ the\ current\ player),\ and\ to\ not\ bother\ distance\ clipping\ particles}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00703}00703\ \ \ \ \ \textcolor{comment}{//\ which\ would\ again\ be\ based\ on\ the\ current\ player.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00704}00704\ \ \ \ \ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_ab32c60d8ecf3c0e100d9f97424d433f3}{animateTickLevel}}\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00705}00705\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00706}00706\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(31);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00707}00707\ \ \ \ \ \doxymbox{\hyperlink{class_random}{Random}}\ *animateRandom\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_random}{Random}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00708}00708\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00709}00709\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00710}00710\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ ticksPerChunk;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00711}00711\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00712}00712\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ packed\ :\ \doxymbox{\hyperlink{class_multi_player_level_a27284a97997f3edc31e2007a3a7d6599}{chunksToAnimate}})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00713}00713\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00714}00714\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ cx\ =\ (\ packed\ <<\ 8\ )\ >>\ 24;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00715}00715\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ cy\ =\ (\ packed\ <<\ 16\ )\ >>\ 24;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00716}00716\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ cz\ =\ (\ packed\ <<\ 24\ )\ >>\ 24;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00717}00717\ \ \ \ \ \ \ \ \ \ \ \ \ cx\ <<=\ 3;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00718}00718\ \ \ \ \ \ \ \ \ \ \ \ \ cy\ <<=\ 3;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00719}00719\ \ \ \ \ \ \ \ \ \ \ \ \ cz\ <<=\ 3;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00720}00720\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ x\ =\ cx\ +\ \doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>nextInt(8);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00721}00721\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ y\ =\ cy\ +\ \doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>nextInt(8);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00722}00722\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ z\ =\ cz\ +\ \doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>nextInt(8);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00723}00723\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ t\ =\ \doxymbox{\hyperlink{class_level_af6c291e6d410b3b40ae101dbf1f41fac}{getTile}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00724}00724\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>nextInt(8)\ >\ y\ \&\&\ t\ ==\ 0\ \&\&\ \doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}-\/>hasBedrockFog())\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ test\ for\ bedrock\ fog\ brought\ forward\ from\ 1.2.3}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00725}00725\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00726}00726\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a6ff30e7e597ed15e0959b4ee29f9311e}{addParticle}}(\doxymbox{\hyperlink{_particle_types_8h_a837667734b04ac1e75501a7107342843a631619608e2673af81ec68917182ba44}{eParticleType\_depthsuspend}},\ x\ +\ \doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>nextFloat(),\ y\ +\ \doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>nextFloat(),\ z\ +\ \doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>nextFloat(),\ 0,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00727}00727\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00728}00728\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (t\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00729}00729\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00730}00730\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t]-\/>animateTick(\textcolor{keyword}{this},\ x,\ y,\ z,\ animateRandom);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00731}00731\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00732}00732\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00733}00733\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00734}00734\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00735}00735\ \ \ \ \ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_ab32c60d8ecf3c0e100d9f97424d433f3}{animateTickLevel}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00736}00736\ \ \ \ \ \textcolor{keyword}{delete}\ animateRandom;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00737}00737\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00738}00738\ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_level_a27284a97997f3edc31e2007a3a7d6599}{chunksToAnimate}}.clear();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00739}00739\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00740}00740\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00741}00741\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00742}\doxymbox{\hyperlink{class_multi_player_level_aa2e5f023007ea3bca92d920173e04286}{00742}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_aa2e5f023007ea3bca92d920173e04286}{MultiPlayerLevel::playSound}}(shared\_ptr<Entity>\ entity,\ \textcolor{keywordtype}{int}\ iSound,\ \textcolor{keywordtype}{float}\ volume,\ \textcolor{keywordtype}{float}\ pitch)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00743}00743\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00744}00744\ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_level_af2e2965714dff9db0e0d4fbd68cacddd}{playLocalSound}}(entity-\/>x,\ entity-\/>y\ -\/\ entity-\/>heightOffset,\ entity-\/>z,\ iSound,\ volume,\ pitch);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00745}00745\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00746}00746\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00747}\doxymbox{\hyperlink{class_multi_player_level_af2e2965714dff9db0e0d4fbd68cacddd}{00747}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_af2e2965714dff9db0e0d4fbd68cacddd}{MultiPlayerLevel::playLocalSound}}(\textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y,\ \textcolor{keywordtype}{double}\ z,\ \textcolor{keywordtype}{int}\ iSound,\ \textcolor{keywordtype}{float}\ volume,\ \textcolor{keywordtype}{float}\ pitch,\ \textcolor{keywordtype}{bool}\ distanceDelay\textcolor{comment}{/*=\ false\ */},\ \textcolor{keywordtype}{float}\ fClipSoundDist)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00748}00748\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00749}00749\ \ \ \ \ \textcolor{comment}{//float\ dd\ =\ 16;}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00750}00750\ \ \ \ \ \textcolor{keywordflow}{if}\ (volume\ >\ 1)\ fClipSoundDist\ *=\ volume;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00751}00751\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00752}00752\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ find\ min\ distance\ to\ any\ players\ rather\ than\ just\ the\ current\ one}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00753}00753\ \ \ \ \ \textcolor{keywordtype}{float}\ minDistSq\ =\ FLT\_MAX;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00754}00754\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{extra_x64_8h_a1365084304888cf899650a443d55b9a9}{XUSER\_MAX\_COUNT}};\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00755}00755\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00756}00756\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ minecraft-\/>localplayers[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00757}00757\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00758}00758\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ distSq\ =\ minecraft-\/>localplayers[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>distanceToSqr(x,\ y,\ z\ );}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00759}00759\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ distSq\ <\ minDistSq\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00760}00760\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00761}00761\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ minDistSq\ =\ distSq;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00762}00762\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00763}00763\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00764}00764\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00765}00765\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00766}00766\ \ \ \ \ \textcolor{keywordflow}{if}\ (minDistSq\ <\ fClipSoundDist\ *\ fClipSoundDist)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00767}00767\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00768}00768\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (distanceDelay\ \&\&\ minDistSq\ >\ 10\ *\ 10)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00769}00769\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00770}00770\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ exhaggerate\ sound\ speed\ effect\ by\ making\ speed\ of\ sound\ \string~=}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00771}00771\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 40\ m/s\ instead\ of\ 300\ m/s}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00772}00772\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ delayInSeconds\ =\ sqrt(minDistSq)\ /\ 40.0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00773}00773\ \ \ \ \ \ \ \ \ \ \ \ \ minecraft-\/>soundEngine-\/>schedule(iSound,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(x),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(y),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(z),\ volume,\ pitch,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_math_a32a2f80111211a00b2e80c847b484054}{Math::round}}(delayInSeconds\ *\ \doxymbox{\hyperlink{class_shared_constants_a170b00572bc783af06c9f0cda11f24c2}{SharedConstants::TICKS\_PER\_SECOND}})));}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00774}00774\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00775}00775\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00776}00776\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00777}00777\ \ \ \ \ \ \ \ \ \ \ \ \ minecraft-\/>soundEngine-\/>play(iSound,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(x),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(y),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(z),\ volume,\ pitch);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00778}00778\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00779}00779\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00780}00780\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00781}00781\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00782}\doxymbox{\hyperlink{class_multi_player_level_a74630001d581b0ce65aaff2834b1e234}{00782}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a74630001d581b0ce65aaff2834b1e234}{MultiPlayerLevel::createFireworks}}(\textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y,\ \textcolor{keywordtype}{double}\ z,\ \textcolor{keywordtype}{double}\ xd,\ \textcolor{keywordtype}{double}\ yd,\ \textcolor{keywordtype}{double}\ zd,\ \doxymbox{\hyperlink{class_compound_tag}{CompoundTag}}\ *infoTag)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00783}00783\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00784}00784\ \ \ \ \ minecraft-\/>particleEngine-\/>add(std::make\_shared<FireworksParticles::FireworksStarter>(\textcolor{keyword}{this},\ x,\ y,\ z,\ xd,\ yd,\ zd,\ minecraft-\/>particleEngine,\ infoTag));}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00785}00785\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00786}00786\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00787}\doxymbox{\hyperlink{class_multi_player_level_a6fc5e7d30db6e3b5c9813554bcf3e9ae}{00787}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a6fc5e7d30db6e3b5c9813554bcf3e9ae}{MultiPlayerLevel::setScoreboard}}(\doxymbox{\hyperlink{class_scoreboard}{Scoreboard}}\ *scoreboard)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00788}00788\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00789}00789\ \ \ \ \ this-\/>scoreboard\ =\ scoreboard;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00790}00790\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00791}00791\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00792}\doxymbox{\hyperlink{class_multi_player_level_a239ee6d4bd8543763926808853b2a433}{00792}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a239ee6d4bd8543763926808853b2a433}{MultiPlayerLevel::setDayTime}}(int64\_t\ newTime)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00793}00793\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00794}00794\ \ \ \ \ \textcolor{comment}{//\ 4J:\ We\ send\ daylight\ cycle\ rule\ with\ host\ options\ so\ don't\ need\ this}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00795}00795\ \ \ \ \ \textcolor{comment}{/*if\ (newTime\ <\ 0)}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00796}00796\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00797}00797\ \textcolor{comment}{\ \ \ \ \ \ \ \ newTime\ =\ -\/newTime;}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00798}00798\ \textcolor{comment}{\ \ \ \ \ \ \ \ getGameRules()-\/>set(GameRules::RULE\_DAYLIGHT,\ L"{}false"{});}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00799}00799\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00800}00800\ \textcolor{comment}{\ \ \ \ else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00801}00801\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00802}00802\ \textcolor{comment}{\ \ \ \ \ \ \ \ getGameRules()-\/>set(GameRules::RULE\_DAYLIGHT,\ L"{}true"{});}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00803}00803\ \textcolor{comment}{\ \ \ \ \}*/}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00804}00804\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00805}00805\ \ \ \ \ \doxymbox{\hyperlink{class_level_a9f616b609137ac8f0f2b45823976d951}{Level::setDayTime}}(newTime);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00806}00806\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00807}00807\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00808}\doxymbox{\hyperlink{class_multi_player_level_ad1326765f06fcd572caabaeec9c55ded}{00808}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_ad1326765f06fcd572caabaeec9c55ded}{MultiPlayerLevel::removeAllPendingEntityRemovals}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00809}00809\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00810}00810\ \ \ \ \ \textcolor{comment}{//entities.removeAll(entitiesToRemove);}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00811}00811\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00812}00812\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&\doxymbox{\hyperlink{class_level_a906544272e59f215fdb4602a045eca81}{m\_entitiesCS}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00813}00813\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ it\ =\ \doxymbox{\hyperlink{class_level_afe0750e2eaaebecb8683480e977c46f6}{entities}}.begin();\ it\ !=\ \doxymbox{\hyperlink{class_level_afe0750e2eaaebecb8683480e977c46f6}{entities}}.end();)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00814}00814\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00815}00815\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ found\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00816}00816\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\ \&\ it2\ :\ \doxymbox{\hyperlink{class_level_ad080acef51b2093d63fd1d26ff17d6f1}{entitiesToRemove}})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00817}00817\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00818}00818\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (*it)\ ==\ it2\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00819}00819\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00820}00820\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00821}00821\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00822}00822\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00823}00823\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00824}00824\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ found\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00825}00825\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00826}00826\ \ \ \ \ \ \ \ \ \ \ \ \ it\ =\ \doxymbox{\hyperlink{class_level_afe0750e2eaaebecb8683480e977c46f6}{entities}}.erase(it);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00827}00827\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00828}00828\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00829}00829\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00830}00830\ \ \ \ \ \ \ \ \ \ \ \ \ it++;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00831}00831\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00832}00832\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00833}00833\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&\doxymbox{\hyperlink{class_level_a906544272e59f215fdb4602a045eca81}{m\_entitiesCS}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00834}00834\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00835}00835\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ e\ :\ \doxymbox{\hyperlink{class_level_ad080acef51b2093d63fd1d26ff17d6f1}{entitiesToRemove}})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00836}00836\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00837}00837\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ e\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00838}00838\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00839}00839\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xc\ =\ e-\/>xChunk;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00840}00840\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ zc\ =\ e-\/>zChunk;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00841}00841\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (e-\/>inChunk\ \&\&\ \doxymbox{\hyperlink{class_level_a98121d8454268467cbc7ffd724b17cd8}{hasChunk}}(xc,\ zc))}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00842}00842\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00843}00843\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a66ea5848e7ccebd417f04151a5d439af}{getChunk}}(xc,\ zc)-\/>\doxymbox{\hyperlink{class_level_chunk_a724ba9ff744994a09e548a910138c4dd}{removeEntity}}(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00844}00844\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00845}00845\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00846}00846\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00847}00847\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00848}00848\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Is\ there\ a\ reason\ do\ this\ in\ a\ separate\ loop?\ Thats\ what\ the\ Java\ does...}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00849}00849\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ it\ :\ \doxymbox{\hyperlink{class_level_ad080acef51b2093d63fd1d26ff17d6f1}{entitiesToRemove}})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00850}00850\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00851}00851\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ it\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00852}00852\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_level_a2f483713ea6876ca42c77171378320d3}{entityRemoved}}(it);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00853}00853\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00854}00854\ \ \ \ \ \doxymbox{\hyperlink{class_level_ad080acef51b2093d63fd1d26ff17d6f1}{entitiesToRemove}}.clear();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00855}00855\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00856}00856\ \ \ \ \ \textcolor{comment}{//for\ (int\ i\ =\ 0;\ i\ <\ entities.size();\ i++)}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00857}00857\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&\doxymbox{\hyperlink{class_level_a906544272e59f215fdb4602a045eca81}{m\_entitiesCS}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00858}00858\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ \doxymbox{\hyperlink{class_level_afe0750e2eaaebecb8683480e977c46f6}{entities}}.begin();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00859}00859\ \ \ \ \ \textcolor{keywordflow}{while}(\ \ it\ !=\ \doxymbox{\hyperlink{class_level_afe0750e2eaaebecb8683480e977c46f6}{entities}}.end()\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00860}00860\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00861}00861\ \ \ \ \ \ \ \ \ shared\_ptr<Entity>\ e\ =\ *it;\textcolor{comment}{//entities.at(i);}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00862}00862\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00863}00863\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (e-\/>riding\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00864}00864\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00865}00865\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (e-\/>riding-\/>removed\ ||\ e-\/>riding-\/>rider.lock()\ !=\ e)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00866}00866\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00867}00867\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>riding-\/>rider\ =\ weak\_ptr<Entity>();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00868}00868\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e-\/>riding\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00869}00869\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00870}00870\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00871}00871\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00872}00872\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++it;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00873}00873\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00874}00874\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00875}00875\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00876}00876\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00877}00877\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (e-\/>removed)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00878}00878\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00879}00879\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xc\ =\ e-\/>xChunk;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00880}00880\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ zc\ =\ e-\/>zChunk;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00881}00881\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (e-\/>inChunk\ \&\&\ \doxymbox{\hyperlink{class_level_a98121d8454268467cbc7ffd724b17cd8}{hasChunk}}(xc,\ zc))}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00882}00882\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00883}00883\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a66ea5848e7ccebd417f04151a5d439af}{getChunk}}(xc,\ zc)-\/>\doxymbox{\hyperlink{class_level_chunk_a724ba9ff744994a09e548a910138c4dd}{removeEntity}}(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00884}00884\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00885}00885\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//entities.remove(i-\/-\/);}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00886}00886\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00887}00887\ \ \ \ \ \ \ \ \ \ \ \ \ it\ =\ \doxymbox{\hyperlink{class_level_afe0750e2eaaebecb8683480e977c46f6}{entities}}.erase(\ it\ );}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00888}00888\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_multi_player_level_a2f483713ea6876ca42c77171378320d3}{entityRemoved}}(e);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00889}00889\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00890}00890\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00891}00891\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00892}00892\ \ \ \ \ \ \ \ \ \ \ \ \ it++;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00893}00893\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00894}00894\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00895}00895\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&\doxymbox{\hyperlink{class_level_a906544272e59f215fdb4602a045eca81}{m\_entitiesCS}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00896}00896\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00897}00897\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00898}\doxymbox{\hyperlink{class_multi_player_level_aa6edb47af589f3b1167051b69db19163}{00898}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_aa6edb47af589f3b1167051b69db19163}{MultiPlayerLevel::removeClientConnection}}(\doxymbox{\hyperlink{class_multi_player_level_a57ddb58ac9f33fbc303507690b67add3}{ClientConnection}}\ *c,\ \textcolor{keywordtype}{bool}\ sendDisconnect)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00899}00899\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00900}00900\ \ \ \ \ \textcolor{keywordflow}{if}(\ sendDisconnect\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00901}00901\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00902}00902\ \ \ \ \ \ \ \ \ c-\/>\doxymbox{\hyperlink{class_client_connection_ac00f609f1ea578392293ea6c69fc7f08}{sendAndDisconnect}}(std::make\_shared<DisconnectPacket>(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19ae6b04840091bd26a411a8fe94d2b2b15}{DisconnectPacket::eDisconnect\_Quitting}}));}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00903}00903\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00904}00904\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00905}00905\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ find(connections.begin(),\ connections.end(),\ c);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00906}00906\ \ \ \ \ \textcolor{keywordflow}{if}(\ it\ !=\ connections.end()\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00907}00907\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00908}00908\ \ \ \ \ \ \ \ \ connections.erase(\ it\ );}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00909}00909\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00910}00910\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00911}00911\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00912}\doxymbox{\hyperlink{class_multi_player_level_a2a303e99b43ca07c72567901d216212f}{00912}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a2a303e99b43ca07c72567901d216212f}{MultiPlayerLevel::tickAllConnections}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00913}00913\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00914}00914\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}Connection\ ticking"{}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00915}00915\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ it\ :\ connections\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00916}00916\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00917}00917\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ it\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00918}00918\ \ \ \ \ \ \ \ \ \ \ \ \ it-\/>tick();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00919}00919\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00920}00920\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00921}00921\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00922}00922\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00923}\doxymbox{\hyperlink{class_multi_player_level_a6c5934ee795d2f0ee5ebffd0699a6fff}{00923}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_a6c5934ee795d2f0ee5ebffd0699a6fff}{MultiPlayerLevel::dataReceivedForChunk}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00924}00924\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00925}00925\ \ \ \ \ chunkCache-\/>dataReceived(x,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00926}00926\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00927}00927\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00928}00928\ \textcolor{comment}{//\ 4J\ added\ -\/\ removes\ all\ tile\ entities\ in\ the\ given\ region\ from\ both\ level\ \&\ levelchunks}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00929}\doxymbox{\hyperlink{class_multi_player_level_aab5e8da12792829fffd31d8c73714215}{00929}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_level_aab5e8da12792829fffd31d8c73714215}{MultiPlayerLevel::removeUnusedTileEntitiesInRegion}}(\textcolor{keywordtype}{int}\ x0,\ \textcolor{keywordtype}{int}\ y0,\ \textcolor{keywordtype}{int}\ z0,\ \textcolor{keywordtype}{int}\ x1,\ \textcolor{keywordtype}{int}\ y1,\ \textcolor{keywordtype}{int}\ z1)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00930}00930\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00931}00931\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&\doxymbox{\hyperlink{class_level_a8cf9ac56b3cb6e7fc22d7abe431c27f2}{m\_tileEntityListCS}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00932}00932\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00933}00933\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_level_a9fbe92039a099ae64af555c7cfeb231f}{tileEntityList}}.size();)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00934}00934\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00935}00935\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ removed\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00936}00936\ \ \ \ \ \ \ \ \ shared\_ptr<TileEntity>\ te\ =\ \doxymbox{\hyperlink{class_level_a9fbe92039a099ae64af555c7cfeb231f}{tileEntityList}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00937}00937\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (te-\/>x\ >=\ x0\ \&\&\ te-\/>y\ >=\ y0\ \&\&\ te-\/>z\ >=\ z0\ \&\&\ te-\/>x\ <\ x1\ \&\&\ te-\/>y\ <\ y1\ \&\&\ te-\/>z\ <\ z1)}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00938}00938\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00939}00939\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *lc\ =\ \doxymbox{\hyperlink{class_level_a66ea5848e7ccebd417f04151a5d439af}{getChunk}}(te-\/>x\ >>\ 4,\ te-\/>z\ >>\ 4);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00940}00940\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (lc\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00941}00941\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00942}00942\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ remove\ tile\ entities\ where\ this\ is\ no\ longer\ a\ tile\ entity}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00943}00943\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tileId\ =\ lc-\/>\doxymbox{\hyperlink{class_level_chunk_ab1a5ca32b7615491d1ffaa4adea9bdf4}{getTile}}(te-\/>x\ \&\ 15,\ te-\/>y,\ te-\/>z\ \&\ 15\ );}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00944}00944\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[tileId]\ ==\ \textcolor{keyword}{nullptr}\ ||\ !\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[tileId]-\/>\doxymbox{\hyperlink{class_level_a71845e0224b0aa9fc657616f00afb23b}{isEntityTile}}())}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00945}00945\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00946}00946\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a9fbe92039a099ae64af555c7cfeb231f}{tileEntityList}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \doxymbox{\hyperlink{class_level_a9fbe92039a099ae64af555c7cfeb231f}{tileEntityList}}.back();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00947}00947\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a9fbe92039a099ae64af555c7cfeb231f}{tileEntityList}}.pop\_back();}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00948}00948\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00949}00949\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Chests\ can\ create\ new\ tile\ entities\ when\ being\ removed,\ so\ disable\ this}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00950}00950\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a41aaefd0f3a15c1afed15f38aa12404b}{m\_bDisableAddNewTileEntities}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00951}00951\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lc-\/>\doxymbox{\hyperlink{class_level_chunk_ad20bd2d63921266c5b71dc334eba46fd}{removeTileEntity}}(te-\/>x\ \&\ 15,\ te-\/>y,\ te-\/>z\ \&\ 15);}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00952}00952\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_a41aaefd0f3a15c1afed15f38aa12404b}{m\_bDisableAddNewTileEntities}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00953}00953\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ removed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00954}00954\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00955}00955\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00956}00956\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00957}00957\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !removed\ )\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++;}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00958}00958\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00959}00959\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00960}00960\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&\doxymbox{\hyperlink{class_level_a8cf9ac56b3cb6e7fc22d7abe431c27f2}{m\_tileEntityListCS}});}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00961}00961\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_level_8cpp_source_l00962}00962\ }
+
+\end{DoxyCode}

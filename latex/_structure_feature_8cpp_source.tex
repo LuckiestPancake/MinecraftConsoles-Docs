@@ -1,0 +1,296 @@
+\doxysection{Structure\+Feature.\+cpp}
+\hypertarget{_structure_feature_8cpp_source}{}\label{_structure_feature_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/StructureFeature.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/StructureFeature.cpp}}
+\doxymbox{\hyperlink{_structure_feature_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_structure_feature_8h}{StructureFeature.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_structure_start_8h}{StructureStart.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_structure_piece_8h}{StructurePiece.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_chunk_pos_8h}{ChunkPos.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_bounding_box_8h}{BoundingBox.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8h}{net.minecraft.world.level.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_level_data_8h}{LevelData.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00010}\doxymbox{\hyperlink{class_structure_feature_ac460f4b59181c85c98a34134106ed48c}{00010}}\ \doxymbox{\hyperlink{class_structure_feature_ac460f4b59181c85c98a34134106ed48c}{StructureFeature::StructureFeature}}()}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00011}00011\ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#ifdef\ ENABLE\_STRUCTURE\_SAVING}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00013}00013\ \ \ \ \ savedData\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00015}00015\ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00017}\doxymbox{\hyperlink{class_structure_feature_a1e2c417ddedda96496914745114ce6bc}{00017}}\ \doxymbox{\hyperlink{class_structure_feature_a1e2c417ddedda96496914745114ce6bc}{StructureFeature::\string~StructureFeature}}()}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00018}00018\ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00019}00019\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ \doxymbox{\hyperlink{class_structure_feature_a32bd07af29dda053d0089a3d2842b9b9}{cachedStructures}})}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00020}00020\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00021}00021\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ it.second;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00022}00022\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00023}00023\ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00025}\doxymbox{\hyperlink{class_structure_feature_a1249d74c4c3dfafe004d5ac2bad2c506}{00025}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_structure_feature_a1249d74c4c3dfafe004d5ac2bad2c506}{StructureFeature::addFeature}}(\doxymbox{\hyperlink{class_level}{Level}}\ *\doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}},\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ xOffs,\ \textcolor{keywordtype}{int}\ zOffs,\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ blocks)}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00026}00026\ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00027}00027\ \ \ \ \ \textcolor{comment}{//\ this\ method\ is\ called\ for\ each\ chunk\ within\ 8\ chunk's\ distance\ from}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00028}00028\ \ \ \ \ \textcolor{comment}{//\ the\ chunk\ being\ generated,\ but\ not\ all\ chunks\ are\ the\ sources\ of}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00029}00029\ \ \ \ \ \textcolor{comment}{//\ structures}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00031}00031\ \ \ \ \ restoreSavedData(\doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}});}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00033}00033\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_structure_feature_a32bd07af29dda053d0089a3d2842b9b9}{cachedStructures}}.find(\doxymbox{\hyperlink{class_chunk_pos_ad58bdaf2f1a1d416d933ae14a3e4239b}{ChunkPos::hashCode}}(x,\ z))\ !=\ \doxymbox{\hyperlink{class_structure_feature_a32bd07af29dda053d0089a3d2842b9b9}{cachedStructures}}.end())}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00034}00034\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00036}00036\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00038}00038\ \ \ \ \ \textcolor{comment}{//\ clear\ random\ key}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00039}00039\ \ \ \ \ \doxymbox{\hyperlink{class_large_feature_a020be4ec6c089967d21473507ba062e4}{random}}-\/>nextInt();}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00040}00040\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ want\ to\ know\ if\ it's\ a\ superflat\ land,\ so\ we\ don't\ generate\ so\ many\ villages\ -\/\ we've\ changed\ the\ distance\ required\ between\ villages\ on\ the\ xbox}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00041}00041\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_structure_feature_ac92d3308f10c376106d9dcd4708edaa8}{isFeatureChunk}}(x,\ z,\doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}}-\/>getLevelData()-\/>getGenerator()\ ==\ \doxymbox{\hyperlink{class_level_type_a05174e57b036c43fc81fdd93eb317752}{LevelType::lvl\_flat}}))}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00042}00042\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_structure_start}{StructureStart}}\ *start\ =\ \doxymbox{\hyperlink{class_structure_feature_ab3f7eb2dc4fda2c1d869fe446bacf218}{createStructureStart}}(x,\ z);}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_structure_feature_a32bd07af29dda053d0089a3d2842b9b9}{cachedStructures}}[\doxymbox{\hyperlink{class_chunk_pos_a29df4b4b2f6af05e8be16a0dc87e042a}{ChunkPos::hashCode}}(x,\ z)]\ =\ start;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ saveFeature(x,\ z,\ start);}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00046}00046\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00047}00047\ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00049}\doxymbox{\hyperlink{class_structure_feature_af389d84002fd4177964732b7b86f9d96}{00049}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_structure_feature_af389d84002fd4177964732b7b86f9d96}{StructureFeature::postProcess}}(\doxymbox{\hyperlink{class_level}{Level}}\ *\doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}},\ \doxymbox{\hyperlink{class_random}{Random}}\ *\doxymbox{\hyperlink{class_large_feature_a020be4ec6c089967d21473507ba062e4}{random}},\ \textcolor{keywordtype}{int}\ chunkX,\ \textcolor{keywordtype}{int}\ chunkZ)}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00050}00050\ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00051}00051\ \ \ \ \ restoreSavedData(\doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}});}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00053}00053\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ The\ x\ and\ z\ used\ to\ be\ offset\ by\ (+8)\ here,\ but\ that\ means\ we\ can\ miss\ out\ half\ structures\ on\ the\ edge\ of\ the\ world}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00054}00054\ \ \ \ \ \textcolor{comment}{//\ Normal\ feature\ generation\ offsets\ generation\ by\ half\ a\ chunk\ to\ ensure\ that\ it\ can\ generate\ the\ entire\ feature\ in\ chunks\ already\ created}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00055}00055\ \ \ \ \ \textcolor{comment}{//\ Structure\ features\ don't\ need\ this,\ as\ the\ PlaceBlock\ function\ only\ places\ blocks\ inside\ the\ BoundingBox\ specified,\ and\ parts}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00056}00056\ \ \ \ \ \textcolor{comment}{//\ of\ a\ struture\ piece\ can\ be\ added\ in\ more\ than\ one\ post-\/process\ call}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00057}00057\ \ \ \ \ \textcolor{keywordtype}{int}\ cx\ =\ (chunkX\ <<\ 4);\ \textcolor{comment}{//\ +\ 8;}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00058}00058\ \ \ \ \ \textcolor{keywordtype}{int}\ cz\ =\ (chunkZ\ <<\ 4);\ \textcolor{comment}{//\ +\ 8;}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00060}00060\ \ \ \ \ \textcolor{keywordtype}{bool}\ intersection\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00061}00061\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ \doxymbox{\hyperlink{class_structure_feature_a32bd07af29dda053d0089a3d2842b9b9}{cachedStructures}})}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00062}00062\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_structure_start}{StructureStart}}\ *structureStart\ =\ it.second;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00065}00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (structureStart-\/>\doxymbox{\hyperlink{class_structure_start_ad7983055d1db877c94507e2c0602592d}{isValid}}())}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (structureStart-\/>\doxymbox{\hyperlink{class_structure_start_a7e399a8bc911fc68ada626afe251b1ad}{getBoundingBox}}()-\/>\doxymbox{\hyperlink{class_bounding_box_ae8a2aad73ed3baa568fdaf522c2ac6c7}{intersects}}(cx,\ cz,\ cx\ +\ 15,\ cz\ +\ 15))}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_bounding_box}{BoundingBox}}\ *bb\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_bounding_box}{BoundingBox}}(cx,\ cz,\ cx\ +\ 15,\ cz\ +\ 15);}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ structureStart-\/>\doxymbox{\hyperlink{class_structure_start_a1ce9749db719ef421e8245ebf7317a9e}{postProcess}}(\doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}},\ \doxymbox{\hyperlink{class_large_feature_a020be4ec6c089967d21473507ba062e4}{random}},\ bb);}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ bb;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ intersection\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ because\ some\ feature\ pieces\ are\ modified\ in\ the\ postProcess\ step,\ we\ need\ to\ save\ them\ again}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ saveFeature(structureStart-\/>\doxymbox{\hyperlink{class_structure_start_a6bf39fc3e80e6f554d288fedf2388b8a}{getChunkX}}(),\ structureStart-\/>\doxymbox{\hyperlink{class_structure_start_a49ba0fa0d1e8a07f5b56d848ff4701b1}{getChunkZ}}(),\ structureStart);}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00078}00078\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00080}00080\ \ \ \ \ \textcolor{keywordflow}{return}\ intersection;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00081}00081\ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00083}\doxymbox{\hyperlink{class_structure_feature_ab8da2cb441a85b82ea95d9ad7c4595d9}{00083}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_structure_feature_ab8da2cb441a85b82ea95d9ad7c4595d9}{StructureFeature::isIntersection}}(\textcolor{keywordtype}{int}\ cellX,\ \textcolor{keywordtype}{int}\ cellZ)}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00084}00084\ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00085}00085\ \ \ \ \ restoreSavedData(\doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}});}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00087}00087\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\ \&\ it\ :\ \doxymbox{\hyperlink{class_structure_feature_a32bd07af29dda053d0089a3d2842b9b9}{cachedStructures}})}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00088}00088\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_structure_start}{StructureStart}}\ *structureStart\ =\ it.second;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (structureStart-\/>\doxymbox{\hyperlink{class_structure_start_ad7983055d1db877c94507e2c0602592d}{isValid}}())}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (structureStart-\/>\doxymbox{\hyperlink{class_structure_start_a7e399a8bc911fc68ada626afe251b1ad}{getBoundingBox}}()-\/>\doxymbox{\hyperlink{class_bounding_box_ae8a2aad73ed3baa568fdaf522c2ac6c7}{intersects}}(cellX,\ cellZ,\ cellX,\ cellZ))}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it2\ =\ structureStart-\/>\doxymbox{\hyperlink{class_structure_start_aeef7973aac9e18d951a51b3a21c1f94a}{getPieces}}()-\/>begin();}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ it2\ !=\ structureStart-\/>\doxymbox{\hyperlink{class_structure_start_aeef7973aac9e18d951a51b3a21c1f94a}{getPieces}}()-\/>end()\ )}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_structure_piece}{StructurePiece}}\ *next\ =\ *it2++;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (next-\/>\doxymbox{\hyperlink{class_structure_piece_a2cb8198187d7cf966f72cdf25f158cc9}{getBoundingBox}}()-\/>\doxymbox{\hyperlink{class_bounding_box_ae8a2aad73ed3baa568fdaf522c2ac6c7}{intersects}}(cellX,\ cellZ,\ cellX,\ cellZ))}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00105}00105\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00106}00106\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00107}00107\ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00109}\doxymbox{\hyperlink{class_structure_feature_ac2596b5f848ea842752e8d8e094776e6}{00109}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_structure_feature_ac2596b5f848ea842752e8d8e094776e6}{StructureFeature::isInsideFeature}}(\textcolor{keywordtype}{int}\ cellX,\ \textcolor{keywordtype}{int}\ cellY,\ \textcolor{keywordtype}{int}\ cellZ)}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00110}00110\ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00111}00111\ \ \ \ \ restoreSavedData(\doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}});}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00112}00112\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_structure_feature_a75a942b3c7f13fe0bd7c7f86811c67ee}{getStructureAt}}(cellX,\ cellY,\ cellZ)\ !=\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00113}00113\ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00115}\doxymbox{\hyperlink{class_structure_feature_a75a942b3c7f13fe0bd7c7f86811c67ee}{00115}}\ \doxymbox{\hyperlink{class_structure_start}{StructureStart}}\ *\doxymbox{\hyperlink{class_structure_feature_a75a942b3c7f13fe0bd7c7f86811c67ee}{StructureFeature::getStructureAt}}(\textcolor{keywordtype}{int}\ cellX,\ \textcolor{keywordtype}{int}\ cellY,\ \textcolor{keywordtype}{int}\ cellZ)}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00116}00116\ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00117}00117\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ \doxymbox{\hyperlink{class_structure_feature_a32bd07af29dda053d0089a3d2842b9b9}{cachedStructures}})}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00118}00118\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_structure_start}{StructureStart}}\ *pStructureStart\ =\ it.second;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pStructureStart-\/>\doxymbox{\hyperlink{class_structure_start_ad7983055d1db877c94507e2c0602592d}{isValid}}())}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pStructureStart-\/>\doxymbox{\hyperlink{class_structure_start_a7e399a8bc911fc68ada626afe251b1ad}{getBoundingBox}}()-\/>\doxymbox{\hyperlink{class_bounding_box_ae8a2aad73ed3baa568fdaf522c2ac6c7}{intersects}}(cellX,\ cellZ,\ cellX,\ cellZ))}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00126}00126\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Iterator<StructurePiece>\ it\ =\ structureStart.getPieces().iterator();}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00127}00127\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ while\ (it.hasNext())\ \{}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00128}00128\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ StructurePiece\ next\ =\ it.next();}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00129}00129\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (next.getBoundingBox().isInside(cellX,\ cellY,\ cellZ))\ \{}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00130}00130\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ true;}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00131}00131\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00132}00132\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ list<StructurePiece\ *>\ *pieces=pStructureStart-\/>\doxymbox{\hyperlink{class_structure_start_aeef7973aac9e18d951a51b3a21c1f94a}{getPieces}}();}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ piece\ :\ *pieces)}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ piece-\/>getBoundingBox()-\/>isInside(cellX,\ cellY,\ cellZ)\ \ )}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ pStructureStart;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00144}00144\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00145}00145\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00146}00146\ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00148}\doxymbox{\hyperlink{class_structure_feature_a5b732d89403705e778ddd6fe65b006f7}{00148}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_structure_feature_a5b732d89403705e778ddd6fe65b006f7}{StructureFeature::isInsideBoundingFeature}}(\textcolor{keywordtype}{int}\ cellX,\ \textcolor{keywordtype}{int}\ cellY,\ \textcolor{keywordtype}{int}\ cellZ)}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00149}00149\ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00150}00150\ \ \ \ \ restoreSavedData(\doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}});}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00152}00152\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ \doxymbox{\hyperlink{class_structure_feature_a32bd07af29dda053d0089a3d2842b9b9}{cachedStructures}})}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00153}00153\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_structure_start}{StructureStart}}\ *structureStart\ =\ it.second;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (structureStart-\/>\doxymbox{\hyperlink{class_structure_start_ad7983055d1db877c94507e2c0602592d}{isValid}}())}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (structureStart-\/>\doxymbox{\hyperlink{class_structure_start_a7e399a8bc911fc68ada626afe251b1ad}{getBoundingBox}}()-\/>\doxymbox{\hyperlink{class_bounding_box_ae8a2aad73ed3baa568fdaf522c2ac6c7}{intersects}}(cellX,\ cellZ,\ cellX,\ cellZ));}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00159}00159\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00160}00160\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00161}00161\ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00163}\doxymbox{\hyperlink{class_structure_feature_aa96c7d18b23f50b3fba35b1ce4364b1a}{00163}}\ \doxymbox{\hyperlink{class_tile_pos}{TilePos}}\ *\doxymbox{\hyperlink{class_structure_feature_aa96c7d18b23f50b3fba35b1ce4364b1a}{StructureFeature::getNearestGeneratedFeature}}(\doxymbox{\hyperlink{class_level}{Level}}\ *\doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}},\ \textcolor{keywordtype}{int}\ cellX,\ \textcolor{keywordtype}{int}\ cellY,\ \textcolor{keywordtype}{int}\ cellZ)}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00164}00164\ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00165}00165\ \ \ \ \ \textcolor{comment}{//\ this\ is\ a\ hack\ that\ will\ "{}force"{}\ the\ feature\ to\ generate\ positions}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00166}00166\ \ \ \ \ \textcolor{comment}{//\ even\ if\ the\ player\ hasn't\ generated\ new\ chunks\ yet}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00167}00167\ \ \ \ \ this-\/>level\ =\ \doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}};}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00169}00169\ \ \ \ \ restoreSavedData(\doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}});}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00171}00171\ \ \ \ \ \doxymbox{\hyperlink{class_large_feature_a020be4ec6c089967d21473507ba062e4}{random}}-\/>setSeed(\doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}}-\/>getSeed());}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00172}00172\ \ \ \ \ int64\_t\ xScale\ =\ \doxymbox{\hyperlink{class_large_feature_a020be4ec6c089967d21473507ba062e4}{random}}-\/>nextLong();}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00173}00173\ \ \ \ \ int64\_t\ zScale\ =\ \doxymbox{\hyperlink{class_large_feature_a020be4ec6c089967d21473507ba062e4}{random}}-\/>nextLong();}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00174}00174\ \ \ \ \ int64\_t\ xx\ =\ (cellX\ >>\ 4)\ *\ xScale;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00175}00175\ \ \ \ \ int64\_t\ zz\ =\ (cellZ\ >>\ 4)\ *\ zScale;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00176}00176\ \ \ \ \ \doxymbox{\hyperlink{class_large_feature_a020be4ec6c089967d21473507ba062e4}{random}}-\/>setSeed(xx\ \string^\ zz\ \string^\ \doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}}-\/>getSeed());}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00178}00178\ \ \ \ \ \doxymbox{\hyperlink{class_structure_feature_a1249d74c4c3dfafe004d5ac2bad2c506}{addFeature}}(\doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}},\ cellX\ >>\ 4,\ cellZ\ >>\ 4,\ 0,\ 0,\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}());}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00179}00179\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00180}00180\ \ \ \ \ \textcolor{keywordtype}{double}\ minDistance\ =\ DBL\_MAX;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00181}00181\ \ \ \ \ \doxymbox{\hyperlink{class_tile_pos}{TilePos}}\ *selected\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00183}00183\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ \doxymbox{\hyperlink{class_structure_feature_a32bd07af29dda053d0089a3d2842b9b9}{cachedStructures}})}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00184}00184\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_structure_start}{StructureStart}}\ *pStructureStart\ =\ it.second;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pStructureStart-\/>\doxymbox{\hyperlink{class_structure_start_ad7983055d1db877c94507e2c0602592d}{isValid}}())}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//StructurePiece\ *pStructurePiece\ =\ pStructureStart-\/>getPieces().get(0);}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_structure_piece}{StructurePiece}}*\ pStructurePiece\ =\ *\ pStructureStart-\/>\doxymbox{\hyperlink{class_structure_start_aeef7973aac9e18d951a51b3a21c1f94a}{getPieces}}()-\/>begin();}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tile_pos}{TilePos}}\ *locatorPosition\ =\ pStructurePiece-\/>\doxymbox{\hyperlink{class_structure_piece_a6dfbc032c47a10dd8760184c15b0d15a}{getLocatorPosition}}();}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00193}00193\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dx\ =\ locatorPosition-\/>\doxymbox{\hyperlink{class_tile_pos_ab03a00dd7294f78e68bea84683c4ef4d}{x}}\ -\/\ cellX;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dy\ =\ locatorPosition-\/>\doxymbox{\hyperlink{class_tile_pos_a01621f32e2229ab81ece4c9da8892ec1}{y}}\ -\/\ cellY;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dz\ =\ locatorPosition-\/>\doxymbox{\hyperlink{class_tile_pos_a9930fe6a472429c1d0d703d245596be2}{z}}\ -\/\ cellZ;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dist\ =\ dx\ *\ dx\ +\ dy\ *\ dy\ +\ dz\ *\ dz;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dist\ <\ minDistance)}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ minDistance\ =\ dist;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ selected\ =\ locatorPosition;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00205}00205\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00206}00206\ \ \ \ \ \textcolor{keywordflow}{if}\ (selected\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00207}00207\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ selected;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00209}00209\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00210}00210\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00211}00211\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ vector<TilePos>\ *guesstimatedFeaturePositions\ =\ \doxymbox{\hyperlink{class_structure_feature_a7cf6b3844d2eec27b04cee6450d07df1}{getGuesstimatedFeaturePositions}}();}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (guesstimatedFeaturePositions\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tile_pos}{TilePos}}\ *pSelectedPos\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_tile_pos}{TilePos}}(0,0,0);}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ it\ :\ *guesstimatedFeaturePositions)}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dx\ =\ it.x\ -\/\ cellX;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dy\ =\ it.y\ -\/\ cellY;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dz\ =\ it.z\ -\/\ cellZ;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dist\ =\ dx\ *\ dx\ +\ dy\ *\ dy\ +\ dz\ *\ dz;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00223}00223\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dist\ <\ minDistance)}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ minDistance\ =\ dist;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pSelectedPos-\/>\doxymbox{\hyperlink{class_tile_pos_ab03a00dd7294f78e68bea84683c4ef4d}{x}}\ =\ it.x;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pSelectedPos-\/>\doxymbox{\hyperlink{class_tile_pos_a01621f32e2229ab81ece4c9da8892ec1}{y}}\ =\ it.y;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pSelectedPos-\/>\doxymbox{\hyperlink{class_tile_pos_a9930fe6a472429c1d0d703d245596be2}{z}}\ =\ it.z;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ guesstimatedFeaturePositions;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ pSelectedPos;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00235}00235\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00236}00236\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00237}00237\ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00239}\doxymbox{\hyperlink{class_structure_feature_a7cf6b3844d2eec27b04cee6450d07df1}{00239}}\ vector<TilePos>\ *\doxymbox{\hyperlink{class_structure_feature_a7cf6b3844d2eec27b04cee6450d07df1}{StructureFeature::getGuesstimatedFeaturePositions}}()}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00240}00240\ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00241}00241\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00242}00242\ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00244}00244\ \textcolor{keywordtype}{void}\ StructureFeature::restoreSavedData(\doxymbox{\hyperlink{class_level}{Level}}\ *level)}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00245}00245\ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00246}00246\ \textcolor{preprocessor}{\#ifdef\ ENABLE\_STRUCTURE\_SAVING}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00247}00247\ \ \ \ \ \textcolor{keywordflow}{if}\ (savedData\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00248}00248\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ savedData\ =\ dynamic\_pointer\_cast<StructureFeatureSavedData>(\ \doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}}-\/>\doxymbox{\hyperlink{class_level_a8a3ce544e9e91cc7ab12684eabf5ee2c}{getSavedData}}(\textcolor{keyword}{typeid}(\doxymbox{\hyperlink{class_structure_feature_saved_data}{StructureFeatureSavedData}}),\ \doxymbox{\hyperlink{class_structure_feature_aa6a8d52694a34f8fb04561bb9cec5b41}{getFeatureName}}())\ );}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00251}00251\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (savedData\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00252}00252\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ savedData\ =\ shared\_ptr<StructureFeatureSavedData>(\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_structure_feature_saved_data}{StructureFeatureSavedData}}(\doxymbox{\hyperlink{class_structure_feature_aa6a8d52694a34f8fb04561bb9cec5b41}{getFeatureName}}())\ );}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}}-\/>\doxymbox{\hyperlink{class_level_a6c9cb21749e7629c8fdc8eef582f776b}{setSavedData}}(\doxymbox{\hyperlink{class_structure_feature_aa6a8d52694a34f8fb04561bb9cec5b41}{getFeatureName}}(),\ savedData);}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00256}00256\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ CompoundTag\ *fullTag\ =\ savedData-\/>getFullTag();}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00259}00259\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ vector<Tag\ *>\ *allTags\ =\ fullTag-\/>\doxymbox{\hyperlink{class_compound_tag_ad4c8ee4f31b69dc93ef838959b8e3d23}{getAllTags}}();}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\ Tag\ *featureTag\ :\ *allTags\ )}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ featureTag\ \&\&\ featureTag-\/>getId()\ ==\ \doxymbox{\hyperlink{class_tag_aecd3ee7620078a9d3d69c537ad4367f2}{Tag::TAG\_Compound}})}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ CompoundTag\ *ct\ =\ (CompoundTag\ *)\ featureTag;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ct-\/>\doxymbox{\hyperlink{class_compound_tag_abfd5a4d5c417b71cdb916da5b4324d70}{contains}}(L\textcolor{stringliteral}{"{}ChunkX"{}})\ \&\&\ ct-\/>\doxymbox{\hyperlink{class_compound_tag_abfd5a4d5c417b71cdb916da5b4324d70}{contains}}(L\textcolor{stringliteral}{"{}ChunkZ"{}}))}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ cx\ =\ ct-\/>\doxymbox{\hyperlink{class_compound_tag_a8efa86997e6f00c3d459928f57331b5c}{getInt}}(L\textcolor{stringliteral}{"{}ChunkX"{}});}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ cz\ =\ ct-\/>\doxymbox{\hyperlink{class_compound_tag_a8efa86997e6f00c3d459928f57331b5c}{getInt}}(L\textcolor{stringliteral}{"{}ChunkZ"{}});}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00271}00271\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ StructureStart\ *start\ =\ \doxymbox{\hyperlink{class_structure_feature_i_o_a1ab241f02a19820c60fe1a777f71496f}{StructureFeatureIO::loadStaticStart}}(ct,\ \doxymbox{\hyperlink{class_large_feature_a726219c90902e1cbcab2da32328ffcfb}{level}});}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ System.out.println("{}Loaded\ "{}\ +\ start.getClass().getSimpleName()\ +\ "{}\ from\ file"{});}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_structure_feature_a32bd07af29dda053d0089a3d2842b9b9}{cachedStructures}}[\doxymbox{\hyperlink{class_chunk_pos_a29df4b4b2f6af05e8be16a0dc87e042a}{ChunkPos::hashCode}}(cx,\ cz)]\ =\ start;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ allTags;}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00280}00280\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00281}00281\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00282}00282\ \}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00284}00284\ \textcolor{keywordtype}{void}\ StructureFeature::saveFeature(\textcolor{keywordtype}{int}\ chunkX,\ \textcolor{keywordtype}{int}\ chunkZ,\ \doxymbox{\hyperlink{class_structure_start}{StructureStart}}\ *feature)}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00285}00285\ \{}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00286}00286\ \textcolor{preprocessor}{\#ifdef\ ENABLE\_STRUCTURE\_SAVING}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00287}00287\ \ \ \ \ savedData-\/>putFeatureTag(feature-\/>\doxymbox{\hyperlink{class_structure_start_a804488c15606e870858b742cff1a5eff}{createTag}}(chunkX,\ chunkZ),\ chunkX,\ chunkZ);}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00288}00288\ \ \ \ \ savedData-\/>setDirty();}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00289}00289\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_structure_feature_8cpp_source_l00290}00290\ \}}
+
+\end{DoxyCode}

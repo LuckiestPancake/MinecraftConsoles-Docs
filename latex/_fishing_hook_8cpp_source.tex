@@ -1,0 +1,455 @@
+\doxysection{Fishing\+Hook.\+cpp}
+\hypertarget{_fishing_hook_8cpp_source}{}\label{_fishing_hook_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/FishingHook.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/FishingHook.cpp}}
+\doxymbox{\hyperlink{_fishing_hook_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8stats_8h}{net.minecraft.stats.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8h}{net.minecraft.world.level.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8tile_8h}{net.minecraft.world.level.tile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8phys_8h}{net.minecraft.world.phys.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8player_8h}{net.minecraft.world.entity.player.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8h}{net.minecraft.world.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8item_8h}{net.minecraft.world.entity.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8h}{net.minecraft.world.entity.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8damagesource_8h}{net.minecraft.world.damagesource.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{com_8mojang_8nbt_8h}{com.mojang.nbt.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_fishing_hook_8h}{FishingHook.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_sound_types_8h}{SoundTypes.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00017}00017\ \textcolor{comment}{//\ 4J\ -\/\ added\ common\ ctor\ code.}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00018}00018\ \textcolor{keywordtype}{void}\ FishingHook::\_init()}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00019}00019\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00020}00020\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ This\ function\ call\ had\ to\ be\ moved\ here\ from\ the\ Entity\ ctor\ to\ ensure\ that}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00021}00021\ \ \ \ \ \textcolor{comment}{//\ the\ derived\ version\ of\ the\ function\ is\ called}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00022}00022\ \ \ \ \ this-\/>\doxymbox{\hyperlink{class_fishing_hook_aec8c88351c4cb94a0c68dc06982a2f09}{defineSynchedData}}();}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00024}00024\ \ \ \ \ xTile\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00025}00025\ \ \ \ \ yTile\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00026}00026\ \ \ \ \ zTile\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00027}00027\ \ \ \ \ lastTile\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00028}00028\ \ \ \ \ inGround\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00029}00029\ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_a102bbf4399dd0f97b9f268484d18a3c8}{shakeTime}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00030}00030\ \ \ \ \ flightTime\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00031}00031\ \ \ \ \ nibble\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00032}00032\ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_a863d9ef1657ac4b2a91a06c612a0feb3}{hookedIn}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00034}00034\ \ \ \ \ lSteps\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00035}00035\ \ \ \ \ lx\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00036}00036\ \ \ \ \ ly\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00037}00037\ \ \ \ \ lz\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00038}00038\ \ \ \ \ lyr\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00039}00039\ \ \ \ \ lxr\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00040}00040\ \ \ \ \ lxd\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00041}00041\ \ \ \ \ lyd\ =\ 0.0;\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00042}00042\ \ \ \ \ lzd\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00043}00043\ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00044}00044\ \ \ \ \ life\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00046}00046\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a85711f517f9752908a0f28ee366655db}{setSize}}(0.25f,\ 0.25f);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00047}00047\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a2ebda192559a64df35584e1bf67805de}{noCulling}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00048}00048\ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00050}\doxymbox{\hyperlink{class_fishing_hook_a6e522780057e0c7be443f4e9b7488144}{00050}}\ \doxymbox{\hyperlink{class_fishing_hook_a6e522780057e0c7be443f4e9b7488144}{FishingHook::FishingHook}}(\doxymbox{\hyperlink{class_level}{Level}}\ *\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}})\ :\ \doxymbox{\hyperlink{class_entity_a7b9de0a383739738a4a67d272303bc9b}{Entity}}(\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}\ )}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00051}00051\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00052}00052\ \ \ \ \ \_init();}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00053}00053\ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00055}\doxymbox{\hyperlink{class_fishing_hook_abc676b44e704d161a1af4e53bbbbc579}{00055}}\ \doxymbox{\hyperlink{class_fishing_hook_a6e522780057e0c7be443f4e9b7488144}{FishingHook::FishingHook}}(\doxymbox{\hyperlink{class_level}{Level}}\ *\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}},\ shared\_ptr<Player>\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}})\ :\ \doxymbox{\hyperlink{class_entity_a7b9de0a383739738a4a67d272303bc9b}{Entity}}(\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}\ )}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00056}00056\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00057}00057\ \ \ \ \ \_init();}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00059}00059\ \ \ \ \ this-\/>owner\ =\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00060}00060\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Moved\ this\ outside\ the\ ctor}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00061}00061\ \ \ \ \ \textcolor{comment}{//owner-\/>fishing\ =\ dynamic\_pointer\_cast<FishingHook>(\ shared\_from\_this()\ );}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00063}00063\ \ \ \ \ \doxymbox{\hyperlink{class_entity_ae5a85d03ef139cb9c96480ac52ace729}{setPos}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00064}00064\ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00066}\doxymbox{\hyperlink{class_fishing_hook_ae3d1df22185cbf23e899065c04e56889}{00066}}\ \doxymbox{\hyperlink{class_fishing_hook_a6e522780057e0c7be443f4e9b7488144}{FishingHook::FishingHook}}(\doxymbox{\hyperlink{class_level}{Level}}\ *\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}},\ shared\_ptr<Player>\ mob)\ :\ \doxymbox{\hyperlink{class_entity_a7b9de0a383739738a4a67d272303bc9b}{Entity}}(\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}\ )}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00067}00067\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00068}00068\ \ \ \ \ \_init();}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00070}00070\ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}\ =\ mob;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00071}00071\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Moved\ this\ outside\ the\ ctor}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00072}00072\ \ \ \ \ \textcolor{comment}{//owner-\/>fishing\ =\ dynamic\_pointer\_cast<FishingHook>(\ shared\_from\_this()\ );}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00074}00074\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a3c9128ab9e51458fecfb7c17a6fe9b71}{moveTo}}(mob-\/>x,\ mob-\/>y\ +\ 1.62\ -\/\ mob-\/>heightOffset,\ mob-\/>z,\ mob-\/>yRot,\ mob-\/>xRot);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00077}00077\ \ \ \ \ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ -\/=\ \doxymbox{\hyperlink{class_mth_a0375fc62984b40bd91df0ce8d7b179ae}{Mth::cos}}(\doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ /\ 180\ *\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}})\ *\ 0.16f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00078}00078\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ -\/=\ 0.1f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00079}00079\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ -\/=\ \doxymbox{\hyperlink{class_mth_a504719e86988c740047029e16d73f79b}{Mth::sin}}(\doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ /\ 180\ *\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}})\ *\ 0.16f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00080}00080\ \ \ \ \ \doxymbox{\hyperlink{class_entity_ae5a85d03ef139cb9c96480ac52ace729}{setPos}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00081}00081\ \ \ \ \ \doxymbox{\hyperlink{class_entity_ae61404c4fdc0f8558fb011ba2f93475b}{heightOffset}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00084}00084\ \ \ \ \ \textcolor{keywordtype}{float}\ speed\ =\ 0.4f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00085}00085\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ =\ (-\/\doxymbox{\hyperlink{class_mth_a504719e86988c740047029e16d73f79b}{Mth::sin}}(\doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ /\ 180\ *\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}})\ *\ \doxymbox{\hyperlink{class_mth_a0375fc62984b40bd91df0ce8d7b179ae}{Mth::cos}}(\doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}}\ /\ 180\ *\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}))\ *\ speed;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00086}00086\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ =\ (\doxymbox{\hyperlink{class_mth_a0375fc62984b40bd91df0ce8d7b179ae}{Mth::cos}}(\doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ /\ 180\ *\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}})\ *\ \doxymbox{\hyperlink{class_mth_a0375fc62984b40bd91df0ce8d7b179ae}{Mth::cos}}(\doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}}\ /\ 180\ *\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}))\ *\ speed;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00087}00087\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ =\ (-\/\doxymbox{\hyperlink{class_mth_a504719e86988c740047029e16d73f79b}{Mth::sin}}(\doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}}\ /\ 180\ *\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}))\ *\ speed;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00089}00089\ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_aaf8add49122f2818990f3a24f282bffb}{shoot}}(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}},\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}},\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}},\ 1.5f,\ 1);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00090}00090\ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00092}\doxymbox{\hyperlink{class_fishing_hook_aec8c88351c4cb94a0c68dc06982a2f09}{00092}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_fishing_hook_aec8c88351c4cb94a0c68dc06982a2f09}{FishingHook::defineSynchedData}}()}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00093}00093\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00094}00094\ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00096}\doxymbox{\hyperlink{class_fishing_hook_a6e7a34eebdb140553097ea336433bdfb}{00096}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_fishing_hook_a6e7a34eebdb140553097ea336433bdfb}{FishingHook::shouldRenderAtSqrDistance}}(\textcolor{keywordtype}{double}\ distance)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00097}00097\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00098}00098\ \ \ \ \ \textcolor{keywordtype}{double}\ size\ =\ \doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>getSize()\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00099}00099\ \ \ \ \ size\ *=\ 64.0f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00100}00100\ \ \ \ \ \textcolor{keywordflow}{return}\ distance\ <\ size\ *\ size;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00101}00101\ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00103}\doxymbox{\hyperlink{class_fishing_hook_aaf8add49122f2818990f3a24f282bffb}{00103}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_fishing_hook_aaf8add49122f2818990f3a24f282bffb}{FishingHook::shoot}}(\textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}},\ \textcolor{keywordtype}{float}\ pow,\ \textcolor{keywordtype}{float}\ uncertainty)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00104}00104\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00105}00105\ \ \ \ \ \textcolor{keywordtype}{float}\ dist\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(sqrt(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ *\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ +\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}));}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00107}00107\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ /=\ dist;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00108}00108\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ /=\ dist;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00109}00109\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ /=\ dist;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00111}00111\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +=\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextGaussian())\ *\ 0.0075f\ *\ uncertainty;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00112}00112\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ +=\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextGaussian())\ *\ 0.0075f\ *\ uncertainty;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00113}00113\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ +=\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextGaussian())\ *\ 0.0075f\ *\ uncertainty;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00115}00115\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *=\ pow;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00116}00116\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ *=\ pow;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00117}00117\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *=\ pow;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00119}00119\ \ \ \ \ this-\/>xd\ =\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00120}00120\ \ \ \ \ this-\/>yd\ =\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00121}00121\ \ \ \ \ this-\/>zd\ =\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00123}00123\ \ \ \ \ \textcolor{keywordtype}{double}\ sd\ =\ sqrt(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00125}00125\ \ \ \ \ \doxymbox{\hyperlink{class_entity_afe674281fdd06c9d0aa174ba4fb06f20}{yRotO}}\ =\ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(atan2(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}},\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}})\ *\ 180\ /\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00126}00126\ \ \ \ \ \doxymbox{\hyperlink{class_entity_af5d5d9b5109f83a3b6ee7ab2ae536abe}{xRotO}}\ =\ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}}\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(atan2(\doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}},\ sd)\ *\ 180\ /\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00127}00127\ \ \ \ \ life\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00128}00128\ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00129}00129\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00130}\doxymbox{\hyperlink{class_fishing_hook_a89f2f525150e7b027bdd3fa5c9d3ea72}{00130}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_fishing_hook_a89f2f525150e7b027bdd3fa5c9d3ea72}{FishingHook::lerpTo}}(\textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}},\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}},\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}},\ \textcolor{keywordtype}{int}\ steps)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00131}00131\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00132}00132\ \ \ \ \ lx\ =\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00133}00133\ \ \ \ \ ly\ =\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00134}00134\ \ \ \ \ lz\ =\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00135}00135\ \ \ \ \ lyr\ =\ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00136}00136\ \ \ \ \ lxr\ =\ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00138}00138\ \ \ \ \ lSteps\ =\ steps;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00140}00140\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ =\ lxd;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00141}00141\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ =\ lyd;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00142}00142\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ =\ lzd;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00143}00143\ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00145}\doxymbox{\hyperlink{class_fishing_hook_a1df5d9b6f8a095adfc455c3fabee2b35}{00145}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_fishing_hook_a1df5d9b6f8a095adfc455c3fabee2b35}{FishingHook::lerpMotion}}(\textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}},\ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}})}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00146}00146\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00147}00147\ \ \ \ \ lxd\ =\ this-\/>xd\ =\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00148}00148\ \ \ \ \ lyd\ =\ this-\/>yd\ =\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00149}00149\ \ \ \ \ lzd\ =\ this-\/>zd\ =\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00150}00150\ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00152}\doxymbox{\hyperlink{class_fishing_hook_a9b0960fa921e7dc8e6b26cebcfa5f69a}{00152}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_fishing_hook_a9b0960fa921e7dc8e6b26cebcfa5f69a}{FishingHook::tick}}()}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00153}00153\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00154}00154\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a2f08fe2d5e636d5d3bd17652c2e4eb53}{Entity::tick}}();}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00156}00156\ \ \ \ \ \textcolor{keywordflow}{if}\ (lSteps\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00157}00157\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xt\ =\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ +\ (lx\ -\/\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}})\ /\ lSteps;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ yt\ =\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ +\ (ly\ -\/\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}})\ /\ lSteps;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ zt\ =\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ +\ (lz\ -\/\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}})\ /\ lSteps;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ yrd\ =\ \doxymbox{\hyperlink{class_mth_a0f480bf28fa5b25abdf268df18dd5917}{Mth::wrapDegrees}}(lyr\ -\/\ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ +=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}((yrd)\ /\ lSteps);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}}\ +=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}((lxr\ -\/\ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}})\ /\ lSteps);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ lSteps-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ae5a85d03ef139cb9c96480ac52ace729}{setPos}}(xt,\ yt,\ zt);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a8939bc96191c784588208e3191b164ae}{setRot}}(\doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}},\ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00171}00171\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00173}00173\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>isClientSide)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00174}00174\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ selectedItem\ =\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>getSelectedItem();}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>removed\ ||\ !\doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>isAlive()\ ||\ selectedItem\ ==\ \textcolor{keyword}{nullptr}\ ||\ selectedItem-\/>getItem()\ !=\ \doxymbox{\hyperlink{class_item_ac395aea81e07279c56d4494bab8c4e73}{Item::fishingRod}}\ ||\ \doxymbox{\hyperlink{class_entity_a7b113655df04ed4e39d14bc117454892}{distanceToSqr}}(\doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}})\ >\ 32\ *\ 32)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_aae71dd2b21c94c6db5497914ef6bdf31}{remove}}();}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>fishing\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_fishing_hook_a863d9ef1657ac4b2a91a06c612a0feb3}{hookedIn}}\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_fishing_hook_a863d9ef1657ac4b2a91a06c612a0feb3}{hookedIn}}-\/>removed)\ \doxymbox{\hyperlink{class_fishing_hook_a863d9ef1657ac4b2a91a06c612a0feb3}{hookedIn}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ =\ \doxymbox{\hyperlink{class_fishing_hook_a863d9ef1657ac4b2a91a06c612a0feb3}{hookedIn}}-\/>x;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ =\ \doxymbox{\hyperlink{class_fishing_hook_a863d9ef1657ac4b2a91a06c612a0feb3}{hookedIn}}-\/>bb-\/>y0\ +\ \doxymbox{\hyperlink{class_fishing_hook_a863d9ef1657ac4b2a91a06c612a0feb3}{hookedIn}}-\/>bbHeight\ *\ 0.8;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ =\ \doxymbox{\hyperlink{class_fishing_hook_a863d9ef1657ac4b2a91a06c612a0feb3}{hookedIn}}-\/>z;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00194}00194\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00196}00196\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_fishing_hook_a102bbf4399dd0f97b9f268484d18a3c8}{shakeTime}}\ >\ 0)\ \doxymbox{\hyperlink{class_fishing_hook_a102bbf4399dd0f97b9f268484d18a3c8}{shakeTime}}-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00198}00198\ \ \ \ \ \textcolor{keywordflow}{if}\ (inGround)\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00199}00199\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tile\ =\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>getTile(xTile,\ yTile,\ zTile);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tile\ !=\ lastTile)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ life++;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (life\ ==\ 20\ *\ 60)\ \doxymbox{\hyperlink{class_fishing_hook_aae71dd2b21c94c6db5497914ef6bdf31}{remove}}();}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ inGround\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *=\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ *\ 0.2f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ *=\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ *\ 0.2f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *=\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ *\ 0.2f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ life\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ flightTime\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00217}00217\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00218}00218\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00219}00219\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ flightTime++;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00221}00221\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00222}00222\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00223}00223\ \ \ \ \ \doxymbox{\hyperlink{class_vec3}{Vec3}}\ *from\ =\ \doxymbox{\hyperlink{class_vec3_a7952cb27b6b21d23081f9ea420306c26}{Vec3::newTemp}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00224}00224\ \ \ \ \ \doxymbox{\hyperlink{class_vec3}{Vec3}}\ *to\ =\ \doxymbox{\hyperlink{class_vec3_a7952cb27b6b21d23081f9ea420306c26}{Vec3::newTemp}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ +\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ +\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ +\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00225}00225\ \ \ \ \ \doxymbox{\hyperlink{class_hit_result}{HitResult}}\ *\doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ =\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>clip(from,\ to);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00227}00227\ \ \ \ \ from\ =\ \doxymbox{\hyperlink{class_vec3_a7952cb27b6b21d23081f9ea420306c26}{Vec3::newTemp}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00228}00228\ \ \ \ \ to\ =\ \doxymbox{\hyperlink{class_vec3_a7952cb27b6b21d23081f9ea420306c26}{Vec3::newTemp}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ +\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ +\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ +\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00229}00229\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ !=\ \textcolor{keyword}{nullptr})\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00230}00230\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ to\ =\ \doxymbox{\hyperlink{class_vec3_a7952cb27b6b21d23081f9ea420306c26}{Vec3::newTemp}}(\doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}-\/>pos-\/>x,\ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}-\/>pos-\/>y,\ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}-\/>pos-\/>z);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00232}00232\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00233}00233\ \ \ \ \ shared\_ptr<Entity>\ hitEntity\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00234}00234\ \ \ \ \ vector<shared\_ptr<Entity>\ >\ *objects\ =\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>getEntities(shared\_from\_this(),\ \doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>expand(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}},\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}},\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}})-\/>grow(1,\ 1,\ 1));}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00235}00235\ \ \ \ \ \textcolor{keywordtype}{double}\ nearest\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00236}00236\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ it\ =\ objects-\/>begin();\ it\ !=\ objects-\/>end();\ it++)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00237}00237\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ shared\_ptr<Entity>\ e\ =\ *it;\ \textcolor{comment}{//\ objects-\/>at(i);}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00239}00239\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!e-\/>isPickable()\ ||\ (e\ ==\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}\ \&\&\ flightTime\ <\ 5))\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00241}00241\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ rr\ =\ 0.3f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00242}00242\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_a_a_b_b}{AABB}}\ *\doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}\ =\ e-\/>bb-\/>grow(rr,\ rr,\ rr);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00243}00243\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_hit_result}{HitResult}}\ *p\ =\ \doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>clip(from,\ to);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00244}00244\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dd\ =\ from-\/>\doxymbox{\hyperlink{class_vec3_a828f27c46c688495dd00a661af5e9f30}{distanceTo}}(p-\/>\doxymbox{\hyperlink{class_hit_result_ace004442c14b23b8b48d19dbaa35709d}{pos}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dd\ <\ nearest\ ||\ nearest\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hitEntity\ =\ e;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nearest\ =\ dd;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ p;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00253}00253\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00254}00254\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00256}00256\ \ \ \ \ \textcolor{keywordflow}{if}\ (hitEntity\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00257}00257\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_hit_result}{HitResult}}(hitEntity);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00260}00260\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00262}00262\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00263}00263\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}-\/>entity\ !=\ \textcolor{keyword}{nullptr})\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00265}00265\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ Move\ fix\ for\ :\ fix\ for\ \#48587\ -\/\ CRASH:\ Code:\ Gameplay:\ Hitting\ another\ player\ with\ the\ fishing\ bobber\ crashes\ the\ game.\ [Fishing\ pole,\ line]}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Incorrect\ dynamic\_pointer\_cast\ used\ around\ the\ shared\_from\_this()}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_damage_source}{DamageSource}}\ *damageSource\ =\ \doxymbox{\hyperlink{class_damage_source_af87cfbcd2fc739389a6f1c4680d9e703}{DamageSource::thrown}}(shared\_from\_this(),\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}-\/>entity-\/>hurt(damageSource,\ 0))}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_a863d9ef1657ac4b2a91a06c612a0feb3}{hookedIn}}\ =\ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}-\/>entity;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ damageSource;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00275}00275\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ inGround\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00279}00279\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00280}00280\ \ \ \ \ \textcolor{keyword}{delete}\ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00281}00281\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00282}00282\ \ \ \ \ \textcolor{keywordflow}{if}\ (inGround)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00284}00284\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a263971a1af8088aff7449ac940e18abb}{move}}(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}},\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}},\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00285}00285\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00286}00286\ \ \ \ \ \textcolor{keywordtype}{double}\ sd\ =\ sqrt(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00287}00287\ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(atan2(\doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}},\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}})\ *\ 180\ /\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00288}00288\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}}\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(atan2(\doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}},\ sd)\ *\ 180\ /\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00289}00289\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00290}00290\ \ \ \ \ \textcolor{keywordflow}{while}\ (\doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}}\ -\/\ \doxymbox{\hyperlink{class_entity_af5d5d9b5109f83a3b6ee7ab2ae536abe}{xRotO}}\ <\ -\/180)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00291}00291\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_af5d5d9b5109f83a3b6ee7ab2ae536abe}{xRotO}}\ -\/=\ 360;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00292}00292\ \ \ \ \ \textcolor{keywordflow}{while}\ (\doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}}\ -\/\ \doxymbox{\hyperlink{class_entity_af5d5d9b5109f83a3b6ee7ab2ae536abe}{xRotO}}\ >=\ 180)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00293}00293\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_af5d5d9b5109f83a3b6ee7ab2ae536abe}{xRotO}}\ +=\ 360;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00294}00294\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00295}00295\ \ \ \ \ \textcolor{keywordflow}{while}\ (\doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ -\/\ \doxymbox{\hyperlink{class_entity_afe674281fdd06c9d0aa174ba4fb06f20}{yRotO}}\ <\ -\/180)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00296}00296\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_afe674281fdd06c9d0aa174ba4fb06f20}{yRotO}}\ -\/=\ 360;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00297}00297\ \ \ \ \ \textcolor{keywordflow}{while}\ (\doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ -\/\ \doxymbox{\hyperlink{class_entity_afe674281fdd06c9d0aa174ba4fb06f20}{yRotO}}\ >=\ 180)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_afe674281fdd06c9d0aa174ba4fb06f20}{yRotO}}\ +=\ 360;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00299}00299\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00300}00300\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}}\ =\ \doxymbox{\hyperlink{class_entity_af5d5d9b5109f83a3b6ee7ab2ae536abe}{xRotO}}\ +\ (\doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}}\ -\/\ \doxymbox{\hyperlink{class_entity_af5d5d9b5109f83a3b6ee7ab2ae536abe}{xRotO}})\ *\ 0.2f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00301}00301\ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ =\ \doxymbox{\hyperlink{class_entity_afe674281fdd06c9d0aa174ba4fb06f20}{yRotO}}\ +\ (\doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ -\/\ \doxymbox{\hyperlink{class_entity_afe674281fdd06c9d0aa174ba4fb06f20}{yRotO}})\ *\ 0.2f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00302}00302\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00303}00303\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00304}00304\ \ \ \ \ \textcolor{keywordtype}{float}\ inertia\ =\ 0.92f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00306}00306\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_aaea9f07bff66b8596dc389c0a5355bfe}{onGround}}\ ||\ \doxymbox{\hyperlink{class_entity_af57ae2c2933e4e237b4c9b3273bf0144}{horizontalCollision}})}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00307}00307\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ inertia\ =\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00309}00309\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00310}00310\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00311}00311\ \ \ \ \ \textcolor{keywordtype}{int}\ steps\ =\ 5;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00312}00312\ \ \ \ \ \textcolor{keywordtype}{double}\ waterPercentage\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00313}00313\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ steps;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00314}00314\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ y0\ =\ \doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>y0\ +\ (\doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>y1\ -\/\ \doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>y0)\ *\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +\ 0)\ /\ steps\ -\/\ 2\ /\ 16.0f\ +\ 2\ /\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ y1\ =\ \doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>y0\ +\ (\doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>y1\ -\/\ \doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>y0)\ *\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +\ 1)\ /\ steps\ -\/\ 2\ /\ 16.0f\ +\ 2\ /\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_a_a_b_b}{AABB}}\ *bb2\ =\ \doxymbox{\hyperlink{class_a_a_b_b_ab22b479280f48a137f53f08c142327d2}{AABB::newTemp}}(\doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>x0,\ y0,\ \doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>z0,\ \doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>x1,\ y1,\ \doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>z1);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>containsLiquid(bb2,\ \doxymbox{\hyperlink{class_material_aa1d1b91f1a63c0c25d309f2de3752a43}{Material::water}}))}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ waterPercentage\ +=\ 1.0\ /\ steps;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00322}00322\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00323}00323\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00324}00324\ \ \ \ \ \textcolor{keywordflow}{if}\ (waterPercentage\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00325}00325\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (nibble\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ nibble-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00329}00329\ \ \ \ \ \ \ \ \ \}\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ nibbleOdds\ =\ 500;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>isRainingAt(\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}),\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}})\ +\ 1,\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}})))\ nibbleOdds\ =\ 300;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00334}00334\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(nibbleOdds)\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nibble\ =\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(30)\ +\ 10;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00338}00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ -\/=\ 0.2f;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a08ed2a3c26d775b4698c873926a3a788}{playSound}}(\doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87a481be545687d077cf983adbce37be46a}{eSoundType\_RANDOM\_SPLASH}},\ 0.25f,\ 1\ +\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ -\/\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat())\ *\ 0.4f);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yt\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>y0));}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 1\ +\ \doxymbox{\hyperlink{class_entity_ac236e702a850201c2c4246cc3e6f4df2}{bbWidth}}\ *\ 20;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_entity_accbdd527336f87abd64091a5840adbae}{xo}}\ =\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ *\ 2\ -\/\ 1)\ *\ \doxymbox{\hyperlink{class_entity_ac236e702a850201c2c4246cc3e6f4df2}{bbWidth}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_entity_a8684b270bac6810e3e97dfa91fe04fe0}{zo}}\ =\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ *\ 2\ -\/\ 1)\ *\ \doxymbox{\hyperlink{class_entity_ac236e702a850201c2c4246cc3e6f4df2}{bbWidth}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>addParticle(\doxymbox{\hyperlink{_particle_types_8h_a837667734b04ac1e75501a7107342843a351c201090b7034d757228cb85c8629b}{eParticleType\_bubble}},\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ +\ \doxymbox{\hyperlink{class_entity_accbdd527336f87abd64091a5840adbae}{xo}},\ yt\ +\ 1,\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ +\ \doxymbox{\hyperlink{class_entity_a8684b270bac6810e3e97dfa91fe04fe0}{zo}},\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}},\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ -\/\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ *\ 0.2f,\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 1\ +\ \doxymbox{\hyperlink{class_entity_ac236e702a850201c2c4246cc3e6f4df2}{bbWidth}}\ *\ 20;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_entity_accbdd527336f87abd64091a5840adbae}{xo}}\ =\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ *\ 2\ -\/\ 1)\ *\ \doxymbox{\hyperlink{class_entity_ac236e702a850201c2c4246cc3e6f4df2}{bbWidth}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_entity_a8684b270bac6810e3e97dfa91fe04fe0}{zo}}\ =\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ *\ 2\ -\/\ 1)\ *\ \doxymbox{\hyperlink{class_entity_ac236e702a850201c2c4246cc3e6f4df2}{bbWidth}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>addParticle(\doxymbox{\hyperlink{_particle_types_8h_a837667734b04ac1e75501a7107342843a81b94d0ad4d7bc0a5dcfe574186014d3}{eParticleType\_splash}},\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ +\ \doxymbox{\hyperlink{class_entity_accbdd527336f87abd64091a5840adbae}{xo}},\ yt\ +\ 1,\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ +\ \doxymbox{\hyperlink{class_entity_a8684b270bac6810e3e97dfa91fe04fe0}{zo}},\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}},\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}},\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00355}00355\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00356}00356\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00357}00357\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00358}00358\ \ \ \ \ \textcolor{keywordflow}{if}\ (nibble\ >\ 0)\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00359}00359\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ -\/=\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ *\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ *\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ *\ 0.2;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00361}00361\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00362}00362\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00363}00363\ \ \ \ \ \textcolor{keywordtype}{double}\ bob\ =\ waterPercentage\ *\ 2\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00364}00364\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ +=\ 0.04f\ *\ bob;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00365}00365\ \ \ \ \ \textcolor{keywordflow}{if}\ (waterPercentage\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00366}00366\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ inertia\ *=\ 0.9;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ *=\ 0.8;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00369}00369\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00371}00371\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ *=\ inertia;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00372}00372\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ *=\ inertia;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00373}00373\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ *=\ inertia;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00374}00374\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00375}00375\ \ \ \ \ \doxymbox{\hyperlink{class_entity_ae5a85d03ef139cb9c96480ac52ace729}{setPos}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00376}00376\ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00377}00377\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00378}\doxymbox{\hyperlink{class_fishing_hook_aa34990ded0a0f90316130086b54fa052}{00378}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_fishing_hook_aa34990ded0a0f90316130086b54fa052}{FishingHook::addAdditonalSaveData}}(\doxymbox{\hyperlink{class_compound_tag}{CompoundTag}}\ *tag)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00379}00379\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00380}00380\ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a93367309683beae51b08c87c11123370}{putShort}}(L\textcolor{stringliteral}{"{}xTile"{}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{short}\textcolor{keyword}{>}(xTile));}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00381}00381\ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a93367309683beae51b08c87c11123370}{putShort}}(L\textcolor{stringliteral}{"{}yTile"{}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{short}\textcolor{keyword}{>}(yTile));}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00382}00382\ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a93367309683beae51b08c87c11123370}{putShort}}(L\textcolor{stringliteral}{"{}zTile"{}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{short}\textcolor{keyword}{>}(zTile));}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00383}00383\ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a9f3f70226497e85a53ec696c9852cd6e}{putByte}}(L\textcolor{stringliteral}{"{}inTile"{}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(lastTile));}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00384}00384\ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a9f3f70226497e85a53ec696c9852cd6e}{putByte}}(L\textcolor{stringliteral}{"{}shake"{}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_fishing_hook_a102bbf4399dd0f97b9f268484d18a3c8}{shakeTime}}));}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00385}00385\ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a9f3f70226497e85a53ec696c9852cd6e}{putByte}}(L\textcolor{stringliteral}{"{}inGround"{}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(inGround\ ?\ 1\ :\ 0));}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00386}00386\ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00387}00387\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00388}\doxymbox{\hyperlink{class_fishing_hook_a158a6d1e04c8ba7e3be90a80ff65faab}{00388}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_fishing_hook_a158a6d1e04c8ba7e3be90a80ff65faab}{FishingHook::readAdditionalSaveData}}(\doxymbox{\hyperlink{class_compound_tag}{CompoundTag}}\ *tag)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00389}00389\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00390}00390\ \ \ \ \ xTile\ =\ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a2483e673f8b7ad56d9fa4992f50199ad}{getShort}}(L\textcolor{stringliteral}{"{}xTile"{}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00391}00391\ \ \ \ \ yTile\ =\ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a2483e673f8b7ad56d9fa4992f50199ad}{getShort}}(L\textcolor{stringliteral}{"{}yTile"{}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00392}00392\ \ \ \ \ zTile\ =\ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a2483e673f8b7ad56d9fa4992f50199ad}{getShort}}(L\textcolor{stringliteral}{"{}zTile"{}});}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00393}00393\ \ \ \ \ lastTile\ =\ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a008486da946a4c2535b08029b8e950ee}{getByte}}(L\textcolor{stringliteral}{"{}inTile"{}})\ \&\ 0xff;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00394}00394\ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_a102bbf4399dd0f97b9f268484d18a3c8}{shakeTime}}\ =\ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a008486da946a4c2535b08029b8e950ee}{getByte}}(L\textcolor{stringliteral}{"{}shake"{}})\ \&\ 0xff;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00395}00395\ \ \ \ \ inGround\ =\ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a008486da946a4c2535b08029b8e950ee}{getByte}}(L\textcolor{stringliteral}{"{}inGround"{}})\ ==\ 1;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00396}00396\ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00397}00397\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00398}\doxymbox{\hyperlink{class_fishing_hook_a7f150cc56e568e81d9a9791f53ec87fa}{00398}}\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_fishing_hook_a7f150cc56e568e81d9a9791f53ec87fa}{FishingHook::getShadowHeightOffs}}()}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00399}00399\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00400}00400\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00401}00401\ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00402}00402\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00403}\doxymbox{\hyperlink{class_fishing_hook_af91ad222e60ac41142b23432d9034830}{00403}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_fishing_hook_af91ad222e60ac41142b23432d9034830}{FishingHook::retrieve}}()}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00404}00404\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00405}00405\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>isClientSide)\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00406}00406\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00407}00407\ \ \ \ \ \textcolor{keywordtype}{int}\ dmg\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00408}00408\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_fishing_hook_a863d9ef1657ac4b2a91a06c612a0feb3}{hookedIn}}\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00409}00409\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00410}00410\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xa\ =\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>x\ -\/\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00411}00411\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ ya\ =\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>y\ -\/\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00412}00412\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ za\ =\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>z\ -\/\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00413}00413\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00414}00414\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dist\ =\ sqrt(xa\ *\ xa\ +\ ya\ *\ ya\ +\ za\ *\ za);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00415}00415\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ speed\ =\ 0.1;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00416}00416\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_a863d9ef1657ac4b2a91a06c612a0feb3}{hookedIn}}-\/>xd\ +=\ xa\ *\ speed;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00417}00417\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_a863d9ef1657ac4b2a91a06c612a0feb3}{hookedIn}}-\/>yd\ +=\ ya\ *\ speed\ +\ sqrt(dist)\ *\ 0.08;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00418}00418\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_a863d9ef1657ac4b2a91a06c612a0feb3}{hookedIn}}-\/>zd\ +=\ za\ *\ speed;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00419}00419\ \ \ \ \ \ \ \ \ dmg\ =\ 3;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00420}00420\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00421}00421\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (nibble\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00422}00422\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00423}00423\ \ \ \ \ \ \ \ \ shared\_ptr<ItemEntity>\ ie\ =\ std::make\_shared<ItemEntity>(this-\/>\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{Entity::level}},\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}},\ shared\_ptr<ItemInstance>(\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_instance}{ItemInstance}}(\doxymbox{\hyperlink{class_item_af96b0c8a220c3dec15e50faff2a8b78c}{Item::fish\_raw}})));}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00424}00424\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xa\ =\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>x\ -\/\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00425}00425\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ ya\ =\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>y\ -\/\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00426}00426\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ za\ =\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>z\ -\/\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00427}00427\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00428}00428\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dist\ =\ sqrt(xa\ *\ xa\ +\ ya\ *\ ya\ +\ za\ *\ za);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00429}00429\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ speed\ =\ 0.1;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00430}00430\ \ \ \ \ \ \ \ \ ie-\/>Entity::xd\ =\ xa\ *\ speed;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00431}00431\ \ \ \ \ \ \ \ \ ie-\/>Entity::yd\ =\ ya\ *\ speed\ +\ sqrt(dist)\ *\ 0.08;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00432}00432\ \ \ \ \ \ \ \ \ ie-\/>Entity::zd\ =\ za\ *\ speed;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00433}00433\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>addEntity(ie);}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00434}00434\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>level-\/>addEntity(std::make\_shared<ExperienceOrb>(\doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>level,\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>x,\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>y\ +\ 0.5f,\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>z\ +\ 0.5f,\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(6)\ +\ 1));\ \textcolor{comment}{//\ 4J\ Stu\ brought\ forward\ from\ 1.4}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00435}00435\ \ \ \ \ \ \ \ \ dmg\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00436}00436\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00437}00437\ \ \ \ \ \textcolor{keywordflow}{if}\ (inGround)\ dmg\ =\ 2;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00438}00438\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00439}00439\ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_aae71dd2b21c94c6db5497914ef6bdf31}{remove}}();}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00440}00440\ \ \ \ \ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>fishing\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00441}00441\ \ \ \ \ \textcolor{keywordflow}{return}\ dmg;}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00442}00442\ \}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00443}00443\ }
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00444}00444\ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Brought\ forward\ from\ 1.4}}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00445}\doxymbox{\hyperlink{class_fishing_hook_aae71dd2b21c94c6db5497914ef6bdf31}{00445}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_fishing_hook_aae71dd2b21c94c6db5497914ef6bdf31}{FishingHook::remove}}()}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00446}00446\ \{}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00447}00447\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa84c32a5d1baceccefec62568edc0a4f}{Entity::remove}}();}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00448}00448\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}\ !=\ \textcolor{keyword}{nullptr})\ \doxymbox{\hyperlink{class_fishing_hook_ab4d9cb92b5643ff66176d8375e7d189c}{owner}}-\/>fishing\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_fishing_hook_8cpp_source_l00449}00449\ \}}
+
+\end{DoxyCode}

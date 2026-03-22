@@ -1,0 +1,563 @@
+\doxysection{Stats.\+cpp}
+\hypertarget{_stats_8cpp_source}{}\label{_stats_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/Stats.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/Stats.cpp}}
+\doxymbox{\hyperlink{_stats_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8locale_8h}{net.minecraft.locale.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8tile_8h}{net.minecraft.world.level.tile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8h}{net.minecraft.world.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8item_8h}{net.minecraft.world.entity.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8crafting_8h}{net.minecraft.world.item.crafting.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_achievements_8h}{Achievements.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_item_stat_8h}{ItemStat.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_general_stat_8h}{GeneralStat.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_stats_8h}{Stats.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_stats_counter_8h}{..\(\backslash\)Minecraft.Client\(\backslash\)StatsCounter.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00013}00013\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ Stats::BLOCKS\_MINED\_OFFSET\ =\ 0x1000000;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00014}00014\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ Stats::ITEMS\_COLLECTED\_OFFSET\ =\ 0x1010000;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00015}00015\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ Stats::ITEMS\_CRAFTED\_OFFSET\ =\ 0x1020000;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00016}00016\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ Stats::ADDITIONAL\_STATS\_OFFSET\ =\ 0x5010000;\ \textcolor{comment}{//\ Needs\ to\ be\ higher\ than\ Achievements::ACHIEVEMENT\_OFFSET\ =\ 0x500000;}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00018}00018\ unordered\_map<int,\ Stat*>*\ \doxymbox{\hyperlink{class_stats_a99dad1b2e369e948524d1f5914a5f9ed}{Stats::statsById}}\ =\ \textcolor{keyword}{new}\ unordered\_map<int,\ Stat*>;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00020}00020\ vector<Stat\ *>\ *\doxymbox{\hyperlink{class_stats_a51027e940831012317b3d07cdacde6f2}{Stats::all}}\ =\ \textcolor{keyword}{new}\ vector<Stat\ *>;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00021}00021\ vector<Stat\ *>\ *\doxymbox{\hyperlink{class_stats_a5afc3d256af81305a02e47f9c1e90eb8}{Stats::generalStats}}\ =\ \textcolor{keyword}{new}\ vector<Stat\ *>;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00022}00022\ vector<ItemStat\ *>\ *\doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{Stats::blocksMinedStats}}\ =\ \textcolor{keyword}{new}\ vector<ItemStat\ *>;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00023}00023\ vector<ItemStat\ *>\ *\doxymbox{\hyperlink{class_stats_ac7dde436ef802bf390e16b1089f43645}{Stats::itemsCollectedStats}}\ =\ \textcolor{keyword}{new}\ vector<ItemStat\ *>;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00024}00024\ vector<ItemStat\ *>\ *\doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{Stats::itemsCraftedStats}}\ =\ \textcolor{keyword}{new}\ vector<ItemStat\ *>;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00026}00026\ \textcolor{preprocessor}{\#if\ (defined\ \_EXTENDED\_ACHIEVEMENTS)\ \&\&\ (!defined\ \_DURANGO)}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00027}00027\ vector<ItemStat\ *>\ *Stats::blocksPlacedStats\ =\ \textcolor{keyword}{new}\ vector<ItemStat\ *>;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00028}00028\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00030}00030\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_ad88af9034fbde292e724ac585455371a}{Stats::walkOneM}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00031}00031\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a5cd6aa0ae85a422cc5b6dd1880f3ad48}{Stats::swimOneM}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00032}00032\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a1afb0d0907255e7a3ea261e343ae5e01}{Stats::fallOneM}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00033}00033\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a890fabec7dcbd5e42f22227d120554a7}{Stats::climbOneM}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00034}00034\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_af5276b7b477a9dfc41b97ccc32074b67}{Stats::minecartOneM}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00035}00035\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a713f46878b592751ec7b907f38a66c1f}{Stats::boatOneM}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00036}00036\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a16676ee7f922251db14e422967c37413}{Stats::pigOneM}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00037}00037\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_ae09504c35e09490f033b437d03e22c37}{Stats::portalsCreated}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00038}00038\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a2302a6e567e01f3578728404f6b4d8bf}{Stats::cowsMilked}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00039}00039\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a23f97eefe274c888dd6e8d3bdf4d2e6b}{Stats::netherLavaCollected}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00040}00040\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a566b7f899703a3bb6443165ea35a6d7e}{Stats::killsZombie}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00041}00041\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_abb65aa46d474bce6399a6eabbbf9125a}{Stats::killsSkeleton}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00042}00042\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a22b1ab951dbe1db410ac47908a8d68d9}{Stats::killsCreeper}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00043}00043\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_aa2e093642178ef7b5cae8384d5714d69}{Stats::killsSpider}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00044}00044\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a0d364e8ecb0e4eec57c87152e1d76534}{Stats::killsSpiderJockey}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00045}00045\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a088b37082f30b498320a8edf8d18725c}{Stats::killsZombiePigman}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00046}00046\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_af6ae3313467c4f9cfaa34a699bdc8a7f}{Stats::killsSlime}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00047}00047\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_ad450f834ff5c1957649fce68aedac97f}{Stats::killsGhast}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00048}00048\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a3d7d1ec4a51c6bda6b876c26c10e1282}{Stats::killsNetherZombiePigman}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00050}00050\ \textcolor{comment}{//\ 4J\ :\ WESTY\ :\ Added\ for\ new\ achievements.}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00051}00051\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_ad90ca3a035e0b0142668d0df5c63a39e}{Stats::befriendsWolf}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00052}00052\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a3e657a60f4fd15a3925fd36b2f4ec5f5}{Stats::totalBlocksMined}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00053}00053\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a2992727ecafa6ebec7a1fd89df7df066}{Stats::timePlayed}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00055}00055\ \doxymbox{\hyperlink{_array_with_length_8h_a410847c0f025aa12952a3ac6e32d43d5}{StatArray}}\ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{Stats::blocksMined}};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00056}00056\ \doxymbox{\hyperlink{_array_with_length_8h_a410847c0f025aa12952a3ac6e32d43d5}{StatArray}}\ \doxymbox{\hyperlink{class_stats_a76d7dfe68c5eec41252308a443f15286}{Stats::itemsCollected}};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00057}00057\ \doxymbox{\hyperlink{_array_with_length_8h_a410847c0f025aa12952a3ac6e32d43d5}{StatArray}}\ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{Stats::itemsCrafted}};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00059}00059\ \textcolor{preprocessor}{\#if\ (defined\ \_EXTENDED\_ACHIEVEMENTS)\ \&\&\ (!defined\ \_DURANGO)}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00060}00060\ \doxymbox{\hyperlink{_array_with_length_8h_a410847c0f025aa12952a3ac6e32d43d5}{StatArray}}\ Stats::blocksPlaced;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00061}00061\ \doxymbox{\hyperlink{_array_with_length_8h_a410847c0f025aa12952a3ac6e32d43d5}{StatArray}}\ Stats::rainbowCollection;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00062}00062\ \doxymbox{\hyperlink{_array_with_length_8h_a410847c0f025aa12952a3ac6e32d43d5}{StatArray}}\ Stats::biomesVisisted;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00063}00063\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00065}00065\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a74e4e8753b1d5b49f9c4ec57eecd1713}{Stats::killsEnderdragon}}\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ The\ number\ of\ times\ this\ player\ has\ dealt\ the\ killing\ blow\ to\ the\ Enderdragon}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00066}00066\ \doxymbox{\hyperlink{class_stat}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a660464e84151d1a821ac1ac725cad302}{Stats::completeTheEnd}}\ =\ \textcolor{keyword}{nullptr};\ \textcolor{comment}{//\ The\ number\ of\ times\ this\ player\ has\ been\ present\ when\ the\ Enderdragon\ has\ died}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00068}\doxymbox{\hyperlink{class_stats_a9235b06b502ed61a144f0701fad2720f}{00068}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_stats_a9235b06b502ed61a144f0701fad2720f}{Stats::staticCtor}}()}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00069}00069\ \{}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00070}00070\ \ \ \ \ \doxymbox{\hyperlink{class_stats_ad88af9034fbde292e724ac585455371a}{Stats::walkOneM}}\ \ \ \ \ \ \ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2000,\ L\textcolor{stringliteral}{"{}stat.walkOneM"{}},\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_stat_formatter}{StatFormatter}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_stat_a437e10b7d60e816d9fed2e44e0e3a4d3}{Stat::distanceFormatter}})))-\/>setAwardLocallyOnly()-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00071}00071\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5cd6aa0ae85a422cc5b6dd1880f3ad48}{Stats::swimOneM}}\ \ \ \ \ \ \ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2001,\ L\textcolor{stringliteral}{"{}stat.swimOneM"{}},\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_stat_formatter}{StatFormatter}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_stat_a437e10b7d60e816d9fed2e44e0e3a4d3}{Stat::distanceFormatter}})))-\/>setAwardLocallyOnly()-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00072}00072\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1afb0d0907255e7a3ea261e343ae5e01}{Stats::fallOneM}}\ \ \ \ \ \ \ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2002,\ L\textcolor{stringliteral}{"{}stat.fallOneM"{}},\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_stat_formatter}{StatFormatter}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_stat_a437e10b7d60e816d9fed2e44e0e3a4d3}{Stat::distanceFormatter}})))-\/>setAwardLocallyOnly()-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00073}00073\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a890fabec7dcbd5e42f22227d120554a7}{Stats::climbOneM}}\ \ \ \ \ \ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2003,\ L\textcolor{stringliteral}{"{}stat.climbOneM"{}},\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_stat_formatter}{StatFormatter}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_stat_a437e10b7d60e816d9fed2e44e0e3a4d3}{Stat::distanceFormatter}})))-\/>setAwardLocallyOnly()-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00074}00074\ \ \ \ \ \doxymbox{\hyperlink{class_stats_af5276b7b477a9dfc41b97ccc32074b67}{Stats::minecartOneM}}\ \ \ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2004,\ L\textcolor{stringliteral}{"{}stat.minecartOneM"{}},\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_stat_formatter}{StatFormatter}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_stat_a437e10b7d60e816d9fed2e44e0e3a4d3}{Stat::distanceFormatter}})))-\/>setAwardLocallyOnly()-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00075}00075\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a713f46878b592751ec7b907f38a66c1f}{Stats::boatOneM}}\ \ \ \ \ \ \ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2005,\ L\textcolor{stringliteral}{"{}stat.boatOneM"{}},\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_stat_formatter}{StatFormatter}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_stat_a437e10b7d60e816d9fed2e44e0e3a4d3}{Stat::distanceFormatter}})))-\/>setAwardLocallyOnly()-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00076}00076\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a16676ee7f922251db14e422967c37413}{Stats::pigOneM}}\ \ \ \ \ \ \ \ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2006,\ L\textcolor{stringliteral}{"{}stat.pigOneM"{}},\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_stat_formatter}{StatFormatter}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_stat_a437e10b7d60e816d9fed2e44e0e3a4d3}{Stat::distanceFormatter}})))-\/>setAwardLocallyOnly()-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00077}00077\ \ \ \ \ \doxymbox{\hyperlink{class_stats_ae09504c35e09490f033b437d03e22c37}{Stats::portalsCreated}}\ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2007,\ L\textcolor{stringliteral}{"{}stat.portalsUsed"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00078}00078\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a2302a6e567e01f3578728404f6b4d8bf}{Stats::cowsMilked}}\ \ \ \ \ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2008,\ L\textcolor{stringliteral}{"{}stat.cowsMilked"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00079}00079\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a23f97eefe274c888dd6e8d3bdf4d2e6b}{Stats::netherLavaCollected}}\ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2009,\ L\textcolor{stringliteral}{"{}stat.netherLavaCollected"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00080}00080\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a566b7f899703a3bb6443165ea35a6d7e}{Stats::killsZombie}}\ \ \ \ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2010,\ L\textcolor{stringliteral}{"{}stat.killsZombie"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00081}00081\ \ \ \ \ \doxymbox{\hyperlink{class_stats_abb65aa46d474bce6399a6eabbbf9125a}{Stats::killsSkeleton}}\ \ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2011,\ L\textcolor{stringliteral}{"{}stat.killsSkeleton"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00082}00082\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a22b1ab951dbe1db410ac47908a8d68d9}{Stats::killsCreeper}}\ \ \ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2012,\ L\textcolor{stringliteral}{"{}stat.killsCreeper"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00083}00083\ \ \ \ \ \doxymbox{\hyperlink{class_stats_aa2e093642178ef7b5cae8384d5714d69}{Stats::killsSpider}}\ \ \ \ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2013,\ L\textcolor{stringliteral}{"{}stat.killsSpider"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00084}00084\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a0d364e8ecb0e4eec57c87152e1d76534}{Stats::killsSpiderJockey}}\ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2014,\ L\textcolor{stringliteral}{"{}stat.killsSpiderJockey"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00085}00085\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a088b37082f30b498320a8edf8d18725c}{Stats::killsZombiePigman}}\ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2015,\ L\textcolor{stringliteral}{"{}stat.killsZombiePigman"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00086}00086\ \ \ \ \ \doxymbox{\hyperlink{class_stats_af6ae3313467c4f9cfaa34a699bdc8a7f}{Stats::killsSlime}}\ \ \ \ \ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2016,\ L\textcolor{stringliteral}{"{}stat.killsSlime"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00087}00087\ \ \ \ \ \doxymbox{\hyperlink{class_stats_ad450f834ff5c1957649fce68aedac97f}{Stats::killsGhast}}\ \ \ \ \ \ \ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2017,\ L\textcolor{stringliteral}{"{}stat.killsGhast"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00088}00088\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a3d7d1ec4a51c6bda6b876c26c10e1282}{Stats::killsNetherZombiePigman}}\ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2018,\ L\textcolor{stringliteral}{"{}stat.killsNetherZombiePigman"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00090}00090\ \ \ \ \ \textcolor{comment}{//\ 4J\ :\ WESTY\ :\ Added\ for\ new\ achievements.}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00091}00091\ \ \ \ \ \doxymbox{\hyperlink{class_stats_ad90ca3a035e0b0142668d0df5c63a39e}{Stats::befriendsWolf}}\ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2019,\ L\textcolor{stringliteral}{"{}stat.befriendsWolf"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00092}00092\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a3e657a60f4fd15a3925fd36b2f4ec5f5}{Stats::totalBlocksMined}}\ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2020,\ L\textcolor{stringliteral}{"{}stat.totalBlocksMined"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00094}00094\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ don't\ want\ the\ time\ played\ going\ to\ the\ server}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00095}00095\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a2992727ecafa6ebec7a1fd89df7df066}{Stats::timePlayed}}\ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(2021,\ L\textcolor{stringliteral}{"{}stat.timePlayed"{}}))-\/>setAwardLocallyOnly()-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00097}00097\ \textcolor{comment}{//\ WARNING:\ NO\ NEW\ STATS\ CAN\ BE\ ADDED\ HERE}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00098}00098\ \textcolor{comment}{//\ These\ stats\ are\ directly\ followed\ by\ the\ achievemnts\ in\ the\ profile\ data,\ so\ cannot\ be\ changed\ without\ migrating\ the\ profile\ data}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00100}00100\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a0cfc20b679ef44cbb1e1f6f6ff50f698}{buildBlockStats}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00102}00102\ \ \ \ \ Achievements::init();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00103}00103\ \ \ \ \ Achievements::staticCtor();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00105}00105\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Added\ this\ function\ to\ allow\ us\ to\ add\ news\ stats\ from\ TU9\ onwards}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00106}00106\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1500845648fd9d66a6d6145f5845cc58}{buildAdditionalStats}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00107}00107\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00109}\doxymbox{\hyperlink{class_stats_a18ae30cf88fc793d1e2352215d60200f}{00109}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_stats_a18ae30cf88fc793d1e2352215d60200f}{Stats::init}}()}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00110}00110\ \{}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00111}00111\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00113}00113\ \textcolor{keywordtype}{bool}\ Stats::blockStatsLoaded\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00115}00115\ \textcolor{comment}{//\ WARNING:\ NO\ NEW\ STATS\ CAN\ BE\ ADDED\ HERE}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00116}00116\ \textcolor{comment}{//\ These\ stats\ are\ directly\ followed\ by\ the\ achievemnts\ in\ the\ profile\ data,\ so\ cannot\ be\ changed\ without\ migrating\ the\ profile\ data}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00117}\doxymbox{\hyperlink{class_stats_a0cfc20b679ef44cbb1e1f6f6ff50f698}{00117}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_stats_a0cfc20b679ef44cbb1e1f6f6ff50f698}{Stats::buildBlockStats}}()}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00118}00118\ \{}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00119}00119\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a410847c0f025aa12952a3ac6e32d43d5}{StatArray}}(32000);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00121}00121\ \ \ \ \ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}*\ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 0,\ L\textcolor{stringliteral}{"{}mineBlock.dirt"{}},\ \doxymbox{\hyperlink{class_tile_ad1302a4b9b129d2fa56e95fbd6de6a28}{Tile::dirt}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00122}00122\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00123}00123\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_ad1302a4b9b129d2fa56e95fbd6de6a28}{Tile::dirt}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00124}00124\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_a4599ca9d011e7984afb28c9e37ac36c9}{Tile::grass}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00125}00125\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_adb88309c8ca015f6cca7aa56df2e5460}{Tile::farmland}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00126}00126\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00128}00128\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 1,\ L\textcolor{stringliteral}{"{}mineBlock.stone"{}},\ \doxymbox{\hyperlink{class_tile_a980f1a3623063af982b960fa58ae778c}{Tile::cobblestone}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00129}00129\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00130}00130\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_a980f1a3623063af982b960fa58ae778c}{Tile::cobblestone}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00131}00131\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00133}00133\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 2,\ L\textcolor{stringliteral}{"{}mineBlock.sand"{}},\ \doxymbox{\hyperlink{class_tile_af3302ddd72c103a3f216b999485560e9}{Tile::sand}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00134}00134\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00135}00135\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_af3302ddd72c103a3f216b999485560e9}{Tile::sand}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00136}00136\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00138}00138\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 3,\ L\textcolor{stringliteral}{"{}mineBlock.cobblestone"{}},\ \doxymbox{\hyperlink{class_tile_abc39fb485426c2923bd2c6ce15bd2c6f}{Tile::stone}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00139}00139\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00140}00140\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_abc39fb485426c2923bd2c6ce15bd2c6f}{Tile::stone}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00141}00141\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00143}00143\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 4,\ L\textcolor{stringliteral}{"{}mineBlock.gravel"{}},\ \doxymbox{\hyperlink{class_tile_ae251b670a518d418c7ad776f0a6739cd}{Tile::gravel}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00144}00144\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00145}00145\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_ae251b670a518d418c7ad776f0a6739cd}{Tile::gravel}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00146}00146\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00148}00148\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 5,\ L\textcolor{stringliteral}{"{}mineBlock.clay"{}},\ \doxymbox{\hyperlink{class_tile_a50a903ece6ddd1ba6e49b1cec1d8ed71}{Tile::clay}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00149}00149\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00150}00150\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_a50a903ece6ddd1ba6e49b1cec1d8ed71}{Tile::clay}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00151}00151\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00153}00153\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 6,\ L\textcolor{stringliteral}{"{}mineBlock.obsidian"{}},\ \doxymbox{\hyperlink{class_tile_a028902a8e3fc9a0cfdf71118a26108bd}{Tile::obsidian}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00154}00154\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00155}00155\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_a028902a8e3fc9a0cfdf71118a26108bd}{Tile::obsidian}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00156}00156\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00158}00158\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 7,\ L\textcolor{stringliteral}{"{}mineBlock.coal"{}},\ \doxymbox{\hyperlink{class_tile_aba372d8cabf2fb6f2a6afa12c567a323}{Tile::coalOre}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00159}00159\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00160}00160\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_aba372d8cabf2fb6f2a6afa12c567a323}{Tile::coalOre}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00161}00161\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00163}00163\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 8,\ L\textcolor{stringliteral}{"{}mineBlock.iron"{}},\ \doxymbox{\hyperlink{class_tile_a1c161d8c1772f4f8e6e961babf7ab96f}{Tile::ironOre}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00164}00164\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00165}00165\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_a1c161d8c1772f4f8e6e961babf7ab96f}{Tile::ironOre}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00166}00166\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00168}00168\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 9,\ L\textcolor{stringliteral}{"{}mineBlock.gold"{}},\ \doxymbox{\hyperlink{class_tile_a148356f62ad8eb3d097bd9c3df3f2531}{Tile::goldOre}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00169}00169\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00170}00170\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_a148356f62ad8eb3d097bd9c3df3f2531}{Tile::goldOre}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00171}00171\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00173}00173\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 10,\ L\textcolor{stringliteral}{"{}mineBlock.diamond"{}},\ \doxymbox{\hyperlink{class_tile_a072507fea3e07194183b401ead682d8f}{Tile::diamondOre}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00174}00174\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00175}00175\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_a072507fea3e07194183b401ead682d8f}{Tile::diamondOre}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00176}00176\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00178}00178\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 11,\ L\textcolor{stringliteral}{"{}mineBlock.redstone"{}},\ \doxymbox{\hyperlink{class_tile_a947f7c139377b448457e885e075ad3f2}{Tile::redStoneOre}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00179}00179\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00180}00180\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_a947f7c139377b448457e885e075ad3f2}{Tile::redStoneOre}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00181}00181\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_a963ace270417442d517caeaa58bfe869}{Tile::redStoneOre\_lit}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00182}00182\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00184}00184\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 12,\ L\textcolor{stringliteral}{"{}mineBlock.lapisLazuli"{}},\ \doxymbox{\hyperlink{class_tile_a877d1cd9e5a86c547f3858e897d0fbdb}{Tile::lapisOre}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00185}00185\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00186}00186\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_a877d1cd9e5a86c547f3858e897d0fbdb}{Tile::lapisOre}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00187}00187\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00188}00188\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00189}00189\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 13,\ L\textcolor{stringliteral}{"{}mineBlock.netherrack"{}},\ \doxymbox{\hyperlink{class_tile_a20f37e7bf6b68bff165bf1b9d0c4bd13}{Tile::netherRack}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00190}00190\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00191}00191\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_a20f37e7bf6b68bff165bf1b9d0c4bd13}{Tile::netherRack}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00192}00192\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00193}00193\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00194}00194\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 14,\ L\textcolor{stringliteral}{"{}mineBlock.soulSand"{}},\ \doxymbox{\hyperlink{class_tile_ad3f32a6b682ca498e49270fcbfcdc319}{Tile::soulsand}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00195}00195\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00196}00196\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_ad3f32a6b682ca498e49270fcbfcdc319}{Tile::soulsand}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00197}00197\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00199}00199\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 15,\ L\textcolor{stringliteral}{"{}mineBlock.glowstone"{}},\ \doxymbox{\hyperlink{class_tile_ab5ec573f7aa4c8c0122032c69833facd}{Tile::glowstone}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00200}00200\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00201}00201\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_ab5ec573f7aa4c8c0122032c69833facd}{Tile::glowstone}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00202}00202\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00203}00203\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00204}00204\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 16,\ L\textcolor{stringliteral}{"{}mineBlock.wood"{}},\ \doxymbox{\hyperlink{class_tile_aefea21959c949cad4ded569e9d620049}{Tile::treeTrunk}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00205}00205\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00206}00206\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_aefea21959c949cad4ded569e9d620049}{Tile::treeTrunk}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00207}00207\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00209}00209\ \textcolor{comment}{//\ WARNING:\ NO\ NEW\ STATS\ CAN\ BE\ ADDED\ HERE}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00210}00210\ \textcolor{comment}{//\ These\ stats\ are\ directly\ followed\ by\ the\ achievemnts\ in\ the\ profile\ data,\ so\ cannot\ be\ changed\ without\ migrating\ the\ profile\ data}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00213}00213\ \ \ \ \ blockStatsLoaded\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00214}00214\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a0598f7b236e4e1ac97ba6d8ca4d01eb0}{buildCraftableStats}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00215}00215\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00217}00217\ \textcolor{keywordtype}{bool}\ Stats::itemStatsLoaded\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00218}00218\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00219}\doxymbox{\hyperlink{class_stats_aabdc3978e9228b3071402e665625f245}{00219}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_stats_aabdc3978e9228b3071402e665625f245}{Stats::buildItemStats}}()}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00220}00220\ \{}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00221}00221\ \ \ \ \ itemStatsLoaded\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00222}00222\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a0598f7b236e4e1ac97ba6d8ca4d01eb0}{buildCraftableStats}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00223}00223\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00224}00224\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00225}00225\ \textcolor{keywordtype}{bool}\ Stats::craftableStatsLoaded\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00227}00227\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00228}00228\ \textcolor{comment}{//\ WARNING:\ NO\ NEW\ STATS\ CAN\ BE\ ADDED\ HERE}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00229}00229\ \textcolor{comment}{//\ These\ stats\ are\ directly\ followed\ by\ the\ achievemnts\ in\ the\ profile\ data,\ so\ cannot\ be\ changed\ without\ migrating\ the\ profile\ data}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00230}\doxymbox{\hyperlink{class_stats_a0598f7b236e4e1ac97ba6d8ca4d01eb0}{00230}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_stats_a0598f7b236e4e1ac97ba6d8ca4d01eb0}{Stats::buildCraftableStats}}()}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00231}00231\ \{}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00232}00232\ \ \ \ \ \textcolor{keywordflow}{if}\ (!blockStatsLoaded\ ||\ !itemStatsLoaded\ ||\ craftableStatsLoaded)}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00233}00233\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ still\ waiting\ for\ the\ JVM\ to\ load\ stuff}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \textcolor{comment}{//Or\ stats\ already\ loaded}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00237}00237\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00239}00239\ \ \ \ \ craftableStatsLoaded\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00241}00241\ \ \ \ \ \textcolor{comment}{//Collected\ stats}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00243}00243\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a76d7dfe68c5eec41252308a443f15286}{itemsCollected}}\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a410847c0f025aa12952a3ac6e32d43d5}{StatArray}}(32000);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00244}00244\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00245}00245\ \ \ \ \ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}*\ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_COLLECTED\_OFFSET\ +\ 0,\ L\textcolor{stringliteral}{"{}collectItem.egg"{}},\ \doxymbox{\hyperlink{class_item_a01b01426d315f20d9daa0e19894092ab}{Item::egg}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00246}00246\ \ \ \ \ \doxymbox{\hyperlink{class_stats_ac7dde436ef802bf390e16b1089f43645}{itemsCollectedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00247}00247\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a76d7dfe68c5eec41252308a443f15286}{itemsCollected}}[\doxymbox{\hyperlink{class_item_a01b01426d315f20d9daa0e19894092ab}{Item::egg}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00248}00248\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00249}00249\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00250}00250\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ The\ following\ stats\ were\ added\ as\ it\ was\ too\ easy\ to\ cheat\ the\ leaderboards\ by\ dropping\ and\ picking\ up\ these\ items}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00251}00251\ \ \ \ \ \textcolor{comment}{//\ They\ are\ now\ changed\ to\ mining\ the\ block\ which\ involves\ a\ tiny\ bit\ more\ effort}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00252}00252\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 18,\ L\textcolor{stringliteral}{"{}mineBlock.wheat"{}},\ \doxymbox{\hyperlink{class_tile_ad05214631b77c595534630f8cd5ace5f}{Tile::wheat\_Id}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00253}00253\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00254}00254\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_ad05214631b77c595534630f8cd5ace5f}{Tile::wheat\_Id}}]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00255}00255\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00256}00256\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00257}00257\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 19,\ L\textcolor{stringliteral}{"{}mineBlock.mushroom1"{}},\ \doxymbox{\hyperlink{class_tile_adce2cb9e4bc87888283f2c775adafb2a}{Tile::mushroom\_brown\_Id}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00258}00258\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00259}00259\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_adce2cb9e4bc87888283f2c775adafb2a}{Tile::mushroom\_brown\_Id}}]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00260}00260\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00262}00262\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(BLOCKS\_MINED\_OFFSET\ +\ 17,\ L\textcolor{stringliteral}{"{}mineBlock.sugar"{}},\ \doxymbox{\hyperlink{class_tile_ac58eb30d04a594751f01cc16b991a5ca}{Tile::reeds\_Id}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00263}00263\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00264}00264\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[\doxymbox{\hyperlink{class_tile_ac58eb30d04a594751f01cc16b991a5ca}{Tile::reeds\_Id}}]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00265}00265\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00266}00266\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00267}00267\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_COLLECTED\_OFFSET\ +\ 1,\ L\textcolor{stringliteral}{"{}collectItem.wheat"{}},\ \doxymbox{\hyperlink{class_item_a6e82c43903eeca6fbd00a539e30d5615}{Item::wheat}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00268}00268\ \ \ \ \ \doxymbox{\hyperlink{class_stats_ac7dde436ef802bf390e16b1089f43645}{itemsCollectedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00269}00269\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a76d7dfe68c5eec41252308a443f15286}{itemsCollected}}[\doxymbox{\hyperlink{class_item_a6e82c43903eeca6fbd00a539e30d5615}{Item::wheat}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00270}00270\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00271}00271\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00272}00272\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_COLLECTED\_OFFSET\ +\ 2,\ L\textcolor{stringliteral}{"{}collectItem.mushroom"{}},\ Tile::mushroom1-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00273}00273\ \ \ \ \ \doxymbox{\hyperlink{class_stats_ac7dde436ef802bf390e16b1089f43645}{itemsCollectedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00274}00274\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a76d7dfe68c5eec41252308a443f15286}{itemsCollected}}[Tile::mushroom1-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00275}00275\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a76d7dfe68c5eec41252308a443f15286}{itemsCollected}}[Tile::mushroom2-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00276}00276\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00278}00278\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_COLLECTED\_OFFSET\ +\ 3,\ L\textcolor{stringliteral}{"{}collectItem.sugarCane"{}},\ \doxymbox{\hyperlink{class_item_a4cce50d76bab95cab9f98fd8c054f910}{Item::reeds}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00279}00279\ \ \ \ \ \doxymbox{\hyperlink{class_stats_ac7dde436ef802bf390e16b1089f43645}{itemsCollectedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00280}00280\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a76d7dfe68c5eec41252308a443f15286}{itemsCollected}}[\doxymbox{\hyperlink{class_item_a4cce50d76bab95cab9f98fd8c054f910}{Item::reeds}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00281}00281\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00282}00282\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00284}00284\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_COLLECTED\_OFFSET\ +\ 4,\ L\textcolor{stringliteral}{"{}collectItem.pumpkin"{}},\ \doxymbox{\hyperlink{class_tile_abba9a17b3b1d1d80a881325b0351f840}{Tile::pumpkin}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00285}00285\ \ \ \ \ \doxymbox{\hyperlink{class_stats_ac7dde436ef802bf390e16b1089f43645}{itemsCollectedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00286}00286\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a76d7dfe68c5eec41252308a443f15286}{itemsCollected}}[\doxymbox{\hyperlink{class_tile_abba9a17b3b1d1d80a881325b0351f840}{Tile::pumpkin}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00287}00287\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a76d7dfe68c5eec41252308a443f15286}{itemsCollected}}[\doxymbox{\hyperlink{class_tile_ae6a67ab0a0bca8bfba94f49275324729}{Tile::litPumpkin}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00288}00288\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00289}00289\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00290}00290\ \ \ \ \ \textcolor{comment}{//Crafted\ stats}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00291}00291\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00292}00292\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a410847c0f025aa12952a3ac6e32d43d5}{StatArray}}(32000);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00293}00293\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00294}00294\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 0,\ L\textcolor{stringliteral}{"{}craftItem.plank"{}},\ \doxymbox{\hyperlink{class_tile_af4e5f14f0779eccc11b98aa20e2d9315}{Tile::wood}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00295}00295\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00296}00296\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_tile_af4e5f14f0779eccc11b98aa20e2d9315}{Tile::wood}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00297}00297\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00298}00298\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00299}00299\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 1,\ L\textcolor{stringliteral}{"{}craftItem.workbench"{}},\ \doxymbox{\hyperlink{class_tile_acb04599d6a697469831e4ee04eacf7d8}{Tile::workBench}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00300}00300\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00301}00301\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_tile_acb04599d6a697469831e4ee04eacf7d8}{Tile::workBench}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00302}00302\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00303}00303\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00304}00304\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 2,\ L\textcolor{stringliteral}{"{}craftItem.stick"{}},\ \doxymbox{\hyperlink{class_item_aabc23eee72eb148123a937470c6138b5}{Item::stick}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00305}00305\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00306}00306\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_aabc23eee72eb148123a937470c6138b5}{Item::stick}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00307}00307\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00308}00308\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00309}00309\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 3,\ L\textcolor{stringliteral}{"{}craftItem.woodenShovel"{}},\ \doxymbox{\hyperlink{class_item_a211ddbef8b2b3ad83d1028351744aea0}{Item::shovel\_wood}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00310}00310\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00311}00311\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a211ddbef8b2b3ad83d1028351744aea0}{Item::shovel\_wood}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00312}00312\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00314}00314\ \ \ \ \ \textcolor{comment}{//\ 4J\ :\ WESTY\ :\ Added\ for\ new\ achievements.}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00315}00315\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 4,\ L\textcolor{stringliteral}{"{}craftItem.woodenPickAxe"{}},\ \doxymbox{\hyperlink{class_item_a7cbb31849365f4748008f3da8af4336e}{Item::pickAxe\_wood}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00316}00316\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00317}00317\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a7cbb31849365f4748008f3da8af4336e}{Item::pickAxe\_wood}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00318}00318\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00319}00319\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00320}00320\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 5,\ L\textcolor{stringliteral}{"{}craftItem.stonePickAxe"{}},\ \doxymbox{\hyperlink{class_item_aa14fbef0e52f3160724b456b5d918cff}{Item::pickAxe\_stone}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00321}00321\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00322}00322\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_aa14fbef0e52f3160724b456b5d918cff}{Item::pickAxe\_stone}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00323}00323\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00324}00324\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00325}00325\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 6,\ L\textcolor{stringliteral}{"{}craftItem.ironPickAxe"{}},\ \doxymbox{\hyperlink{class_item_ac5dd7edbe5899174b2cc12acb010dd48}{Item::pickAxe\_iron}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00326}00326\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00327}00327\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_ac5dd7edbe5899174b2cc12acb010dd48}{Item::pickAxe\_iron}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00328}00328\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00329}00329\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00330}00330\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 7,\ L\textcolor{stringliteral}{"{}craftItem.diamondPickAxe"{}},\ \doxymbox{\hyperlink{class_item_a45b4c8febcc3a89b14773aa5a8128052}{Item::pickAxe\_diamond}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00331}00331\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00332}00332\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a45b4c8febcc3a89b14773aa5a8128052}{Item::pickAxe\_diamond}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00333}00333\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00334}00334\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00335}00335\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 8,\ L\textcolor{stringliteral}{"{}craftItem.goldPickAxe"{}},\ \doxymbox{\hyperlink{class_item_a070bb6b0a62099edfe6bf801f53a7813}{Item::pickAxe\_gold}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00336}00336\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00337}00337\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a070bb6b0a62099edfe6bf801f53a7813}{Item::pickAxe\_gold}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00338}00338\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00340}00340\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 9,\ L\textcolor{stringliteral}{"{}craftItem.stoneShovel"{}},\ \doxymbox{\hyperlink{class_item_a98d9c742d11e59c9c3fd667eb12fda0e}{Item::shovel\_stone}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00341}00341\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00342}00342\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a98d9c742d11e59c9c3fd667eb12fda0e}{Item::shovel\_stone}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00343}00343\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00344}00344\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00345}00345\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 10,\ L\textcolor{stringliteral}{"{}craftItem.ironShovel"{}},\ \doxymbox{\hyperlink{class_item_a9c1b1260d992f9e6b94915e5cd193142}{Item::shovel\_iron}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00346}00346\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00347}00347\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a9c1b1260d992f9e6b94915e5cd193142}{Item::shovel\_iron}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00348}00348\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00349}00349\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00350}00350\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 11,\ L\textcolor{stringliteral}{"{}craftItem.diamondShovel"{}},\ \doxymbox{\hyperlink{class_item_a4fed638d3740a956b29a94e30aeae2f6}{Item::shovel\_diamond}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00351}00351\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00352}00352\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a4fed638d3740a956b29a94e30aeae2f6}{Item::shovel\_diamond}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00353}00353\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00354}00354\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00355}00355\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 12,\ L\textcolor{stringliteral}{"{}craftItem.goldShovel"{}},\ \doxymbox{\hyperlink{class_item_a247ba992cd364fdb04ae5d1e7ce7e5d3}{Item::shovel\_gold}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00356}00356\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00357}00357\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a247ba992cd364fdb04ae5d1e7ce7e5d3}{Item::shovel\_gold}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00358}00358\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00359}00359\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00360}00360\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 13,\ L\textcolor{stringliteral}{"{}craftItem.woodenAxe"{}},\ \doxymbox{\hyperlink{class_item_aba13b94e8ddcf97cb70c50f1589db181}{Item::hatchet\_wood}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00361}00361\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00362}00362\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_aba13b94e8ddcf97cb70c50f1589db181}{Item::hatchet\_wood}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00363}00363\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00364}00364\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00365}00365\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 14,\ L\textcolor{stringliteral}{"{}craftItem.stoneAxe"{}},\ \doxymbox{\hyperlink{class_item_a7ba52354240ddb2ee415de991bcfb7af}{Item::hatchet\_stone}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00366}00366\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00367}00367\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a7ba52354240ddb2ee415de991bcfb7af}{Item::hatchet\_stone}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00368}00368\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00369}00369\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00370}00370\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 15,\ L\textcolor{stringliteral}{"{}craftItem.ironAxe"{}},\ \doxymbox{\hyperlink{class_item_a8f6dfab7b4ddd1373299d71fa566dd5f}{Item::hatchet\_iron}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00371}00371\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00372}00372\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a8f6dfab7b4ddd1373299d71fa566dd5f}{Item::hatchet\_iron}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00373}00373\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00374}00374\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00375}00375\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 16,\ L\textcolor{stringliteral}{"{}craftItem.diamondAxe"{}},\ \doxymbox{\hyperlink{class_item_a0d036666f3262c1025a3b2c85391ef58}{Item::hatchet\_diamond}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00376}00376\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00377}00377\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a0d036666f3262c1025a3b2c85391ef58}{Item::hatchet\_diamond}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00378}00378\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00379}00379\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00380}00380\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 17,\ L\textcolor{stringliteral}{"{}craftItem.goldAxe"{}},\ \doxymbox{\hyperlink{class_item_a7e88d82e805cfb2fdd63938d1ea897ed}{Item::hatchet\_gold}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00381}00381\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00382}00382\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a7e88d82e805cfb2fdd63938d1ea897ed}{Item::hatchet\_gold}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00383}00383\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00384}00384\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00385}00385\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 18,\ L\textcolor{stringliteral}{"{}craftItem.woodenHoe"{}},\ \doxymbox{\hyperlink{class_item_a7f6da60a2a1ea140f748adf51a4989e5}{Item::hoe\_wood}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00386}00386\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00387}00387\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a7f6da60a2a1ea140f748adf51a4989e5}{Item::hoe\_wood}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00388}00388\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00389}00389\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00390}00390\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 19,\ L\textcolor{stringliteral}{"{}craftItem.stoneHoe"{}},\ \doxymbox{\hyperlink{class_item_a4d513dc5b2f6cec82997d3e306bf08a1}{Item::hoe\_stone}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00391}00391\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00392}00392\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a4d513dc5b2f6cec82997d3e306bf08a1}{Item::hoe\_stone}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00393}00393\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00394}00394\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00395}00395\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 20,\ L\textcolor{stringliteral}{"{}craftItem.ironHoe"{}},\ \doxymbox{\hyperlink{class_item_a43428201eff3be77e9afa421adfe84cb}{Item::hoe\_iron}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00396}00396\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00397}00397\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a43428201eff3be77e9afa421adfe84cb}{Item::hoe\_iron}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00398}00398\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00399}00399\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00400}00400\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 21,\ L\textcolor{stringliteral}{"{}craftItem.diamondHoe"{}},\ \doxymbox{\hyperlink{class_item_a86d1c3bfecbceada07d7f11803bd8a60}{Item::hoe\_diamond}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00401}00401\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00402}00402\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a86d1c3bfecbceada07d7f11803bd8a60}{Item::hoe\_diamond}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00403}00403\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00405}00405\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 22,\ L\textcolor{stringliteral}{"{}craftItem.goldHoe"{}},\ \doxymbox{\hyperlink{class_item_a22a6cdda5a7db2cb2314c5d900ea9c3a}{Item::hoe\_gold}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00406}00406\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00407}00407\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a22a6cdda5a7db2cb2314c5d900ea9c3a}{Item::hoe\_gold}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00408}00408\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00409}00409\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00410}00410\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 23,\ L\textcolor{stringliteral}{"{}craftItem.glowstone"{}},\ \doxymbox{\hyperlink{class_tile_a9be5f19845abba0a486d7a48f9c0faed}{Tile::glowstone\_Id}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00411}00411\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00412}00412\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_tile_a9be5f19845abba0a486d7a48f9c0faed}{Tile::glowstone\_Id}}]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00413}00413\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00414}00414\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00415}00415\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 24,\ L\textcolor{stringliteral}{"{}craftItem.tnt"{}},\ \doxymbox{\hyperlink{class_tile_afd9365e5e18fe0633854bbb66d425db4}{Tile::tnt\_Id}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00416}00416\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00417}00417\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_tile_afd9365e5e18fe0633854bbb66d425db4}{Tile::tnt\_Id}}]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00418}00418\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00419}00419\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00420}00420\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 25,\ L\textcolor{stringliteral}{"{}craftItem.bowl"{}},\ \doxymbox{\hyperlink{class_item_a5da3538aada58d9e0f0843dced8c77bd}{Item::bowl}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00421}00421\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00422}00422\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a5da3538aada58d9e0f0843dced8c77bd}{Item::bowl}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00423}00423\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00424}00424\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00425}00425\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 26,\ L\textcolor{stringliteral}{"{}craftItem.bucket"{}},\ \doxymbox{\hyperlink{class_item_aa22b19839eef23c9a601195ab6168ad4}{Item::bucket\_empty}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00426}00426\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00427}00427\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_aa22b19839eef23c9a601195ab6168ad4}{Item::bucket\_empty}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00428}00428\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00429}00429\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00430}00430\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 27,\ L\textcolor{stringliteral}{"{}craftItem.flintAndSteel"{}},\ \doxymbox{\hyperlink{class_item_a797867a88835fb7b4c435ae3de59db31}{Item::flintAndSteel}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00431}00431\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00432}00432\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a797867a88835fb7b4c435ae3de59db31}{Item::flintAndSteel}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00433}00433\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00434}00434\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00435}00435\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 28,\ L\textcolor{stringliteral}{"{}craftItem.fishingRod"{}},\ \doxymbox{\hyperlink{class_item_ac395aea81e07279c56d4494bab8c4e73}{Item::fishingRod}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00436}00436\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00437}00437\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_ac395aea81e07279c56d4494bab8c4e73}{Item::fishingRod}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00438}00438\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00439}00439\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00440}00440\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 29,\ L\textcolor{stringliteral}{"{}craftItem.clock"{}},\ \doxymbox{\hyperlink{class_item_aa939972a03a19545287e4b3ea8d5b8ed}{Item::clock}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00441}00441\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00442}00442\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_aa939972a03a19545287e4b3ea8d5b8ed}{Item::clock}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00443}00443\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00444}00444\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00445}00445\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 30,\ L\textcolor{stringliteral}{"{}craftItem.compass"{}},\ \doxymbox{\hyperlink{class_item_a3da31b3b1b02b477bb52354814629b16}{Item::compass}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00446}00446\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00447}00447\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_a3da31b3b1b02b477bb52354814629b16}{Item::compass}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00448}00448\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00449}00449\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00450}00450\ \ \ \ \ newStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(ITEMS\_CRAFTED\_OFFSET\ +\ 31,\ L\textcolor{stringliteral}{"{}craftItem.map"{}},\ \doxymbox{\hyperlink{class_item_aeee00cd0673e952822347e34d6bb41e5}{Item::map}}-\/>\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00451}00451\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(newStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00452}00452\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[\doxymbox{\hyperlink{class_item_aeee00cd0673e952822347e34d6bb41e5}{Item::map}}-\/>id]\ =\ newStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00453}00453\ \ \ \ \ newStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00454}00454\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00455}00455\ \textcolor{comment}{//\ WARNING:\ NO\ NEW\ STATS\ CAN\ BE\ ADDED\ HERE}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00456}00456\ \textcolor{comment}{//\ These\ stats\ are\ directly\ followed\ by\ the\ achievemnts\ in\ the\ profile\ data,\ so\ cannot\ be\ changed\ without\ migrating\ the\ profile\ data}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00457}00457\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00458}00458\ \ \ \ \ \textcolor{comment}{//This\ sets\ up\ a\ static\ list\ of\ stat/leaderboard\ pairings,\ used\ to\ tell\ which\ leaderboards\ need\ an\ update}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00459}00459\ \ \ \ \ \doxymbox{\hyperlink{class_stats_counter_a93ca2d94b75cf1a02d6fdca2f33b30fb}{StatsCounter::setupStatBoards}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00460}00460\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00461}00461\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00462}00462\ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Added\ this\ function\ to\ allow\ us\ to\ add\ news\ stats\ from\ TU9\ onwards}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00463}\doxymbox{\hyperlink{class_stats_a1500845648fd9d66a6d6145f5845cc58}{00463}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_stats_a1500845648fd9d66a6d6145f5845cc58}{Stats::buildAdditionalStats}}()}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00464}00464\ \{}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00465}00465\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ =\ ADDITIONAL\_STATS\_OFFSET;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00466}00466\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00467}00467\ \ \ \ \ \textcolor{comment}{//\ The\ order\ of\ these\ stats\ should\ not\ be\ changed,\ as\ the\ map\ directly\ to\ bits\ in\ the\ profile\ data}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00468}00468\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00469}00469\ \ \ \ \ \textcolor{comment}{//\ The\ number\ of\ times\ this\ player\ has\ dealt\ the\ killing\ blow\ to\ the\ Enderdragon}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00470}00470\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a74e4e8753b1d5b49f9c4ec57eecd1713}{Stats::killsEnderdragon}}\ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}++,\ L\textcolor{stringliteral}{"{}stat.killsEnderdragon"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00471}00471\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00472}00472\ \ \ \ \ \textcolor{comment}{//\ The\ number\ of\ times\ this\ player\ has\ been\ present\ when\ the\ Enderdragon\ has\ died}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00473}00473\ \ \ \ \ \doxymbox{\hyperlink{class_stats_a660464e84151d1a821ac1ac725cad302}{Stats::completeTheEnd}}\ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}++,\ L\textcolor{stringliteral}{"{}stat.completeTheEnd"{}}))-\/>postConstruct();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00474}00474\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00475}00475\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00476}00476\ \textcolor{preprocessor}{\#if\ (defined\ \_EXTENDED\_ACHIEVEMENTS)\ \&\&\ (!defined\ \_DURANGO)}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00477}00477\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00478}00478\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}\ *itemStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}++,\ L\textcolor{stringliteral}{"{}craftItem.flowerPot"{}},\ \doxymbox{\hyperlink{class_item_a45cbac4beb36a208f5e7b0b313c33054}{Item::flowerPot\_Id}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00479}00479\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(itemStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00480}00480\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[itemStat-\/>\doxymbox{\hyperlink{class_item_stat_a11dcef46a9ebed41df21b3f60ac5dc6d}{getItemId}}()]\ =\ itemStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00481}00481\ \ \ \ \ \ \ \ \ itemStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00482}00482\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00483}00483\ \ \ \ \ \ \ \ \ itemStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}++,\ L\textcolor{stringliteral}{"{}craftItem.sign"{}},\ \doxymbox{\hyperlink{class_item_ae1645bf121f89669e70c1fa31fe1a03f}{Item::sign\_Id}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00484}00484\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(itemStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00485}00485\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[itemStat-\/>\doxymbox{\hyperlink{class_item_stat_a11dcef46a9ebed41df21b3f60ac5dc6d}{getItemId}}()]\ =\ itemStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00486}00486\ \ \ \ \ \ \ \ \ itemStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00487}00487\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00488}00488\ \ \ \ \ \ \ \ \ itemStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}++,\ L\textcolor{stringliteral}{"{}mineBlock.emerald"{}},\ \doxymbox{\hyperlink{class_tile_a2efb4f3fd3821758a3f6aba467b680a3}{Tile::emeraldOre\_Id}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00489}00489\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_stats_a9eb0ce56e523dfbf65f5e8b3eb24b323}{blocksMinedStats}}-\/>push\_back(itemStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00490}00490\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_stats_a6743236f7c355208616a6dc145fd5869}{blocksMined}}[itemStat-\/>\doxymbox{\hyperlink{class_item_stat_a11dcef46a9ebed41df21b3f60ac5dc6d}{getItemId}}()]\ =\ itemStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00491}00491\ \ \ \ \ \ \ \ \ itemStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00492}00492\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00493}00493\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J-\/JEV:\ We\ don't\ need\ itemsCollected(emerald)\ so\ I'm\ using\ it\ to}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00494}00494\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ stor\ itemsBought(emerald)\ so\ I\ don't\ have\ to\ make\ yet\ another\ massive}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00495}00495\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ StatArray\ for\ Items\ Bought.}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00496}00496\ \ \ \ \ \ \ \ \ itemStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}++,\ L\textcolor{stringliteral}{"{}itemsBought.emerald"{}},\ \doxymbox{\hyperlink{class_item_a4407d753e7f8d62bd333ef1e1d195996}{Item::emerald\_Id}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00497}00497\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_stats_ac7dde436ef802bf390e16b1089f43645}{itemsCollectedStats}}-\/>push\_back(itemStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00498}00498\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_stats_a76d7dfe68c5eec41252308a443f15286}{itemsCollected}}[itemStat-\/>\doxymbox{\hyperlink{class_item_stat_a11dcef46a9ebed41df21b3f60ac5dc6d}{getItemId}}()]\ =\ itemStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00499}00499\ \ \ \ \ \ \ \ \ itemStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00500}00500\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00501}00501\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J-\/JEV:\ \ WHY\ ON\ EARTH\ DO\ THESE\ ARRAYS\ HAVE\ TO\ BE\ SO\ PAINFULLY\ LARGE\ WHEN\ THEY\ ARE\ GOING\ TO\ BE\ MOSTLY\ EMPTY!!!}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00502}00502\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ Either\ way,\ I'm\ making\ this\ one\ smaller\ because\ we\ don't\ need\ those\ record\ items\ (and\ we\ only\ need\ 2).}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00503}00503\ \ \ \ \ \ \ \ \ blocksPlaced\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a410847c0f025aa12952a3ac6e32d43d5}{StatArray}}(1000);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00504}00504\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00505}00505\ \ \ \ \ \ \ \ \ itemStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}++,\ L\textcolor{stringliteral}{"{}blockPlaced.flowerPot"{}},\ \doxymbox{\hyperlink{class_tile_aba0ec810a919980bdaa75ab47452dd26}{Tile::flowerPot\_Id}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00506}00506\ \ \ \ \ \ \ \ \ blocksPlacedStats-\/>push\_back(itemStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00507}00507\ \ \ \ \ \ \ \ \ blocksPlaced[itemStat-\/>\doxymbox{\hyperlink{class_item_stat_a11dcef46a9ebed41df21b3f60ac5dc6d}{getItemId}}()]\ =\ itemStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00508}00508\ \ \ \ \ \ \ \ \ itemStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00509}00509\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00510}00510\ \ \ \ \ \ \ \ \ itemStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}++,\ L\textcolor{stringliteral}{"{}blockPlaced.sign"{}},\ \doxymbox{\hyperlink{class_tile_a29c130c819c699f77ec68bb89cdd53b9}{Tile::sign\_Id}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00511}00511\ \ \ \ \ \ \ \ \ blocksPlacedStats-\/>push\_back(itemStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00512}00512\ \ \ \ \ \ \ \ \ blocksPlaced[itemStat-\/>\doxymbox{\hyperlink{class_item_stat_a11dcef46a9ebed41df21b3f60ac5dc6d}{getItemId}}()]\ =\ itemStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00513}00513\ \ \ \ \ \ \ \ \ itemStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00514}00514\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00515}00515\ \ \ \ \ \ \ \ \ itemStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}++,\ L\textcolor{stringliteral}{"{}blockPlaced.wallsign"{}},\ \doxymbox{\hyperlink{class_tile_acb94505f671ceb16fc79a567859f00d4}{Tile::wallSign\_Id}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00516}00516\ \ \ \ \ \ \ \ \ blocksPlacedStats-\/>push\_back(itemStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00517}00517\ \ \ \ \ \ \ \ \ blocksPlaced[itemStat-\/>\doxymbox{\hyperlink{class_item_stat_a11dcef46a9ebed41df21b3f60ac5dc6d}{getItemId}}()]\ =\ itemStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00518}00518\ \ \ \ \ \ \ \ \ itemStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00519}00519\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00520}00520\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}\ *generalStat\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00521}00521\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00522}00522\ \ \ \ \ \ \ \ \ rainbowCollection\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a410847c0f025aa12952a3ac6e32d43d5}{StatArray}}(16);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00523}00523\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 16;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00524}00524\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00525}00525\ \ \ \ \ \ \ \ \ \ \ \ \ generalStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}++,\ L\textcolor{stringliteral}{"{}rainbowCollection."{}}\ +\ std::to\_wstring(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}));}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00526}00526\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5afc3d256af81305a02e47f9c1e90eb8}{generalStats}}-\/>push\_back(generalStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ rainbowCollection[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ generalStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00528}00528\ \ \ \ \ \ \ \ \ \ \ \ \ generalStat-\/>\doxymbox{\hyperlink{class_general_stat_a4da84534c3726fce2af365cb5b3d40b4}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00529}00529\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00530}00530\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00531}00531\ \ \ \ \ \ \ \ \ biomesVisisted\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a410847c0f025aa12952a3ac6e32d43d5}{StatArray}}(23);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00532}00532\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 23;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00533}00533\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00534}00534\ \ \ \ \ \ \ \ \ \ \ \ \ generalStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_general_stat}{GeneralStat}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}++,\ L\textcolor{stringliteral}{"{}biomesVisited."{}}\ +\ std::to\_wstring(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}));}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00535}00535\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5afc3d256af81305a02e47f9c1e90eb8}{generalStats}}-\/>push\_back(generalStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00536}00536\ \ \ \ \ \ \ \ \ \ \ \ \ biomesVisisted[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ generalStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00537}00537\ \ \ \ \ \ \ \ \ \ \ \ \ generalStat-\/>\doxymbox{\hyperlink{class_general_stat_a4da84534c3726fce2af365cb5b3d40b4}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00538}00538\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00539}00539\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00540}00540\ \ \ \ \ \ \ \ \ itemStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}++,\ L\textcolor{stringliteral}{"{}itemCrafted.porkchop"{}},\ \doxymbox{\hyperlink{class_item_ad14458194fde4adb0b96b285e7d4f472}{Item::porkChop\_cooked\_Id}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00541}00541\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_stats_a5df8d2d10adf79a26dff4cb56420a77f}{itemsCraftedStats}}-\/>push\_back(itemStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00542}00542\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_stats_a1a2fe9e3e7a00218ac6628e50f81e7e1}{itemsCrafted}}[itemStat-\/>\doxymbox{\hyperlink{class_item_stat_a11dcef46a9ebed41df21b3f60ac5dc6d}{getItemId}}()]\ =\ itemStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00543}00543\ \ \ \ \ \ \ \ \ itemStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00544}00544\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00545}00545\ \ \ \ \ \ \ \ \ itemStat\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_item_stat}{ItemStat}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}++,\ L\textcolor{stringliteral}{"{}itemEaten.porkchop"{}},\ \doxymbox{\hyperlink{class_item_ad14458194fde4adb0b96b285e7d4f472}{Item::porkChop\_cooked\_Id}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00546}00546\ \ \ \ \ \ \ \ \ blocksPlacedStats-\/>push\_back(itemStat);}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00547}00547\ \ \ \ \ \ \ \ \ blocksPlaced[itemStat-\/>\doxymbox{\hyperlink{class_item_stat_a11dcef46a9ebed41df21b3f60ac5dc6d}{getItemId}}()]\ =\ itemStat;}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00548}00548\ \ \ \ \ \ \ \ \ itemStat-\/>\doxymbox{\hyperlink{class_stat_a3b337048dddfbccd464a80262d764599}{postConstruct}}();}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00549}00549\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00550}00550\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00551}00551\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00552}00552\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00553}00553\ }
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00554}\doxymbox{\hyperlink{class_stats_a2f1064a6d62b4409174790b095a8907a}{00554}}\ \doxymbox{\hyperlink{class_stats_a4f45ea1cc20774153884666fa026feac}{Stat}}\ *\doxymbox{\hyperlink{class_stats_a2f1064a6d62b4409174790b095a8907a}{Stats::get}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}})}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00555}00555\ \{}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00556}00556\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_stats_a99dad1b2e369e948524d1f5914a5f9ed}{statsById}}-\/>at(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}});}
+\DoxyCodeLine{\Hypertarget{_stats_8cpp_source_l00557}00557\ \}}
+
+\end{DoxyCode}

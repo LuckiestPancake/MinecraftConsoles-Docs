@@ -1,0 +1,25 @@
+var class_c_scene___multi_game_launch_more_options =
+[
+    [ "OnControlNavigate", "class_c_scene___multi_game_launch_more_options.html#a9f8c74bf983912b3505052b8e98470ec", null ],
+    [ "OnInit", "class_c_scene___multi_game_launch_more_options.html#a090a1524b4842775784f38482ff5ba51", null ],
+    [ "OnKeyDown", "class_c_scene___multi_game_launch_more_options.html#a6d61a8afba9207c98e49fd8f7933ccce", null ],
+    [ "OnNotifyPressEx", "class_c_scene___multi_game_launch_more_options.html#ab258f69ca24706c96a44ef99ba6d7dcd", null ],
+    [ "OnNotifySetFocus", "class_c_scene___multi_game_launch_more_options.html#af7b46742e1ebff17913df285f72106f7", null ],
+    [ "OnTimer", "class_c_scene___multi_game_launch_more_options.html#ae656301cd2f4fed30d0c25d1c4afe64d", null ],
+    [ "m_CheckboxAllowFoF", "class_c_scene___multi_game_launch_more_options.html#a69dc469b4e50aca66c0b5ae317fc8de7", null ],
+    [ "m_CheckboxBonusChest", "class_c_scene___multi_game_launch_more_options.html#ac4d29f33f39db2296fe9a47ec6e95ab6", null ],
+    [ "m_CheckboxFireSpreads", "class_c_scene___multi_game_launch_more_options.html#ab52fe5bcf6c2df9ca65b0f94bbb32217", null ],
+    [ "m_CheckboxFlatWorld", "class_c_scene___multi_game_launch_more_options.html#a37d92bd6a013cce3e7681245ec96d963", null ],
+    [ "m_CheckboxHostPrivileges", "class_c_scene___multi_game_launch_more_options.html#af60d30c09a9d0d56537054f70615e046", null ],
+    [ "m_CheckboxInviteOnly", "class_c_scene___multi_game_launch_more_options.html#ad9d7b977bb4bdd3dad27a719ebb349a9", null ],
+    [ "m_CheckboxOnline", "class_c_scene___multi_game_launch_more_options.html#a28b3ec6489c3ac3687e5da346278ccce", null ],
+    [ "m_CheckboxPVP", "class_c_scene___multi_game_launch_more_options.html#a82a458e9489ba2494248e63eee5018e7", null ],
+    [ "m_CheckboxResetNether", "class_c_scene___multi_game_launch_more_options.html#a76ead004f564690f65a85c15944594d1", null ],
+    [ "m_CheckboxStructures", "class_c_scene___multi_game_launch_more_options.html#ade016456e282d6f8ea1bc3c501abc16b", null ],
+    [ "m_CheckboxTNTExplodes", "class_c_scene___multi_game_launch_more_options.html#a944210c7076d7e03c709571b43f8718b", null ],
+    [ "m_CheckboxTrustPlayers", "class_c_scene___multi_game_launch_more_options.html#a9e8088f168c3e6fe7b12639e6ff9628b", null ],
+    [ "m_Description", "class_c_scene___multi_game_launch_more_options.html#adb3749b56b680df0d686bc37e802d151", null ],
+    [ "m_GenerationGroup", "class_c_scene___multi_game_launch_more_options.html#afea7f2efa7fcf090178da6414600c881", null ],
+    [ "m_HostOptionGroup", "class_c_scene___multi_game_launch_more_options.html#ac26c5a0a709e29f4e8ff082ad9043814", null ],
+    [ "m_LabelWorldOptions", "class_c_scene___multi_game_launch_more_options.html#a665543f59da38e2487defa6b0fe89ded", null ]
+];

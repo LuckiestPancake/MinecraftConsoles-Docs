@@ -1,0 +1,367 @@
+\chapter{Minecraft.\+Server 開発ガイド (日本語) }
+\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a}{}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a}\index{Minecraft.Server 開発ガイド (日本語)@{Minecraft.Server 開発ガイド (日本語)}}
+\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md33}%
+\Hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md33}%
+
+
+この文書は、{\ttfamily Minecraft.\+Server} に新しく入る開発者が、安全に機能追加や改修を行うための実践的な地図として使うことを想定しています\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md34}{}\doxysection{\texorpdfstring{1. このサーバーが担うこと}{1. このサーバーが担うこと}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md34}
+{\ttfamily Minecraft.\+Server} は、このコードベースにおける専用サーバー実行ファイルのエントリーポイントです
+
+主な責務:\+
+\begin{DoxyItemize}
+\item 相対パスのファイル I/\+O を行う前に、カレントディレクトリを実行ファイルのあるフォルダへ切り替える
+\item {\ttfamily server.\+properties} を読み込み、正規化し、不足や不正値を補完する
+\item 専用サーバー向けランタイム、接続ログ、アクセス制御を初期化する
+\item 対象ワールドをロードまたは新規作成し、実際のセーブ先と {\ttfamily level-\/id} を整合させる
+\item 専用サーバーのメインループを回す (network tick, XUI actions, autosave, CLI input)
+\item {\ttfamily banned-\/players.\+json} や {\ttfamily banned-\/ips.\+json} など運用向けファイルを維持する
+\item 新規ワールドの初回保存を実行し、その後安全にシャットダウンする
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md35}{}\doxysection{\texorpdfstring{2. 重要ファイル}{2. 重要ファイル}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md35}
+\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md36}{}\doxysubsection{\texorpdfstring{起動とランタイム}{起動とランタイム}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md36}
+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{_server_main_8cpp}{Windows64/\+\+Server\+Main.\+cpp}}
+\begin{DoxyItemize}
+\item {\ttfamily Print\+Usage()} と {\ttfamily Parse\+Command\+Line()}
+\item {\ttfamily Set\+Exe\+Working\+Directory()}
+\item 起動/\+終了フロー
+\item 新規ワールド初回保存の経路
+\item メインループ、オートセーブ、\+CLI ポーリング
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md37}{}\doxysubsection{\texorpdfstring{ワールド選択とセーブ読込}{ワールド選択とセーブ読込}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md37}
+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{_world_manager_8h}{World\+Manager.\+h}}
+\item {\ttfamily \doxylink{_world_manager_8cpp}{World\+Manager.\+cpp}}
+\begin{DoxyItemize}
+\item {\ttfamily level-\/id} 優先、その後 world 名フォールバックでセーブ探索
+\item storage title と save ID を常にセットで適用
+\item 非同期 storage/\+server action 完了待ちの helper を提供
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md38}{}\doxysubsection{\texorpdfstring{サーバー設定}{サーバー設定}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md38}
+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{_server_properties_8h}{Server\+Properties.\+h}}
+\item {\ttfamily \doxylink{_server_properties_8cpp}{Server\+Properties.\+cpp}}
+\begin{DoxyItemize}
+\item 既定値と正規化レンジ
+\item {\ttfamily server.\+properties} の読込/\+補修/\+書込
+\item {\ttfamily \doxylink{struct_server_properties_config}{Server\+Properties\+Config}} の提供
+\item {\ttfamily \doxylink{_server_main_8cpp_a85c299aee8bf056de8ac22a3116a0825}{Save\+Server\+Properties\+Config()}} は {\ttfamily level-\/name} /\+ {\ttfamily level-\/id} /\+ {\ttfamily white-\/list} を書き換える
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md39}{}\doxysubsection{\texorpdfstring{アクセス制御と BAN /\+ Whitelist 永続化}{アクセス制御と BAN /\+ Whitelist 永続化}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md39}
+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{_access_8h}{Access/\+\+Access.\+h}}
+\item {\ttfamily \doxylink{_access_8cpp}{Access/\+\+Access.\+cpp}}
+\begin{DoxyItemize}
+\item プロセス全体で使うアクセス制御 facade
+\item コンソールコマンドとログイン判定から参照される公開スナップショット管理
+\end{DoxyItemize}
+\item {\ttfamily \doxylink{_ban_manager_8h}{Access/\+\+Ban\+Manager.\+h}}
+\item {\ttfamily \doxylink{_ban_manager_8cpp}{Access/\+\+Ban\+Manager.\+cpp}}
+\begin{DoxyItemize}
+\item {\ttfamily banned-\/players.\+json} と {\ttfamily banned-\/ips.\+json} の読込/\+書込
+\item 識別子の正規化と、期限切れエントリを除いた snapshot 出力
+\end{DoxyItemize}
+\item {\ttfamily \doxylink{_whitelist_manager_8h}{Access/\+\+Whitelist\+Manager.\+h}}
+\item {\ttfamily \doxylink{_whitelist_manager_8cpp}{Access/\+\+Whitelist\+Manager.\+cpp}}
+\begin{DoxyItemize}
+\item {\ttfamily whitelist.\+json} の読込/\+書込
+\item ログイン判定と CLI で使う XUID whitelist の正規化管理
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md40}{}\doxysubsection{\texorpdfstring{ログと接続監査}{ログと接続監査}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md40}
+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{_server_logger_8h}{Server\+Logger.\+h}}
+\item {\ttfamily \doxylink{_server_logger_8cpp}{Server\+Logger.\+cpp}}
+\begin{DoxyItemize}
+\item ログレベル解釈
+\item 色付き/\+タイムスタンプ付きコンソールログ
+\item {\ttfamily startup}, {\ttfamily world-\/io}, {\ttfamily console}, {\ttfamily access}, {\ttfamily network}, {\ttfamily shutdown} などのカテゴリ
+\end{DoxyItemize}
+\item {\ttfamily \doxylink{_server_log_manager_8h}{Server\+Log\+Manager.\+h}}
+\item {\ttfamily \doxylink{_server_log_manager_8cpp}{Server\+Log\+Manager.\+cpp}}
+\begin{DoxyItemize}
+\item TCP 接続 accept/\+reject ログ
+\item ログイン/\+切断の監査ログ
+\item {\ttfamily ban-\/ip \texorpdfstring{$<$}{<}player\texorpdfstring{$>$}{>}} が使う remote IP キャッシュ
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md41}{}\doxysubsection{\texorpdfstring{コンソールコマンドシステム}{コンソールコマンドシステム}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md41}
+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{_server_cli_8cpp}{Console/\+\+Server\+Cli.\+cpp}} (facade)
+\item {\ttfamily \doxylink{_server_cli_input_8cpp}{Console/\+\+Server\+Cli\+Input.\+cpp}} (linenoise 入力スレッド + completion bridge)
+\item {\ttfamily \doxylink{_server_cli_parser_8cpp}{Console/\+\+Server\+Cli\+Parser.\+cpp}} (トークン分解、クォート、補完コンテキスト)
+\item {\ttfamily \doxylink{_server_cli_engine_8cpp}{Console/\+\+Server\+Cli\+Engine.\+cpp}} (実行ディスパッチ、補完、共通ヘルパー)
+\item {\ttfamily \doxylink{_server_cli_registry_8cpp}{Console/\+\+Server\+Cli\+Registry.\+cpp}} (登録と名前解決)
+\item {\ttfamily Console/\+commands/\+\texorpdfstring{$\ast$}{*}} (各コマンド実装)
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md42}{}\doxysection{\texorpdfstring{3. 起動フロー全体}{3. 起動フロー全体}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md42}
+{\ttfamily \doxylink{_server_main_8cpp}{Windows64/\+\+Server\+Main.\+cpp}} の主な流れ:\+
+\begin{DoxyEnumerate}
+\item {\ttfamily Set\+Exe\+Working\+Directory()} でカレントディレクトリを実行ファイルのフォルダへ切り替える
+\item {\ttfamily \doxylink{_server_main_8cpp_ac8490b313a587bb21427e8f4e306f5da}{Load\+Server\+Properties\+Config()}} で {\ttfamily server.\+properties} を読み込み、正規化する
+\item {\ttfamily \doxylink{struct_dedicated_server_config}{Dedicated\+Server\+Config}} へ反映したあと、\+CLI 引数で上書きする ({\ttfamily -\/port}, {\ttfamily -\/ip}/\+{\ttfamily -\/\doxylink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_ab62f000ffddc47ca0bd8d857c1c7b44b}{bind}}, {\ttfamily -\/name}, {\ttfamily -\/maxplayers}, {\ttfamily -\/seed}, {\ttfamily -\/loglevel}, {\ttfamily -\/help}/\+{\ttfamily -\/-\/help}/\+{\ttfamily -\/h})
+\item プロセス状態、{\ttfamily Server\+Log\+Manager}、{\ttfamily Access::\+\+Initialize("{}."{})} を初期化する
+\item window/\+device/\+profile/\+network/\+thread-\/local 系を初期化する
+\item {\ttfamily \doxylink{struct_server_properties_config}{Server\+Properties\+Config}} をゲームホスト設定へ反映する
+\item {\ttfamily Bootstrap\+World\+For\+Server(...)} でワールドを決定する
+\item 読み込まれたセーブ ID が正規化後に変わった場合は、{\ttfamily \doxylink{_server_main_8cpp_a85c299aee8bf056de8ac22a3116a0825}{Save\+Server\+Properties\+Config()}} で書き戻す
+\item {\ttfamily Run\+Network\+Game\+Thread\+Proc} でホストゲームスレッドを起動する
+\item 新規ワールドが作成された場合は、専用サーバー側で明示的に初回保存を要求する
+\item メインループに入る:\+
+\begin{DoxyItemize}
+\item {\ttfamily Tick\+Core\+Systems()}
+\item {\ttfamily Handle\+Xui\+Actions()}
+\item {\ttfamily server\+Cli.\+Poll()}
+\item オートセーブスケジュール
+\end{DoxyItemize}
+\item 終了時:\+
+\begin{DoxyItemize}
+\item CLI 入力を停止
+\item save-\/on-\/exit を要求してサーバー停止
+\item ネットワーク停止完了を待機
+\item ログ/\+アクセス制御/\+ネットワーク/\+デバイスを終了
+\end{DoxyItemize}
+\end{DoxyEnumerate}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md43}{}\doxysection{\texorpdfstring{4. 現在の運用インターフェース}{4. 現在の運用インターフェース}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md43}
+\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md44}{}\doxysubsection{\texorpdfstring{4.\+1 起動引数}{4.\+1 起動引数}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md44}
+
+\begin{DoxyItemize}
+\item {\ttfamily -\/port \texorpdfstring{$<$}{<}1-\/65535\texorpdfstring{$>$}{>}}
+\item {\ttfamily -\/ip \texorpdfstring{$<$}{<}addr\texorpdfstring{$>$}{>}} または {\ttfamily -\/\doxylink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_ab62f000ffddc47ca0bd8d857c1c7b44b}{bind} \texorpdfstring{$<$}{<}addr\texorpdfstring{$>$}{>}}
+\item {\ttfamily -\/name \texorpdfstring{$<$}{<}name\texorpdfstring{$>$}{>}} (実行時上限 16 文字)
+\item {\ttfamily -\/maxplayers \texorpdfstring{$<$}{<}1-\/8\texorpdfstring{$>$}{>}}
+\item {\ttfamily -\/seed \texorpdfstring{$<$}{<}\doxylink{_heap_inspector_server_types_8h_aecfc3c54bd29ad5964e1c1c3ccbf89df}{int64}\texorpdfstring{$>$}{>}}
+\item {\ttfamily -\/loglevel \texorpdfstring{$<$}{<}debug\texorpdfstring{$\vert$}{|}info\texorpdfstring{$\vert$}{|}warn\texorpdfstring{$\vert$}{|}error\texorpdfstring{$>$}{>}}
+\item {\ttfamily -\/help}, {\ttfamily -\/-\/help}, {\ttfamily -\/h}
+\end{DoxyItemize}
+
+補足:\+
+\begin{DoxyItemize}
+\item CLI による上書きは、その起動中のプロセスにだけ効きます
+\item 現在サーバーが書き戻す値は {\ttfamily level-\/name} と {\ttfamily level-\/id} だけで、ワールド解決時に識別情報が変わった場合に限られます
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md45}{}\doxysubsection{\texorpdfstring{4.\+2 組み込みコンソールコマンド}{4.\+2 組み込みコンソールコマンド}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md45}
+
+\begin{DoxyItemize}
+\item {\ttfamily help} /\+ {\ttfamily ?}
+\item {\ttfamily stop}
+\item {\ttfamily list}
+\item {\ttfamily ban \texorpdfstring{$<$}{<}player\texorpdfstring{$>$}{>} \+[reason ...]\+}
+\begin{DoxyItemize}
+\item 現状では対象プレイヤーがオンラインである必要があります
+\end{DoxyItemize}
+\item {\ttfamily ban-\/ip \texorpdfstring{$<$}{<}address\texorpdfstring{$\vert$}{|}player\texorpdfstring{$>$}{>} \+[reason ...]\+}
+\begin{DoxyItemize}
+\item リテラル IPv4/\+\+IPv6 か、オンラインプレイヤーの現在 IP を対象にできます
+\end{DoxyItemize}
+\item {\ttfamily pardon \texorpdfstring{$<$}{<}player\texorpdfstring{$>$}{>}}
+\item {\ttfamily pardon-\/ip \texorpdfstring{$<$}{<}address\texorpdfstring{$>$}{>}}
+\begin{DoxyItemize}
+\item リテラルアドレスのみ受け付けます
+\end{DoxyItemize}
+\item {\ttfamily banlist}
+\item {\ttfamily tp \texorpdfstring{$<$}{<}player\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}target\texorpdfstring{$>$}{>}} /\+ {\ttfamily teleport}
+\item {\ttfamily gamemode \texorpdfstring{$<$}{<}survival\texorpdfstring{$\vert$}{|}creative\texorpdfstring{$\vert$}{|}0\texorpdfstring{$\vert$}{|}1\texorpdfstring{$>$}{>} \+[player]\+} /\+ {\ttfamily gm}
+\end{DoxyItemize}
+
+CLI 挙動の補足:\+
+\begin{DoxyItemize}
+\item {\ttfamily cmd} と {\ttfamily /\+cmd} の両方を受け付けます
+\item {\ttfamily Server\+Cli\+Parser} により引用符付き引数を扱えます
+\item 補完は各コマンドの {\ttfamily Complete(...)} で実装します
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md46}{}\doxysubsection{\texorpdfstring{4.\+3 実行ファイル横に書かれるファイル}{4.\+3 実行ファイル横に書かれるファイル}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md46}
+
+\begin{DoxyItemize}
+\item {\ttfamily server.\+properties}
+\item {\ttfamily banned-\/players.\+json}
+\item {\ttfamily banned-\/ips.\+json}
+\end{DoxyItemize}
+
+これは {\ttfamily Set\+Exe\+Working\+Directory()} による挙動ですつまり、これらのファイルはシェル上の起動場所ではなく {\ttfamily Minecraft.\+Server.\+exe} 基準で解決されます\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md47}{}\doxysection{\texorpdfstring{5. よくある開発作業}{5. よくある開発作業}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md47}
+\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md48}{}\doxysubsection{\texorpdfstring{5.\+1 CLI コマンドを追加する}{5.\+1 CLI コマンドを追加する}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md48}
+{\ttfamily /\+kick} や {\ttfamily /\+time} のようなコマンド追加時の基本手順:\+
+
+
+\begin{DoxyEnumerate}
+\item {\ttfamily Console/\+commands/\+} にファイルを追加
+\begin{DoxyItemize}
+\item {\ttfamily Cli\+Command\+Your\+Command.\+h}
+\item {\ttfamily Cli\+Command\+Your\+Command.\+cpp}
+\end{DoxyItemize}
+\item {\ttfamily IServer\+Cli\+Command} を実装
+\begin{DoxyItemize}
+\item {\ttfamily Name()}, {\ttfamily Usage()}, {\ttfamily Description()}, {\ttfamily Execute(...)}
+\item 必要なら {\ttfamily Aliases()} と {\ttfamily Complete(...)}
+\end{DoxyItemize}
+\item {\ttfamily Server\+Cli\+Engine::\+\+Register\+Default\+Commands()} に登録する
+\item ビルド定義に追加する
+\begin{DoxyItemize}
+\item {\ttfamily CMake\+Lists.\+txt} ({\ttfamily MINECRAFT\+\_\+\+SERVER\+\_\+\+SOURCES})
+\item {\ttfamily Minecraft.\+Server/\+\+Minecraft.Server.\+vcxproj} ({\ttfamily \texorpdfstring{$<$}{<}Cl\+Compile\texorpdfstring{$>$}{>}} /\+ {\ttfamily \texorpdfstring{$<$}{<}Cl\+Include\texorpdfstring{$>$}{>}})
+\end{DoxyItemize}
+\item 手動確認
+\begin{DoxyItemize}
+\item {\ttfamily help} に表示される
+\item 実行結果が期待通り
+\item 補完が {\ttfamily cmd} と {\ttfamily /\+cmd} の両方で動く
+\item 引用符付き引数が期待通り処理される
+\end{DoxyItemize}
+\end{DoxyEnumerate}
+
+参考実装:\+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{_cli_command_help_8cpp}{Cli\+Command\+Help.\+cpp}} (単純コマンド)
+\item {\ttfamily \doxylink{_cli_command_tp_8cpp}{Cli\+Command\+Tp.\+cpp}} (複数引数 + 補完 + 実行時チェック)
+\item {\ttfamily \doxylink{_cli_command_gamemode_8cpp}{Cli\+Command\+Gamemode.\+cpp}} (引数解釈 + エイリアス)
+\item {\ttfamily \doxylink{_cli_command_ban_ip_8cpp}{Cli\+Command\+Ban\+Ip.\+cpp}} (接続メタデータを使うアクセス制御系コマンド)
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md49}{}\doxysubsection{\texorpdfstring{5.\+2 {\ttfamily server.\+properties} キーを追加/\+変更する}{5.\+2 {\ttfamily server.\+properties} キーを追加/\+変更する}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md49}
+
+\begin{DoxyEnumerate}
+\item {\ttfamily \doxylink{_server_properties_8h}{Server\+Properties.\+h}} の {\ttfamily \doxylink{struct_server_properties_config}{Server\+Properties\+Config}} にフィールドを追加/\+更新する
+\item {\ttfamily \doxylink{_server_properties_8cpp}{Server\+Properties.\+cpp}} の {\ttfamily k\+Server\+Property\+Defaults} に既定値を追加する
+\item {\ttfamily \doxylink{_server_main_8cpp_ac8490b313a587bb21427e8f4e306f5da}{Load\+Server\+Properties\+Config()}} で読み込みと正規化を実装する
+\begin{DoxyItemize}
+\item bool/\+int/\+string/\+int64/\+log level/\+level type 用の既存 helper を使う
+\end{DoxyItemize}
+\item 書き戻し対象にしたいなら {\ttfamily \doxylink{_server_main_8cpp_a85c299aee8bf056de8ac22a3116a0825}{Save\+Server\+Properties\+Config()}} を更新する
+\begin{DoxyItemize}
+\item ただし現状この関数は、意図的にワールド識別情報だけを永続化します
+\end{DoxyItemize}
+\item 実行時反映箇所を更新する:\+
+\begin{DoxyItemize}
+\item {\ttfamily Apply\+Server\+Properties\+To\+Dedicated\+Config(...)}
+\item {\ttfamily \doxylink{_server_main_8cpp}{Server\+Main.\+cpp}} の {\ttfamily app.\+Set\+Game\+Host\+Option(...)}
+\item CLI 上書きも持たせるなら {\ttfamily Print\+Usage()} /\+ {\ttfamily Parse\+Command\+Line()}
+\end{DoxyItemize}
+\item 手動確認:\+
+\begin{DoxyItemize}
+\item 欠損キーの自動補完
+\item 不正値の正規化
+\item clamp 範囲が妥当か
+\item 実行時挙動に反映されるか
+\end{DoxyItemize}
+\end{DoxyEnumerate}
+
+\begin{quote}
+覚えておくと良い正規化ポイント \end{quote}
+
+\begin{DoxyItemize}
+\item {\ttfamily level-\/id} は安全な save ID に正規化され、長さ制限も掛かる
+\item {\ttfamily server-\/name} は実行時 16 文字まで
+\item {\ttfamily max-\/players} は {\ttfamily 1..8} に clamp される(あとで増やす必要あり)
+\item {\ttfamily autosave-\/interval} は {\ttfamily 5..3600} に clamp される
+\item {\ttfamily level-\/type} は {\ttfamily default} または {\ttfamily flat} に正規化される
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md50}{}\doxysubsection{\texorpdfstring{5.\+3 BAN /\+ アクセス制御挙動を変更する}{5.\+3 BAN /\+ アクセス制御挙動を変更する}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md50}
+主な実装は {\ttfamily \doxylink{_access_8cpp}{Access/\+\+Access.\+cpp}}, {\ttfamily \doxylink{_ban_manager_8cpp}{Access/\+\+Ban\+Manager.\+cpp}}, {\ttfamily \doxylink{_server_log_manager_8cpp}{Server\+Log\+Manager.\+cpp}} にあります
+
+変更時の注意:\+
+\begin{DoxyItemize}
+\item {\ttfamily Ban\+Manager} は storage/\+caching に責務を寄せ、 live-\/network policy を持ち込みすぎない
+\item {\ttfamily \doxylink{_access_8cpp}{Access.\+cpp}} の clone-\/and-\/publish スナップショット方式を保ち、読取側がディスク I/\+O で止まらないようにする
+\item {\ttfamily ban-\/ip \texorpdfstring{$<$}{<}player\texorpdfstring{$>$}{>}} は {\ttfamily Server\+Log\+Manager::\+\+Try\+Get\+Connection\+Remote\+Ip(...)} に依存することを忘れない
+\item {\ttfamily Snapshot\+Banned\+Players()} /\+ {\ttfamily Snapshot\+Banned\+Ips()} には期限切れエントリを混ぜない
+\item 確認項目:\+
+\begin{DoxyItemize}
+\item 欠損時に空の BAN ファイルが初回起動で生成される
+\item {\ttfamily ban}, {\ttfamily ban-\/ip}, {\ttfamily pardon}, {\ttfamily pardon-\/ip}, {\ttfamily banlist} が動く
+\item オンライン対象の BAN が即時切断まで到達する
+\item 将来 reload 経路を増やしても手動編集が安全に再読込できる
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md51}{}\doxysubsection{\texorpdfstring{5.\+4 ワールドロード/\+新規作成ロジックを変更する}{5.\+4 ワールドロード/\+新規作成ロジックを変更する}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md51}
+主な実装は {\ttfamily \doxylink{_world_manager_8cpp}{World\+Manager.\+cpp}} にあります
+
+現在の探索ポリシー:\+
+\begin{DoxyEnumerate}
+\item {\ttfamily level-\/id} ({\ttfamily UTF8\+Save\+Filename}) 完全一致を優先
+\item 失敗時に world 名一致へフォールバック
+\end{DoxyEnumerate}
+
+変更時の注意:\+
+\begin{DoxyItemize}
+\item {\ttfamily Apply\+World\+Storage\+Target(...)} で title と save ID を常にセットで扱う
+\item 待機ループで {\ttfamily tick\+Proc} を回し続ける
+\begin{DoxyItemize}
+\item これを止めると非同期進行が止まり、タイムアウトしやすくなる
+\end{DoxyItemize}
+\item タイムアウトや失敗ログは具体的に残す
+\item 確認項目
+\begin{DoxyItemize}
+\item 既存ワールドを正しく再利用できるか
+\item 意図しない新規セーブ先が増えていないか
+\item 終了時保存が成功するか
+\item 新規ワールド時の明示的初回保存が {\ttfamily \doxylink{_server_main_8cpp}{Server\+Main.\+cpp}} から維持されているか
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md52}{}\doxysubsection{\texorpdfstring{5.\+5 ログを追加する}{5.\+5 ログを追加する}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md52}
+{\ttfamily Server\+Logger} の API を利用:\+
+\begin{DoxyItemize}
+\item {\ttfamily Log\+Debug}, {\ttfamily Log\+Info}, {\ttfamily \doxylink{_server_main_8cpp_a75985b6b27a3e2b9f496b84ccccc262b}{Log\+Warn}}, {\ttfamily \doxylink{_server_main_8cpp_a39f080ac7b9e7090f81b8823f7920655}{Log\+Error}}
+\item フォーマット付きは {\ttfamily \doxylink{_server_main_8cpp_a05c70c22e29e6f2a38d9431f2eecae0a}{Log\+Debugf}}, {\ttfamily \doxylink{_server_main_8cpp_a27b5f62791fd5c61710ede777fb91b57}{Log\+Infof}} など
+\end{DoxyItemize}
+
+transport/\+login/\+disconnect ライフサイクルに属するイベントなら {\ttfamily Server\+Log\+Manager} 側を使います
+
+推奨カテゴリ:\+
+\begin{DoxyItemize}
+\item {\ttfamily startup}:\+ 起動ライフサイクル
+\item {\ttfamily shutdown}:\+ 停止ライフサイクル
+\item {\ttfamily world-\/io}:\+ ワールド/\+保存処理
+\item {\ttfamily console}:\+ CLI コマンド処理
+\item {\ttfamily access}:\+ BAN/\+アクセス制御状態
+\item {\ttfamily network}:\+ 接続/\+ログイン監査
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md53}{}\doxysection{\texorpdfstring{6. ビルドと実行}{6. ビルドと実行}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md53}
+リポジトリルートで実行:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S\ .\ -\/B\ build\ -\/G\ "{}Visual\ Studio\ 17\ 2022"{}\ -\/A\ x64}
+\DoxyCodeLine{cmake\ -\/-\/build\ build\ -\/-\/config\ Debug\ -\/-\/target\ MinecraftServer}
+\DoxyCodeLine{cd\ .\(\backslash\)build\(\backslash\)Debug}
+\DoxyCodeLine{.\(\backslash\)Minecraft.Server.exe\ -\/port\ 25565\ -\/bind\ 0.0.0.0\ -\/name\ DedicatedServer}
+
+\end{DoxyCode}
+
+
+補足:\+
+\begin{DoxyItemize}
+\item プロセスは起動時にカレントディレクトリを実行ファイルの場所へ切り替えます
+\item {\ttfamily server.\+properties}, {\ttfamily banned-\/players.\+json}, {\ttfamily banned-\/ips.\+json} はそのため実行ファイル横に読み書きされます
+\item Visual Studio ワークフローはルートの {\ttfamily \doxylink{_c_o_m_p_i_l_e_8md}{COMPILE.\+md}} を参照してください
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md54}{}\doxysection{\texorpdfstring{7. 変更前チェックリスト}{7. 変更前チェックリスト}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md54}
+
+\begin{DoxyItemize}
+\item {\ttfamily server.\+properties} が欠損または疎でもクラッシュせず起動できる
+\item 欠損したアクセス制御ファイルがクリーンブート時に再生成される
+\item 既存ワールドが期待した {\ttfamily level-\/id} でロードされる
+\item 新規ワールド作成時の明示的初回保存が維持される
+\item CLI 入力と補完が引き続き応答する
+\item {\ttfamily banlist} 出力が BAN 追加/\+解除後も破綻しない
+\item 非同期待機ループから {\ttfamily Tick\+Core\+Systems()} など busy-\/wait 防止用ティックを消していない
+\item 新規追加したソースが CMake と {\ttfamily .vcxproj} の両方に入っている
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md55}{}\doxysection{\texorpdfstring{8. クイックトラブルシュート}{8. クイックトラブルシュート}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_61acc10f39754064317b60c42f34fe6a_autotoc_md55}
+
+\begin{DoxyItemize}
+\item コマンドが認識されない:\+
+\begin{DoxyItemize}
+\item {\ttfamily Register\+Default\+Commands()} とビルド定義を確認する
+\end{DoxyItemize}
+\item {\ttfamily server.\+properties} や BAN ファイルの読込先が想定と違う:\+
+\begin{DoxyItemize}
+\item {\ttfamily Set\+Exe\+Working\+Directory()} により実行ファイルのフォルダへ移動していることを確認する
+\end{DoxyItemize}
+\item オートセーブ/\+終了時保存がタイムアウトする:\+
+\begin{DoxyItemize}
+\item 待機ループ内で {\ttfamily Tick\+Core\+Systems()} と {\ttfamily Handle\+Xui\+Actions()} を回しているか確認する
+\end{DoxyItemize}
+\item 再起動時に同じワールドを使わない:\+
+\begin{DoxyItemize}
+\item {\ttfamily level-\/id} の正規化と {\ttfamily \doxylink{_world_manager_8cpp}{World\+Manager.\+cpp}} の一致判定を確認する
+\end{DoxyItemize}
+\item {\ttfamily ban-\/ip \texorpdfstring{$<$}{<}player\texorpdfstring{$>$}{>}} で IP を解決できない:\+
+\begin{DoxyItemize}
+\item 対象プレイヤーがオンラインで、{\ttfamily Server\+Log\+Manager} に接続 IP がキャッシュされているか確認する
+\end{DoxyItemize}
+\item 設定変更が効かない:\+
+\begin{DoxyItemize}
+\item 値が {\ttfamily \doxylink{struct_server_properties_config}{Server\+Properties\+Config}} にロードされ、必要なら {\ttfamily \doxylink{struct_dedicated_server_config}{Dedicated\+Server\+Config}} にコピーされ、その後 {\ttfamily \doxylink{_server_main_8cpp}{Server\+Main.\+cpp}} で反映されているか確認する 
+\end{DoxyItemize}
+\end{DoxyItemize}

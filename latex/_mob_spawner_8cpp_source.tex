@@ -1,0 +1,499 @@
+\doxysection{Mob\+Spawner.\+cpp}
+\hypertarget{_mob_spawner_8cpp_source}{}\label{_mob_spawner_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/MobSpawner.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/MobSpawner.cpp}}
+\doxymbox{\hyperlink{_mob_spawner_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8h}{net.minecraft.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8h}{net.minecraft.world.entity.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8animal_8h}{net.minecraft.world.entity.animal.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8monster_8h}{net.minecraft.world.entity.monster.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8player_8h}{net.minecraft.world.entity.player.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8h}{net.minecraft.world.level.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8biome_8h}{net.minecraft.world.level.biome.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8material_8h}{net.minecraft.world.level.material.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8pathfinder_8h}{net.minecraft.world.level.pathfinder.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8tile_8h}{net.minecraft.world.level.tile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_difficulty_8h}{Difficulty.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_weighed_random_8h}{WeighedRandom.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_level_8h}{Level.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_chunk_pos_8h}{ChunkPos.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_tile_pos_8h}{TilePos.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00017}00017\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_level_8h}{..\(\backslash\)Minecraft.Client\(\backslash\)ServerLevel.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00018}00018\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_mob_spawner_8h}{MobSpawner.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00019}00019\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_dimension_8h}{Dimension.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00021}00021\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ MobSpawner::MIN\_SPAWN\_DISTANCE\ =\ 24;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00023}\doxymbox{\hyperlink{class_mob_spawner_a17ff4a2a3f2fc391f51b40e7b8b9fd0f}{00023}}\ \doxymbox{\hyperlink{class_tile_pos}{TilePos}}\ \doxymbox{\hyperlink{class_mob_spawner_a17ff4a2a3f2fc391f51b40e7b8b9fd0f}{MobSpawner::getRandomPosWithin}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level,\ \textcolor{keywordtype}{int}\ cx,\ \textcolor{keywordtype}{int}\ cz)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00024}00024\ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00025}00025\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Added\ 1.2.3\ but\ we\ don't\ need\ it\ as\ it\ was\ only\ used\ to\ access\ sections}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00026}00026\ \ \ \ \ \textcolor{comment}{//\ Leaving\ here\ though\ to\ help\ explain\ why\ chunk\ coords\ are\ not\ passed\ in\ rather\ than\ full\ coords}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00027}00027\ \ \ \ \ \textcolor{comment}{//LevelChunk\ *chunk\ =\ level-\/>getChunk(cx,\ cz);}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00028}00028\ \ \ \ \ \textcolor{keywordtype}{int}\ x\ =\ cx\ *\ 16\ +\ level-\/>\doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(16);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00029}00029\ \ \ \ \ \textcolor{keywordtype}{int}\ y\ =\ level-\/>\doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(level-\/>\doxymbox{\hyperlink{class_level_a4cb41c4930e51323d4e0ed903c58cc66}{getHeight}}());}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00030}00030\ \ \ \ \ \textcolor{keywordtype}{int}\ z\ =\ cz\ *\ 16\ +\ level-\/>\doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(16);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00032}00032\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_tile_pos}{TilePos}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00033}00033\ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00035}00035\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00036}00036\ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ See\ CustomMap.h\ for\ an\ explanation\ of\ this}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00037}00037\ \ \ \ \ \doxymbox{\hyperlink{class_custom_map}{CustomMap}}\ MobSpawner::chunksToPoll;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00038}00038\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00039}00039\ \ \ \ \ unordered\_map<ChunkPos,bool,ChunkPosKeyHash,ChunkPosKeyEq>\ MobSpawner::chunksToPoll;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00040}00040\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00042}\doxymbox{\hyperlink{class_mob_spawner_a56d225df89a46399b9e1df19303a9e78}{00042}}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_mob_spawner_a56d225df89a46399b9e1df19303a9e78}{MobSpawner::tick}}(\doxymbox{\hyperlink{class_server_level}{ServerLevel}}\ *level,\ \textcolor{keywordtype}{bool}\ spawnEnemies,\ \textcolor{keywordtype}{bool}\ spawnFriendlies,\ \textcolor{keywordtype}{bool}\ spawnPersistent)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00043}00043\ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00044}00044\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00046}00046\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00047}00047\ \ \ \ \ \textcolor{comment}{//\ PIX\ output\ for\ mob\ counters\ -\/\ generally\ disabling\ as\ Entity::countFlagsForPIX\ is\ reasonably\ expensive}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00048}00048\ \ \ \ \ \textcolor{keywordflow}{if}(\ level-\/>\doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}-\/>\doxymbox{\hyperlink{class_dimension_ab2a8a3e455fe5b4bcc3bdd93920352b0}{id}}\ ==\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00049}00049\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a3137e377db55ba1d44dd87f41caafd0b}{Entity::countFlagsForPIX}}();}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00051}00051\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a3df504cd40f43b2caece02421d0b764c}{eTYPE\_WATERANIMAL}}\ \ \ \ ,\textcolor{keyword}{false}),\ \textcolor{stringliteral}{"{}eTYPE\_WATERANIMAL"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a189ddfa64316554be937f1f669c7347a}{eTYPE\_ANIMALS\_SPAWN\_LIMIT\_CHECK}}\ \ \ \ \ \ \ \ \ \ ,\textcolor{keyword}{false}),\ \textcolor{stringliteral}{"{}eTYPE\_ANIMAL"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a38c852c4c6daa3bc4b542d5ffde3666a}{eTYPE\_MONSTER}}\ \ \ \ \ \ \ \ ,\textcolor{keyword}{false}),\ \textcolor{stringliteral}{"{}eTYPE\_MONSTER"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a4e59058e40194579e48fadef04b69e78}{eTYPE\_SQUID}}\ \ \ \ \ \ \ \ \ \ ,\textcolor{keyword}{true}\ ),\ \textcolor{stringliteral}{"{}eTYPE\_SQUID"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00055}00055\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a7ccc402420fa51579b56888cc032ca27}{eTYPE\_VILLAGER}}\ \ \ \ \ \ \ \ \ \ \ ,\textcolor{keyword}{true}\ ),\ \textcolor{stringliteral}{"{}eTYPE\_VILLAGER"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ totalCount[4];}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00058}00058\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ protectedCount[4];}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ unprotectedCount[4];}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ couldWanderCount[4];}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ totalCount[0]\ =\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6ab46112e240e08fc3ce6cec3b08175985}{eTYPE\_COW}}\ \ \ \ \ \ \ \ \ \ \ \ ,\textcolor{keyword}{true},\ \&protectedCount[0],\ \&couldWanderCount[0]\ );}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ totalCount[1]\ =\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a4160a78e3c9093c37c9b37c71f173fce}{eTYPE\_SHEEP}}\ \ \ \ \ \ \ \ \ \ ,\textcolor{keyword}{true},\ \&protectedCount[1],\ \&couldWanderCount[1]\ );}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ totalCount[2]\ =\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aab706c1d495a6826c4bb76343b6b2e81}{eTYPE\_CHICKEN}}\ \ \ \ \ \ \ \ ,\textcolor{keyword}{true},\ \&protectedCount[2],\ \&couldWanderCount[2]\ );}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00065}00065\ \ \ \ \ \ \ \ \ totalCount[3]\ =\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a602a8a9b9633dedcf55f27daf12a555d}{eTYPE\_PIG}}\ \ \ \ \ \ \ \ \ \ \ \ ,\textcolor{keyword}{true},\ \&protectedCount[3],\ \&couldWanderCount[3]\ );}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 4;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )\ unprotectedCount[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ totalCount[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ protectedCount[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ unprotectedCount[0],\ \textcolor{stringliteral}{"{}eTYPE\_COW\ (unprotected)"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ unprotectedCount[1],\ \textcolor{stringliteral}{"{}eTYPE\_SHEEP\ (unprotected)"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ unprotectedCount[2],\ \textcolor{stringliteral}{"{}eTYPE\_CHICKEN\ (unprotected)"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ unprotectedCount[3],\ \textcolor{stringliteral}{"{}eTYPE\_PIG\ (unprotected)"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ protectedCount[0],\ \textcolor{stringliteral}{"{}eTYPE\_COW\ (protected)"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ protectedCount[1],\ \textcolor{stringliteral}{"{}eTYPE\_SHEEP\ (protected)"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ protectedCount[2],\ \textcolor{stringliteral}{"{}eTYPE\_CHICKEN\ (protected)"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ protectedCount[3],\ \textcolor{stringliteral}{"{}eTYPE\_PIG\ (protected)"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ couldWanderCount[0],\ \textcolor{stringliteral}{"{}eTYPE\_COW\ (could\ wander)"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ couldWanderCount[1],\ \textcolor{stringliteral}{"{}eTYPE\_SHEEP\ (could\ wander)"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ couldWanderCount[2],\ \textcolor{stringliteral}{"{}eTYPE\_CHICKEN\ (could\ wander)"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ couldWanderCount[3],\ \textcolor{stringliteral}{"{}eTYPE\_PIG\ (could\ wander)"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a1a4768fb7717c39609eb689c6b9fa84e}{eTYPE\_WOLF}}\ \ \ \ \ \ \ \ \ \ \ ,\textcolor{keyword}{true}\ ),\ \textcolor{stringliteral}{"{}eTYPE\_WOLF"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a8801aa46daa42950d6ac57e8ce3f41b3}{eTYPE\_CREEPER}}\ \ \ \ \ \ \ \ ,\textcolor{keyword}{true}\ ),\ \textcolor{stringliteral}{"{}eTYPE\_CREEPER"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a8246a1d6754ff6be400bdb6631f9468c}{eTYPE\_GIANT}}\ \ \ \ \ \ \ \ \ \ ,\textcolor{keyword}{true}\ ),\ \textcolor{stringliteral}{"{}eTYPE\_GIANT"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aaeca1bb26fc1e2a8c863b38b92e9f793}{eTYPE\_SKELETON}}\ \ \ \ \ \ \ ,\textcolor{keyword}{true}\ ),\ \textcolor{stringliteral}{"{}eTYPE\_SKELETON"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a539728fdf797c8d220d0df618c3ed80f}{eTYPE\_SPIDER}}\ \ \ \ \ \ \ \ \ ,\textcolor{keyword}{true}\ ),\ \textcolor{stringliteral}{"{}eTYPE\_SPIDER"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a0b1b8dab0377b77a6f7cb7d12f199b23}{eTYPE\_ZOMBIE}}\ \ \ \ \ \ \ \ \ ,\textcolor{keyword}{true}\ ),\ \textcolor{stringliteral}{"{}eTYPE\_ZOMBIE"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a21a2286756572401a4ce6895fed15d63}{eTYPE\_PIGZOMBIE}}\ \ \ \ \ \ ,\textcolor{keyword}{true}\ ),\ \textcolor{stringliteral}{"{}eTYPE\_PIGZOMBIE"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a742293fc2653c065e0391a89e8ed5ef5}{eTYPE\_SLIME}}\ \ \ \ \ \ \ \ \ \ ,\textcolor{keyword}{true}\ ),\ \textcolor{stringliteral}{"{}eTYPE\_SLIME"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a7dfeddf56d09f2ff218a96ccfeee86dc}{PIXAddNamedCounter}}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a559b31ea69b8f59744477093ed73abf6}{eTYPE\_GHAST}}\ \ \ \ \ \ \ \ \ \ ,\textcolor{keyword}{true}\ ),\ \textcolor{stringliteral}{"{}eTYPE\_GHAST"{}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00093}00093\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00094}00094\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00095}00095\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00097}00097\ \ \ \ \ \textcolor{keywordflow}{if}\ (!spawnEnemies\ \&\&\ !spawnFriendlies\ \&\&\ !spawnPersistent)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00098}00098\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00100}00100\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00101}00101\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(20);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00102}00102\ \ \ \ \ chunksToPoll.clear();}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00104}00104\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00105}00105\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ player\ :\ level-\/>\doxymbox{\hyperlink{class_level_a8db872ec73345c825758e36f20e28c18}{players}})}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00106}00106\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xx\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(player-\/>x\ /\ 16);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ zz\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(player-\/>z\ /\ 16);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ 128\ /\ 16;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ -\/r;\ x\ <=\ r;\ x++)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ z\ =\ -\/r;\ z\ <=\ r;\ z++)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chunksToPoll.insert(\doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(x\ +\ xx,\ z\ +\ zz));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00116}00116\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00117}00117\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00118}00118\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ rewritten\ to\ add\ chunks\ interleaved\ by\ player,\ and\ to\ add\ them\ from\ the\ centre\ outwards.\ We're\ going\ to\ be}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00119}00119\ \ \ \ \ \textcolor{comment}{//\ potentially\ adding\ less\ creatures\ than\ the\ original\ so\ that\ our\ count\ stays\ consistent\ with\ number\ of\ players\ added,\ so}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00120}00120\ \ \ \ \ \textcolor{comment}{//\ we\ want\ to\ make\ sure\ as\ best\ we\ can\ that\ the\ ones\ we\ do\ add\ are\ near\ the\ active\ players}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00121}00121\ \ \ \ \ \textcolor{keywordtype}{int}\ playerCount\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(level-\/>\doxymbox{\hyperlink{class_level_a8db872ec73345c825758e36f20e28c18}{players}}.size());}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00122}00122\ \ \ \ \ \textcolor{keywordtype}{int}\ *xx\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{int}[playerCount];}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00123}00123\ \ \ \ \ \textcolor{keywordtype}{int}\ *zz\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{int}[playerCount];}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00124}00124\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ playerCount;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00125}00125\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ shared\_ptr<Player>\ player\ =\ level-\/>\doxymbox{\hyperlink{class_level_a8db872ec73345c825758e36f20e28c18}{players}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(player-\/>x\ /\ 16);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(player-\/>z\ /\ 16);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00129}00129\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ chunksToPoll.insert(\doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}],\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ ),\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00131}00131\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ chunksToPoll.insert(std::pair<ChunkPos,bool>(\doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}],\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ ),\textcolor{keyword}{false}));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00133}00133\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00134}00134\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00136}00136\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ r\ =\ 1;\ r\ <=\ 8;\ r++\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00137}00137\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ l\ =\ 0;\ l\ <\ (\ r\ *\ 2\ )\ ;\ l++\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ playerCount;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ edgeChunk\ =\ (\ r\ ==\ 8\ );}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ this\ chunk\ isn't\ at\ the\ edge\ of\ the\ region\ for\ this\ player,\ then\ always\ store\ with\ a\ flag\ of\ false}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ so\ that\ if\ it\ was\ at\ the\ edge\ of\ another\ player,\ then\ this\ will\ remove\ that}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !edgeChunk\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00148}00148\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chunksToPoll.insert(\doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ )\ +\ l\ ,\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ )\ \ \ \ \ ),\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chunksToPoll.insert(\doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ )\ \ ,\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ )\ +\ l\ \ \ \ ),\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chunksToPoll.insert(\doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ )\ -\/\ l\ ,\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ )\ \ \ \ \ ),\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chunksToPoll.insert(\doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ )\ \ ,\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ )\ -\/\ l\ \ \ \ ),\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00153}00153\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chunksToPoll.insert(std::pair<ChunkPos,bool>(\doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ )\ +\ l\ ,\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ )\ \ \ \ \ \ \ \ ),\ \textcolor{keyword}{false}));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chunksToPoll.insert(std::pair<ChunkPos,bool>(\doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ )\ \ \ \ \ ,\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ )\ +\ l\ \ \ \ ),\ \textcolor{keyword}{false}));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chunksToPoll.insert(std::pair<ChunkPos,bool>(\doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ )\ -\/\ l\ ,\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ )\ \ \ \ \ \ \ \ ),\ \textcolor{keyword}{false}));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chunksToPoll.insert(std::pair<ChunkPos,bool>(\doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ )\ \ \ \ \ ,\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ )\ -\/\ l\ \ \ \ ),\ \textcolor{keyword}{false}));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00158}00158\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00162}00162\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}\ cp\ =\ \doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ \ )\ +\ l\ ,\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ ));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ chunksToPoll.find(\ cp\ )\ )\ \ \ chunksToPoll.insert(cp,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cp\ =\ \doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ ),\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ )\ +\ l\ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ chunksToPoll.find(\ cp\ )\ )\ \ \ chunksToPoll.insert(cp,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cp\ =\ \doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ )\ -\/\ l\ ,\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ ));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ chunksToPoll.find(\ cp\ )\ )\ \ \ chunksToPoll.insert(cp,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cp\ =\ \doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ ),\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ )\ -\/\ l);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ chunksToPoll.find(\ cp\ )\ )\ \ \ chunksToPoll.insert(cp,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00171}00171\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}\ cp\ =\ \doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ \ )\ +\ l\ ,\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ ));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ chunksToPoll.find(\ cp\ )\ ==\ chunksToPoll.end()\ )\ chunksToPoll.insert(std::pair<ChunkPos,bool>(cp,\ \textcolor{keyword}{true}));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cp\ =\ \doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ ),\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ )\ +\ l\ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ chunksToPoll.find(\ cp\ )\ ==\ chunksToPoll.end()\ )\ chunksToPoll.insert(std::pair<ChunkPos,bool>(cp,\ \textcolor{keyword}{true}));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cp\ =\ \doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ )\ -\/\ l\ ,\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ ));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ chunksToPoll.find(\ cp\ )\ ==\ chunksToPoll.end()\ )\ chunksToPoll.insert(std::pair<ChunkPos,bool>(cp,\ \textcolor{keyword}{true}));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cp\ =\ \doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}(\ (\ xx[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/\ r\ ),\ (\ zz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +\ r\ )\ -\/\ l);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ chunksToPoll.find(\ cp\ )\ ==\ chunksToPoll.end()\ )\ chunksToPoll.insert(std::pair<ChunkPos,bool>(cp,\ \textcolor{keyword}{true}));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00180}00180\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00185}00185\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00186}00186\ \ \ \ \ \textcolor{keyword}{delete}\ []\ xx;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00187}00187\ \ \ \ \ \textcolor{keyword}{delete}\ []\ zz;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00188}00188\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00189}00189\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00190}00190\ \ \ \ \ \textcolor{keywordtype}{int}\ count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00191}00191\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(31);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00192}00192\ \ \ \ \ \doxymbox{\hyperlink{class_pos}{Pos}}\ *spawnPos\ =\ level-\/>\doxymbox{\hyperlink{class_level_a94beef307b3fcf15bd6ab80f3a1b620d}{getSharedSpawnPos}}();}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00193}00193\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00195}00195\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_mob_category_ae70f22dfd376faa34a402dc638bdc06b}{MobCategory::values}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00196}00196\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_mob_category}{MobCategory}}\ *mobCategory\ =\ \doxymbox{\hyperlink{class_mob_category_ae70f22dfd376faa34a402dc638bdc06b}{MobCategory::values}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((mobCategory-\/>\doxymbox{\hyperlink{class_mob_category_a4a0247a15a22500bccf36a7c6d4e9176}{isFriendly}}()\ \&\&\ !spawnFriendlies)\ ||\ (!mobCategory-\/>\doxymbox{\hyperlink{class_mob_category_a4a0247a15a22500bccf36a7c6d4e9176}{isFriendly}}()\ \&\&\ !spawnEnemies)\ ||\ (mobCategory-\/>\doxymbox{\hyperlink{class_mob_category_ae005c05644f80bbc23ea0c0a15a082c2}{isPersistent}}()\ \&\&\ !spawnPersistent))}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ early\ out\ for\ non-\/main\ dimensions,\ if\ spawning\ anything\ friendly}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ mobCategory-\/>\doxymbox{\hyperlink{class_mob_category_a4a0247a15a22500bccf36a7c6d4e9176}{isFriendly}}()\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ level-\/>\doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}-\/>\doxymbox{\hyperlink{class_dimension_ab2a8a3e455fe5b4bcc3bdd93920352b0}{id}}\ !=\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ this\ is\ now\ quite\ different\ to\ the\ java\ version.\ We\ just\ have\ global\ max\ counts\ for\ the\ level\ whereas\ the\ original\ has\ a\ max\ per\ chunk\ that}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ scales\ with\ the\ number\ of\ chunks\ to\ be\ polled.}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ categoryCount\ =\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(\ mobCategory-\/>\doxymbox{\hyperlink{class_mob_category_ac138089b6d07a6dec24513fbe1a12878}{getEnumBaseClass}}(),\ mobCategory-\/>\doxymbox{\hyperlink{class_mob_category_ad6430ac03d6c856604013c5d8260a002}{isSingleType}}());}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ categoryCount\ >=\ mobCategory-\/>\doxymbox{\hyperlink{class_mob_category_a1932830c96aaf31ab655a1dcd208f611}{getMaxInstancesPerLevel}}())}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00220}00220\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ chunksToPoll.end();\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +=\ 1\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_custom_map_node}{SCustomMapNode}}\ *it\ =\ chunksToPoll.get(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00224}00224\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ it\ :\ chunksToPoll)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00227}00227\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ it.\doxymbox{\hyperlink{struct_s_custom_map_node_ad4fe75acf74c64b772063b230313f276}{second}}\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ don't\ add\ mobs\ to\ edge\ chunks,\ to\ prevent\ adding\ mobs\ "{}outside"{}\ of\ the\ active\ playground}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}\ *cp\ =\ (\doxymbox{\hyperlink{class_chunk_pos}{ChunkPos}}\ *)\ (\&it.\doxymbox{\hyperlink{struct_s_custom_map_node_ae8efcabecff38d060b92f69162d4b1c0}{first}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00234}00234\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ don't\ let\ this\ actually\ create/load\ a\ chunk\ that\ isn't\ here\ already\ -\/\ we'll\ let\ the\ normal\ updateDirtyChunks\ etc.\ processes\ do\ that,\ so\ it\ can\ happen\ on\ another\ thread}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !level-\/>\doxymbox{\hyperlink{class_level_a98121d8454268467cbc7ffd724b17cd8}{hasChunk}}(cp-\/>\doxymbox{\hyperlink{class_chunk_pos_a2100e3c4e03421e42589382b3a1d8af1}{x}},cp-\/>\doxymbox{\hyperlink{class_chunk_pos_a86940ea41fab86944bf550fe83530811}{z}})\ )\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tile_pos}{TilePos}}\ start\ =\ \doxymbox{\hyperlink{class_mob_spawner_a17ff4a2a3f2fc391f51b40e7b8b9fd0f}{getRandomPosWithin}}(level,\ cp-\/>\doxymbox{\hyperlink{class_chunk_pos_a2100e3c4e03421e42589382b3a1d8af1}{x}},\ cp-\/>\doxymbox{\hyperlink{class_chunk_pos_a86940ea41fab86944bf550fe83530811}{z}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xStart\ =\ start.\doxymbox{\hyperlink{class_tile_pos_ab03a00dd7294f78e68bea84683c4ef4d}{x}};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ yStart\ =\ start.\doxymbox{\hyperlink{class_tile_pos_a01621f32e2229ab81ece4c9da8892ec1}{y}};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ zStart\ =\ start.\doxymbox{\hyperlink{class_tile_pos_a9930fe6a472429c1d0d703d245596be2}{z}};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (level-\/>\doxymbox{\hyperlink{class_level_a091e681d138a48b6f51cdaa0a5da8370}{isSolidBlockingTile}}(xStart,\ yStart,\ zStart))\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (level-\/>\doxymbox{\hyperlink{class_level_ada07f90401a0bd8ec3401c05604ae658}{getMaterial}}(xStart,\ yStart,\ zStart)\ !=\ mobCategory-\/>\doxymbox{\hyperlink{class_mob_category_a12356e5c2c6eea60d5f3ea2238b36207}{getSpawnPositionMaterial}}())\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ clusterSize\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ dd\ =\ 0;\ dd\ <\ 3;\ dd++)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ x\ =\ xStart;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ y\ =\ yStart;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ z\ =\ zStart;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ss\ =\ 6;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00253}00253\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_biome_1_1_mob_spawner_data}{Biome::MobSpawnerData}}\ *currentMobType\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_mob_group_data}{MobGroupData}}\ *groupData\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00256}00256\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ ll\ =\ 0;\ ll\ <\ 4;\ ll++)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x\ +=\ level-\/>\doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(ss)\ -\/\ level-\/>\doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(ss);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ y\ +=\ level-\/>\doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(1)\ -\/\ level-\/>\doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(1);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ z\ +=\ level-\/>\doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(ss)\ -\/\ level-\/>\doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(ss);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ int\ y\ =\ heightMap[x\ +\ z\ *\ w]\ +\ 1;}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00263}00263\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ don't\ let\ this\ actually\ create/load\ a\ chunk\ that\ isn't\ here\ already\ -\/\ we'll\ let\ the\ normal\ updateDirtyChunks\ etc.\ processes\ do\ that,\ so\ it\ can\ happen\ on\ another\ thread}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !level-\/>\doxymbox{\hyperlink{class_level_ae0216919b36bcfcaadc13e2f9fc1bccb}{hasChunkAt}}(\ x,\ y,\ z\ )\ )\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_mob_spawner_a1c76c01e32d365e2831ca2172709cefe}{isSpawnPositionOk}}(mobCategory,\ level,\ x,\ y,\ z))}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xx\ =\ x\ +\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yy\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(y);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ zz\ =\ z\ +\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (level-\/>\doxymbox{\hyperlink{class_level_abc00452f92688dbc948959a80a84299a}{getNearestPlayer}}(xx,\ yy,\ zz,\ MIN\_SPAWN\_DISTANCE)\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xd\ =\ xx\ -\/\ spawnPos-\/>\doxymbox{\hyperlink{class_pos_a4bcafee8dc3800fb8c3792de54996496}{x}};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yd\ =\ yy\ -\/\ spawnPos-\/>\doxymbox{\hyperlink{class_pos_a6b309684454df6615bce567e09437348}{y}};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ zd\ =\ zz\ -\/\ spawnPos-\/>\doxymbox{\hyperlink{class_pos_aa923cf2200dcc6f44fa6dd381be58c7e}{z}};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ sd\ =\ xd\ *\ xd\ +\ yd\ *\ yd\ +\ zd\ *\ zd;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (sd\ <\ MIN\_SPAWN\_DISTANCE\ *\ MIN\_SPAWN\_DISTANCE)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00284}00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00286}00286\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00287}00287\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00288}00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (currentMobType\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ currentMobType\ =\ level-\/>\doxymbox{\hyperlink{class_server_level_abf3ad828cb86104d71e1eece6da76718}{getRandomMobSpawnAt}}(mobCategory,\ x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (currentMobType\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<Mob>\ mob;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ removed\ try/catch}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00299}00299\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ try}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00300}00300\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00301}00301\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(29);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//mob\ =\ type.mobClass.getConstructor(Level.class).newInstance(level);}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mob\ =\ dynamic\_pointer\_cast<Mob>(\doxymbox{\hyperlink{class_entity_i_o_a3f151287071a9fe1bc7dd31a7a5fbf73}{EntityIO::newByEnumType}}(currentMobType-\/>\doxymbox{\hyperlink{class_biome_1_1_mob_spawner_data_a2349a9f21afeb6dc5fd2a7ee456796e6}{mobClass}},\ level));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00304}00304\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00305}00305\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00306}00306\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ catch\ (exception\ e)}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00307}00307\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00308}00308\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ TODO\ 4J\ We\ can't\ print\ a\ stack\ trace,\ and\ the\ newInstance\ function\ doesn't\ throw\ an\ exception\ just\ now\ anyway}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00309}00309\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //e.printStackTrace();}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00310}00310\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ count;}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00311}00311\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00312}00312\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ If\ it\ is\ an\ animal\ or\ a\ monster,\ don't\ let\ any\ one\ type\ of\ mob\ represent\ more\ than\ 50\%\ of\ the\ total\ amount\ of\ these\ things.\ This}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ was\ added\ initially\ to\ stop\ flat\ lands\ being\ totally\ populated\ with\ slimes\ but\ seems\ like\ a\ generally\ good\ rule.}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6}{eINSTANCEOF}}\ mobType\ =\ mob-\/>GetType();}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00316}00316\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ mobType\ \&\ \doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a189ddfa64316554be937f1f669c7347a}{eTYPE\_ANIMALS\_SPAWN\_LIMIT\_CHECK}}\ )\ ||\ (\ mobType\ \&\ \doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a38c852c4c6daa3bc4b542d5ffde3666a}{eTYPE\_MONSTER}}\ )\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ even\ more\ special\ rule\ for\ ghasts,\ because\ filling\ up\ the\ nether\ with\ 25\ of\ them\ is\ a\ bit\ unpleasant.\ In\ the\ java\ version\ they\ are}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ only\ limited\ by\ the\ fact\ that\ the\ world\ fills\ up\ with\ pig\ zombies\ (the\ only\ other\ type\ of\ enemy\ mob\ in\ the\ nether)\ before\ them\ -\/\ they}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ aren't\ actually\ even\ counted\ properly\ themselves}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ mobType\ ==\ \doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a559b31ea69b8f59744477093ed73abf6}{eTYPE\_GHAST}}\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(mobType,\ \textcolor{keyword}{true})\ >=\ 4\ )\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ mobType\ ==\ \doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a012341f12c22e0a7df665be6ce7a5960}{eTYPE\_ENDERMAN}}\ \&\&\ level-\/>\doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}-\/>\doxymbox{\hyperlink{class_dimension_ab2a8a3e455fe5b4bcc3bdd93920352b0}{id}}\ ==\ 1\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Special\ rule\ for\ the\ end,\ as\ we\ only\ have\ Endermen\ (plus\ the\ dragon).\ Increase\ the\ spawnable\ counts\ based\ on\ level\ difficulty}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ maxEndermen\ =\ mobCategory-\/>\doxymbox{\hyperlink{class_mob_category_a1932830c96aaf31ab655a1dcd208f611}{getMaxInstancesPerLevel}}();}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00330}00330\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ level-\/>\doxymbox{\hyperlink{class_level_a8a7f4ffd54fb0becda51b525c1ea4035}{difficulty}}\ ==\ \doxymbox{\hyperlink{class_difficulty_a6a6316b8cd64aee198cab0f8655b04f8}{Difficulty::NORMAL}}\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ maxEndermen\ -\/=\ mobCategory-\/>\doxymbox{\hyperlink{class_mob_category_a1932830c96aaf31ab655a1dcd208f611}{getMaxInstancesPerLevel}}()/4;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ level-\/>\doxymbox{\hyperlink{class_level_a8a7f4ffd54fb0becda51b525c1ea4035}{difficulty}}\ <=\ \doxymbox{\hyperlink{class_difficulty_ac44b79bd0b6dfc75037f319ddc49df97}{Difficulty::EASY}})}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ maxEndermen\ -\/=\ mobCategory-\/>\doxymbox{\hyperlink{class_mob_category_a1932830c96aaf31ab655a1dcd208f611}{getMaxInstancesPerLevel}}()/2;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00338}00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(mobType,\ \textcolor{keyword}{true})\ >=\ maxEndermen\ )\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ level-\/>\doxymbox{\hyperlink{class_level_aa0ba97c855063c2b1d4608805bd0d80c}{countInstanceOf}}(mobType,\ \textcolor{keyword}{true})\ >=\ (\ mobCategory-\/>\doxymbox{\hyperlink{class_mob_category_a1932830c96aaf31ab655a1dcd208f611}{getMaxInstancesPerLevel}}()\ /\ 2\ )\ )\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00344}00344\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mob-\/>moveTo(xx,\ yy,\ zz,\ level-\/>\doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}()\ *\ 360,\ 0);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mob-\/>canSpawn())}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ check\ if\ we\ are\ going\ to\ despawn\ straight\ away\ too,\ and\ don't\ add\ if\ we\ will\ -\/\ otherwise\ we'll\ be\ sending}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ network\ packets\ for\ adding\ \&\ removal\ that\ we\ don't\ need}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mob-\/>checkDespawn();}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !mob-\/>removed\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ clusterSize++;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ categoryCount++;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mob-\/>setDespawnProtected();\ \ \textcolor{comment}{//\ 4J\ added\ -\/\ default\ to\ protected\ against\ despawning}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_server_level_aec480e3780ad0aae77c65e8f55111aa8}{addEntity}}(mob);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ groupData\ =\ mob-\/>finalizeMobSpawn(groupData);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ change\ here\ so\ that\ we\ can't\ ever\ make\ more\ than\ the\ desired\ amount\ of\ entities\ in\ each\ priority.\ In\ the\ original\ java\ version}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ depending\ on\ the\ random\ spawn\ positions\ being\ considered\ the\ only\ limit\ as\ to\ the\ number\ of\ entities\ created\ per\ category\ is\ the\ number}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ of\ chunks\ to\ poll.}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (categoryCount\ >=\ mobCategory-\/>\doxymbox{\hyperlink{class_mob_category_a1932830c96aaf31ab655a1dcd208f611}{getMaxInstancesPerLevel}}()\ )\ \textcolor{keywordflow}{goto}\ categoryLoop;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (clusterSize\ >=\ mob-\/>getMaxSpawnClusterSize())\ \textcolor{keywordflow}{goto}\ chunkLoop;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ count\ +=\ clusterSize;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chunkLoop:\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ categoryLoop:\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00373}00373\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00374}00374\ \ \ \ \ \textcolor{keyword}{delete}\ spawnPos;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00375}00375\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00376}00376\ \ \ \ \ \textcolor{keywordflow}{return}\ count;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00377}00377\ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00378}00378\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00379}\doxymbox{\hyperlink{class_mob_spawner_a1c76c01e32d365e2831ca2172709cefe}{00379}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_mob_spawner_a1c76c01e32d365e2831ca2172709cefe}{MobSpawner::isSpawnPositionOk}}(\doxymbox{\hyperlink{class_mob_category}{MobCategory}}\ *category,\ \doxymbox{\hyperlink{class_level}{Level}}\ *level,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00380}00380\ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00381}00381\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ don't\ let\ this\ actually\ create/load\ a\ chunk\ that\ isn't\ here\ already\ -\/\ we'll\ let\ the\ normal\ updateDirtyChunks\ etc.\ processes\ do\ that,\ so\ it\ can\ happen\ on\ another\ thread}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00382}00382\ \ \ \ \ \textcolor{keywordflow}{if}(\ !level-\/>\doxymbox{\hyperlink{class_level_ae0216919b36bcfcaadc13e2f9fc1bccb}{hasChunkAt}}(x,\ y,\ z\ )\ )\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00383}00383\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00384}00384\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00385}00385\ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ added\ this\ for\ Vita.\ Make\ sure\ a\ new\ spawn\ point\ has\ 2\ chunks\ around\ it.\ This\ will\ make\ sure\ monsters\ don't\ keep\ getting\ spawned\ on\ the\ edge\ preventing\ other\ new\ monsters}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00386}00386\ \ \ \ \ \textcolor{comment}{//\ from\ being\ spawned}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00387}00387\ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ 32;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00388}00388\ \ \ \ \ \textcolor{keywordflow}{if}(\ !level-\/>\doxymbox{\hyperlink{class_level_a5e1f69ea12cb6c3b01aa9baa75c351a5}{hasChunksAt}}(x\ -\/\ r,\ 0,\ z\ -\/\ r,\ x\ +\ r,\ 0,\ z\ +\ r))}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00389}00389\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00391}00391\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00392}00392\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00393}00393\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00394}00394\ \ \ \ \ \textcolor{keywordflow}{if}\ (category-\/>\doxymbox{\hyperlink{class_mob_category_a12356e5c2c6eea60d5f3ea2238b36207}{getSpawnPositionMaterial}}()\ ==\ \doxymbox{\hyperlink{class_material_aa1d1b91f1a63c0c25d309f2de3752a43}{Material::water}})}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00395}00395\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00396}00396\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ changed\ to\ spawn\ water\ things\ only\ in\ deep\ water}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00397}00397\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ yo\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00398}00398\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ liquidCount\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00399}00399\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00400}00400\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ (\ y\ -\/\ yo\ )\ >=\ 0\ \&\&\ (\ yo\ <\ 5\ )\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00401}00401\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ level-\/>\doxymbox{\hyperlink{class_level_ada07f90401a0bd8ec3401c05604ae658}{getMaterial}}(x,\ y\ -\/\ yo,\ z)-\/>\doxymbox{\hyperlink{class_material_ae0e5333166869a40b3edeaa34eb97f3e}{isLiquid}}()\ )\ liquidCount++;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00403}00403\ \ \ \ \ \ \ \ \ \ \ \ \ yo++;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00404}00404\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00405}00405\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00406}00406\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ Sometimes\ deep\ water\ could\ be\ just\ a\ waterfall,\ so\ check\ that\ it's\ wide\ as\ well}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00407}00407\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ inEnoughWater\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00408}00408\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ liquidCount\ ==\ 5\ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00409}00409\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00410}00410\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ level-\/>\doxymbox{\hyperlink{class_level_ada07f90401a0bd8ec3401c05604ae658}{getMaterial}}(x+5,\ y,\ z)-\/>\doxymbox{\hyperlink{class_material_ae0e5333166869a40b3edeaa34eb97f3e}{isLiquid}}()\ \&\&}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00411}00411\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_ada07f90401a0bd8ec3401c05604ae658}{getMaterial}}(x-\/5,\ y,\ z)-\/>\doxymbox{\hyperlink{class_material_ae0e5333166869a40b3edeaa34eb97f3e}{isLiquid}}()\ \&\&}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00412}00412\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_ada07f90401a0bd8ec3401c05604ae658}{getMaterial}}(x,\ y,\ z+5)-\/>\doxymbox{\hyperlink{class_material_ae0e5333166869a40b3edeaa34eb97f3e}{isLiquid}}()\ \&\&}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00413}00413\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_ada07f90401a0bd8ec3401c05604ae658}{getMaterial}}(x,\ y,\ z-\/5)-\/>\doxymbox{\hyperlink{class_material_ae0e5333166869a40b3edeaa34eb97f3e}{isLiquid}}()}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00416}00416\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ inEnoughWater\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00417}00417\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00418}00418\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00419}00419\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00420}00420\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ inEnoughWater\ \&\&\ !level-\/>\doxymbox{\hyperlink{class_level_a091e681d138a48b6f51cdaa0a5da8370}{isSolidBlockingTile}}(x,\ y\ +\ 1,\ z);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00421}00421\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00422}00422\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00423}00423\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00424}00424\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!level-\/>\doxymbox{\hyperlink{class_level_abbf18478c4b79d72a87abd635afd553f}{isTopSolidBlocking}}(x,\ y\ -\/\ 1,\ z))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00425}00425\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tt\ =\ level-\/>\doxymbox{\hyperlink{class_level_af6c291e6d410b3b40ae101dbf1f41fac}{getTile}}(x,\ y\ -\/\ 1,\ z);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00426}00426\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tt\ !=\ \doxymbox{\hyperlink{class_tile_a0c8ab9592ed11b534125cae3396fad43}{Tile::unbreakable\_Id}}\ \&\&\ !level-\/>\doxymbox{\hyperlink{class_level_a091e681d138a48b6f51cdaa0a5da8370}{isSolidBlockingTile}}(x,\ y,\ z)\ \&\&\ !level-\/>\doxymbox{\hyperlink{class_level_ada07f90401a0bd8ec3401c05604ae658}{getMaterial}}(x,\ y,\ z)-\/>\doxymbox{\hyperlink{class_material_ae0e5333166869a40b3edeaa34eb97f3e}{isLiquid}}()\ \&\&\ !level-\/>\doxymbox{\hyperlink{class_level_a091e681d138a48b6f51cdaa0a5da8370}{isSolidBlockingTile}}(x,\ y\ +\ 1,\ z);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00427}00427\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00429}00429\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00430}\doxymbox{\hyperlink{class_mob_spawner_a8b8a933664bc49324c7b3389af98e577}{00430}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_mob_spawner_a8b8a933664bc49324c7b3389af98e577}{MobSpawner::postProcessSpawnMobs}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level,\ \doxymbox{\hyperlink{class_biome}{Biome}}\ *biome,\ \textcolor{keywordtype}{int}\ xo,\ \textcolor{keywordtype}{int}\ zo,\ \textcolor{keywordtype}{int}\ cellWidth,\ \textcolor{keywordtype}{int}\ cellHeight,\ \doxymbox{\hyperlink{class_random}{Random}}\ *random)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00431}00431\ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00432}00432\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ not\ for\ our\ version.\ Creates\ a\ few\ too\ many\ mobs.}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00433}00433\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00434}00434\ \ \ \ \ vector<Biome::MobSpawnerData\ *>\ *mobs\ =\ biome-\/>\doxymbox{\hyperlink{class_biome_a23ce4ae2bcb4d22da1c721ea652d666c}{getMobs}}(\doxymbox{\hyperlink{class_mob_category_a6da92136db51da63fbe14632f1748a8b}{MobCategory::creature}});}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00435}00435\ \ \ \ \ \textcolor{keywordflow}{if}\ (mobs-\/>empty())}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00436}00436\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00437}00437\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00438}00438\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00439}00439\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00440}00440\ \ \ \ \ \textcolor{keywordflow}{while}\ (random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}()\ <\ biome-\/>\doxymbox{\hyperlink{class_biome_ad16f6ed52a45e2547164453ffbf821ce}{getCreatureProbability}}())}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00441}00441\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00442}00442\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_biome_1_1_mob_spawner_data}{Biome::MobSpawnerData}}\ *type\ =\ (\doxymbox{\hyperlink{class_biome_1_1_mob_spawner_data}{Biome::MobSpawnerData}}\ *)\ \doxymbox{\hyperlink{class_weighed_random_a2b5283f5942c072a31fbedbe482752a4}{WeighedRandom::getRandomItem}}(level-\/>\doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}},\ ((vector<WeighedRandomItem\ *>\ *)mobs));}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00443}00443\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_mob_group_data}{MobGroupData}}\ *groupData\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00444}00444\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ count\ =\ type-\/>minCount\ +\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(1\ +\ type-\/>maxCount\ -\/\ type-\/>minCount);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00445}00445\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00446}00446\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ x\ =\ xo\ +\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(cellWidth);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00447}00447\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ z\ =\ zo\ +\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(cellHeight);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00448}00448\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ startX\ =\ x,\ startZ\ =\ z;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00449}00449\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00450}00450\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ c\ =\ 0;\ c\ <\ count;\ c++)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00451}00451\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00452}00452\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ success\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00453}00453\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ attempts\ =\ 0;\ !success\ \&\&\ attempts\ <\ 4;\ attempts++)}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00454}00454\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00455}00455\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ these\ mobs\ always\ spawn\ at\ the\ topmost\ position}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00456}00456\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ y\ =\ level-\/>\doxymbox{\hyperlink{class_level_ae886dad0b70587124d5d6e51c0245afe}{getTopSolidBlock}}(x,\ z);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00457}00457\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_mob_spawner_a1c76c01e32d365e2831ca2172709cefe}{isSpawnPositionOk}}(\doxymbox{\hyperlink{class_mob_category_a6da92136db51da63fbe14632f1748a8b}{MobCategory::creature}},\ level,\ x,\ y,\ z))}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00458}00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00459}00459\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00460}00460\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xx\ =\ x\ +\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yy\ =\ (float)y;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00462}00462\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ zz\ =\ z\ +\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00463}00463\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00464}00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<Mob>\ mob;}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//try\ \{}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00466}00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mob\ =\ dynamic\_pointer\_cast<Mob>(\ \doxymbox{\hyperlink{class_entity_i_o_a3f151287071a9fe1bc7dd31a7a5fbf73}{EntityIO::newByEnumType}}(type-\/>mobClass,\ level\ )\ );}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00467}00467\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\}\ catch\ (Exception\ e)\ \{}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00468}00468\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ e.printStackTrace();}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00469}00469\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ continue;}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00470}00470\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00471}00471\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ System.out.println("{}Placing\ night\ mob"{});}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mob-\/>moveTo(xx,\ yy,\ zz,\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}()\ *\ 360,\ 0);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00474}00474\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00475}00475\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mob-\/>setDespawnProtected();}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00476}00476\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a2205e602ef4c7aa2a0bde4d2df726ca9}{addEntity}}(mob);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ groupData\ =\ mob-\/>finalizeMobSpawn(groupData);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ success\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00481}00481\ }
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00482}00482\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x\ +=\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(5)\ -\/\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(5);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ z\ +=\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(5)\ -\/\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(5);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00484}00484\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (x\ <\ xo\ ||\ x\ >=\ (xo\ +\ cellWidth)\ ||\ z\ <\ zo\ ||\ z\ >=\ (zo\ +\ cellWidth))}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ startX\ +\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(5)\ -\/\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(5);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ z\ =\ startZ\ +\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(5)\ -\/\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(5);}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00490}00490\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00491}00491\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00492}00492\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_mob_spawner_8cpp_source_l00493}00493\ \}}
+
+\end{DoxyCode}

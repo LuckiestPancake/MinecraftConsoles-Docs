@@ -1,0 +1,361 @@
+\chapter{Minecraft.\+Server Developer Guide (English) }
+\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205}{}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205}\index{Minecraft.Server Developer Guide (English)@{Minecraft.Server Developer Guide (English)}}
+\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md10}%
+\Hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md10}%
+
+
+This document is for contributors who are new to {\ttfamily Minecraft.\+Server} and need a practical map for adding or modifying features safely.\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md11}{}\doxysection{\texorpdfstring{1. What This Server Does}{1. What This Server Does}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md11}
+{\ttfamily Minecraft.\+Server} is the dedicated-\/server executable entry for this codebase.
+
+Core responsibilities:\+
+\begin{DoxyItemize}
+\item Switch the process working directory to the executable folder before relative file I/\+O
+\item Load, normalize, and repair {\ttfamily server.\+properties}
+\item Initialize dedicated runtime systems, connection logging, and access control
+\item Load or create the target world and keep {\ttfamily level-\/id} aligned with the actual save destination
+\item Run the dedicated main loop (network tick, XUI actions, autosave, CLI input)
+\item Maintain operator-\/facing access files such as {\ttfamily banned-\/players.\+json} and {\ttfamily banned-\/ips.\+json}
+\item Perform an initial save for newly created worlds and then shut down safely
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md12}{}\doxysection{\texorpdfstring{2. Important Files}{2. Important Files}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md12}
+\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md13}{}\doxysubsection{\texorpdfstring{Startup and Runtime}{Startup and Runtime}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md13}
+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{_server_main_8cpp}{Windows64/\+\+Server\+Main.\+cpp}}
+\begin{DoxyItemize}
+\item {\ttfamily Print\+Usage()} and {\ttfamily Parse\+Command\+Line()}
+\item {\ttfamily Set\+Exe\+Working\+Directory()}
+\item Runtime setup and shutdown flow
+\item Initial save path for newly created worlds
+\item Main loop, autosave scheduler, and CLI polling
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md14}{}\doxysubsection{\texorpdfstring{World Selection and Save Load}{World Selection and Save Load}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md14}
+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{_world_manager_8h}{World\+Manager.\+h}}
+\item {\ttfamily \doxylink{_world_manager_8cpp}{World\+Manager.\+cpp}}
+\begin{DoxyItemize}
+\item Finds matching save by {\ttfamily level-\/id} first, then world-\/name fallback
+\item Applies storage title + save ID consistently
+\item Wait helpers for async storage/\+server action completion
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md15}{}\doxysubsection{\texorpdfstring{Server Properties}{Server Properties}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md15}
+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{_server_properties_8h}{Server\+Properties.\+h}}
+\item {\ttfamily \doxylink{_server_properties_8cpp}{Server\+Properties.\+cpp}}
+\begin{DoxyItemize}
+\item Default values and normalization ranges
+\item Parse/\+repair/\+write {\ttfamily server.\+properties}
+\item Exposes {\ttfamily \doxylink{struct_server_properties_config}{Server\+Properties\+Config}}
+\item {\ttfamily \doxylink{_server_main_8cpp_a85c299aee8bf056de8ac22a3116a0825}{Save\+Server\+Properties\+Config()}} rewrites {\ttfamily level-\/name}, {\ttfamily level-\/id}, and {\ttfamily white-\/list}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md16}{}\doxysubsection{\texorpdfstring{Access Control, Ban, and Whitelist Storage}{Access Control, Ban, and Whitelist Storage}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md16}
+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{_access_8h}{Access/\+\+Access.\+h}}
+\item {\ttfamily \doxylink{_access_8cpp}{Access/\+\+Access.\+cpp}}
+\begin{DoxyItemize}
+\item Process-\/wide access-\/control facade
+\item Published snapshot model used by console commands and login checks
+\end{DoxyItemize}
+\item {\ttfamily \doxylink{_ban_manager_8h}{Access/\+\+Ban\+Manager.\+h}}
+\item {\ttfamily \doxylink{_ban_manager_8cpp}{Access/\+\+Ban\+Manager.\+cpp}}
+\begin{DoxyItemize}
+\item Reads/\+writes {\ttfamily banned-\/players.\+json} and {\ttfamily banned-\/ips.\+json}
+\item Normalizes identifiers and filters expired entries from snapshots
+\end{DoxyItemize}
+\item {\ttfamily \doxylink{_whitelist_manager_8h}{Access/\+\+Whitelist\+Manager.\+h}}
+\item {\ttfamily \doxylink{_whitelist_manager_8cpp}{Access/\+\+Whitelist\+Manager.\+cpp}}
+\begin{DoxyItemize}
+\item Reads/\+writes {\ttfamily whitelist.\+json}
+\item Normalizes XUID-\/based whitelist entries used by login validation and CLI commands
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md17}{}\doxysubsection{\texorpdfstring{Logging and Connection Audit}{Logging and Connection Audit}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md17}
+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{_server_logger_8h}{Server\+Logger.\+h}}
+\item {\ttfamily \doxylink{_server_logger_8cpp}{Server\+Logger.\+cpp}}
+\begin{DoxyItemize}
+\item Log level parsing
+\item Colored/\+timestamped console logs
+\item General categories such as {\ttfamily startup}, {\ttfamily world-\/io}, {\ttfamily console}, {\ttfamily access}, {\ttfamily network}, and {\ttfamily shutdown}
+\end{DoxyItemize}
+\item {\ttfamily \doxylink{_server_log_manager_8h}{Server\+Log\+Manager.\+h}}
+\item {\ttfamily \doxylink{_server_log_manager_8cpp}{Server\+Log\+Manager.\+cpp}}
+\begin{DoxyItemize}
+\item Accepted/\+rejected TCP connection logs
+\item Login/\+disconnect audit logs
+\item Remote-\/\+IP cache used by {\ttfamily ban-\/ip \texorpdfstring{$<$}{<}player\texorpdfstring{$>$}{>}}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md18}{}\doxysubsection{\texorpdfstring{Console Command System}{Console Command System}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md18}
+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{_server_cli_8cpp}{Console/\+\+Server\+Cli.\+cpp}} (facade)
+\item {\ttfamily \doxylink{_server_cli_input_8cpp}{Console/\+\+Server\+Cli\+Input.\+cpp}} (linenoise input thread + completion bridge)
+\item {\ttfamily \doxylink{_server_cli_parser_8cpp}{Console/\+\+Server\+Cli\+Parser.\+cpp}} (tokenization, quoted args, completion context)
+\item {\ttfamily \doxylink{_server_cli_engine_8cpp}{Console/\+\+Server\+Cli\+Engine.\+cpp}} (dispatch, completion, helpers)
+\item {\ttfamily \doxylink{_server_cli_registry_8cpp}{Console/\+\+Server\+Cli\+Registry.\+cpp}} (command registration + lookup)
+\item {\ttfamily Console/\+commands/\+\texorpdfstring{$\ast$}{*}} (individual commands)
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md19}{}\doxysection{\texorpdfstring{3. End-\/to-\/\+End Startup Flow}{3. End-\/to-\/\+End Startup Flow}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md19}
+Main flow in {\ttfamily \doxylink{_server_main_8cpp}{Windows64/\+\+Server\+Main.\+cpp}}:\+
+\begin{DoxyEnumerate}
+\item {\ttfamily Set\+Exe\+Working\+Directory()} switches the current directory to the executable folder.
+\item Load and normalize {\ttfamily server.\+properties} via {\ttfamily \doxylink{_server_main_8cpp_ac8490b313a587bb21427e8f4e306f5da}{Load\+Server\+Properties\+Config()}}.
+\item Copy config into {\ttfamily \doxylink{struct_dedicated_server_config}{Dedicated\+Server\+Config}}, then apply CLI overrides ({\ttfamily -\/port}, {\ttfamily -\/ip}/\+{\ttfamily -\/\doxylink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_ab62f000ffddc47ca0bd8d857c1c7b44b}{bind}}, {\ttfamily -\/name}, {\ttfamily -\/maxplayers}, {\ttfamily -\/seed}, {\ttfamily -\/loglevel}, {\ttfamily -\/help}/\+{\ttfamily -\/-\/help}/\+{\ttfamily -\/h}).
+\item Initialize process state, {\ttfamily Server\+Log\+Manager}, and {\ttfamily Access::\+\+Initialize("{}."{})}.
+\item Initialize window/\+device/\+profile/\+network/\+thread-\/local systems.
+\item Set host/\+game options from {\ttfamily \doxylink{struct_server_properties_config}{Server\+Properties\+Config}}.
+\item Bootstrap world with {\ttfamily Bootstrap\+World\+For\+Server(...)}.
+\item If world bootstrap resolves a different normalized save ID, persist it with {\ttfamily \doxylink{_server_main_8cpp_a85c299aee8bf056de8ac22a3116a0825}{Save\+Server\+Properties\+Config()}}.
+\item Start hosted game thread ({\ttfamily Run\+Network\+Game\+Thread\+Proc}).
+\item If a brand-\/new world was created, explicitly request one initial save.
+\item Enter the main loop:\+
+\begin{DoxyItemize}
+\item {\ttfamily Tick\+Core\+Systems()}
+\item {\ttfamily Handle\+Xui\+Actions()}
+\item {\ttfamily server\+Cli.\+Poll()}
+\item autosave scheduling
+\end{DoxyItemize}
+\item On shutdown:\+
+\begin{DoxyItemize}
+\item stop CLI input
+\item request save-\/on-\/exit /\+ halt server
+\item wait for network shutdown completion
+\item terminate log, access, network, and device systems
+\end{DoxyItemize}
+\end{DoxyEnumerate}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md20}{}\doxysection{\texorpdfstring{4. Current Operator Surface}{4. Current Operator Surface}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md20}
+\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md21}{}\doxysubsection{\texorpdfstring{4.\+1 Launch Arguments}{4.\+1 Launch Arguments}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md21}
+
+\begin{DoxyItemize}
+\item {\ttfamily -\/port \texorpdfstring{$<$}{<}1-\/65535\texorpdfstring{$>$}{>}}
+\item {\ttfamily -\/ip \texorpdfstring{$<$}{<}addr\texorpdfstring{$>$}{>}} or {\ttfamily -\/\doxylink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_ab62f000ffddc47ca0bd8d857c1c7b44b}{bind} \texorpdfstring{$<$}{<}addr\texorpdfstring{$>$}{>}}
+\item {\ttfamily -\/name \texorpdfstring{$<$}{<}name\texorpdfstring{$>$}{>}} (runtime max 16 chars)
+\item {\ttfamily -\/maxplayers \texorpdfstring{$<$}{<}1-\/8\texorpdfstring{$>$}{>}}
+\item {\ttfamily -\/seed \texorpdfstring{$<$}{<}\doxylink{_heap_inspector_server_types_8h_aecfc3c54bd29ad5964e1c1c3ccbf89df}{int64}\texorpdfstring{$>$}{>}}
+\item {\ttfamily -\/loglevel \texorpdfstring{$<$}{<}debug\texorpdfstring{$\vert$}{|}info\texorpdfstring{$\vert$}{|}warn\texorpdfstring{$\vert$}{|}error\texorpdfstring{$>$}{>}}
+\item {\ttfamily -\/help}, {\ttfamily -\/-\/help}, {\ttfamily -\/h}
+\end{DoxyItemize}
+
+Notes:\+
+\begin{DoxyItemize}
+\item CLI overrides affect only the current process.
+\item \doxylink{requirements_The}{The} only values currently written back by the server are {\ttfamily level-\/name} and {\ttfamily level-\/id}, and that happens when world bootstrap resolves identity changes.
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md22}{}\doxysubsection{\texorpdfstring{4.\+2 Built-\/in Console Commands}{4.\+2 Built-\/in Console Commands}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md22}
+
+\begin{DoxyItemize}
+\item {\ttfamily help} /\+ {\ttfamily ?}
+\item {\ttfamily stop}
+\item {\ttfamily list}
+\item {\ttfamily ban \texorpdfstring{$<$}{<}player\texorpdfstring{$>$}{>} \+[reason ...]\+}
+\begin{DoxyItemize}
+\item currently requires the target player to be online
+\end{DoxyItemize}
+\item {\ttfamily ban-\/ip \texorpdfstring{$<$}{<}address\texorpdfstring{$\vert$}{|}player\texorpdfstring{$>$}{>} \+[reason ...]\+}
+\begin{DoxyItemize}
+\item accepts a literal IPv4/\+\+IPv6 address or an online player\textquotesingle{}s current remote IP
+\end{DoxyItemize}
+\item {\ttfamily pardon \texorpdfstring{$<$}{<}player\texorpdfstring{$>$}{>}}
+\item {\ttfamily pardon-\/ip \texorpdfstring{$<$}{<}address\texorpdfstring{$>$}{>}}
+\begin{DoxyItemize}
+\item only accepts a literal address
+\end{DoxyItemize}
+\item {\ttfamily banlist}
+\item {\ttfamily tp \texorpdfstring{$<$}{<}player\texorpdfstring{$>$}{>} \texorpdfstring{$<$}{<}target\texorpdfstring{$>$}{>}} /\+ {\ttfamily teleport}
+\item {\ttfamily gamemode \texorpdfstring{$<$}{<}survival\texorpdfstring{$\vert$}{|}creative\texorpdfstring{$\vert$}{|}0\texorpdfstring{$\vert$}{|}1\texorpdfstring{$>$}{>} \+[player]\+} /\+ {\ttfamily gm}
+\end{DoxyItemize}
+
+CLI behavior notes:\+
+\begin{DoxyItemize}
+\item \doxylink{class_command}{Command} parsing accepts both {\ttfamily cmd} and {\ttfamily /\+cmd}.
+\item Quoted arguments are supported by {\ttfamily Server\+Cli\+Parser}.
+\item Completion is implemented per command via {\ttfamily Complete(...)}.
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md23}{}\doxysubsection{\texorpdfstring{4.\+3 Files Written Next to the Executable}{4.\+3 Files Written Next to the Executable}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md23}
+
+\begin{DoxyItemize}
+\item {\ttfamily server.\+properties}
+\item {\ttfamily banned-\/players.\+json}
+\item {\ttfamily banned-\/ips.\+json}
+\end{DoxyItemize}
+
+This follows from {\ttfamily Set\+Exe\+Working\+Directory()}, so these files are resolved relative to {\ttfamily Minecraft.\+Server.\+exe}, not the shell directory you launched from.\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md24}{}\doxysection{\texorpdfstring{5. Common Development Tasks}{5. Common Development Tasks}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md24}
+\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md25}{}\doxysubsection{\texorpdfstring{5.\+1 Add a New CLI Command}{5.\+1 Add a New CLI Command}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md25}
+Use this pattern when adding commands like {\ttfamily /\+kick}, {\ttfamily /\+time}, etc.
+
+
+\begin{DoxyEnumerate}
+\item Add files under {\ttfamily Console/\+commands/\+}
+\begin{DoxyItemize}
+\item {\ttfamily Cli\+Command\+Your\+Command.\+h}
+\item {\ttfamily Cli\+Command\+Your\+Command.\+cpp}
+\end{DoxyItemize}
+\item Implement {\ttfamily IServer\+Cli\+Command}
+\begin{DoxyItemize}
+\item {\ttfamily Name()}, {\ttfamily Usage()}, {\ttfamily Description()}, {\ttfamily Execute(...)}
+\item optional:\+ {\ttfamily Aliases()} and {\ttfamily Complete(...)}
+\end{DoxyItemize}
+\item Register the command in {\ttfamily Server\+Cli\+Engine::\+\+Register\+Default\+Commands()}.
+\item Add source/\+header to build definitions:\+
+\begin{DoxyItemize}
+\item {\ttfamily CMake\+Lists.\+txt} ({\ttfamily MINECRAFT\+\_\+\+SERVER\+\_\+\+SOURCES})
+\item {\ttfamily Minecraft.\+Server/\+\+Minecraft.Server.\+vcxproj} ({\ttfamily \texorpdfstring{$<$}{<}Cl\+Compile\texorpdfstring{$>$}{>}} /\+ {\ttfamily \texorpdfstring{$<$}{<}Cl\+Include\texorpdfstring{$>$}{>}})
+\end{DoxyItemize}
+\item Manual verify:\+
+\begin{DoxyItemize}
+\item command appears in {\ttfamily help}
+\item command executes correctly
+\item completion works for both {\ttfamily cmd} and {\ttfamily /\+cmd}
+\item quoted arguments behave as expected
+\end{DoxyItemize}
+\end{DoxyEnumerate}
+
+Implementation references:\+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{_cli_command_help_8cpp}{Cli\+Command\+Help.\+cpp}} for a simple no-\/arg command
+\item {\ttfamily \doxylink{_cli_command_tp_8cpp}{Cli\+Command\+Tp.\+cpp}} for multi-\/arg + completion + runtime checks
+\item {\ttfamily \doxylink{_cli_command_gamemode_8cpp}{Cli\+Command\+Gamemode.\+cpp}} for argument parsing and aliases
+\item {\ttfamily \doxylink{_cli_command_ban_ip_8cpp}{Cli\+Command\+Ban\+Ip.\+cpp}} for access-\/backed behavior with connection metadata
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md26}{}\doxysubsection{\texorpdfstring{5.\+2 Add or Change a {\ttfamily server.\+properties} Key}{5.\+2 Add or Change a {\ttfamily server.\+properties} Key}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md26}
+
+\begin{DoxyEnumerate}
+\item Add/\+update the field in {\ttfamily \doxylink{struct_server_properties_config}{Server\+Properties\+Config}} ({\ttfamily \doxylink{_server_properties_8h}{Server\+Properties.\+h}}).
+\item Add a default entry to {\ttfamily k\+Server\+Property\+Defaults} ({\ttfamily \doxylink{_server_properties_8cpp}{Server\+Properties.\+cpp}}).
+\item Load and normalize the value in {\ttfamily \doxylink{_server_main_8cpp_ac8490b313a587bb21427e8f4e306f5da}{Load\+Server\+Properties\+Config()}}.
+\begin{DoxyItemize}
+\item Use existing helpers for bool/\+int/\+string/\+int64/\+log level/\+level type.
+\end{DoxyItemize}
+\item If this value should be written back, update {\ttfamily \doxylink{_server_main_8cpp_a85c299aee8bf056de8ac22a3116a0825}{Save\+Server\+Properties\+Config()}}.
+\begin{DoxyItemize}
+\item Note:\+ today that function intentionally only persists world identity.
+\end{DoxyItemize}
+\item Apply it to runtime where needed:\+
+\begin{DoxyItemize}
+\item {\ttfamily Apply\+Server\+Properties\+To\+Dedicated\+Config(...)}
+\item host options in {\ttfamily \doxylink{_server_main_8cpp}{Server\+Main.\+cpp}} ({\ttfamily app.\+Set\+Game\+Host\+Option(...)})
+\item {\ttfamily Print\+Usage()} /\+ {\ttfamily Parse\+Command\+Line()} if the key also gets a CLI override
+\end{DoxyItemize}
+\item Manual verify:\+
+\begin{DoxyItemize}
+\item missing key regeneration
+\item invalid value normalization
+\item clamped ranges still make sense
+\item runtime behavior reflects the new value
+\end{DoxyItemize}
+\end{DoxyEnumerate}
+
+Normalization details worth remembering:\+
+\begin{DoxyItemize}
+\item {\ttfamily level-\/id} is normalized to a safe save ID and length-\/limited.
+\item {\ttfamily server-\/name} is capped to 16 runtime chars.
+\item {\ttfamily max-\/players} is clamped to {\ttfamily 1..8}.
+\item {\ttfamily autosave-\/interval} is clamped to {\ttfamily 5..3600}.
+\item {\ttfamily level-\/type} normalizes to {\ttfamily default} or {\ttfamily flat}.
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md27}{}\doxysubsection{\texorpdfstring{5.\+3 Change Ban /\+ Access Behavior}{5.\+3 Change Ban /\+ Access Behavior}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md27}
+Primary code lives in {\ttfamily \doxylink{_access_8cpp}{Access/\+\+Access.\+cpp}}, {\ttfamily \doxylink{_ban_manager_8cpp}{Access/\+\+Ban\+Manager.\+cpp}}, and {\ttfamily \doxylink{_server_log_manager_8cpp}{Server\+Log\+Manager.\+cpp}}.
+
+When changing this area:\+
+\begin{DoxyItemize}
+\item Keep {\ttfamily Ban\+Manager} responsible for storage/\+caching, not live-\/network policy.
+\item Keep the clone-\/and-\/publish snapshot pattern in {\ttfamily \doxylink{_access_8cpp}{Access.\+cpp}} so readers never block on disk I/\+O.
+\item Remember that {\ttfamily ban-\/ip \texorpdfstring{$<$}{<}player\texorpdfstring{$>$}{>}} depends on {\ttfamily Server\+Log\+Manager::\+\+Try\+Get\+Connection\+Remote\+Ip(...)}.
+\item Keep expired entries out of {\ttfamily Snapshot\+Banned\+Players()} /\+ {\ttfamily Snapshot\+Banned\+Ips()} output.
+\item Verify:\+
+\begin{DoxyItemize}
+\item clean boot creates empty ban files when missing
+\item {\ttfamily ban}, {\ttfamily ban-\/ip}, {\ttfamily pardon}, {\ttfamily pardon-\/ip}, and {\ttfamily banlist} still work
+\item online bans disconnect live targets immediately
+\item manual edits still reload safely if you later add or extend reload paths
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md28}{}\doxysubsection{\texorpdfstring{5.\+4 Change World Load/\+\+Create Behavior}{5.\+4 Change World Load/\+\+Create Behavior}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md28}
+Primary code is in {\ttfamily \doxylink{_world_manager_8cpp}{World\+Manager.\+cpp}}.
+
+Current matching policy:\+
+\begin{DoxyEnumerate}
+\item Match by {\ttfamily level-\/id} ({\ttfamily UTF8\+Save\+Filename}) first.
+\item Fall back to world-\/name match on title/\+file name.
+\end{DoxyEnumerate}
+
+When changing this logic:\+
+\begin{DoxyItemize}
+\item Keep {\ttfamily Apply\+World\+Storage\+Target(...)} usage consistent (title + save ID together).
+\item Preserve periodic ticking in wait loops ({\ttfamily tick\+Proc}) to avoid async deadlocks.
+\item Keep timeout/\+error logs specific enough for diagnosis.
+\item Verify:\+
+\begin{DoxyItemize}
+\item existing world is reused correctly
+\item no accidental new save directory creation
+\item shutdown save still succeeds
+\item newly created worlds still get the explicit initial save from {\ttfamily \doxylink{_server_main_8cpp}{Server\+Main.\+cpp}}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md29}{}\doxysubsection{\texorpdfstring{5.\+5 Add Logging for New Feature Work}{5.\+5 Add Logging for New Feature Work}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md29}
+Use {\ttfamily Server\+Logger} helpers:\+
+\begin{DoxyItemize}
+\item {\ttfamily Log\+Debug}, {\ttfamily Log\+Info}, {\ttfamily \doxylink{_server_main_8cpp_a75985b6b27a3e2b9f496b84ccccc262b}{Log\+Warn}}, {\ttfamily \doxylink{_server_main_8cpp_a39f080ac7b9e7090f81b8823f7920655}{Log\+Error}}
+\item formatted variants {\ttfamily \doxylink{_server_main_8cpp_a05c70c22e29e6f2a38d9431f2eecae0a}{Log\+Debugf}}, {\ttfamily \doxylink{_server_main_8cpp_a27b5f62791fd5c61710ede777fb91b57}{Log\+Infof}}, etc.
+\end{DoxyItemize}
+
+Use {\ttfamily Server\+Log\+Manager} when the event is specifically part of the transport/\+login/\+disconnect lifecycle.
+
+Recommended categories:\+
+\begin{DoxyItemize}
+\item {\ttfamily startup} for init/\+shutdown lifecycle
+\item {\ttfamily world-\/io} for save/\+world operations
+\item {\ttfamily console} for CLI command handling
+\item {\ttfamily access} for ban/\+access control state
+\item {\ttfamily network} for connection/\+login audit
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md30}{}\doxysection{\texorpdfstring{6. Build and Run}{6. Build and Run}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md30}
+From repository root:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S\ .\ -\/B\ build\ -\/G\ "{}Visual\ Studio\ 17\ 2022"{}\ -\/A\ x64}
+\DoxyCodeLine{cmake\ -\/-\/build\ build\ -\/-\/config\ Debug\ -\/-\/target\ MinecraftServer}
+\DoxyCodeLine{cd\ .\(\backslash\)build\(\backslash\)Debug}
+\DoxyCodeLine{.\(\backslash\)Minecraft.Server.exe\ -\/port\ 25565\ -\/bind\ 0.0.0.0\ -\/maxplayers\ 8\ -\/name\ DedicatedServer}
+
+\end{DoxyCode}
+
+
+Notes:\+
+\begin{DoxyItemize}
+\item \doxylink{requirements_The}{The} process switches its working directory to the executable directory at startup.
+\item {\ttfamily server.\+properties}, {\ttfamily banned-\/players.\+json}, and {\ttfamily banned-\/ips.\+json} are therefore read/\+written next to the executable.
+\item For Visual Studio workflow, see root {\ttfamily \doxylink{_c_o_m_p_i_l_e_8md}{COMPILE.\+md}}.
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md31}{}\doxysection{\texorpdfstring{7. Safety Checklist Before Commit}{7. Safety Checklist Before Commit}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md31}
+
+\begin{DoxyItemize}
+\item the server starts without crash when {\ttfamily server.\+properties} is missing or sparse
+\item missing access files are recreated on a clean boot
+\item existing world loads by expected {\ttfamily level-\/id}
+\item new world creation still performs the explicit initial save
+\item CLI input and completion remain responsive
+\item {\ttfamily banlist} output stays sane after adding/\+removing bans
+\item no busy-\/wait path removed from async wait loops
+\item both CMake and {\ttfamily .vcxproj} include newly added source files
+\end{DoxyItemize}\hypertarget{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md32}{}\doxysection{\texorpdfstring{8. Quick Troubleshooting}{8. Quick Troubleshooting}}\label{md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205_autotoc_md32}
+
+\begin{DoxyItemize}
+\item Unknown command:\+
+\begin{DoxyItemize}
+\item check {\ttfamily Register\+Default\+Commands()} and build-\/file entries
+\end{DoxyItemize}
+\item {\ttfamily server.\+properties} or ban files seem to load from the wrong folder:\+
+\begin{DoxyItemize}
+\item remember {\ttfamily Set\+Exe\+Working\+Directory()} moves the working directory to the executable folder
+\end{DoxyItemize}
+\item Autosave or shutdown save timing out:\+
+\begin{DoxyItemize}
+\item confirm wait loops still call {\ttfamily Tick\+Core\+Systems()} and {\ttfamily Handle\+Xui\+Actions()} where required
+\end{DoxyItemize}
+\item World not reused on restart:\+
+\begin{DoxyItemize}
+\item inspect {\ttfamily level-\/id} normalization and matching logic in {\ttfamily \doxylink{_world_manager_8cpp}{World\+Manager.\+cpp}}
+\end{DoxyItemize}
+\item {\ttfamily ban-\/ip \texorpdfstring{$<$}{<}player\texorpdfstring{$>$}{>}} cannot resolve an address:\+
+\begin{DoxyItemize}
+\item confirm the player is currently online and {\ttfamily Server\+Log\+Manager} has a cached remote IP for that connection
+\end{DoxyItemize}
+\item \doxylink{class_settings}{Settings} not applied:\+
+\begin{DoxyItemize}
+\item confirm the value is loaded into {\ttfamily \doxylink{struct_server_properties_config}{Server\+Properties\+Config}}, optionally copied into {\ttfamily \doxylink{struct_dedicated_server_config}{Dedicated\+Server\+Config}}, and then applied in {\ttfamily \doxylink{_server_main_8cpp}{Server\+Main.\+cpp}} 
+\end{DoxyItemize}
+\end{DoxyItemize}

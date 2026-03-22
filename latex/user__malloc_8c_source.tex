@@ -1,0 +1,354 @@
+\doxysection{user\+\_\+malloc.\+c}
+\hypertarget{user__malloc_8c_source}{}\label{user__malloc_8c_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PSVita/PSVitaExtras/user\_malloc.c@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PSVita/PSVitaExtras/user\_malloc.c}}
+\doxymbox{\hyperlink{user__malloc_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00001}00001\ \textcolor{comment}{/*\ SCE\ CONFIDENTIAL}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00002}00002\ \textcolor{comment}{\ PlayStation(R)Vita\ Programmer\ Tool\ Runtime\ Library\ Release\ 03.000.061}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00003}00003\ \textcolor{comment}{\ *\ Copyright\ (C)\ 2012\ Sony\ Computer\ Entertainment\ Inc.}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00004}00004\ \textcolor{comment}{\ *\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00005}00005\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00007}00007\ \textcolor{comment}{//\ AP\ -\/\ this\ is\ a\ modified\ version\ of\ the\ basic\ sony\ memory\ overide\ functions.\ }}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00008}00008\ \textcolor{comment}{//\ It\ was\ found\ from\ profiling\ that\ threads\ were\ stalling\ far\ too\ much\ waiting\ for\ their\ turn\ to\ malloc/free}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00009}00009\ \textcolor{comment}{//\ This\ manager\ will\ keep\ memory\ bound\ to\ a\ thread\ once\ allocated\ so\ it\ can\ be\ reused\ by\ the\ same\ thread\ later.}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00010}00010\ \textcolor{comment}{//\ It's\ only\ interested\ in\ chunks\ up\ to\ 1036\ bytes\ in\ size,\ anything\ greater\ is\ not\ retained}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00011}00011\ \textcolor{comment}{//\ Todo\ :\ I\ may\ need\ to\ put\ in\ a\ memory\ flusher\ if\ I\ find\ threads\ holding\ onto\ memory\ too\ much.}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <mspace.h>}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00015}00015\ \textcolor{preprocessor}{\#include\ <kernel.h>}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00016}00016\ \textcolor{comment}{//\#include\ <libdbg.h>}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00017}00017\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00018}\doxymbox{\hyperlink{user__malloc_8c_a1b45302695680930829cac31d65e41e1}{00018}}\ \textcolor{preprocessor}{\#define\ HEAP\_SIZE\ (164\ *\ 1024\ *\ 1024)}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00019}\doxymbox{\hyperlink{user__malloc_8c_a31ab5c6e01ef7efe33321ef01f508d2d}{00019}}\ \textcolor{preprocessor}{\#define\ HEAP\_ERROR1\ 1}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00020}\doxymbox{\hyperlink{user__malloc_8c_a2b3421df0419d065b9d6bd210888fbfe}{00020}}\ \textcolor{preprocessor}{\#define\ HEAP\_ERROR2\ 2}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00021}\doxymbox{\hyperlink{user__malloc_8c_a6b65a3d3a31a1dd3fb8846f856c307ed}{00021}}\ \textcolor{preprocessor}{\#define\ HEAP\_ERROR3\ 3}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00023}00023\ \textcolor{keyword}{static}\ SceUID\ s\_heapUid;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00024}00024\ \textcolor{keyword}{static}\ mspace\ s\_mspace;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00026}00026\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{user__malloc_8c_a31e4efb68311317726ca0e689d11bf0c}{user\_malloc\_init}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00027}00027\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{user__malloc_8c_aab7594c22467c57e70c636f82269d682}{user\_malloc\_finalize}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00028}00028\ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{user__malloc_8c_a4bca043427da3a6795439010c911c3f3}{user\_malloc}}(\textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00029}00029\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{user__malloc_8c_a171ecd0e708f1d26344cf3ee011d285f}{user\_free}}(\textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00030}00030\ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{user__malloc_8c_a9501f8e139e5d5ecb09ff75ac21c8632}{user\_calloc}}(\textcolor{keywordtype}{size\_t}\ nelem,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00031}00031\ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{user__malloc_8c_a5652fc95de054abdf0f8d8556ea25b08}{user\_realloc}}(\textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}},\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00032}00032\ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{user__malloc_8c_aed41f6aa7cf0bea713fdbd3abb0fd65f}{user\_memalign}}(\textcolor{keywordtype}{size\_t}\ boundary,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00033}00033\ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{user__malloc_8c_ac37fc3401f95b5dc97028efc2eb20162}{user\_reallocalign}}(\textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}},\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{size\_t}\ boundary);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00034}00034\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{user__malloc_8c_abedebb2df19598b6ac9aa6c2275cbc07}{user\_malloc\_stats}}(\textcolor{keyword}{struct}\ malloc\_managed\_size\ *mmsize);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00035}00035\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{user__malloc_8c_af58b5a1a6c8afc4b122fc050786996b1}{user\_malloc\_stats\_fast}}(\textcolor{keyword}{struct}\ malloc\_managed\_size\ *mmsize);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00036}00036\ \textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{user__malloc_8c_a062ef20192d80da5eec9bb55804dd0c3}{user\_malloc\_usable\_size}}(\textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00038}00038\ \textcolor{comment}{//\ this\ is\ our\ basic\ node\ for\ managing\ stacks}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00039}\doxymbox{\hyperlink{struct_block}{00039}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_block}{Block}}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00040}00040\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00041}\doxymbox{\hyperlink{struct_block_a3460a1e68c53e9e7313b036b290c3fca}{00041}}\ \ \ \ \ \textcolor{keywordtype}{void}*\ \doxymbox{\hyperlink{struct_block_a3460a1e68c53e9e7313b036b290c3fca}{Memory}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00042}\doxymbox{\hyperlink{struct_block_a56b390dfdbc1694b4761b194e3b7a031}{00042}}\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_block}{Block}}\ *\doxymbox{\hyperlink{struct_block_a56b390dfdbc1694b4761b194e3b7a031}{Next}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00043}\doxymbox{\hyperlink{user__malloc_8c_a2af45dc93858b3ab0965646789821f60}{00043}}\ \}\ \doxymbox{\hyperlink{struct_block}{Block}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00045}\doxymbox{\hyperlink{user__malloc_8c_af58946f7a795769e04a21c1a6f004f2a}{00045}}\ \textcolor{preprocessor}{\#define\ MaxRetainedBytes\ 1036}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00046}\doxymbox{\hyperlink{user__malloc_8c_ab867fe1d37c2e43919c58596c51571c9}{00046}}\ \textcolor{preprocessor}{\#define\ Malloc\_BlocksMemorySize\ 1024}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00047}\doxymbox{\hyperlink{struct_s_thread_storage}{00047}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00048}00048\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00049}\doxymbox{\hyperlink{struct_s_thread_storage_a7ed78d23d078d7ef0a317de1af076b78}{00049}}\ \ \ \ \ \doxymbox{\hyperlink{struct_block}{Block}}\ **\doxymbox{\hyperlink{struct_s_thread_storage_a7ed78d23d078d7ef0a317de1af076b78}{Malloc\_MemoryPool}};\ \ \ \ \ \ \textcolor{comment}{//\ this\ is\ an\ array\ of\ available\ memory\ allocations\ up\ to\ 1036\ bytes\ in\ size}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00050}\doxymbox{\hyperlink{struct_s_thread_storage_a87ce6da1116bd2c21def215e7d903f7a}{00050}}\ \ \ \ \ \doxymbox{\hyperlink{struct_block}{Block}}\ *\doxymbox{\hyperlink{struct_s_thread_storage_a87ce6da1116bd2c21def215e7d903f7a}{Malloc\_Blocks}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this\ is\ a\ stack\ of\ available\ block\ nodes\ used\ to\ store\ memory\ chunks}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00051}\doxymbox{\hyperlink{struct_s_thread_storage_ad0c9498e748714ae3868196ac244fc17}{00051}}\ \ \ \ \ \doxymbox{\hyperlink{struct_block}{Block}}\ *\doxymbox{\hyperlink{struct_s_thread_storage_ad0c9498e748714ae3868196ac244fc17}{Malloc\_BlocksMemory}}[\doxymbox{\hyperlink{user__malloc_8c_ab867fe1d37c2e43919c58596c51571c9}{Malloc\_BlocksMemorySize}}];\ \ \ \ \ \ \ \ \textcolor{comment}{//\ this\ is\ a\ pool\ of\ block\ nodes\ allocated\ in\ large\ chunks\ (256\ blocks\ at\ a\ time)}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00052}\doxymbox{\hyperlink{struct_s_thread_storage_a96d53b542656b33c76a877ed4a854df0}{00052}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_thread_storage_a96d53b542656b33c76a877ed4a854df0}{Malloc\_BlocksAlloced}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this\ shows\ how\ many\ block\ node\ chunks\ have\ been\ allocated\ in\ Malloc\_BlocksMemory}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00053}00053\ \}\ \doxymbox{\hyperlink{struct_s_thread_storage}{SThreadStorage}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00055}\doxymbox{\hyperlink{user__malloc_8c_a8f66ed5ae6aaeeda48c8fd50aa5fb0b7}{00055}}\ \_\_thread\ \doxymbox{\hyperlink{struct_s_thread_storage}{SThreadStorage}}\ *\doxymbox{\hyperlink{user__malloc_8c_a8f66ed5ae6aaeeda48c8fd50aa5fb0b7}{Malloc\_ThreadStorage}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00059}\doxymbox{\hyperlink{user__malloc_8c_a31e4efb68311317726ca0e689d11bf0c}{00059}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{user__malloc_8c_a31e4efb68311317726ca0e689d11bf0c}{user\_malloc\_init}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00060}00060\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00061}00061\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00062}00062\ \ \ \ \ \textcolor{keywordtype}{void}\ *base\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00066}00066\ \ \ \ \ s\_heapUid\ =\ sceKernelAllocMemBlock(\textcolor{stringliteral}{"{}UserAllocator"{}},\ SCE\_KERNEL\_MEMBLOCK\_TYPE\_USER\_RWDATA,\ \doxymbox{\hyperlink{deflate_8h_a1b45302695680930829cac31d65e41e1}{HEAP\_SIZE}},\ SCE\_NULL);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00067}00067\ \ \ \ \ \textcolor{keywordflow}{if}\ (s\_heapUid\ <\ SCE\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00070}00070\ \ \ \ \ \ \ \ \ sceLibcSetHeapInitError(\doxymbox{\hyperlink{user__malloc_8c_a31ab5c6e01ef7efe33321ef01f508d2d}{HEAP\_ERROR1}});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00071}00071\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00074}00074\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ =\ sceKernelGetMemBlockBase(s\_heapUid,\ \&base);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ <\ SCE\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ sceLibcSetHeapInitError(\doxymbox{\hyperlink{user__malloc_8c_a2b3421df0419d065b9d6bd210888fbfe}{HEAP\_ERROR2}});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00079}00079\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ s\_mspace\ =\ mspace\_create(base,\ \doxymbox{\hyperlink{deflate_8h_a1b45302695680930829cac31d65e41e1}{HEAP\_SIZE}});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (s\_mspace\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sceLibcSetHeapInitError(\doxymbox{\hyperlink{user__malloc_8c_a6b65a3d3a31a1dd3fb8846f856c307ed}{HEAP\_ERROR3}});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00088}00088\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00089}00089\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00090}00090\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00094}\doxymbox{\hyperlink{user__malloc_8c_aab7594c22467c57e70c636f82269d682}{00094}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{user__malloc_8c_aab7594c22467c57e70c636f82269d682}{user\_malloc\_finalize}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00095}00095\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00096}00096\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{if}\ (s\_mspace\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00101}00101\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ =\ mspace\_destroy(s\_mspace);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ !=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_breakpoint(0);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00106}00106\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00107}00107\ \ \ \ \ \ \ \ \ s\_mspace\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00108}00108\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00110}00110\ \ \ \ \ \textcolor{keywordflow}{if}\ (SCE\_OK\ <=\ s\_heapUid)\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00113}00113\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00114}00114\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ =\ sceKernelFreeMemBlock(s\_heapUid);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00115}00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ <\ SCE\_OK)\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_breakpoint(0);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00119}00119\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00120}00120\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00121}00121\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00122}00122\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00124}00124\ \textcolor{comment}{//\ before\ a\ thread\ can\ use\ the\ memory\ system\ it\ should\ register\ itself}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00125}\doxymbox{\hyperlink{user__malloc_8c_a31fa2e3b7fdbebd0e7e288eb5575a85f}{00125}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{user__malloc_8c_a31fa2e3b7fdbebd0e7e288eb5575a85f}{user\_registerthread}}()}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00126}00126\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00127}00127\ \ \ \ \ \doxymbox{\hyperlink{user__malloc_8c_a8f66ed5ae6aaeeda48c8fd50aa5fb0b7}{Malloc\_ThreadStorage}}\ =\ mspace\_malloc(s\_mspace,\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{struct_s_thread_storage}{SThreadStorage}}));}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00128}00128\ \ \ \ \ \doxymbox{\hyperlink{user__malloc_8c_a8f66ed5ae6aaeeda48c8fd50aa5fb0b7}{Malloc\_ThreadStorage}}-\/>Malloc\_Blocks\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00129}00129\ \ \ \ \ \doxymbox{\hyperlink{user__malloc_8c_a8f66ed5ae6aaeeda48c8fd50aa5fb0b7}{Malloc\_ThreadStorage}}-\/>Malloc\_BlocksAlloced\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00130}00130\ \ \ \ \ \doxymbox{\hyperlink{user__malloc_8c_a8f66ed5ae6aaeeda48c8fd50aa5fb0b7}{Malloc\_ThreadStorage}}-\/>Malloc\_MemoryPool\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00131}00131\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00133}00133\ \textcolor{comment}{//\ before\ a\ thread\ is\ destroyed\ make\ sure\ we\ free\ any\ space\ it\ might\ be\ holding\ on\ to}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00134}\doxymbox{\hyperlink{user__malloc_8c_a6cadcf0520fca69ce4dd70059397d558}{00134}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{user__malloc_8c_a6cadcf0520fca69ce4dd70059397d558}{user\_removethread}}()}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00135}00135\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00136}00136\ \ \ \ \ \doxymbox{\hyperlink{struct_s_thread_storage}{SThreadStorage}}\ *psStorage\ =\ \doxymbox{\hyperlink{user__malloc_8c_a8f66ed5ae6aaeeda48c8fd50aa5fb0b7}{Malloc\_ThreadStorage}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00137}00137\ \ \ \ \ \textcolor{keywordflow}{if}(\ psStorage\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00138}00138\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00139}00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a7ed78d23d078d7ef0a317de1af076b78}{Malloc\_MemoryPool}}\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00140}00140\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ j\ =\ 0;j\ <\ 1037;j\ +=\ 1\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_block}{Block}}\ *OldBlock\ =\ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a7ed78d23d078d7ef0a317de1af076b78}{Malloc\_MemoryPool}}[j];}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ OldBlock\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mspace\_free(s\_mspace,\ OldBlock-\/>\doxymbox{\hyperlink{struct_block_a3460a1e68c53e9e7313b036b290c3fca}{Memory}});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OldBlock\ =\ OldBlock-\/>\doxymbox{\hyperlink{struct_block_a56b390dfdbc1694b4761b194e3b7a031}{Next}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ mspace\_free(s\_mspace,\ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a7ed78d23d078d7ef0a317de1af076b78}{Malloc\_MemoryPool}});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00152}00152\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00153}00153\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00154}00154\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ j\ =\ 0;j\ <\ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a96d53b542656b33c76a877ed4a854df0}{Malloc\_BlocksAlloced}};j\ +=\ 1\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00155}00155\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_ad0c9498e748714ae3868196ac244fc17}{Malloc\_BlocksMemory}}[j]);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00157}00157\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00159}00159\ \ \ \ \ \ \ \ \ mspace\_free(s\_mspace,\ psStorage);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00160}00160\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{user__malloc_8c_a8f66ed5ae6aaeeda48c8fd50aa5fb0b7}{Malloc\_ThreadStorage}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00161}00161\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00162}00162\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00166}\doxymbox{\hyperlink{user__malloc_8c_a4bca043427da3a6795439010c911c3f3}{00166}}\ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{user__malloc_8c_a4bca043427da3a6795439010c911c3f3}{user\_malloc}}(\textcolor{keywordtype}{size\_t}\ size)}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00167}00167\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00168}00168\ \ \ \ \ \textcolor{keywordtype}{void}\ *p\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00169}00169\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00170}00170\ \ \ \ \ \doxymbox{\hyperlink{struct_s_thread_storage}{SThreadStorage}}\ *psStorage\ =\ \doxymbox{\hyperlink{user__malloc_8c_a8f66ed5ae6aaeeda48c8fd50aa5fb0b7}{Malloc\_ThreadStorage}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00171}00171\ \ \ \ \ \textcolor{keywordflow}{if}(\ psStorage\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00172}00172\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00173}00173\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ is\ this\ the\ first\ time\ we've\ malloced}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00174}00174\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a7ed78d23d078d7ef0a317de1af076b78}{Malloc\_MemoryPool}}\ ==\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00175}00175\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ create\ an\ array\ of\ pointers\ to\ Block\ nodes,\ one\ pointer\ for\ each\ memory\ bytes\ size\ up\ to\ 1036}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a7ed78d23d078d7ef0a317de1af076b78}{Malloc\_MemoryPool}}\ =\ mspace\_malloc(s\_mspace,\ (\doxymbox{\hyperlink{user__malloc_8c_af58946f7a795769e04a21c1a6f004f2a}{MaxRetainedBytes}}+1)\ *\ 4);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ (\doxymbox{\hyperlink{user__malloc_8c_af58946f7a795769e04a21c1a6f004f2a}{MaxRetainedBytes}}+1);\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +=\ 1\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a7ed78d23d078d7ef0a317de1af076b78}{Malloc\_MemoryPool}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00182}00182\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00184}00184\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ are\ we\ interested\ in\ retaining\ this\ size\ of\ memory\ (less\ 4\ bytes\ to\ store\ the\ associated\ thread\ ID)}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00185}00185\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ size\ <\ (\doxymbox{\hyperlink{user__malloc_8c_af58946f7a795769e04a21c1a6f004f2a}{MaxRetainedBytes}}-\/4)\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00186}00186\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ add\ on\ space\ for\ the\ thread\ ID}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ size\ +=\ 4;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ round\ to\ the\ nearest\ malloc\ boundary.\ This\ is\ what\ happens\ internally\ in\ the\ malloc\ library}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ size\ <=\ 12\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ size\ =\ 12;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ size\ =\ ((size\ -\/\ 12)\ \&\ 0xfffffff0)\ +\ 16\ +\ 12;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ do\ we\ have\ any\ memory\ of\ this\ size\ retained}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a7ed78d23d078d7ef0a317de1af076b78}{Malloc\_MemoryPool}}[size]\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ pop\ it\ from\ the\ retained\ pool}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_block}{Block}}\ *\ OldBlock\ =\ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a7ed78d23d078d7ef0a317de1af076b78}{Malloc\_MemoryPool}}[size];}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a7ed78d23d078d7ef0a317de1af076b78}{Malloc\_MemoryPool}}[size]\ =\ OldBlock-\/>\doxymbox{\hyperlink{struct_block_a56b390dfdbc1694b4761b194e3b7a031}{Next}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ =\ OldBlock-\/>\doxymbox{\hyperlink{struct_block_a3460a1e68c53e9e7313b036b290c3fca}{Memory}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00204}00204\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ push\ the\ block\ storage\ onto\ the\ stack}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OldBlock-\/>\doxymbox{\hyperlink{struct_block_a56b390dfdbc1694b4761b194e3b7a031}{Next}}\ =\ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a87ce6da1116bd2c21def215e7d903f7a}{Malloc\_Blocks}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a87ce6da1116bd2c21def215e7d903f7a}{Malloc\_Blocks}}\ =\ OldBlock;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ create\ some\ new\ memory}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ =\ mspace\_malloc(s\_mspace,\ size);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ store\ the\ thread\ ID\ in\ the\ last\ 4\ bytes}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ threadID\ =\ sceKernelGetThreadId();}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *ThreadAddr\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)\ ((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}*)\ p\ +\ (size\ -\/\ 4));}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ThreadAddr[0]\ =\ threadID;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00219}00219\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00220}00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00221}00221\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ p\ =\ mspace\_malloc(s\_mspace,\ size);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00223}00223\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00224}00224\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00225}00225\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00226}00226\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00227}00227\ \ \ \ \ \ \ \ \ p\ =\ mspace\_malloc(s\_mspace,\ size);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00228}00228\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00229}00229\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00230}00230\ \textcolor{comment}{//\ \ SCE\_DBG\_LOG\_TRACE("{}Called\ malloc(\%u)"{},\ size);}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00231}00231\ \ \ \ \ \textcolor{keywordflow}{return}\ p;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00232}00232\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00233}00233\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00236}\doxymbox{\hyperlink{user__malloc_8c_a171ecd0e708f1d26344cf3ee011d285f}{00236}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{user__malloc_8c_a171ecd0e708f1d26344cf3ee011d285f}{user\_free}}(\textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}})}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00237}00237\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00238}00238\ \ \ \ \ \textcolor{keywordflow}{if}(\ !\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}}\ ||\ !s\_mspace\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00239}00239\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00240}00240\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00241}00241\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00243}00243\ \ \ \ \ \doxymbox{\hyperlink{struct_s_thread_storage}{SThreadStorage}}\ *psStorage\ =\ \doxymbox{\hyperlink{user__malloc_8c_a8f66ed5ae6aaeeda48c8fd50aa5fb0b7}{Malloc\_ThreadStorage}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00244}00244\ \ \ \ \ \textcolor{keywordflow}{if}(\ psStorage\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00245}00245\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00246}00246\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ calc\ the\ size\ of\ this\ chunk\ rounding\ to\ a\ valid\ size}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00247}00247\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ size\ =\ ((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}*)\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}})[-\/1]\ -\/\ 7;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00248}00248\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ RoundedSize\ =\ (size\ \&\ 0xfffffff0)\ +\ 12;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00249}00249\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00250}00250\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ RoundedSize\ <\ (\doxymbox{\hyperlink{user__malloc_8c_af58946f7a795769e04a21c1a6f004f2a}{MaxRetainedBytes}}+1)\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00251}00251\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ grab\ the\ thread\ ID\ from\ the\ last\ 4\ bytes}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *ThreadAddr\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)\ ((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}*)\ \doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}}\ +\ (RoundedSize\ -\/\ 4));}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ did\ this\ thread\ create\ this\ memory}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sceKernelGetThreadId()\ !=\ ThreadAddr[0]\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ don't\ worry\ about\ retaining\ memory\ allocated\ from\ a\ different\ thread.\ too\ much\ mucking\ about}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mspace\_free(s\_mspace,\ \doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00262}00262\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ need\ a\ block\ node\ to\ retain\ the\ memory\ on\ our\ stack.\ do\ we\ have\ any\ block\ nodes\ available}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a87ce6da1116bd2c21def215e7d903f7a}{Malloc\_Blocks}}\ ==\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a96d53b542656b33c76a877ed4a854df0}{Malloc\_BlocksAlloced}}\ ==\ \doxymbox{\hyperlink{user__malloc_8c_ab867fe1d37c2e43919c58596c51571c9}{Malloc\_BlocksMemorySize}}\ )\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Max\ blocks\ allocated}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ worst\ case\ for\ this\ running\ out\ is\ when\ the\ player\ has\ explored\ a\ large\ amount\ of\ the\ map\ in\ a\ single\ session\ and\ then\ quits.\ All\ the\ allocations}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ are\ suddenly\ freed\ up\ so\ we\ need\ lots\ of\ space\ to\ store\ them.}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}oh\ nos,\ max\ blocks\ allocated.\ increase\ Malloc\_BlocksMemorySize"{}});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(0);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00274}00274\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ allocate\ some\ more\ block\ space\ in\ a\ large\ chunk}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ chunkSize\ =\ 256;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_ad0c9498e748714ae3868196ac244fc17}{Malloc\_BlocksMemory}}[psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a96d53b542656b33c76a877ed4a854df0}{Malloc\_BlocksAlloced}}]\ =\ mspace\_malloc(s\_mspace,\ chunkSize\ *\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{struct_block}{Block}}));}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ push\ all\ the\ new\ blocks\ onto\ the\ pool}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ chunkSize;\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +=\ 1\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_block}{Block}}\ *NewBlock\ =\ \&psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_ad0c9498e748714ae3868196ac244fc17}{Malloc\_BlocksMemory}}[psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a96d53b542656b33c76a877ed4a854df0}{Malloc\_BlocksAlloced}}][\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NewBlock-\/>\doxymbox{\hyperlink{struct_block_a56b390dfdbc1694b4761b194e3b7a031}{Next}}\ =\ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a87ce6da1116bd2c21def215e7d903f7a}{Malloc\_Blocks}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00284}00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a87ce6da1116bd2c21def215e7d903f7a}{Malloc\_Blocks}}\ =\ NewBlock;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a96d53b542656b33c76a877ed4a854df0}{Malloc\_BlocksAlloced}}++;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00288}00288\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00289}00289\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ pop\ a\ block\ node\ off\ the\ stack}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_block}{Block}}\ *NewBlock\ =\ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a87ce6da1116bd2c21def215e7d903f7a}{Malloc\_Blocks}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a87ce6da1116bd2c21def215e7d903f7a}{Malloc\_Blocks}}\ =\ NewBlock-\/>\doxymbox{\hyperlink{struct_block_a56b390dfdbc1694b4761b194e3b7a031}{Next}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00293}00293\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ set\ up\ the\ block\ data\ and\ retain\ it\ to\ the\ correct\ slot.\ We\ can\ now\ reuse\ this\ memory\ on\ the\ next\ malloc}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ NewBlock-\/>\doxymbox{\hyperlink{struct_block_a3460a1e68c53e9e7313b036b290c3fca}{Memory}}\ =\ \doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ NewBlock-\/>\doxymbox{\hyperlink{struct_block_a56b390dfdbc1694b4761b194e3b7a031}{Next}}\ =\ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a7ed78d23d078d7ef0a317de1af076b78}{Malloc\_MemoryPool}}[RoundedSize];}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ psStorage-\/>\doxymbox{\hyperlink{struct_s_thread_storage_a7ed78d23d078d7ef0a317de1af076b78}{Malloc\_MemoryPool}}[RoundedSize]\ =\ NewBlock;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00298}00298\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00299}00299\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00300}00300\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ mspace\_free(s\_mspace,\ \doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00302}00302\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00303}00303\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00304}00304\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00305}00305\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00306}00306\ \ \ \ \ \ \ \ \ mspace\_free(s\_mspace,\ \doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00307}00307\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00308}00308\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00309}00309\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00312}\doxymbox{\hyperlink{user__malloc_8c_a9501f8e139e5d5ecb09ff75ac21c8632}{00312}}\ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{user__malloc_8c_a9501f8e139e5d5ecb09ff75ac21c8632}{user\_calloc}}(\textcolor{keywordtype}{size\_t}\ nelem,\ \textcolor{keywordtype}{size\_t}\ size)}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00313}00313\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00314}00314\ \textcolor{comment}{//\ \ SCE\_DBG\_LOG\_TRACE("{}Called\ calloc(\%u,\ \%u)"{},\ nelem,\ size);}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00315}00315\ \ \ \ \ \textcolor{keywordflow}{return}\ mspace\_calloc(s\_mspace,\ nelem,\ size);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00316}00316\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00320}\doxymbox{\hyperlink{user__malloc_8c_a5652fc95de054abdf0f8d8556ea25b08}{00320}}\ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{user__malloc_8c_a5652fc95de054abdf0f8d8556ea25b08}{user\_realloc}}(\textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}},\ \textcolor{keywordtype}{size\_t}\ size)}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00321}00321\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00322}00322\ \ \ \ \ \textcolor{keywordtype}{void}*\ p\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00323}00323\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00324}00324\ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{user__malloc_8c_a8f66ed5ae6aaeeda48c8fd50aa5fb0b7}{Malloc\_ThreadStorage}}\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00325}00325\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00326}00326\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ make\ sure\ we\ use\ malloc/memcpy/free\ instead\ of\ realloc}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00327}00327\ \ \ \ \ \ \ \ \ p\ =\ \doxymbox{\hyperlink{user__malloc_8c_a4bca043427da3a6795439010c911c3f3}{user\_malloc}}(size);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00329}00329\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ OldSize;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00330}00330\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ OldRoundedSize;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00331}00331\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}}\ )}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00332}00332\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ calc\ the\ size\ of\ this\ chunk\ rounding\ to\ a\ valid\ size}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ OldSize\ =\ ((\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}*)\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}})[-\/1]\ -\/\ 7;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ OldRoundedSize\ =\ (OldSize\ \&\ 0xfffffff0)\ +\ 12;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(p,\ \doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}},\ OldRoundedSize);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{user__malloc_8c_a171ecd0e708f1d26344cf3ee011d285f}{user\_free}}(\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00338}00338\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00339}00339\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00340}00340\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00341}00341\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00342}00342\ \ \ \ \ \ \ \ \ p\ =\ mspace\_realloc(s\_mspace,\ \doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}},\ size);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00343}00343\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00344}00344\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00345}00345\ \ \ \ \ \textcolor{keywordflow}{return}\ p;}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00347}00347\ \textcolor{comment}{//\ \ SCE\_DBG\_LOG\_TRACE("{}Called\ realloc(\%p,\ \%u)"{},\ ptr,\ size);}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00348}00348\ \textcolor{comment}{//\ \ return\ mspace\_realloc(s\_mspace,\ ptr,\ size);}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00349}00349\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00350}00350\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00353}\doxymbox{\hyperlink{user__malloc_8c_aed41f6aa7cf0bea713fdbd3abb0fd65f}{00353}}\ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{user__malloc_8c_aed41f6aa7cf0bea713fdbd3abb0fd65f}{user\_memalign}}(\textcolor{keywordtype}{size\_t}\ boundary,\ \textcolor{keywordtype}{size\_t}\ size)}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00354}00354\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00355}00355\ \textcolor{comment}{//\ \ SCE\_DBG\_LOG\_TRACE("{}Called\ memalign(\%u,\ \%u)"{},\ boundary,\ size);}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00356}00356\ \ \ \ \ \textcolor{keywordflow}{return}\ mspace\_memalign(s\_mspace,\ boundary,\ size);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00357}00357\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00358}00358\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00361}\doxymbox{\hyperlink{user__malloc_8c_ac37fc3401f95b5dc97028efc2eb20162}{00361}}\ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{user__malloc_8c_ac37fc3401f95b5dc97028efc2eb20162}{user\_reallocalign}}(\textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}},\ \textcolor{keywordtype}{size\_t}\ size,\ \textcolor{keywordtype}{size\_t}\ boundary)}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00362}00362\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00363}00363\ \textcolor{comment}{//\ \ SCE\_DBG\_LOG\_TRACE("{}Called\ reallocalign(\%p,\ \%u,\ \%u)"{},\ ptr,\ size,\ boundary);}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00364}00364\ \ \ \ \ \textcolor{keywordflow}{return}\ mspace\_reallocalign(s\_mspace,\ \doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}},\ size,\ boundary);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00365}00365\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00366}00366\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00369}\doxymbox{\hyperlink{user__malloc_8c_abedebb2df19598b6ac9aa6c2275cbc07}{00369}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{user__malloc_8c_abedebb2df19598b6ac9aa6c2275cbc07}{user\_malloc\_stats}}(\textcolor{keyword}{struct}\ malloc\_managed\_size\ *mmsize)}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00370}00370\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00371}00371\ \textcolor{comment}{//\ \ SCE\_DBG\_LOG\_TRACE("{}Called\ malloc\_stats"{});}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00372}00372\ \ \ \ \ \textcolor{keywordflow}{return}\ mspace\_malloc\_stats(s\_mspace,\ mmsize);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00373}00373\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00374}00374\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00377}\doxymbox{\hyperlink{user__malloc_8c_af58b5a1a6c8afc4b122fc050786996b1}{00377}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{user__malloc_8c_af58b5a1a6c8afc4b122fc050786996b1}{user\_malloc\_stats\_fast}}(\textcolor{keyword}{struct}\ malloc\_managed\_size\ *mmsize)}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00378}00378\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00379}00379\ \textcolor{comment}{//\ \ SCE\_DBG\_LOG\_TRACE("{}Called\ malloc\_stats\_fast"{});}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00380}00380\ \ \ \ \ \textcolor{keywordflow}{return}\ mspace\_malloc\_stats\_fast(s\_mspace,\ mmsize);}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00381}00381\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00385}\doxymbox{\hyperlink{user__malloc_8c_a062ef20192d80da5eec9bb55804dd0c3}{00385}}\ \textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{user__malloc_8c_a062ef20192d80da5eec9bb55804dd0c3}{user\_malloc\_usable\_size}}(\textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}})}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00386}00386\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00387}00387\ \textcolor{comment}{//\ \ SCE\_DBG\_LOG\_TRACE("{}Called\ malloc\_usable\_size"{});}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00388}00388\ \ \ \ \ \textcolor{keywordflow}{return}\ mspace\_malloc\_usable\_size(\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}});}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00389}00389\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc_8c_source_l00390}00390\ }
+
+\end{DoxyCode}

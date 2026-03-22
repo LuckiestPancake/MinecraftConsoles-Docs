@@ -1,0 +1,401 @@
+\doxysection{Edge\+ZLib.\+cpp}
+\hypertarget{_edge_z_lib_8cpp_source}{}\label{_edge_z_lib_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/PS3Extras/EdgeZLib.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/PS3Extras/EdgeZLib.cpp}}
+\doxymbox{\hyperlink{_edge_z_lib_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_edge_z_lib_8h}{EdgeZLib.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}edge/zlib/edgezlib\_ppu.h"{}}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00006}00006\ \textcolor{keyword}{static}\ CellSpurs*\ s\_pSpurs\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00008}00008\ \textcolor{comment}{//Set\ this\ to\ 5\ if\ you\ want\ deflate/inflate\ to\ run\ in\ parallel\ on\ 5\ SPUs.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00010}\doxymbox{\hyperlink{_edge_z_lib_8cpp_ae6c7bbdaa8d0da8c6dafa9d722543379}{00010}}\ \textcolor{keyword}{const}\ uint32\_t\ \doxymbox{\hyperlink{_edge_z_lib_8cpp_ae6c7bbdaa8d0da8c6dafa9d722543379}{kNumDeflateTasks}}\ \ \ \ \ \ \ \ \ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00011}\doxymbox{\hyperlink{_edge_z_lib_8cpp_a4aaa7324303234b2abcbf6ca79fc9531}{00011}}\ \textcolor{keyword}{const}\ uint32\_t\ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a4aaa7324303234b2abcbf6ca79fc9531}{kMaxNumDeflateQueueEntries}}\ =\ 64;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00012}00012\ \textcolor{keyword}{static}\ CellSpursEventFlag\ s\_eventFlagDeflate;\ \ \ \ \ \ \ \textcolor{comment}{//Cannot\ be\ on\ stack}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00013}00013\ \textcolor{keyword}{static}\ CellSpursTaskset\ s\_taskSetDeflate;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//Cannot\ be\ on\ stack}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00014}00014\ \textcolor{keyword}{static}\ EdgeZlibDeflateQHandle\ s\_deflateQueue;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00015}00015\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}*\ s\_pDeflateQueueBuffer\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00016}00016\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}*\ s\_pDeflateTaskContext[\doxymbox{\hyperlink{_edge_z_lib_8cpp_ae6c7bbdaa8d0da8c6dafa9d722543379}{kNumDeflateTasks}}];}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00017}00017\ \textcolor{keyword}{static}\ uint32\_t\ s\_numElementsToCompress;\ \ \ \ \textcolor{comment}{//Cannot\ be\ on\ stack}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00020}\doxymbox{\hyperlink{_edge_z_lib_8cpp_a9b5efa2f863bed27ae7d602db9c63b6d}{00020}}\ \textcolor{keyword}{const}\ uint32\_t\ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a9b5efa2f863bed27ae7d602db9c63b6d}{kNumInflateTasks}}\ \ \ \ \ \ \ \ \ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00021}\doxymbox{\hyperlink{_edge_z_lib_8cpp_a1bd65a7a373d168ba746bd715e19023d}{00021}}\ \textcolor{keyword}{const}\ uint32\_t\ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a1bd65a7a373d168ba746bd715e19023d}{kMaxNumInflateQueueEntries}}\ =\ 64;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00022}00022\ \textcolor{keyword}{static}\ CellSpursEventFlag\ s\_eventFlagInflate;\ \ \ \ \ \ \ \textcolor{comment}{//Cannot\ be\ on\ stack}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00023}00023\ \textcolor{keyword}{static}\ CellSpursTaskset\ s\_taskSetInflate;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//Cannot\ be\ on\ stack}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00024}00024\ \textcolor{keyword}{static}\ EdgeZlibInflateQHandle\ s\_inflateQueue;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00025}00025\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}*\ s\_pInflateQueueBuffer\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00026}00026\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}*\ s\_pInflateTaskContext[\doxymbox{\hyperlink{_edge_z_lib_8cpp_a9b5efa2f863bed27ae7d602db9c63b6d}{kNumInflateTasks}}];}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00027}00027\ \textcolor{keyword}{static}\ uint32\_t\ s\_numElementsToDecompress;\ \ \textcolor{comment}{//Cannot\ be\ on\ stack}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00030}00030\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{_orbis_stubs_8h_a18c881c9602dbf86a11ec558ec2cc990}{CRITICAL\_SECTION}}\ s\_critSect;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00032}00032\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ sc\_verbose\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00034}\doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{00034}}\ \textcolor{preprocessor}{\#define\ printf\_verbose(...)\ \{\ if(sc\_verbose)\{\ printf(\_\_VA\_ARGS\_\_);\}\ \}}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00038}\doxymbox{\hyperlink{class_edge_z_lib_a70761ab6f3b02811cf7cc7e68202e406}{00038}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_edge_z_lib_a70761ab6f3b02811cf7cc7e68202e406}{EdgeZLib::Init}}(CellSpurs*\ pSpurs)}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00039}00039\ \{}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00040}00040\ \ \ \ \ s\_pSpurs\ =\ pSpurs;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00041}00041\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_af41f87535f6c7854166e69f18e0c123a}{InitializeCriticalSection}}(\&s\_critSect);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00044}00044\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00045}00045\ \ \ \ \ \textcolor{comment}{//\ \ Initialize\ Deflate\ Queue.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00046}00046\ \ \ \ \ \textcolor{comment}{//\ \ This\ will\ hold\ the\ queue\ of\ work\ that\ the\ Deflate\ Task(s)\ on\ SPU\ will}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00047}00047\ \ \ \ \ \textcolor{comment}{//\ \ pull\ work\ from.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00048}00048\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00050}00050\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ register\ taskSet}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ CellSpursTasksetAttribute\ taskSetAttribute;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ uint8\_t\ prios[8]\ =\ \{15,\ 15,\ 15,\ 15,\ 15,\ 15,\ 0,\ 0\};}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00055}00055\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ret\ =\ cellSpursTasksetAttributeInitialize(\ \&taskSetAttribute,\ 0,\ prios,\ 8\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ ret\ =\ cellSpursTasksetAttributeSetName(\&taskSetAttribute,\ \textcolor{stringliteral}{"{}edgeZlibDeflateTaskSet"{}});}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00058}00058\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ ret\ =\ cellSpursCreateTasksetWithAttribute(\ pSpurs,\ \&s\_taskSetDeflate,\ \&taskSetAttribute\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ ret\ =\ cellSpursEventFlagInitializeIWL(\ \ pSpurs,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \&s\_eventFlagDeflate,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ CELL\_SPURS\_EVENT\_FLAG\_CLEAR\_AUTO,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ CELL\_SPURS\_EVENT\_FLAG\_SPU2PPU\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ ret\ =\ cellSpursEventFlagAttachLv2EventQueue(\ \&s\_eventFlagDeflate\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00070}00070\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Event\ flag\ created\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00072}00072\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ uint32\_t\ deflateQueueBuffSize\ =\ edgeZlibGetDeflateQueueSize(\ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a4aaa7324303234b2abcbf6ca79fc9531}{kMaxNumDeflateQueueEntries}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ s\_pDeflateQueueBuffer\ =\ memalign(\ EDGE\_ZLIB\_DEFLATE\_QUEUE\_ALIGN,\ deflateQueueBuffSize\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ s\_deflateQueue\ =\ edgeZlibCreateDeflateQueue(}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ s\_pSpurs,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a4aaa7324303234b2abcbf6ca79fc9531}{kMaxNumDeflateQueueEntries}},}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ s\_pDeflateQueueBuffer,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ deflateQueueBuffSize\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00081}00081\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Deflate\ Queue\ created\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00083}00083\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ Build\ Deflate\ Tasks.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ We\ want\ the\ compression\ to\ be\ able\ to\ run\ in\ parallel\ on\ multiple}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ SPUs\ so\ we\ create\ as\ many\ tasks\ as\ SPUs\ that\ we\ want\ it\ to\ run}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ on\ (kNumDeflateTasks).}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ s\_pDeflateTaskContext[\doxymbox{\hyperlink{_edge_z_lib_8cpp_ae6c7bbdaa8d0da8c6dafa9d722543379}{kNumDeflateTasks}}];}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ uint32\_t\ taskNum\ =\ 0\ ;\ taskNum\ <\ \doxymbox{\hyperlink{_edge_z_lib_8cpp_ae6c7bbdaa8d0da8c6dafa9d722543379}{kNumDeflateTasks}}\ ;\ taskNum++\ )}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ contextSaveSize\ =\ edgeZlibGetDeflateTaskContextSaveSize();}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ s\_pDeflateTaskContext[taskNum]\ =\ memalign(\ CELL\_SPURS\_TASK\_CONTEXT\_ALIGN,\ contextSaveSize\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ edgeZlibCreateDeflateTask(\ \&s\_taskSetDeflate,\ s\_pDeflateTaskContext[taskNum],\ s\_deflateQueue\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00101}00101\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ \%d\ Deflate\ Task(s)\ started\(\backslash\)n"{}},\ \doxymbox{\hyperlink{_edge_z_lib_8cpp_ae6c7bbdaa8d0da8c6dafa9d722543379}{kNumDeflateTasks}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00103}00103\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00104}00104\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00108}00108\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ Initialize\ taskset\ and\ event\ flag}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ register\ taskSet}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ CellSpursTasksetAttribute\ taskSetAttribute;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ uint8\_t\ prios[8]\ =\ \{15,\ 15,\ 15,\ 15,\ 15,\ 15,\ 0,\ 0\};}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ret\ =\ cellSpursTasksetAttributeInitialize(\ \&taskSetAttribute,\ 0,\ prios,\ 8\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ ret\ =\ cellSpursTasksetAttributeSetName(\&taskSetAttribute,\ \textcolor{stringliteral}{"{}edgeZlibInflateTaskSet"{}});}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ ret\ =\ cellSpursCreateTasksetWithAttribute(\ s\_pSpurs,\ \&s\_taskSetInflate,\ \&taskSetAttribute\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00127}00127\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Inflate\ Taskset\ created\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00129}00129\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ ret\ =\ cellSpursEventFlagInitializeIWL(\ \ s\_pSpurs,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \&s\_eventFlagInflate,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ CELL\_SPURS\_EVENT\_FLAG\_CLEAR\_AUTO,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ CELL\_SPURS\_EVENT\_FLAG\_SPU2PPU\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ ret\ =\ cellSpursEventFlagAttachLv2EventQueue(\ \&s\_eventFlagInflate\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00139}00139\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Event\ flag\ created\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00141}00141\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ Initialize\ Inflate\ Queue.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ This\ will\ hold\ the\ queue\ of\ work\ that\ the\ Inflate\ Task(s)\ on\ SPU\ will}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ pull\ work\ from.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ uint32\_t\ inflateQueueBuffSize\ =\ edgeZlibGetInflateQueueSize(\ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a1bd65a7a373d168ba746bd715e19023d}{kMaxNumInflateQueueEntries}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ s\_pInflateQueueBuffer\ =\ memalign(\ EDGE\_ZLIB\_INFLATE\_QUEUE\_ALIGN,\ inflateQueueBuffSize\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ s\_inflateQueue\ =\ edgeZlibCreateInflateQueue(}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ s\_pSpurs,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a1bd65a7a373d168ba746bd715e19023d}{kMaxNumInflateQueueEntries}},}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ s\_pInflateQueueBuffer,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ inflateQueueBuffSize\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00158}00158\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Inflate\ Queue\ created\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00160}00160\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ Build\ Inflate\ Tasks.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ We\ want\ the\ compression\ to\ be\ able\ to\ run\ in\ parallel\ on\ multiple}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ SPUs\ so\ we\ create\ as\ many\ tasks\ as\ SPUs\ that\ we\ want\ it\ to\ run}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00166}00166\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ on\ (kNumInflateTasks).}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00169}00169\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ uint32\_t\ taskNum\ =\ 0\ ;\ taskNum\ <\ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a9b5efa2f863bed27ae7d602db9c63b6d}{kNumInflateTasks}}\ ;\ taskNum++\ )}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ contextSaveSize\ =\ edgeZlibGetInflateTaskContextSaveSize();}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ s\_pInflateTaskContext[taskNum]\ =\ memalign(\ CELL\_SPURS\_TASK\_CONTEXT\_ALIGN,\ contextSaveSize\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ edgeZlibCreateInflateTask(\ \&s\_taskSetInflate,\ s\_pInflateTaskContext[taskNum],\ s\_inflateQueue\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00176}00176\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ \%d\ Inflate\ Task(s)\ started\(\backslash\)n"{}},\ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a9b5efa2f863bed27ae7d602db9c63b6d}{kNumInflateTasks}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00178}00178\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00179}00179\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00181}00181\ \}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00184}00184\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00187}00187\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00188}\doxymbox{\hyperlink{class_edge_z_lib_a6c7a806b6610de8ed06a4aeab49a81fa}{00188}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_edge_z_lib_a6c7a806b6610de8ed06a4aeab49a81fa}{EdgeZLib::Compress}}(\textcolor{keywordtype}{void}*\ pDestination,\ uint32\_t*\ pDestSize,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ pSource,\ uint32\_t\ SrcSize)}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00189}00189\ \{}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00190}00190\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&s\_critSect);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00193}00193\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00194}00194\ \ \ \ \ \textcolor{comment}{//\ \ Add\ one\ item\ to\ the\ Deflate\ Queue.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00195}00195\ \ \ \ \ \textcolor{comment}{//\ \ The\ Deflate\ Task\ will\ wake\ up\ and\ process\ this\ work.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00196}00196\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00198}00198\ \ \ \ \ uint32\_t*\ pDst\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00199}00199\ \ \ \ \ \textcolor{keywordtype}{bool}\ findingSizeOnly\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00200}00200\ \ \ \ \ \textcolor{keywordflow}{if}(pDestination\ ==\ \textcolor{keyword}{nullptr}\ \&\&\ *pDestSize\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00201}00201\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ pDst\ =\ (uint32\_t*)\doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(SrcSize);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ findingSizeOnly\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ *pDestSize\ =\ SrcSize;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00205}00205\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00206}00206\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00207}00207\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ pDst\ =\ ((uint32\_t*)pDestination);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00209}00209\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00211}00211\ \ \ \ \ pDst[0]\ =\ SrcSize;\ \ \ \ \ \ \textcolor{comment}{//\ 4\ byte\ header\ added\ for\ source\ size}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00214}00214\ \ \ \ \ s\_numElementsToCompress\ =\ 1;\ \ \ \ \textcolor{comment}{//Must\ be\ set\ correctly\ before\ any\ elements\ are\ added}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00215}00215\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00216}00216\ \ \ \ \ uint16\_t\ eventFlagBits\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00218}00218\ \ \ \ \ uint32\_t\ compressionLevel\ =\ 9;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00219}00219\ \ \ \ \ \textcolor{keyword}{static}\ uint32\_t\ s\_compressedSize;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//Cannot\ be\ on\ stack}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00220}00220\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00221}00221\ \ \ \ \ \textcolor{comment}{//\ create\ one\ task\ queue\ entry\ (max\ 64K\ deflate\ per\ entry)}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00222}00222\ \ \ \ \ edgeZlibAddDeflateQueueElement(\ \ \ \ \ s\_deflateQueue,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ pSource,\ SrcSize,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \&pDst[1],\ *pDestSize,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \&s\_compressedSize,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \&s\_numElementsToCompress,\ \ \ \textcolor{comment}{//This\ will\ be\ decremented\ by\ 1\ when\ this\ element\ is\ compressed}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \&s\_eventFlagDeflate,\ \ \ \ \ \ \ \ \textcolor{comment}{//When\ s\_numElementsToCompress\ decrements\ to\ zero,\ this\ event\ will\ be\ triggered}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ eventFlagBits,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ compressionLevel,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ kEdgeZlibDeflateTask\_DeflateStoreCompressed}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00232}00232\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00233}00233\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00234}00234\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Deflate\ element(s)\ added\ to\ queue\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00236}00236\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Wait\ for\ event\ flag\ acknowledgment\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00237}00237\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00240}00240\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00241}00241\ \ \ \ \ \textcolor{comment}{//\ \ Wait\ for\ the\ event\ flag\ to\ be\ acknowledged\ in\ order\ to\ tell\ us\ the}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00242}00242\ \ \ \ \ \textcolor{comment}{//\ \ work\ is\ done.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00243}00243\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00245}00245\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00246}00246\ \ \ \ \ \textcolor{keywordtype}{int}\ ret\ =\ cellSpursEventFlagWait(\ \&s\_eventFlagDeflate,\ \&eventFlagBits,\ CELL\_SPURS\_EVENT\_FLAG\_AND\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00247}00247\ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00248}00248\ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\ s\_numElementsToCompress\ ==\ 0\ );\ \textcolor{comment}{//Should\ have\ reached\ zero\ by\ now}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00249}00249\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00250}00250\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00251}00251\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Edge\ Zlib\ event\ acknowledged\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00252}00252\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00253}00253\ \ \ \ \ \textcolor{comment}{//\ ensure\ Deflate\ task\ told\ us\ it\ stored\ the\ compressed\ data}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00254}00254\ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\ (s\_compressedSize\ \&\ kEdgeZlibDeflateTask\_HowStoredMask)\ ==\ kEdgeZlibDeflateTask\_CompressedWasStored\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00255}00255\ \ \ \ \ \textcolor{comment}{//\ remove\ bit\ from\ s\_compressedSize}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00256}00256\ \ \ \ \ s\_compressedSize\ \&=\ \string~kEdgeZlibDeflateTask\_HowStoredMask;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00258}00258\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00259}00259\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00260}00260\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00262}00262\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00263}00263\ \ \ \ \ \textcolor{comment}{//\ \ Print\ stats}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00264}00264\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00267}00267\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00268}00268\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}\(\backslash\)n\ uncompSiz\ \ \ \ compSiz\ \ \ \ compress\%\%\ numTasks\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00269}00269\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00270}00270\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00271}00271\ \ \ \ \ \textcolor{keywordtype}{float}\ compressionPercent\ =\ (1.f\ -\/\ (float)s\_compressedSize\ /\ (float)SrcSize)\ *\ 100.f;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00273}00273\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00274}00274\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}\ \ \ 0x\%05x\ \ \ \ 0x\%05x\ \ \ \%8.2f\%\%\ \ \ \ \ \ \ \ \ \%d\(\backslash\)n\(\backslash\)n"{}},\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00275}00275\ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{int})SrcSize,\ (\textcolor{keywordtype}{int})s\_compressedSize,\ \ \ \ compressionPercent,\ \doxymbox{\hyperlink{_edge_z_lib_8cpp_ae6c7bbdaa8d0da8c6dafa9d722543379}{kNumDeflateTasks}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00276}00276\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00278}00278\ \ \ \ \ *pDestSize\ =\ s\_compressedSize\ +\ 4;\ \ \ \ \ \ \textcolor{comment}{//\ 4\ byte\ header\ for\ size}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00279}00279\ \ \ \ \ \textcolor{keywordflow}{if}(findingSizeOnly)}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00280}00280\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(pDst);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00281}00281\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&s\_critSect);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00283}00283\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00284}00284\ \}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00285}00285\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00286}\doxymbox{\hyperlink{class_edge_z_lib_a11d019afd168e5c6bca17bc880180974}{00286}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_edge_z_lib_a11d019afd168e5c6bca17bc880180974}{EdgeZLib::Shutdown}}()}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00287}00287\ \{}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00289}00289\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00290}00290\ \ \ \ \ \textcolor{comment}{//\ \ Shutdown\ Deflate\ Queue,\ event\ flag\ and\ taskset.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00291}00291\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00293}00293\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00294}00294\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00295}00295\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Shutdown\ Deflate\ Queue...\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00296}00296\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00297}00297\ \ \ \ \ edgeZlibShutdownDeflateQueue(\ s\_deflateQueue\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00298}00298\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00299}00299\ \ \ \ \ \textcolor{keywordtype}{int}\ ret\ =\ cellSpursEventFlagDetachLv2EventQueue(\ \&s\_eventFlagDeflate\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00300}00300\ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00301}00301\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00302}00302\ \ \ \ \ \textcolor{comment}{//\ shutdown\ taskSet}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00303}00303\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00304}00304\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Wait\ for\ taskset\ shutdown...\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00305}00305\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00306}00306\ \ \ \ \ ret\ =\ cellSpursShutdownTaskset(\ \&s\_taskSetDeflate\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00307}00307\ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00308}00308\ \ \ \ \ \textcolor{comment}{//\ wait\ for\ all\ tasks\ to\ finish}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00309}00309\ \ \ \ \ ret\ =\ cellSpursJoinTaskset(\ \&s\_taskSetDeflate\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00310}00310\ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00311}00311\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00312}00312\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Shutdown\ taskset\ completed.\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00313}00313\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00314}00314\ \ \ \ \ \textcolor{comment}{//\ free\ alloc'd\ buffers}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00315}00315\ \ \ \ \ \textcolor{keywordflow}{for}(\ uint32\_t\ taskNum\ =\ 0\ ;\ taskNum\ <\ \doxymbox{\hyperlink{_edge_z_lib_8cpp_ae6c7bbdaa8d0da8c6dafa9d722543379}{kNumDeflateTasks}}\ ;\ taskNum++\ )}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00316}00316\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(\ s\_pDeflateTaskContext[taskNum]\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00318}00318\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00319}00319\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(\ s\_pDeflateQueueBuffer\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00320}00320\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00323}00323\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00324}00324\ \ \ \ \ \textcolor{comment}{//\ \ Shutdown\ Inflate\ Queue,\ event\ flag\ and\ taskset.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00325}00325\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00327}00327\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00328}00328\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00329}00329\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Shutdown\ Inflate\ Queue...\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00330}00330\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00331}00331\ \ \ \ \ edgeZlibShutdownInflateQueue(\ s\_inflateQueue\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00332}00332\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00333}00333\ \ \ \ \ ret\ =\ cellSpursEventFlagDetachLv2EventQueue(\ \&s\_eventFlagInflate\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00334}00334\ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00336}00336\ \ \ \ \ \textcolor{comment}{//\ shutdown\ taskSet}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00337}00337\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00338}00338\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Wait\ for\ taskset\ shutdown...\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00339}00339\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00340}00340\ \ \ \ \ ret\ =\ cellSpursShutdownTaskset(\ \&s\_taskSetInflate\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00341}00341\ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00342}00342\ \ \ \ \ \textcolor{comment}{//\ wait\ for\ all\ tasks\ to\ finish}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00343}00343\ \ \ \ \ ret\ =\ cellSpursJoinTaskset(\ \&s\_taskSetInflate\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00344}00344\ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00345}00345\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00346}00346\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Shutdown\ taskset\ completed.\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00347}00347\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00348}00348\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00349}00349\ \ \ \ \ \textcolor{comment}{//\ free\ alloc'd\ buffers}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00350}00350\ \ \ \ \ \textcolor{keywordflow}{for}(\ uint32\_t\ taskNum\ =\ 0\ ;\ taskNum\ <\ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a9b5efa2f863bed27ae7d602db9c63b6d}{kNumInflateTasks}}\ ;\ taskNum++\ )}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00351}00351\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(\ s\_pInflateTaskContext[taskNum]\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00353}00353\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00354}00354\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(\ s\_pInflateQueueBuffer\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00355}00355\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00356}00356\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00357}00357\ \}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00358}00358\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00359}\doxymbox{\hyperlink{class_edge_z_lib_a16772d7328c025052e61ecc5747d2501}{00359}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_edge_z_lib_a16772d7328c025052e61ecc5747d2501}{EdgeZLib::Decompress}}(\textcolor{keywordtype}{void}*\ pDestination,\ uint32\_t*\ pDestSize,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ pSource,\ uint32\_t\ SrcSize)}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00360}00360\ \{\ \ \ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00361}00361\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00362}00362\ \textcolor{preprocessor}{\#if\ 1}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00363}00363\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&s\_critSect);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00364}00364\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00365}00365\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t*\ pSrc\ =\ (uint32\_t*)pSource;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00366}00366\ \ \ \ \ uint32\_t\ uncompressedSize\ =\ pSrc[0];}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00367}00367\ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(uncompressedSize\ <=\ (*pDestSize));}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00368}00368\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00369}00369\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00372}00372\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00373}00373\ \ \ \ \ \textcolor{comment}{//\ \ Add\ one\ item\ to\ the\ Inflate\ Queue.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00374}00374\ \ \ \ \ \textcolor{comment}{//\ \ The\ Inflate\ Task\ will\ wake\ up\ and\ process\ this\ work.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00375}00375\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00377}00377\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00378}00378\ \ \ \ \ s\_numElementsToDecompress\ =\ 1;\ \ \textcolor{comment}{//Must\ be\ set\ correctly\ before\ any\ elements\ are\ added}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00379}00379\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00380}00380\ \ \ \ \ uint16\_t\ eventFlagBits\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00381}00381\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00382}00382\ \ \ \ \ \textcolor{comment}{//\ create\ one\ task\ queue\ entry\ (max\ 64K\ inflate\ per\ entry)}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00383}00383\ \ \ \ \ edgeZlibAddInflateQueueElement(\ s\_inflateQueue,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00384}00384\ \ \ \ \ \ \ \ \ \&pSrc[1],\ SrcSize,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ pDestination,\ uncompressedSize,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ \&s\_numElementsToDecompress,\ \textcolor{comment}{//This\ will\ be\ decremented\ by\ 1\ when\ this\ element\ is\ compressed}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \&s\_eventFlagInflate,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//When\ s\_numElementsToDecompress\ decrements\ to\ zero,\ this\ event\ will\ be\ triggered}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ eventFlagBits,}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ kEdgeZlibInflateTask\_Inflate}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ );\ \ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00391}00391\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00392}00392\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00393}00393\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Inflate\ element(s)\ added\ to\ queue\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00394}00394\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00395}00395\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Wait\ for\ event\ flag\ acknowledgment\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00396}00396\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00397}00397\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00399}00399\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00400}00400\ \ \ \ \ \textcolor{comment}{//\ \ Wait\ for\ the\ event\ flag\ to\ be\ acknowledged\ in\ order\ to\ tell\ us\ the}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00401}00401\ \ \ \ \ \textcolor{comment}{//\ \ work\ is\ done.}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00402}00402\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00405}00405\ \ \ \ \ \textcolor{keywordtype}{int}\ ret\ =\ cellSpursEventFlagWait(\ \&s\_eventFlagInflate,\ \&eventFlagBits,\ CELL\_SPURS\_EVENT\_FLAG\_AND\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00406}00406\ \ \ \ \ \doxymbox{\hyperlink{_p_s3_2_assert_2assert_8h_a1945dee33f07871a10dc181c205ae8ba}{PS3\_ASSERT\_CELL\_ERROR}}(ret);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00407}00407\ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\ s\_numElementsToDecompress\ ==\ 0\ );\ \ \ \textcolor{comment}{//Should\ have\ reached\ zero\ by\ now}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00408}00408\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00409}00409\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00410}00410\ \ \ \ \ \doxymbox{\hyperlink{_edge_z_lib_8cpp_a57eb4b02f24d4ddd4dac3c1ec57e3ad3}{printf\_verbose}}(\ \textcolor{stringliteral}{"{}PPU:\ Edge\ Zlib\ event\ acknowledged\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00411}00411\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00412}00412\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00413}00413\ \ \ \ \ *pDestSize\ =\ uncompressedSize;}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00414}00414\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&s\_critSect);}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00415}00415\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00416}00416\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00417}00417\ }
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00418}00418\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ 0}}
+\DoxyCodeLine{\Hypertarget{_edge_z_lib_8cpp_source_l00419}00419\ \}}
+
+\end{DoxyCode}

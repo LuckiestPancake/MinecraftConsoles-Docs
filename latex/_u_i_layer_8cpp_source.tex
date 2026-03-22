@@ -1,0 +1,914 @@
+\doxysection{UILayer.\+cpp}
+\hypertarget{_u_i_layer_8cpp_source}{}\label{_u_i_layer_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/UI/UILayer.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/UI/UILayer.cpp}}
+\doxymbox{\hyperlink{_u_i_layer_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_u_i_8h}{UI.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_u_i_layer_8h}{UILayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_u_i_scene_8h}{UIScene.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00006}\doxymbox{\hyperlink{class_u_i_layer_abd8d4b9050cfd263dabb51ae72df039b}{00006}}\ \doxymbox{\hyperlink{class_u_i_layer_abd8d4b9050cfd263dabb51ae72df039b}{UILayer::UILayer}}(\doxymbox{\hyperlink{class_u_i_group}{UIGroup}}\ *\doxymbox{\hyperlink{json_8hpp_a682088b120a3283ca341558cc23102d4}{parent}})}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00007}00007\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00008}00008\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_afd2f8c4ebbf3af49bad3ba2e91460770}{m\_parentGroup}}\ =\ \doxymbox{\hyperlink{json_8hpp_a682088b120a3283ca341558cc23102d4}{parent}};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00009}00009\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a4d3e786ab7829a5a437853ff77e16f5a}{m\_hasFocus}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00010}00010\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a27a92d606ee4125ed253fddb2e3e9675}{m\_bMenuDisplayed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00011}00011\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a57584bc14797a60cb629a40bac0c0572}{m\_bPauseMenuDisplayed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00012}00012\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a697ee7e1da2d5735c7ded9fdd59079e4}{m\_bContainerMenuDisplayed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00013}00013\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_ae2ec048d0e5d7da3c0e32c485750896f}{m\_bIgnoreAutosaveMenuDisplayed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00014}00014\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a3b4ed1fdc9741fc749b183fbcd0c51d7}{m\_bIgnorePlayerJoinMenuDisplayed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00015}00015\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00017}\doxymbox{\hyperlink{class_u_i_layer_a74070165e262317cd48142dd8a5d7ad1}{00017}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_a74070165e262317cd48142dd8a5d7ad1}{UILayer::tick}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00018}00018\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00019}00019\ \ \ \ \ \textcolor{comment}{//\ Delete\ old\ scenes\ -\/\ deleting\ a\ scene\ can\ cause\ a\ new\ scene\ to\ be\ deleted,\ so\ we\ need\ to\ make\ a\ copy\ of\ the\ scenes\ that\ we\ are\ going\ to\ try\ and\ destroy\ this\ tick}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00020}00020\ \ \ \ \ vector<UIScene\ *>scenesToDeleteCopy;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00021}00021\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ scene\ :\ m\_scenesToDelete)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00022}00022\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00023}00023\ \ \ \ \ \ \ \ \ scenesToDeleteCopy.push\_back(scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00024}00024\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00025}00025\ \ \ \ \ m\_scenesToDelete.clear();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00027}00027\ \ \ \ \ \textcolor{comment}{//\ Delete\ the\ scenes\ in\ our\ copy\ if\ they\ are\ ready\ to\ delete,\ otherwise\ add\ back\ to\ the\ ones\ that\ are\ still\ to\ be\ deleted.\ Actually\ deleting\ a\ scene\ might\ also\ add\ something\ back\ into\ m\_scenesToDelete.}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00028}00028\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ scene\ :\ scenesToDeleteCopy)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00029}00029\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00030}00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ scene\ \&\&\ scene-\/>isReadyToDelete())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ scene;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00035}00035\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ m\_scenesToDelete.push\_back(scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00038}00038\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00040}00040\ \ \ \ \ \textcolor{keywordflow}{while}\ (!m\_scenesToDestroy.empty())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00041}00041\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *scene\ =\ m\_scenesToDestroy.back();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ m\_scenesToDestroy.pop\_back();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ scene-\/>\doxymbox{\hyperlink{class_u_i_scene_ae8a30305219588af8117e17da50d094d}{destroyMovie}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00045}00045\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00046}00046\ \ \ \ \ m\_scenesToDestroy.clear();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00048}00048\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\ \&\ component\ :\ m\_components)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00049}00049\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ component-\/>tick();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00051}00051\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{comment}{//\ Note:\ reverse\ iterator,\ the\ last\ element\ is\ the\ top\ of\ the\ stack}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00053}00053\ \ \ \ \ \textcolor{keywordtype}{int}\ sceneIndex\ =\ m\_sceneStack.size()\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00054}00054\ \ \ \ \ \textcolor{keywordflow}{while}(\ sceneIndex\ >=\ 0\ \&\&\ sceneIndex\ <\ m\_sceneStack.size()\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00055}00055\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \textcolor{comment}{//(*it)-\/>tick();}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *scene\ =\ m\_sceneStack[sceneIndex];}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00058}00058\ \ \ \ \ \ \ \ \ scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a6dda066e4c1cc95afb64426df5da2ca9}{tick}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ -\/-\/sceneIndex;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ We\ may\ wish\ to\ ignore\ ticking\ the\ rest\ of\ the\ stack\ based\ on\ this\ scene}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00061}00061\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00062}00062\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00064}\doxymbox{\hyperlink{class_u_i_layer_ac009dafcc0a3808a2d2d81a6144e5486}{00064}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_ac009dafcc0a3808a2d2d81a6144e5486}{UILayer::render}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}\ width,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}\ height,\ \doxymbox{\hyperlink{class_c4_j_render_a42446185d78f164dcc4a9e527748d758}{C4JRender::eViewportType}}\ viewport)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00065}00065\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00066}00066\ \ \ \ \ \textcolor{keywordflow}{if}(!\doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.IsExpectingOrReloadingSkin())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00067}00067\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ m\_components)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ itRef\ =\ m\_componentRefCount.find(it-\/>getSceneType());}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(itRef\ !=\ m\_componentRefCount.end()\ \&\&\ itRef-\/>second.second)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(it-\/>isVisible()\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\ \textcolor{stringliteral}{"{}Rendering\ component\ \%d"{}},\ it-\/>getSceneType()\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ it-\/>render(width,\ height,viewport);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00081}00081\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00082}00082\ \ \ \ \ \textcolor{keywordflow}{if}(!m\_sceneStack.empty())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00083}00083\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ lowestRenderable\ =\ m\_sceneStack.size()\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(;lowestRenderable\ >=\ 0;\ -\/-\/lowestRenderable)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_sceneStack[lowestRenderable]-\/>\doxymbox{\hyperlink{class_u_i_layer_a7ab1609f7f50d012fabe92849f59e202}{hidesLowerScenes}}())\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(lowestRenderable\ <\ 0)\ lowestRenderable\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(;lowestRenderable\ <\ m\_sceneStack.size();\ ++lowestRenderable)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_sceneStack[lowestRenderable]-\/>isVisible()\ \&\&\ (!\doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.IsExpectingOrReloadingSkin()\ ||\ m\_sceneStack[lowestRenderable]-\/>getSceneType()==\doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a721e950491fa00514a716e0523182743}{eUIScene\_Timer}}))}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\ \textcolor{stringliteral}{"{}Rendering\ scene\ \%d"{}},\ m\_sceneStack[lowestRenderable]-\/>getSceneType()\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_sceneStack[lowestRenderable]-\/>render(width,\ height,viewport);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00099}00099\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00100}00100\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00102}\doxymbox{\hyperlink{class_u_i_layer_aefc46ae6f290e43caac9c8af114285c0}{00102}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_u_i_layer_aefc46ae6f290e43caac9c8af114285c0}{UILayer::IsSceneInStack}}(\doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832}{EUIScene}}\ scene)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00103}00103\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00104}00104\ \ \ \ \ \textcolor{keywordtype}{bool}\ inStack\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00105}00105\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(m\_sceneStack.size())\ -\/\ 1;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ >=\ 0;\ -\/-\/\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00106}00106\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_sceneStack[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>getSceneType()\ ==\ scene)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ inStack\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00112}00112\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00113}00113\ \ \ \ \ \textcolor{keywordflow}{return}\ inStack;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00114}00114\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00116}\doxymbox{\hyperlink{class_u_i_layer_a20b5bfa7242546b424d08c59a53585d1}{00116}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_u_i_layer_a20b5bfa7242546b424d08c59a53585d1}{UILayer::HasFocus}}(\textcolor{keywordtype}{int}\ iPad)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00117}00117\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00118}00118\ \ \ \ \ \textcolor{keywordtype}{bool}\ hasFocus\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00119}00119\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_u_i_layer_a4d3e786ab7829a5a437853ff77e16f5a}{m\_hasFocus}})}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00120}00120\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ (\textcolor{keywordtype}{int})m\_sceneStack.size()\ -\/\ 1;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ >=\ 0;\ -\/-\/\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_sceneStack[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>stealsFocus()\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_sceneStack[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>hasFocus(iPad))}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasFocus\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00132}00132\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00133}00133\ \ \ \ \ \textcolor{keywordflow}{return}\ hasFocus;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00134}00134\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00136}\doxymbox{\hyperlink{class_u_i_layer_a7ab1609f7f50d012fabe92849f59e202}{00136}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_u_i_layer_a7ab1609f7f50d012fabe92849f59e202}{UILayer::hidesLowerScenes}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00137}00137\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00138}00138\ \ \ \ \ \textcolor{keywordtype}{bool}\ hidesScenes\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00139}00139\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ m\_components)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00140}00140\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(it-\/>hidesLowerScenes())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ hidesScenes\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00146}00146\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00147}00147\ \ \ \ \ \textcolor{keywordflow}{if}(!hidesScenes\ \&\&\ !m\_sceneStack.empty())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00148}00148\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(m\_sceneStack.size())\ -\/\ 1;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ >=\ 0;\ -\/-\/\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_sceneStack[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>\doxymbox{\hyperlink{class_u_i_layer_a7ab1609f7f50d012fabe92849f59e202}{hidesLowerScenes}}())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hidesScenes\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00157}00157\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00158}00158\ \ \ \ \ \textcolor{keywordflow}{return}\ hidesScenes;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00159}00159\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00161}\doxymbox{\hyperlink{class_u_i_layer_accea1c09217f7aa942cbdcf1080ecb97}{00161}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_accea1c09217f7aa942cbdcf1080ecb97}{UILayer::getRenderDimensions}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}\ \&width,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}\ \&height)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00162}00162\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00163}00163\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_afd2f8c4ebbf3af49bad3ba2e91460770}{m\_parentGroup}}-\/>getRenderDimensions(width,\ height);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00164}00164\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00166}\doxymbox{\hyperlink{class_u_i_layer_adbd0cae448e3fe4b096806fcbadd0d50}{00166}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_adbd0cae448e3fe4b096806fcbadd0d50}{UILayer::DestroyAll}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00167}00167\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00168}00168\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ m\_components)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00169}00169\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ it-\/>destroyMovie();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00171}00171\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00172}00172\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ m\_sceneStack)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00173}00173\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ it-\/>destroyMovie();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00175}00175\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00176}00176\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00178}\doxymbox{\hyperlink{class_u_i_layer_a3881b40a81955b81ebe20ee82b7a946c}{00178}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_a3881b40a81955b81ebe20ee82b7a946c}{UILayer::ReloadAll}}(\textcolor{keywordtype}{bool}\ force)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00179}00179\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00180}00180\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ m\_components)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00181}00181\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ it-\/>reloadMovie(force);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00183}00183\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00184}00184\ \ \ \ \ \textcolor{keywordflow}{if}(!m\_sceneStack.empty())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00185}00185\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ lowestRenderable\ :\ m\_sceneStack)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ lowestRenderable-\/>reloadMovie(force);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00190}00190\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00191}00191\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00193}\doxymbox{\hyperlink{class_u_i_layer_a065e14dcfc5f1c66367bc44245465195}{00193}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_u_i_layer_a065e14dcfc5f1c66367bc44245465195}{UILayer::GetMenuDisplayed}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00194}00194\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00195}00195\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_u_i_layer_a27a92d606ee4125ed253fddb2e3e9675}{m\_bMenuDisplayed}};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00196}00196\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00198}\doxymbox{\hyperlink{class_u_i_layer_aed1e7f705f413aa803acc23d94e3393a}{00198}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_u_i_layer_aed1e7f705f413aa803acc23d94e3393a}{UILayer::NavigateToScene}}(\textcolor{keywordtype}{int}\ iPad,\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832}{EUIScene}}\ scene,\ \textcolor{keywordtype}{void}\ *initData)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00199}00199\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00200}00200\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *newScene\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00201}00201\ \ \ \ \ \textcolor{keywordflow}{switch}(scene)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00202}00202\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Debug}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00204}00204\ \textcolor{preprocessor}{\#ifdef\ \_DEBUG\_MENUS\_ENABLED}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00205}00205\ \ \ \ \ \textcolor{keywordflow}{case}\ eUIScene\_DebugOverlay:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ UIScene\_DebugOverlay(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00208}00208\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a598ecd3499e04227d795af1a7d9d1951}{eUIScene\_DebugSetCamera}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ UIScene\_DebugSetCamera(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00211}00211\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a24c9cd4b52c55453b6ef9e9f370db147}{eUIScene\_DebugCreateSchematic}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ UIScene\_DebugCreateSchematic(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00214}00214\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00215}00215\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a26492eaafaf4ec65e7ed2fd2b7b94d53}{eUIScene\_DebugOptions}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___debug_options_menu}{UIScene\_DebugOptionsMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00218}00218\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Containers}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00220}00220\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a6dd11c6e488942e552b4c1abbc97f986}{eUIScene\_InventoryMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___inventory_menu}{UIScene\_InventoryMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00223}00223\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a694711f3a7b3df522f1c9139bc54f761}{eUIScene\_CreativeMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___creative_menu}{UIScene\_CreativeMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00226}00226\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a4b7a50af2bba15bbace2ca2f36d2cd3a}{eUIScene\_ContainerMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00227}00227\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832aa1389c41f6c6ee7747e505e228d56955}{eUIScene\_LargeContainerMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___container_menu}{UIScene\_ContainerMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00230}00230\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a125c742da04adde254e030f07f0eb030}{eUIScene\_BrewingStandMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___brewing_stand_menu}{UIScene\_BrewingStandMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00233}00233\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a30fa001803d8e8ad2a009c49615e1936}{eUIScene\_DispenserMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___dispenser_menu}{UIScene\_DispenserMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00236}00236\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a137a04cc678319d1247cc845b1df948a}{eUIScene\_EnchantingMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00237}00237\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___enchanting_menu}{UIScene\_EnchantingMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00239}00239\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ae792cd8cc0d714efe21f9ffb146b9348}{eUIScene\_FurnaceMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00240}00240\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___furnace_menu}{UIScene\_FurnaceMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00241}00241\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00242}00242\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a70d069083a6dcb81151c8a32b86a9ebf}{eUIScene\_Crafting2x2Menu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00243}00243\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a2c0f48ce101eac93d896de9792c3dea0}{eUIScene\_Crafting3x3Menu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00244}00244\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___crafting_menu}{UIScene\_CraftingMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00246}00246\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832aec076e1acf5482555cd7605e9795eb09}{eUIScene\_TradingMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___trading_menu}{UIScene\_TradingMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00249}00249\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a2207d622a2642a0727cf0970e1c35c42}{eUIScene\_AnvilMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00250}00250\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___anvil_menu}{UIScene\_AnvilMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00251}00251\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00252}00252\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832adf927e0f35390e5fd0925165183eafe2}{eUIScene\_HopperMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00253}00253\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___hopper_menu}{UIScene\_HopperMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00254}00254\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00255}00255\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a0cc9f3b212fba8f9d829f219fc472e5b}{eUIScene\_BeaconMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00256}00256\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___beacon_menu}{UIScene\_BeaconMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00258}00258\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a8a0b37e3934d8558d61a61da636a60db}{eUIScene\_HorseMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___horse_inventory_menu}{UIScene\_HorseInventoryMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00261}00261\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ad7df0b19d7f617435f1fc6e52532445c}{eUIScene\_FireworksMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00262}00262\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___fireworks_menu}{UIScene\_FireworksMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00263}00263\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00264}00264\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00265}00265\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Help\ and\ Options}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00266}00266\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ab18bc5972c515cbb2323b696a4037acc}{eUIScene\_HelpAndOptionsMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___help_and_options_menu}{UIScene\_HelpAndOptionsMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00269}00269\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a4b79b293ba859c9c24647db2e94bdc22}{eUIScene\_SettingsMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___settings_menu}{UIScene\_SettingsMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00272}00272\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a5d3e78be8f9ce825d492fbd9b0780d84}{eUIScene\_SettingsOptionsMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___settings_options_menu}{UIScene\_SettingsOptionsMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00275}00275\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a49c1d895864567ff79d735e8652c6402}{eUIScene\_SettingsAudioMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___settings_audio_menu}{UIScene\_SettingsAudioMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00278}00278\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ac3091750f3253fceb6a08db6ee9fa399}{eUIScene\_SettingsControlMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___settings_control_menu}{UIScene\_SettingsControlMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00280}00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00281}00281\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832aa907bd04d73232c9184deda37872e7d9}{eUIScene\_SettingsGraphicsMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___settings_graphics_menu}{UIScene\_SettingsGraphicsMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00284}00284\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a9467665f9702756d4235097e6258100a}{eUIScene\_SettingsUIMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00285}00285\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___settings_u_i_menu}{UIScene\_SettingsUIMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00286}00286\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00287}00287\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a7378862ece245de052b36dc9a3c5ca35}{eUIScene\_SkinSelectMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00288}00288\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___skin_select_menu}{UIScene\_SkinSelectMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00289}00289\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00290}00290\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832aedc5f2026a7ce507690f0c846d60e619}{eUIScene\_HowToPlayMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00291}00291\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___how_to_play_menu}{UIScene\_HowToPlayMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00292}00292\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00293}00293\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a9cf408da0984e71fc9e2926f8b25bc31}{eUIScene\_LanguageSelector}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___language_selector}{UIScene\_LanguageSelector}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00296}00296\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ad0a23164897c22b7d0e0d8b87e9f8158}{eUIScene\_HowToPlay}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___how_to_play}{UIScene\_HowToPlay}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00299}00299\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a3339c8a5fb3111efe4429f9728cb2140}{eUIScene\_ControlsMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___controls_menu}{UIScene\_ControlsMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00302}00302\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ae9571b3c79b9b670c3e3b66336c58ac5}{eUIScene\_ReinstallMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___reinstall_menu}{UIScene\_ReinstallMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00304}00304\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00305}00305\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a3ac72f6101624d4bcb8924172cf4ed4f}{eUIScene\_Credits}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___credits}{UIScene\_Credits}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00308}00308\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00309}00309\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Other\ in-\/game}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00311}00311\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ad43d45ee775d2c64f4d8dee34f540a5d}{eUIScene\_PauseMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___pause_menu}{UIScene\_PauseMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00314}00314\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a9655e7cd0c6ebeb1d9b482e3b27b91da}{eUIScene\_DeathMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___death_menu}{UIScene\_DeathMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00317}00317\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a14b72ed359eda36ac6320d48ac9b027f}{eUIScene\_ConnectingProgress}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___connecting_progress}{UIScene\_ConnectingProgress}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00320}00320\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832aa418ea88874dbf37473121e345e90590}{eUIScene\_SignEntryMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___sign_entry_menu}{UIScene\_SignEntryMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00323}00323\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832acca4c7cdf24757999a51de87d562438e}{eUIScene\_InGameInfoMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu}{UIScene\_InGameInfoMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00326}00326\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a88994f5be5eae47929470506cd23aeed}{eUIScene\_InGameHostOptionsMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_u_i_layer_aefc46ae6f290e43caac9c8af114285c0}{IsSceneInStack}}(\doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a88994f5be5eae47929470506cd23aeed}{eUIScene\_InGameHostOptionsMenu}}))\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Skipped\ eUIScene\_InGameHostOptionsMenu,\ we\ have\ already\ this\ tab!"{}});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_host_options_menu}{UIScene\_InGameHostOptionsMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00333}00333\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a21c70f5c3f2626d11d16523af98b1ed3}{eUIScene\_InGamePlayerOptionsMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_player_options_menu}{UIScene\_InGamePlayerOptionsMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00336}00336\ \textcolor{preprocessor}{\#if\ defined(\_XBOX\_ONE)\ ||\ defined(\_\_ORBIS\_\_)}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00337}00337\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a81a9eaf48a72531f854ffbf291b61ad6}{eUIScene\_InGameSaveManagementMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00338}00338\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_save_management_menu}{UIScene\_InGameSaveManagementMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00340}00340\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00341}00341\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832acd385958c61a039881cd72d5a25e76ea}{eUIScene\_TeleportMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___teleport_menu}{UIScene\_TeleportMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00344}00344\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ac8d54712f3b4b950a787fb24ddbd6220}{eUIScene\_EndPoem}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_u_i_layer_aefc46ae6f290e43caac9c8af114285c0}{IsSceneInStack}}(\doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ac8d54712f3b4b950a787fb24ddbd6220}{eUIScene\_EndPoem}}))}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Skipped\ EndPoem\ as\ one\ was\ already\ showing\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___end_poem}{UIScene\_EndPoem}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00355}00355\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00356}00356\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Frontend}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00358}00358\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a7a5a50a8ed3e3d5f9631af386b09b72a}{eUIScene\_TrialExitUpsell}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___trial_exit_upsell}{UIScene\_TrialExitUpsell}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00361}00361\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a9c712bc86c9c36d38b482423ad41d998}{eUIScene\_Intro}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___intro}{UIScene\_Intro}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00364}00364\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ac4181989ef90fe439a38efa8c888dd28}{eUIScene\_SaveMessage}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___save_message}{UIScene\_SaveMessage}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00367}00367\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a786120beb3f489abde22d2be338eb45c}{eUIScene\_MainMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___main_menu}{UIScene\_MainMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00370}00370\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a7c5aa697ce5ad1092c5598195c7c7ad1}{eUIScene\_LoadOrJoinMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___load_or_join_menu}{UIScene\_LoadOrJoinMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00373}00373\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832aef51273fa6bda0eb688d94b52dd3ecf8}{eUIScene\_LoadMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00374}00374\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___load_menu}{UIScene\_LoadMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00375}00375\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00376}00376\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a4efe83694243ae11586df7d6f472fc73}{eUIScene\_JoinMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00377}00377\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___join_menu}{UIScene\_JoinMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00378}00378\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00379}00379\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a54ee3caa72054618c3268ace2edc8d9b}{eUIScene\_CreateWorldMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___create_world_menu}{UIScene\_CreateWorldMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00382}00382\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a5edb952fdbffe28d02073cc93ac1e21c}{eUIScene\_LaunchMoreOptionsMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00383}00383\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___launch_more_options_menu}{UIScene\_LaunchMoreOptionsMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00384}00384\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00385}00385\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832aaf8e08c5e8fd45140729ccabad1de7de}{eUIScene\_FullscreenProgress}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___fullscreen_progress}{UIScene\_FullscreenProgress}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00388}00388\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a575b417e2ae03b6714932f7d360f4582}{eUIScene\_LeaderboardsMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___leaderboards_menu}{UIScene\_LeaderboardsMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00391}00391\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a9922c6810055e7730bfe7d574fa9e4e7}{eUIScene\_DLCMainMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00392}00392\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___d_l_c_main_menu}{UIScene\_DLCMainMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00393}00393\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00394}00394\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a7b8da5830a443657fcca2759e619ebaf}{eUIScene\_DLCOffersMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___d_l_c_offers_menu}{UIScene\_DLCOffersMenu}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00396}00396\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00397}00397\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ac3fd23f7ef36d1ff65526a9e614a964c}{eUIScene\_EULA}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00398}00398\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___e_u_l_a}{UIScene\_EULA}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00399}00399\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00400}00400\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a55ed913cbed7ee817e0aff402d8adf6c}{eUIScene\_NewUpdateMessage}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00401}00401\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___new_update_message}{UIScene\_NewUpdateMessage}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00403}00403\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00404}00404\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Other}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00405}00405\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a87611213a77e413b3dc49356659a269e}{eUIScene\_Keyboard}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00406}00406\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___keyboard}{UIScene\_Keyboard}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00407}00407\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00408}00408\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832aa2da5dc078d03189d3c6be9f6ae312b5}{eUIScene\_QuadrantSignin}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00409}00409\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___quadrant_signin}{UIScene\_QuadrantSignin}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00410}00410\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00411}00411\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a3231cc8a9fcb52827f3b594fb97f6547}{eUIScene\_MessageBox}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00412}00412\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_u_i_layer_aefc46ae6f290e43caac9c8af114285c0}{IsSceneInStack}}(\doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a3231cc8a9fcb52827f3b594fb97f6547}{eUIScene\_MessageBox}}))}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00413}00413\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Skipped\ MessageBox\ as\ one\ was\ already\ showing\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00416}00416\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00417}00417\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00418}00418\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___message_box}{UIScene\_MessageBox}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00420}00420\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00421}00421\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00422}00422\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a721e950491fa00514a716e0523182743}{eUIScene\_Timer}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00423}00423\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___timer}{UIScene\_Timer}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00424}00424\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00425}00425\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00426}00426\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00427}00427\ \ \ \ \ \textcolor{keywordflow}{if}(newScene\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00428}00428\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00429}00429\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}WARNING:\ Scene\ \%d\ was\ not\ created.\ Add\ it\ to\ UILayer::NavigateToScene\(\backslash\)n"{}},\ scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00430}00430\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00431}00431\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00432}00432\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00433}00433\ \ \ \ \ \textcolor{keywordflow}{if}(m\_sceneStack.size()\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00434}00434\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00435}00435\ \ \ \ \ \ \ \ \ newScene-\/>\doxymbox{\hyperlink{class_u_i_scene_a91cdc4192cfc5b31fc06500aef89a195}{setBackScene}}(m\_sceneStack[m\_sceneStack.size()-\/1]);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00436}00436\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00437}00437\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00438}00438\ \ \ \ \ m\_sceneStack.push\_back(newScene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00439}00439\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00440}00440\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_ae7e79613de94a0a0cfa101942319a99c}{updateFocusState}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00441}00441\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00442}00442\ \ \ \ \ newScene-\/>\doxymbox{\hyperlink{class_u_i_scene_a6dda066e4c1cc95afb64426df5da2ca9}{tick}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00443}00443\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00444}00444\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00445}00445\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00446}00446\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00447}\doxymbox{\hyperlink{class_u_i_layer_a28da47a8ac2f48ba8ed1191a1a00f07a}{00447}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_u_i_layer_a28da47a8ac2f48ba8ed1191a1a00f07a}{UILayer::NavigateBack}}(\textcolor{keywordtype}{int}\ iPad,\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832}{EUIScene}}\ eScene)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00448}00448\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00449}00449\ \ \ \ \ \textcolor{keywordflow}{if}(m\_sceneStack.size()\ ==\ 0)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00450}00450\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00451}00451\ \ \ \ \ \textcolor{keywordtype}{bool}\ navigated\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00452}00452\ \ \ \ \ \textcolor{keywordflow}{if}(eScene\ <\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a5f2b99db2dd66843ccef2bf150040741}{eUIScene\_COUNT}})}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00453}00453\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00454}00454\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *scene\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00455}00455\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00456}00456\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00457}00457\ \ \ \ \ \ \ \ \ \ \ \ \ scene\ =\ m\_sceneStack.back();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00458}00458\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a9754ffa3f0a03d64b59ac0c9dfe5df45}{getSceneType}}()\ ==\ eScene)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00459}00459\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00460}00460\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ navigated\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00462}00462\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00463}00463\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00464}00464\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a78e6007ed8d529a0c75f1f36eda46514}{hasFocus}}(iPad))}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00466}00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00467}00467\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a07136d1e036753509b847ae20f2fb5b3}{removeScene}}(scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00468}00468\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00469}00469\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00470}00470\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00471}00471\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ No\ focus\ on\ the\ top\ scene,\ so\ this\ use\ shouldn't\ be\ navigating!}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00474}00474\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00475}00475\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}(m\_sceneStack.size()\ >\ 0);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00476}00476\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00477}00477\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00478}00478\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00479}00479\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00480}00480\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *scene\ =\ m\_sceneStack.back();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00481}00481\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a78e6007ed8d529a0c75f1f36eda46514}{hasFocus}}(iPad))}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00482}00482\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a07136d1e036753509b847ae20f2fb5b3}{removeScene}}(scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00484}00484\ \ \ \ \ \ \ \ \ \ \ \ \ navigated\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00485}00485\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00486}00486\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00487}00487\ \ \ \ \ \textcolor{keywordflow}{return}\ navigated;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00488}00488\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00489}00489\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00490}\doxymbox{\hyperlink{class_u_i_layer_a68ad14eda163ec4ce7dfcec58d6cd635}{00490}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_a68ad14eda163ec4ce7dfcec58d6cd635}{UILayer::showComponent}}(\textcolor{keywordtype}{int}\ iPad,\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832}{EUIScene}}\ scene,\ \textcolor{keywordtype}{bool}\ show)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00491}00491\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00492}00492\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ m\_componentRefCount.find(scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00493}00493\ \ \ \ \ \textcolor{keywordflow}{if}(it\ !=\ m\_componentRefCount.end())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00494}00494\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00495}00495\ \ \ \ \ \ \ \ \ it-\/>second.second\ =\ show;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00496}00496\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00497}00497\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00498}00498\ \ \ \ \ \textcolor{keywordflow}{if}(show)\ \doxymbox{\hyperlink{class_u_i_layer_a4f240f3aa87e563808cbee7a6336d292}{addComponent}}(iPad,scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00499}00499\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00500}00500\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00501}\doxymbox{\hyperlink{class_u_i_layer_a1b4cc6d6e64f8121bc1ba9d939e0b2cd}{00501}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_u_i_layer_a1b4cc6d6e64f8121bc1ba9d939e0b2cd}{UILayer::isComponentVisible}}(\doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832}{EUIScene}}\ scene)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00502}00502\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00503}00503\ \ \ \ \ \textcolor{keywordtype}{bool}\ visible\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00504}00504\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ m\_componentRefCount.find(scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00505}00505\ \ \ \ \ \textcolor{keywordflow}{if}(it\ !=\ m\_componentRefCount.end())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00506}00506\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00507}00507\ \ \ \ \ \ \ \ \ visible\ =\ it-\/>second.second;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00508}00508\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00509}00509\ \ \ \ \ \textcolor{keywordflow}{return}\ visible;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00510}00510\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00511}00511\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00512}\doxymbox{\hyperlink{class_u_i_layer_a4f240f3aa87e563808cbee7a6336d292}{00512}}\ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *\doxymbox{\hyperlink{class_u_i_layer_a4f240f3aa87e563808cbee7a6336d292}{UILayer::addComponent}}(\textcolor{keywordtype}{int}\ iPad,\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832}{EUIScene}}\ scene,\ \textcolor{keywordtype}{void}\ *initData)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00513}00513\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00514}00514\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ m\_componentRefCount.find(scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00515}00515\ \ \ \ \ \textcolor{keywordflow}{if}(it\ !=\ m\_componentRefCount.end())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00516}00516\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00517}00517\ \ \ \ \ \ \ \ \ ++it-\/>second.first;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00518}00518\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00519}00519\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ itComp\ :\ m\_components)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00520}00520\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00521}00521\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ itComp-\/>getSceneType()\ ==\ scene\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00522}00522\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00523}00523\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ itComp;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00524}00524\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00525}00525\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00526}00526\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00527}00527\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00528}00528\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *newScene\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00529}00529\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00530}00530\ \ \ \ \ \textcolor{keywordflow}{switch}(scene)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00531}00531\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00532}00532\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832aa8f9969798e7fb1fd6a3a33c748b7342}{eUIComponent\_Panorama}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00533}00533\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_component___panorama}{UIComponent\_Panorama}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00534}00534\ \ \ \ \ \ \ \ \ m\_componentRefCount[scene]\ =\ pair<int,bool>(1,\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00535}00535\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00536}00536\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a473972e428204267974f6dd483ca14f6}{eUIComponent\_DebugUIConsole}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00537}00537\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_component___debug_u_i_console}{UIComponent\_DebugUIConsole}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00538}00538\ \ \ \ \ \ \ \ \ m\_componentRefCount[scene]\ =\ pair<int,bool>(1,\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00539}00539\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00540}00540\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a7ca019042e2b25ce44a4ea994b1a0e0b}{eUIComponent\_DebugUIMarketingGuide}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00541}00541\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_component___debug_u_i_marketing_guide}{UIComponent\_DebugUIMarketingGuide}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00542}00542\ \ \ \ \ \ \ \ \ m\_componentRefCount[scene]\ =\ pair<int,bool>(1,\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00543}00543\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00544}00544\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832af66dbafc8a5a43fa594710b3dc492a93}{eUIComponent\_Logo}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00545}00545\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_component___logo}{UIComponent\_Logo}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00546}00546\ \ \ \ \ \ \ \ \ m\_componentRefCount[scene]\ =\ pair<int,bool>(1,\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00547}00547\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00548}00548\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832afae31696c38f883cde25b95e2127dbd6}{eUIComponent\_Tooltips}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00549}00549\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_component___tooltips}{UIComponent\_Tooltips}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00550}00550\ \ \ \ \ \ \ \ \ m\_componentRefCount[scene]\ =\ pair<int,bool>(1,\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00551}00551\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00552}00552\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a051983d8ccb2fb25bbbcedfd7900e67a}{eUIComponent\_TutorialPopup}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00553}00553\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_component___tutorial_popup}{UIComponent\_TutorialPopup}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00554}00554\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Start\ hidden}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00555}00555\ \ \ \ \ \ \ \ \ m\_componentRefCount[scene]\ =\ pair<int,bool>(1,\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00556}00556\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00557}00557\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832acaf402e2bc126a47cc37968d6b02fcc6}{eUIScene\_HUD}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00558}00558\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_scene___h_u_d}{UIScene\_HUD}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00559}00559\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Start\ hidden}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00560}00560\ \ \ \ \ \ \ \ \ m\_componentRefCount[scene]\ =\ pair<int,bool>(1,\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00561}00561\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00562}00562\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a62b471257b089fd7d434b91f286697ca}{eUIComponent\_Chat}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00563}00563\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_component___chat}{UIComponent\_Chat}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00564}00564\ \ \ \ \ \ \ \ \ m\_componentRefCount[scene]\ =\ pair<int,bool>(1,\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00565}00565\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00566}00566\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a06460788cd614f4aec6e03a131d15909}{eUIComponent\_PressStartToPlay}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00567}00567\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_component___press_start_to_play}{UIComponent\_PressStartToPlay}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00568}00568\ \ \ \ \ \ \ \ \ m\_componentRefCount[scene]\ =\ pair<int,bool>(1,\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00569}00569\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00570}00570\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ad8ce723904a6f4a1acbe4b52bbdc80c4}{eUIComponent\_MenuBackground}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00571}00571\ \ \ \ \ \ \ \ \ newScene\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_u_i_component___menu_background}{UIComponent\_MenuBackground}}(iPad,\ initData,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00572}00572\ \ \ \ \ \ \ \ \ m\_componentRefCount[scene]\ =\ pair<int,bool>(1,\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00573}00573\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00574}00574\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00575}00575\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00576}00576\ \ \ \ \ \textcolor{keywordflow}{if}(newScene\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00577}00577\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00578}00578\ \ \ \ \ m\_components.push\_back(newScene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00579}00579\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00580}00580\ \ \ \ \ \textcolor{keywordflow}{return}\ newScene;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00581}00581\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00582}00582\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00583}\doxymbox{\hyperlink{class_u_i_layer_a4efa74fe938308234c0acaeaebc6a96a}{00583}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_a4efa74fe938308234c0acaeaebc6a96a}{UILayer::removeComponent}}(\doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832}{EUIScene}}\ scene)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00584}00584\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00585}00585\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ m\_componentRefCount.find(scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00586}00586\ \ \ \ \ \textcolor{keywordflow}{if}(it\ !=\ m\_componentRefCount.end())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00587}00587\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00588}00588\ \ \ \ \ \ \ \ \ -\/-\/it-\/>second.first;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00589}00589\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00590}00590\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(it-\/>second.first\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00591}00591\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ m\_componentRefCount.erase(it);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00593}00593\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ compIt\ =\ m\_components.begin();\ compIt\ !=\ m\_components.end();)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00594}00594\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00595}00595\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (*compIt)-\/>getSceneType()\ ==\ scene)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00596}00596\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00597}00597\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00598}00598\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ remove\ any\ touchboxes}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00599}00599\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.TouchBoxesClear((*compIt));}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00600}00600\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00601}00601\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_scenesToDelete.push\_back((*compIt));}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00602}00602\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (*compIt)-\/>handleDestroy();\ \textcolor{comment}{//\ For\ anything\ that\ might\ require\ the\ pointer\ be\ valid}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00603}00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ compIt\ =\ m\_components.erase(compIt);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00604}00604\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00605}00605\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++compIt;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00608}00608\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00609}00609\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00610}00610\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00611}00611\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00612}00612\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00613}00613\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00614}\doxymbox{\hyperlink{class_u_i_layer_a07136d1e036753509b847ae20f2fb5b3}{00614}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_a07136d1e036753509b847ae20f2fb5b3}{UILayer::removeScene}}(\doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *scene)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00615}00615\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00616}00616\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00617}00617\ \ \ \ \ \textcolor{comment}{//\ remove\ any\ touchboxes}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00618}00618\ \ \ \ \ \doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.TouchBoxesClear(scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00619}00619\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00620}00620\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00621}00621\ \ \ \ \ \textcolor{keyword}{auto}\ newEnd\ =\ std::remove(m\_sceneStack.begin(),\ m\_sceneStack.end(),\ scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00622}00622\ \ \ \ \ m\_sceneStack.erase(newEnd,\ m\_sceneStack.end());}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00623}00623\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00624}00624\ \ \ \ \ m\_scenesToDelete.push\_back(scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00625}00625\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00626}00626\ \ \ \ \ scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a4f83b42600dd85bd6d6090278114608d}{handleDestroy}}();\ \textcolor{comment}{//\ For\ anything\ that\ might\ require\ the\ pointer\ be\ valid}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00627}00627\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00628}00628\ \ \ \ \ \textcolor{keywordtype}{bool}\ hadFocus\ =\ \doxymbox{\hyperlink{class_u_i_layer_a4d3e786ab7829a5a437853ff77e16f5a}{m\_hasFocus}};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00629}00629\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_ae7e79613de94a0a0cfa101942319a99c}{updateFocusState}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00630}00630\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00631}00631\ \ \ \ \ \textcolor{comment}{//\ If\ this\ layer\ has\ focus,\ pass\ it\ on}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00632}00632\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_u_i_layer_a4d3e786ab7829a5a437853ff77e16f5a}{m\_hasFocus}}\ ||\ hadFocus)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00633}00633\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00634}00634\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a4d3e786ab7829a5a437853ff77e16f5a}{m\_hasFocus}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00635}00635\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_afd2f8c4ebbf3af49bad3ba2e91460770}{m\_parentGroup}}-\/>UpdateFocusState();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00636}00636\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00637}00637\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00638}00638\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00639}\doxymbox{\hyperlink{class_u_i_layer_a5a67c04400a38851c5a31a22b89ec51f}{00639}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_a5a67c04400a38851c5a31a22b89ec51f}{UILayer::closeAllScenes}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00640}00640\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00641}00641\ \ \ \ \ vector<UIScene\ *>\ temp;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00642}00642\ \ \ \ \ temp.insert(temp.end(),\ m\_sceneStack.begin(),\ m\_sceneStack.end());}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00643}00643\ \ \ \ \ m\_sceneStack.clear();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00644}00644\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ temp)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00645}00645\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00646}00646\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00647}00647\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ remove\ any\ touchboxes}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00648}00648\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.TouchBoxesClear(it);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00649}00649\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00650}00650\ \ \ \ \ \ \ \ \ m\_scenesToDelete.push\_back(it);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00651}00651\ \ \ \ \ \ \ \ \ it-\/>handleDestroy();\ \textcolor{comment}{//\ For\ anything\ that\ might\ require\ the\ pointer\ be\ valid}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00652}00652\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00653}00653\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00654}00654\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_ae7e79613de94a0a0cfa101942319a99c}{updateFocusState}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00655}00655\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00656}00656\ \ \ \ \ \textcolor{comment}{//\ If\ this\ layer\ has\ focus,\ pass\ it\ on}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00657}00657\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_u_i_layer_a4d3e786ab7829a5a437853ff77e16f5a}{m\_hasFocus}})}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00658}00658\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00659}00659\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a4d3e786ab7829a5a437853ff77e16f5a}{m\_hasFocus}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00660}00660\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_afd2f8c4ebbf3af49bad3ba2e91460770}{m\_parentGroup}}-\/>UpdateFocusState();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00661}00661\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00662}00662\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00663}00663\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00664}00664\ \textcolor{comment}{//\ Get\ top\ scene\ on\ stack\ (or\ nullptr\ if\ stack\ is\ empty)}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00665}\doxymbox{\hyperlink{class_u_i_layer_af3d88ff0af0c490d90c205c91544a37f}{00665}}\ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *\doxymbox{\hyperlink{class_u_i_layer_af3d88ff0af0c490d90c205c91544a37f}{UILayer::GetTopScene}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00666}00666\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00667}00667\ \ \ \ \ \textcolor{keywordflow}{if}(m\_sceneStack.size()\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00668}00668\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00669}00669\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00670}00670\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00671}00671\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00672}00672\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00673}00673\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_sceneStack[m\_sceneStack.size()-\/1];}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00674}00674\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00675}00675\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00676}00676\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00677}00677\ \textcolor{comment}{//\ Updates\ layer\ focus\ state\ if\ no\ error\ message\ is\ present\ (unless\ this\ is\ the\ error\ layer)}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00678}\doxymbox{\hyperlink{class_u_i_layer_ae7e79613de94a0a0cfa101942319a99c}{00678}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_u_i_layer_ae7e79613de94a0a0cfa101942319a99c}{UILayer::updateFocusState}}(\textcolor{keywordtype}{bool}\ allowedFocus\ \textcolor{comment}{/*\ =\ false\ */})}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00679}00679\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00680}00680\ \ \ \ \ \textcolor{comment}{//\ If\ haveFocus\ is\ false,\ request\ it}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00681}00681\ \ \ \ \ \textcolor{keywordflow}{if}\ (!allowedFocus)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00682}00682\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00683}00683\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ To\ update\ focus\ in\ this\ layer\ we\ need\ to\ request\ focus\ from\ group}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00684}00684\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Focus\ will\ be\ denied\ if\ there's\ an\ upper\ layer\ that\ needs\ focus}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00685}00685\ \ \ \ \ \ \ \ \ allowedFocus\ =\ \doxymbox{\hyperlink{class_u_i_layer_afd2f8c4ebbf3af49bad3ba2e91460770}{m\_parentGroup}}-\/>RequestFocus(\textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00686}00686\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00687}00687\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00688}00688\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a27a92d606ee4125ed253fddb2e3e9675}{m\_bMenuDisplayed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00689}00689\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a57584bc14797a60cb629a40bac0c0572}{m\_bPauseMenuDisplayed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00690}00690\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a697ee7e1da2d5735c7ded9fdd59079e4}{m\_bContainerMenuDisplayed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00691}00691\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_ae2ec048d0e5d7da3c0e32c485750896f}{m\_bIgnoreAutosaveMenuDisplayed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00692}00692\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a3b4ed1fdc9741fc749b183fbcd0c51d7}{m\_bIgnorePlayerJoinMenuDisplayed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00693}00693\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00694}00694\ \ \ \ \ \textcolor{keywordtype}{bool}\ layerFocusSet\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00695}00695\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ it\ =\ m\_sceneStack.rbegin();\ it\ !=\ m\_sceneStack.rend();\ ++it)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00696}00696\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00697}00697\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *scene\ =\ *it;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00698}00698\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00699}00699\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ UPDATE\ FOCUS\ STATES}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00700}00700\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!layerFocusSet\ \&\&\ allowedFocus\ \&\&\ scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a5e8fffa40041d448c8d0eba8d6bf4d7d}{stealsFocus}}())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00701}00701\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00702}00702\ \ \ \ \ \ \ \ \ \ \ \ \ scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a1bb955b4b81be370a0b0e24807df8e49}{gainFocus}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00703}00703\ \ \ \ \ \ \ \ \ \ \ \ \ layerFocusSet\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00704}00704\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00705}00705\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00706}00706\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00707}00707\ \ \ \ \ \ \ \ \ \ \ \ \ scene-\/>\doxymbox{\hyperlink{class_u_i_scene_aae34cd66480de34edc11966dd148e73b}{loseFocus}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00708}00708\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(allowedFocus\ \&\&\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetGameStarted())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00709}00709\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00710}00710\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ This\ is\ a\ memory\ optimisation\ so\ we\ don't\ keep\ scenes\ loaded\ in\ memory\ all\ the\ time}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00711}00711\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ is\ required\ for\ PS3\ (and\ likely\ Vita),\ but\ I'm\ removing\ it\ on\ XboxOne\ so\ that\ we\ can\ avoid}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00712}00712\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ scene\ creation\ time\ (which\ can\ be\ >0.5s)\ since\ we\ have\ the\ memory\ to\ spare}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00713}00713\ \textcolor{preprocessor}{\#ifndef\ \_XBOX\_ONE}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00714}00714\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_scenesToDestroy.push\_back(scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00715}00715\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00716}00716\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00717}00717\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00718}00718\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a9754ffa3f0a03d64b59ac0c9dfe5df45}{getSceneType}}()\ ==\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a5d3e78be8f9ce825d492fbd9b0780d84}{eUIScene\_SettingsOptionsMenu}})}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00719}00719\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00720}00720\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ scene-\/>\doxymbox{\hyperlink{class_u_i_scene_aae34cd66480de34edc11966dd148e73b}{loseFocus}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00721}00721\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_scenesToDestroy.push\_back(scene);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00722}00722\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00723}00723\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00724}00724\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00726}00726\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00727}00727\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ this\ should\ just\ be\ true}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00728}00728\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a27a92d606ee4125ed253fddb2e3e9675}{m\_bMenuDisplayed}}=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00729}00729\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00730}00730\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832}{EUIScene}}\ sceneType\ =\ scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a9754ffa3f0a03d64b59ac0c9dfe5df45}{getSceneType}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00731}00731\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}(sceneType)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00732}00732\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00733}00733\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ad43d45ee775d2c64f4d8dee34f540a5d}{eUIScene\_PauseMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00734}00734\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a57584bc14797a60cb629a40bac0c0572}{m\_bPauseMenuDisplayed}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00735}00735\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00736}00736\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a70d069083a6dcb81151c8a32b86a9ebf}{eUIScene\_Crafting2x2Menu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00737}00737\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a2c0f48ce101eac93d896de9792c3dea0}{eUIScene\_Crafting3x3Menu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00738}00738\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ae792cd8cc0d714efe21f9ffb146b9348}{eUIScene\_FurnaceMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00739}00739\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a4b7a50af2bba15bbace2ca2f36d2cd3a}{eUIScene\_ContainerMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00740}00740\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832aa1389c41f6c6ee7747e505e228d56955}{eUIScene\_LargeContainerMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00741}00741\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a6dd11c6e488942e552b4c1abbc97f986}{eUIScene\_InventoryMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00742}00742\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a694711f3a7b3df522f1c9139bc54f761}{eUIScene\_CreativeMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00743}00743\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a30fa001803d8e8ad2a009c49615e1936}{eUIScene\_DispenserMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00744}00744\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a125c742da04adde254e030f07f0eb030}{eUIScene\_BrewingStandMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00745}00745\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a137a04cc678319d1247cc845b1df948a}{eUIScene\_EnchantingMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00746}00746\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832aec076e1acf5482555cd7605e9795eb09}{eUIScene\_TradingMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00747}00747\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832adf927e0f35390e5fd0925165183eafe2}{eUIScene\_HopperMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00748}00748\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a8a0b37e3934d8558d61a61da636a60db}{eUIScene\_HorseMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00749}00749\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ad7df0b19d7f617435f1fc6e52532445c}{eUIScene\_FireworksMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00750}00750\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a0cc9f3b212fba8f9d829f219fc472e5b}{eUIScene\_BeaconMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00751}00751\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a2207d622a2642a0727cf0970e1c35c42}{eUIScene\_AnvilMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00752}00752\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a697ee7e1da2d5735c7ded9fdd59079e4}{m\_bContainerMenuDisplayed}}=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00753}00753\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00754}00754\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Intentional\ fall-\/through}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00755}00755\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a9655e7cd0c6ebeb1d9b482e3b27b91da}{eUIScene\_DeathMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00756}00756\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832aaf8e08c5e8fd45140729ccabad1de7de}{eUIScene\_FullscreenProgress}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00757}00757\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832aa418ea88874dbf37473121e345e90590}{eUIScene\_SignEntryMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00758}00758\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ac8d54712f3b4b950a787fb24ddbd6220}{eUIScene\_EndPoem}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00759}00759\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_ae2ec048d0e5d7da3c0e32c485750896f}{m\_bIgnoreAutosaveMenuDisplayed}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00760}00760\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00761}00761\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00762}00762\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00763}00763\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}(sceneType)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00764}00764\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00765}00765\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832aaf8e08c5e8fd45140729ccabad1de7de}{eUIScene\_FullscreenProgress}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00766}00766\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ac8d54712f3b4b950a787fb24ddbd6220}{eUIScene\_EndPoem}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00767}00767\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a3ac72f6101624d4bcb8924172cf4ed4f}{eUIScene\_Credits}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00768}00768\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a575b417e2ae03b6714932f7d360f4582}{eUIScene\_LeaderboardsMenu}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00769}00769\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a3b4ed1fdc9741fc749b183fbcd0c51d7}{m\_bIgnorePlayerJoinMenuDisplayed}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00770}00770\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00771}00771\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00772}00772\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00773}00773\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_layer_a4d3e786ab7829a5a437853ff77e16f5a}{m\_hasFocus}}\ =\ layerFocusSet;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00774}00774\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00775}00775\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_u_i_layer_a4d3e786ab7829a5a437853ff77e16f5a}{m\_hasFocus}};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00776}00776\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00777}00777\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00778}00778\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00779}00779\ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *UILayer::getCurrentScene()}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00780}00780\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00781}00781\ \ \ \ \ \textcolor{comment}{//\ Note:\ reverse\ iterator,\ the\ last\ element\ is\ the\ top\ of\ the\ stack}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00782}00782\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keyword}{auto}\ it\ =\ m\_sceneStack.rbegin();\ it\ !=\ m\_sceneStack.rend();\ ++it)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00783}00783\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00784}00784\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *scene\ =\ *it;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00785}00785\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ only\ used\ on\ Vita,\ so\ iPad\ 0\ is\ fine}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00786}00786\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a78e6007ed8d529a0c75f1f36eda46514}{hasFocus}}(0)\ \&\&\ scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a94378d37bae408e4a46526cbd29a9332}{canHandleInput}}())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00787}00787\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00788}00788\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ scene;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00789}00789\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00790}00790\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00791}00791\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00792}00792\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00793}00793\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00794}00794\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00795}00795\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00796}\doxymbox{\hyperlink{class_u_i_layer_a99c7113b38334394dea9dfdd5d869d31}{00796}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_a99c7113b38334394dea9dfdd5d869d31}{UILayer::handleInput}}(\textcolor{keywordtype}{int}\ iPad,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}},\ \textcolor{keywordtype}{bool}\ repeat,\ \textcolor{keywordtype}{bool}\ pressed,\ \textcolor{keywordtype}{bool}\ released,\ \textcolor{keywordtype}{bool}\ \&handled)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00797}00797\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00798}00798\ \ \ \ \ \textcolor{comment}{//\ Note:\ reverse\ iterator,\ the\ last\ element\ is\ the\ top\ of\ the\ stack}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00799}00799\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ it\ =\ m\_sceneStack.rbegin();\ it\ !=\ m\_sceneStack.rend();\ ++it)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00800}00800\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00801}00801\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *scene\ =\ *it;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00802}00802\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a78e6007ed8d529a0c75f1f36eda46514}{hasFocus}}(iPad)\ \&\&\ scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a94378d37bae408e4a46526cbd29a9332}{canHandleInput}}())}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00803}00803\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00804}00804\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ ignore\ repeats\ of\ action\ ABXY\ buttons}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00805}00805\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ fix\ for\ PS3\ 213\ -\/\ [MAIN\ MENU]\ Holding\ down\ buttons\ will\ continue\ to\ activate\ every\ prompt.}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00806}00806\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Changed\ this\ slightly\ to\ add\ the\ allowRepeat\ function\ so\ we\ can\ allow\ repeats\ in\ the\ crafting\ menu}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00807}00807\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(repeat\ \&\&\ !scene-\/>\doxymbox{\hyperlink{class_u_i_scene_ae83d1f9cf645d7602b34cf3a369b3350}{allowRepeat}}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}})\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00808}00808\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00809}00809\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00810}00810\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00811}00811\ \ \ \ \ \ \ \ \ \ \ \ \ scene-\/>\doxymbox{\hyperlink{class_u_i_scene_abce02b3b316e9d4cbb5e2cad5ac1f5e1}{handleInput}}(iPad,\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}},\ repeat,\ pressed,\ released,\ handled);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00812}00812\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00813}00813\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00814}00814\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Fix\ for\ PS3\ \#444\ -\/\ [IN\ GAME]\ If\ the\ user\ keeps\ pressing\ CROSS\ while\ on\ the\ 'Save\ Game'\ screen\ the\ title\ will\ crash.}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00815}00815\ \ \ \ \ \ \ \ \ handled\ =\ handled\ ||\ scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a9a772d4da6d9eb4008d8ae3df73bb4e8}{hidesLowerScenes}}()\ ||\ scene-\/>\doxymbox{\hyperlink{class_u_i_scene_a43df55e1279b0ff0d9bd8d1e920fc65f}{blocksInput}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00816}00816\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(handled\ )\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00817}00817\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00818}00818\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00819}00819\ \ \ \ \ \textcolor{comment}{//\ Components\ can't\ take\ input\ or\ focus}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00820}00820\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00821}00821\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00822}\doxymbox{\hyperlink{class_u_i_layer_a57357b3731a9c96b3e0067b6404fa6c6}{00822}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_a57357b3731a9c96b3e0067b6404fa6c6}{UILayer::HandleDLCMountingComplete}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00823}00823\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00824}00824\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ it\ =\ m\_sceneStack.rbegin();\ it\ !=\ m\_sceneStack.rend();\ ++it)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00825}00825\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00826}00826\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *topScene\ =\ *it;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00827}00827\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}UILayer::HandleDLCMountingComplete\ -\/\ topScene\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00828}00828\ \ \ \ \ \ \ \ \ topScene-\/>\doxymbox{\hyperlink{class_u_i_scene_a8e5f7715ea28946b0fb1484ae6b2b142}{HandleDLCMountingComplete}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00829}00829\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00830}00830\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00831}00831\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00832}\doxymbox{\hyperlink{class_u_i_layer_a3c1697fd8b82cf9d492be5e5da45f3e1}{00832}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_a3c1697fd8b82cf9d492be5e5da45f3e1}{UILayer::HandleDLCInstalled}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00833}00833\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00834}00834\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ it\ =\ m\_sceneStack.rbegin();\ it\ !=\ m\_sceneStack.rend();\ ++it)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00835}00835\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00836}00836\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *topScene\ =\ *it;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00837}00837\ \ \ \ \ \ \ \ \ topScene-\/>\doxymbox{\hyperlink{class_u_i_scene_a227e7b0d2c2e8ca14b5ce112072cc15e}{HandleDLCInstalled}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00838}00838\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00839}00839\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00840}00840\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00841}00841\ \textcolor{preprocessor}{\#ifdef\ \_XBOX\_ONE}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00842}00842\ \textcolor{keywordtype}{void}\ UILayer::HandleDLCLicenseChange()}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00843}00843\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00844}00844\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keyword}{auto}\ it\ =\ m\_sceneStack.rbegin();\ it\ !=\ m\_sceneStack.rend();\ ++it)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00845}00845\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00846}00846\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *topScene\ =\ *it;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00847}00847\ \ \ \ \ \ \ \ \ topScene-\/>HandleDLCLicenseChange();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00848}00848\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00849}00849\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00850}00850\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00851}00851\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00852}\doxymbox{\hyperlink{class_u_i_layer_a580100a65cb365115f1c9c7132c62480}{00852}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_a580100a65cb365115f1c9c7132c62480}{UILayer::HandleMessage}}(\doxymbox{\hyperlink{_u_i_enums_8h_adb51f1b529168ed7103cb070e80115dd}{EUIMessage}}\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}},\ \textcolor{keywordtype}{void}\ *data)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00853}00853\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00854}00854\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ it\ =\ m\_sceneStack.rbegin();\ it\ !=\ m\_sceneStack.rend();\ ++it)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00855}00855\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00856}00856\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *topScene\ =\ *it;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00857}00857\ \ \ \ \ \ \ \ \ topScene-\/>\doxymbox{\hyperlink{class_u_i_scene_aa02402d1fe731015bdb6142e8e911b10}{HandleMessage}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}},\ data);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00858}00858\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00859}00859\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00860}00860\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00861}\doxymbox{\hyperlink{class_u_i_layer_ab742caa16455e81a4e2d19bca926a7db}{00861}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_u_i_layer_ab742caa16455e81a4e2d19bca926a7db}{UILayer::IsFullscreenGroup}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00862}00862\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00863}00863\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_u_i_layer_afd2f8c4ebbf3af49bad3ba2e91460770}{m\_parentGroup}}-\/>IsFullscreenGroup();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00864}00864\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00865}00865\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00866}\doxymbox{\hyperlink{class_u_i_layer_a30cb9c3727bb6d6e74b55f6299659c32}{00866}}\ \doxymbox{\hyperlink{class_c4_j_render_a42446185d78f164dcc4a9e527748d758}{C4JRender::eViewportType}}\ \doxymbox{\hyperlink{class_u_i_layer_a30cb9c3727bb6d6e74b55f6299659c32}{UILayer::getViewport}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00867}00867\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00868}00868\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_u_i_layer_afd2f8c4ebbf3af49bad3ba2e91460770}{m\_parentGroup}}-\/>GetViewportType();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00869}00869\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00870}00870\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00871}00871\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00872}\doxymbox{\hyperlink{class_u_i_layer_a2284f34d6396210b3a6ba4c5abe07fc2}{00872}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_a2284f34d6396210b3a6ba4c5abe07fc2}{UILayer::handleUnlockFullVersion}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00873}00873\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00874}00874\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ m\_sceneStack)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00875}00875\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00876}00876\ \ \ \ \ \ \ \ \ it-\/>handleUnlockFullVersion();}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00877}00877\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00878}00878\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00879}00879\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00880}\doxymbox{\hyperlink{class_u_i_layer_af0f62a883e4d8b62d25c93e405318919}{00880}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_layer_af0f62a883e4d8b62d25c93e405318919}{UILayer::PrintTotalMemoryUsage}}(int64\_t\ \&totalStatic,\ int64\_t\ \&totalDynamic)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00881}00881\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00882}00882\ \ \ \ \ int64\_t\ layerStatic\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00883}00883\ \ \ \ \ int64\_t\ layerDynamic\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00884}00884\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ m\_components)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00885}00885\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00886}00886\ \ \ \ \ \ \ \ \ it-\/>PrintTotalMemoryUsage(layerStatic,\ layerDynamic);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00887}00887\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00888}00888\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ m\_sceneStack)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00889}00889\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00890}00890\ \ \ \ \ \ \ \ \ it-\/>PrintTotalMemoryUsage(layerStatic,\ layerDynamic);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00891}00891\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00892}00892\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.USER\_SR,\ \textcolor{stringliteral}{"{}\ \ \(\backslash\)\(\backslash\)-\/\ Layer\ static:\ \%d\ ,\ Layer\ dynamic:\ \%d\(\backslash\)n"{}},\ layerStatic,\ layerDynamic);}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00893}00893\ \ \ \ \ totalStatic\ +=\ layerStatic;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00894}00894\ \ \ \ \ totalDynamic\ +=\ layerDynamic;}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00895}00895\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00896}00896\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00897}00897\ \textcolor{comment}{//\ Returns\ the\ first\ scene\ of\ given\ type\ if\ it\ exists,\ nullptr\ otherwise}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00898}\doxymbox{\hyperlink{class_u_i_layer_ad069a2b8870da6db8d80755163eb18ab}{00898}}\ \doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *\doxymbox{\hyperlink{class_u_i_layer_ad069a2b8870da6db8d80755163eb18ab}{UILayer::FindScene}}(\doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832}{EUIScene}}\ sceneType)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00899}00899\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00900}00900\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_sceneStack.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00901}00901\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00902}00902\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_sceneStack[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>getSceneType()\ ==\ sceneType)}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00903}00903\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00904}00904\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_sceneStack[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00905}00905\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00906}00906\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00907}00907\ }
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00908}00908\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_u_i_layer_8cpp_source_l00909}00909\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,406 @@
+\doxysection{UIScene\+\_\+\+Keyboard.\+cpp}
+\hypertarget{_u_i_scene___keyboard_8cpp_source}{}\label{_u_i_scene___keyboard_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/UI/UIScene\_Keyboard.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/UI/UIScene\_Keyboard.cpp}}
+\doxymbox{\hyperlink{_u_i_scene___keyboard_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_u_i_8h}{UI.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_u_i_scene___keyboard_8h}{UIScene\_Keyboard.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#ifdef\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00006}00006\ \textcolor{comment}{//\ Global\ buffer\ that\ stores\ the\ text\ entered\ in\ the\ native\ keyboard\ scene.}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00007}00007\ \textcolor{comment}{//\ Callbacks\ retrieve\ it\ via\ Win64\_GetKeyboardText()\ declared\ in\ UIStructs.h.}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00008}00008\ \textcolor{keywordtype}{wchar\_t}\ g\_Win64KeyboardResult[256]\ =\ \{\};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00011}\doxymbox{\hyperlink{_u_i_scene___keyboard_8cpp_a1d35924f2e45b6e9f12b1ac11af7e73b}{00011}}\ \textcolor{preprocessor}{\#define\ KEYBOARD\_DONE\_TIMER\_ID\ 0}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00012}\doxymbox{\hyperlink{_u_i_scene___keyboard_8cpp_af7e7778764180b6e31724255f939fb4f}{00012}}\ \textcolor{preprocessor}{\#define\ KEYBOARD\_DONE\_TIMER\_TIME\ 100}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00014}\doxymbox{\hyperlink{class_u_i_scene___keyboard_a7510aa22ce6ffa9d11040021c7ec4ef9}{00014}}\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a7510aa22ce6ffa9d11040021c7ec4ef9}{UIScene\_Keyboard::UIScene\_Keyboard}}(\textcolor{keywordtype}{int}\ iPad,\ \textcolor{keywordtype}{void}\ *initData,\ \doxymbox{\hyperlink{class_u_i_scene_a51836e98d66a868eacff38d348f2d35c}{UILayer}}\ *parentLayer)\ :\ \doxymbox{\hyperlink{class_u_i_scene_a3ba88e19a2bb55feaef23eeeba7646aa}{UIScene}}(iPad,\ parentLayer)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00015}00015\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00016}00016\ \ \ \ \ \textcolor{comment}{//\ Setup\ all\ the\ Iggy\ references\ we\ need\ for\ this\ scene}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00017}00017\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_a7f21c1edae92cf27df2f857dcc9dcf20}{initialiseMovie}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00019}00019\ \textcolor{preprocessor}{\#ifdef\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00020}00020\ \ \ \ \ m\_win64Callback\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00021}00021\ \ \ \ \ m\_win64CallbackParam\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00022}00022\ \ \ \ \ m\_win64TextBuffer\ =\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00023}00023\ \ \ \ \ m\_win64MaxChars\ =\ 25;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00025}00025\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}*\ titleText\ =\ L\textcolor{stringliteral}{"{}Enter\ text"{}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00026}00026\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}*\ defaultText\ =\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00028}00028\ \ \ \ \ m\_bPCMode\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00029}00029\ \ \ \ \ \textcolor{keywordflow}{if}\ (initData)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00030}00030\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ UIKeyboardInitData*\ kbData\ =\ \textcolor{keyword}{static\_cast<}UIKeyboardInitData\ *\textcolor{keyword}{>}(initData);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ m\_win64Callback\ =\ kbData-\/>callback;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ m\_win64CallbackParam\ =\ kbData-\/>lpParam;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (kbData-\/>title)\ \ \ \ \ \ \ titleText\ \ \ \ \ \ \ \ =\ kbData-\/>title;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (kbData-\/>defaultText)\ defaultText\ \ \ \ \ \ =\ kbData-\/>defaultText;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00036}00036\ \ \ \ \ \ \ \ \ m\_win64MaxChars\ =\ kbData-\/>maxChars;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ m\_bPCMode\ =\ kbData-\/>pcMode;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00038}00038\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00040}00040\ \ \ \ \ m\_win64TextBuffer\ =\ defaultText;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00041}00041\ \ \ \ \ m\_iCursorPos\ =\ (int)m\_win64TextBuffer.length();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00043}00043\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_acf7600c3706653a1a5c1db3657f9efca}{m\_EnterTextLabel}}.init(titleText);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00044}00044\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a885dd4e47413faf5bfdd3dbe136da532}{m\_KeyboardTextInput}}.init(defaultText,\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00045}00045\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a885dd4e47413faf5bfdd3dbe136da532}{m\_KeyboardTextInput}}.SetCharLimit(m\_win64MaxChars);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00047}00047\ \ \ \ \ \textcolor{comment}{//\ Clear\ any\ leftover\ typed\ characters\ from\ a\ previous\ keyboard\ session}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00048}00048\ \ \ \ \ g\_KBMInput.ClearCharBuffer();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00049}00049\ \ \ \ \ g\_Win64KeyboardResult[0]\ =\ L\textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00050}00050\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00051}00051\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_acf7600c3706653a1a5c1db3657f9efca}{m\_EnterTextLabel}}.init(L\textcolor{stringliteral}{"{}Enter\ Sign\ Text"{}});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00053}00053\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a885dd4e47413faf5bfdd3dbe136da532}{m\_KeyboardTextInput}}.init(L\textcolor{stringliteral}{"{}"{}},\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00054}00054\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a885dd4e47413faf5bfdd3dbe136da532}{m\_KeyboardTextInput}}.SetCharLimit(15);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00055}00055\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00056}00056\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00057}00057\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_ac2d0db50adde6b9381b4b88ad898ca73}{m\_ButtonSpace}}.init(L\textcolor{stringliteral}{"{}Space"{}},\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00058}00058\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a3b2035ac7ab34f728489c610a5172c62}{m\_ButtonCursorLeft}}.init(L\textcolor{stringliteral}{"{}Cur\ L"{}},\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00059}00059\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a8e00bbab726d36cfaf2a0f23d33509f7}{m\_ButtonCursorRight}}.init(L\textcolor{stringliteral}{"{}Cur\ R"{}},\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00060}00060\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a2e0c518adb3da208bdbe4e8c89e2389c}{m\_ButtonCaps}}.init(L\textcolor{stringliteral}{"{}Caps"{}},\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00061}00061\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a306082114dcd64dba6f7237827ed22fe}{m\_ButtonDone}}.init(L\textcolor{stringliteral}{"{}Done"{}},\ 0);\ \ \textcolor{comment}{//\ only\ the\ done\ button\ needs\ an\ id,\ the\ others\ will\ never\ call\ back!}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00062}00062\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a769f24ae873797713a2de71bc7e8e23b}{m\_ButtonSymbols}}.init(L\textcolor{stringliteral}{"{}Symbols"{}},\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00063}00063\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a20b01a05853de36d585aed21dbad725d}{m\_ButtonBackspace}}.init(L\textcolor{stringliteral}{"{}Backspace"{}},\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00065}00065\ \ \ \ \ \textcolor{comment}{//\ Initialise\ function\ keyboard\ Buttons\ and\ set\ alternative\ symbol\ button\ string}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00066}00066\ \textcolor{preprocessor}{\#ifdef\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00067}00067\ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_bPCMode)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00068}00068\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00069}00069\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ wstring\ label\ =\ L\textcolor{stringliteral}{"{}Abc"{}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_string_u_t_f16}{IggyStringUTF16}}\ stringVal;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ stringVal.\doxymbox{\hyperlink{struct_iggy_string_u_t_f16_a2cec9dbf97524658514aa3d9c713c6b2}{string}}\ =\ (\doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a42f8277161b0a5bc30ea491c35482fda}{IggyUTF16}}*)label.c\_str();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ stringVal.\doxymbox{\hyperlink{struct_iggy_string_u_t_f16_ae7cc34fbbb43fe9a633c324eda2e8d62}{length}}\ =\ label.length();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_data_value}{IggyDataValue}}\ result;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_data_value}{IggyDataValue}}\ value[1];}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ value[0].type\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af2666d08dc7f762c6acf668c2a599859ac913048421eb6b0af7d177e8edaaee08}{IGGY\_DATATYPE\_string\_UTF16}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ value[0].string16\ =\ stringVal;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a2810980027b9a2cb04e7fcfda8f7147b}{IggyPlayerCallMethodRS}}\ (\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ,\ \&result,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a496df6a2bb4b0dc3008aa02abd996f84}{IggyPlayerRootPath}}(\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ),\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a64600b0e2692d7adbd41f4c9dfe867ab}{m\_funcInitFunctionButtons}}\ ,\ 1\ ,\ value\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00081}00081\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00083}00083\ \textcolor{preprocessor}{\#ifdef\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00084}00084\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bPCMode)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00085}00085\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ PC\ text-\/input\ mode:\ hide\ all\ on-\/screen\ buttons,\ user\ types\ with\ physical\ keyboard}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Hide\ the\ mapped\ function-\/row\ buttons}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_ac2d0db50adde6b9381b4b88ad898ca73}{m\_ButtonSpace}}.setVisible(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a3b2035ac7ab34f728489c610a5172c62}{m\_ButtonCursorLeft}}.setVisible(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a8e00bbab726d36cfaf2a0f23d33509f7}{m\_ButtonCursorRight}}.setVisible(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a2e0c518adb3da208bdbe4e8c89e2389c}{m\_ButtonCaps}}.setVisible(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a769f24ae873797713a2de71bc7e8e23b}{m\_ButtonSymbols}}.setVisible(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a20b01a05853de36d585aed21dbad725d}{m\_ButtonBackspace}}.setVisible(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Hide\ the\ letter/number\ key\ grid\ (Flash-\/baked,\ not\ mapped\ as\ UIControls)}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ s\_keyNames[]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Button\_q"{}},\ \textcolor{stringliteral}{"{}Button\_w"{}},\ \textcolor{stringliteral}{"{}Button\_e"{}},\ \textcolor{stringliteral}{"{}Button\_r"{}},\ \textcolor{stringliteral}{"{}Button\_t"{}},}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Button\_y"{}},\ \textcolor{stringliteral}{"{}Button\_u"{}},\ \textcolor{stringliteral}{"{}Button\_i"{}},\ \textcolor{stringliteral}{"{}Button\_o"{}},\ \textcolor{stringliteral}{"{}Button\_p"{}},}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Button\_a"{}},\ \textcolor{stringliteral}{"{}Button\_s"{}},\ \textcolor{stringliteral}{"{}Button\_d"{}},\ \textcolor{stringliteral}{"{}Button\_f"{}},\ \textcolor{stringliteral}{"{}Button\_g"{}},}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Button\_h"{}},\ \textcolor{stringliteral}{"{}Button\_j"{}},\ \textcolor{stringliteral}{"{}Button\_k"{}},\ \textcolor{stringliteral}{"{}Button\_l"{}},\ \textcolor{stringliteral}{"{}Button\_apostraphy"{}},}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Button\_z"{}},\ \textcolor{stringliteral}{"{}Button\_x"{}},\ \textcolor{stringliteral}{"{}Button\_c"{}},\ \textcolor{stringliteral}{"{}Button\_v"{}},\ \textcolor{stringliteral}{"{}Button\_b"{}},}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Button\_n"{}},\ \textcolor{stringliteral}{"{}Button\_m"{}},\ \textcolor{stringliteral}{"{}Button\_comma"{}},\ \textcolor{stringliteral}{"{}Button\_stop"{}},\ \textcolor{stringliteral}{"{}Button\_qmark"{}},}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Button\_0"{}},\ \textcolor{stringliteral}{"{}Button\_1"{}},\ \textcolor{stringliteral}{"{}Button\_2"{}},\ \textcolor{stringliteral}{"{}Button\_3"{}},\ \textcolor{stringliteral}{"{}Button\_4"{}},}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Button\_5"{}},\ \textcolor{stringliteral}{"{}Button\_6"{}},\ \textcolor{stringliteral}{"{}Button\_7"{}},\ \textcolor{stringliteral}{"{}Button\_8"{}},\ \textcolor{stringliteral}{"{}Button\_9"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_aa74987a6727e565c078eaad797703c0e}{IggyName}}\ nameVisible\ =\ \doxymbox{\hyperlink{class_u_i_scene_a60adea906a385d74f53f3eafc326214e}{registerFastName}}(L\textcolor{stringliteral}{"{}visible"{}});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_value_path}{IggyValuePath}}*\ root\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a496df6a2bb4b0dc3008aa02abd996f84}{IggyPlayerRootPath}}(\doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}());}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i\ <\ static\_cast<int>}}(\textcolor{keyword}{sizeof}(s\_keyNames)\ /\ \textcolor{keyword}{sizeof}(s\_keyNames[0]));\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_value_path}{IggyValuePath}}\ keyPath;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a32b3e8d0387d8d3e71d1ea797d611245}{IggyValuePathMakeNameRef}}(\&keyPath,\ root,\ s\_keyNames[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a8e751b5bbd4e4c7aeed71b70aaaba8c0}{IggyValueSetBooleanRS}}(\&keyPath,\ nameVisible,\ \textcolor{keyword}{nullptr},\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a885dd4e47413faf5bfdd3dbe136da532}{m\_KeyboardTextInput}}.setCaretVisible(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a885dd4e47413faf5bfdd3dbe136da532}{m\_KeyboardTextInput}}.setCaretIndex(m\_iCursorPos);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00118}00118\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00119}00119\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00121}00121\ \ \ \ \ m\_bKeyboardDonePressed\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00123}00123\ \ \ \ \ parentLayer-\/>\doxymbox{\hyperlink{class_u_i_layer_a4f240f3aa87e563808cbee7a6336d292}{addComponent}}(iPad,\doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ad8ce723904a6f4a1acbe4b52bbdc80c4}{eUIComponent\_MenuBackground}});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00124}00124\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00126}\doxymbox{\hyperlink{class_u_i_scene___keyboard_a5ec9feebc85e353f5f5aedb35a3e48d9}{00126}}\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a5ec9feebc85e353f5f5aedb35a3e48d9}{UIScene\_Keyboard::\string~UIScene\_Keyboard}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00127}00127\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00128}00128\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_a93abcafc90e6a642caa50332b02036f9}{m\_parentLayer}}-\/>removeComponent(\doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832ad8ce723904a6f4a1acbe4b52bbdc80c4}{eUIComponent\_MenuBackground}});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00129}00129\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00131}\doxymbox{\hyperlink{class_u_i_scene___keyboard_a9e30c583c51e111e79985c0e2d9425a9}{00131}}\ wstring\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a9e30c583c51e111e79985c0e2d9425a9}{UIScene\_Keyboard::getMoviePath}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00132}00132\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00133}00133\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetLocalPlayerCount()\ >\ 1\ \&\&\ !\doxymbox{\hyperlink{class_u_i_scene_a93abcafc90e6a642caa50332b02036f9}{m\_parentLayer}}-\/>IsFullscreenGroup())}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00134}00134\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ L\textcolor{stringliteral}{"{}KeyboardSplit"{}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00136}00136\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00137}00137\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00138}00138\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ L\textcolor{stringliteral}{"{}Keyboard"{}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00140}00140\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00141}00141\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00143}\doxymbox{\hyperlink{class_u_i_scene___keyboard_a3bd2de4a196b427665b7a2fed8a591fe}{00143}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a3bd2de4a196b427665b7a2fed8a591fe}{UIScene\_Keyboard::updateTooltips}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00144}00144\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00145}00145\ \ \ \ \ \doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.SetTooltips(\ \doxymbox{\hyperlink{_app___defines_8h_ab244a6c117db7e30cf638dc997563879}{DEFAULT\_XUI\_MENU\_USER}},\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a76107444b972a0217b895eb7ff5d4d55}{IDS\_TOOLTIPS\_SELECT}},\doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a34d9e97806d6692fc2c9c0ff7268ccbb}{IDS\_TOOLTIPS\_BACK}},\ -\/1,\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00146}00146\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00148}\doxymbox{\hyperlink{class_u_i_scene___keyboard_a5c024de21c3b1426949d57aff2abf554}{00148}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a5c024de21c3b1426949d57aff2abf554}{UIScene\_Keyboard::allowRepeat}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00149}00149\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00150}00150\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ TomK\ -\/\ we\ want\ to\ allow\ X\ and\ Y\ repeats!}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00151}00151\ \ \ \ \ \textcolor{keywordflow}{switch}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00152}00152\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00153}00153\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7af3f318c1f3477b7d78855732a3d2e6d2}{ACTION\_MENU\_OK}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00154}00154\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a3fd1b6f525260f84f36835657fa5ca3e}{ACTION\_MENU\_CANCEL}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00155}00155\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a9cd864bf5d578e6106fb29bc47338850}{ACTION\_MENU\_A}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00156}00156\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a5c567951431102f7d66e9d9a66cc8ffb}{ACTION\_MENU\_B}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00157}00157\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a6bde1c0687cd0f450c7d4daffb394c25}{ACTION\_MENU\_PAUSEMENU}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00158}00158\ \ \ \ \ \textcolor{comment}{//case\ ACTION\_MENU\_X:}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00159}00159\ \ \ \ \ \textcolor{comment}{//case\ ACTION\_MENU\_Y:}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00161}00161\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00162}00162\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00163}00163\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00165}00165\ \textcolor{preprocessor}{\#ifdef\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00166}00166\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_scene_a6dda066e4c1cc95afb64426df5da2ca9}{UIScene\_Keyboard::tick}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00167}00167\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00168}00168\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_a6dda066e4c1cc95afb64426df5da2ca9}{UIScene::tick}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00169}00169\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00170}00170\ \ \ \ \ \textcolor{comment}{//\ Sync\ our\ buffer\ from\ Flash\ so\ we\ pick\ up\ changes\ made\ via\ controller/on-\/screen\ buttons.}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00171}00171\ \ \ \ \ \textcolor{comment}{//\ Without\ this,\ switching\ between\ controller\ and\ keyboard\ would\ use\ stale\ text.}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00172}00172\ \ \ \ \ \textcolor{comment}{//\ In\ PC\ mode\ we\ own\ the\ buffer\ —\ skip\ sync\ to\ preserve\ cursor\ position.}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00173}00173\ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_bPCMode)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00174}00174\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}*\ flashText\ =\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a885dd4e47413faf5bfdd3dbe136da532}{m\_KeyboardTextInput}}.\doxymbox{\hyperlink{class_u_i_control___base_ad7d2cb6c1abb100bde2fd0a5964c596a}{getLabel}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (flashText)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ m\_win64TextBuffer\ =\ flashText;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00178}00178\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00179}00179\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00180}00180\ \ \ \ \ \textcolor{comment}{//\ Accumulate\ physical\ keyboard\ chars\ into\ our\ own\ buffer,\ then\ push\ to\ Flash\ via\ setLabel.}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00181}00181\ \ \ \ \ \textcolor{comment}{//\ This\ bypasses\ Iggy's\ focus\ system\ (char\ events\ only\ route\ to\ the\ focused\ element).}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00182}00182\ \ \ \ \ \textcolor{comment}{//\ The\ char\ buffer\ is\ cleared\ on\ open\ so\ Enter/clicks\ from\ the\ triggering\ action\ don't\ leak\ in.}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00183}00183\ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ ch;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00184}00184\ \ \ \ \ \textcolor{keywordtype}{bool}\ changed\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00185}00185\ \ \ \ \ \textcolor{keywordflow}{while}\ (g\_KBMInput.ConsumeChar(ch))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00186}00186\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ch\ ==\ 0x08)\ \textcolor{comment}{//\ backspace}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bPCMode)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_iCursorPos\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_win64TextBuffer.erase(m\_iCursorPos\ -\/\ 1,\ 1);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_iCursorPos-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ changed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (!m\_win64TextBuffer.empty())}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_win64TextBuffer.pop\_back();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ changed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (ch\ ==\ 0x0D)\ \textcolor{comment}{//\ enter\ -\/\ confirm}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_bKeyboardDonePressed)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_aa7397c3820c68677df7308790e927e64}{addTimer}}(\doxymbox{\hyperlink{_u_i_scene___keyboard_8cpp_a1d35924f2e45b6e9f12b1ac11af7e73b}{KEYBOARD\_DONE\_TIMER\_ID}},\ \doxymbox{\hyperlink{_u_i_scene___keyboard_8cpp_af7e7778764180b6e31724255f939fb4f}{KEYBOARD\_DONE\_TIMER\_TIME}});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_bKeyboardDonePressed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(m\_win64TextBuffer.length())\ <\ m\_win64MaxChars)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bPCMode)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_win64TextBuffer.insert(m\_iCursorPos,\ 1,\ ch);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_iCursorPos++;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_win64TextBuffer\ +=\ ch;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ changed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00225}00225\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00227}00227\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bPCMode)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00228}00228\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Arrow\ keys,\ Home,\ End,\ Delete\ for\ cursor\ movement}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_KBMInput.IsKeyPressed(VK\_LEFT)\ \&\&\ m\_iCursorPos\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ m\_iCursorPos-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_KBMInput.IsKeyPressed(VK\_RIGHT)\ \&\&\ m\_iCursorPos\ <\ (\textcolor{keywordtype}{int})m\_win64TextBuffer.length())}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ m\_iCursorPos++;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_KBMInput.IsKeyPressed(VK\_HOME))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ m\_iCursorPos\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_KBMInput.IsKeyPressed(VK\_END))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ m\_iCursorPos\ =\ (int)m\_win64TextBuffer.length();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_KBMInput.IsKeyPressed(VK\_DELETE)\ \&\&\ m\_iCursorPos\ <\ (\textcolor{keywordtype}{int})m\_win64TextBuffer.length())}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00239}00239\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ m\_win64TextBuffer.erase(m\_iCursorPos,\ 1);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ changed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00242}00242\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00243}00243\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00244}00244\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00245}00245\ \ \ \ \ \textcolor{keywordflow}{if}\ (changed)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a885dd4e47413faf5bfdd3dbe136da532}{m\_KeyboardTextInput}}.setLabel(m\_win64TextBuffer.c\_str(),\ \textcolor{keyword}{true}\ \textcolor{comment}{/*instant*/});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00247}00247\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00248}00248\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bPCMode)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00249}00249\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00250}00250\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a885dd4e47413faf5bfdd3dbe136da532}{m\_KeyboardTextInput}}.setCaretVisible(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00251}00251\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a885dd4e47413faf5bfdd3dbe136da532}{m\_KeyboardTextInput}}.setCaretIndex(m\_iCursorPos);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00252}00252\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00253}00253\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00254}00254\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00256}\doxymbox{\hyperlink{class_u_i_scene___keyboard_ab7a308c5c533e1f9b07f021fad291bfb}{00256}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_ab7a308c5c533e1f9b07f021fad291bfb}{UIScene\_Keyboard::handleInput}}(\textcolor{keywordtype}{int}\ iPad,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}},\ \textcolor{keywordtype}{bool}\ repeat,\ \textcolor{keywordtype}{bool}\ pressed,\ \textcolor{keywordtype}{bool}\ released,\ \textcolor{keywordtype}{bool}\ \&handled)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00257}00257\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00258}00258\ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_data_value}{IggyDataValue}}\ result;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00259}00259\ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a219efe54cb83c9896187f36151869fbc}{IggyResult}}\ out;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00260}00260\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00261}00261\ \ \ \ \ \textcolor{keywordflow}{if}(repeat\ ||\ pressed)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00262}00262\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00263}00263\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00265}00265\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a3fd1b6f525260f84f36835657fa5ca3e}{ACTION\_MENU\_CANCEL}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00266}00266\ \textcolor{preprocessor}{\#ifdef\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Cache\ before\ navigateBack()\ destroys\ this\ scene}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int(*cb)(\doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}},\ \textcolor{keyword}{const}\ bool)\ =\ m\_win64Callback;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ cbParam\ =\ m\_win64CallbackParam;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_a18367b02f996b9140f1cceeb3185fb44}{navigateBack}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cb)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cb(cbParam,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00275}00275\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_a18367b02f996b9140f1cceeb3185fb44}{navigateBack}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00277}00277\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ handled\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00280}00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a8385064c3dbfae4e44e67550ac8bd8cb}{ACTION\_MENU\_X}}:\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ X}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00281}00281\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7ab09edc35799f2a3c43cc7f77e3c2b817}{ACTION\_MENU\_PAGEUP}}:\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ LT}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a2df4d5c009e59176c81e436fe95f43b7}{ACTION\_MENU\_Y}}:\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Y}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7ac88cc8bca9fe748fb96252478a62428b}{ACTION\_MENU\_STICK\_PRESS}}:\ \ \ \ \ \ \ \textcolor{comment}{//\ LS}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00284}00284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7afeefe142efc9b9f9946bee606e4300f8}{ACTION\_MENU\_LEFT\_SCROLL}}:\ \ \ \ \ \ \ \textcolor{comment}{//\ LB}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00285}00285\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a696de02f9f19a5fba2ffd467a4d8fbed}{ACTION\_MENU\_RIGHT\_SCROLL}}:\ \ \ \ \ \ \textcolor{comment}{//\ RB}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00286}00286\ \textcolor{preprocessor}{\#ifdef\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00287}00287\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00288}00288\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bPCMode)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ handled\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00293}00293\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}}\ ==\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a8385064c3dbfae4e44e67550ac8bd8cb}{ACTION\_MENU\_X}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a2810980027b9a2cb04e7fcfda8f7147b}{IggyPlayerCallMethodRS}}\ (\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ,\ \&result,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a496df6a2bb4b0dc3008aa02abd996f84}{IggyPlayerRootPath}}(\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ),\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a7909118b15a951d36599420211d9c745}{m\_funcBackspaceButtonPressed}},\ 0\ ,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}}\ ==\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7ab09edc35799f2a3c43cc7f77e3c2b817}{ACTION\_MENU\_PAGEUP}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a2810980027b9a2cb04e7fcfda8f7147b}{IggyPlayerCallMethodRS}}\ (\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ,\ \&result,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a496df6a2bb4b0dc3008aa02abd996f84}{IggyPlayerRootPath}}(\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ),\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a1c34e1355299f0f404f98b3d4fffb6be}{m\_funcSymbolButtonPressed}},\ 0\ ,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}}\ ==\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a2df4d5c009e59176c81e436fe95f43b7}{ACTION\_MENU\_Y}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a2810980027b9a2cb04e7fcfda8f7147b}{IggyPlayerCallMethodRS}}\ (\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ,\ \&result,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a496df6a2bb4b0dc3008aa02abd996f84}{IggyPlayerRootPath}}(\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ),\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a6a89b16d1b761697f0f50220f03729dd}{m\_funcSpaceButtonPressed}},\ 0\ ,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}}\ ==\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7ac88cc8bca9fe748fb96252478a62428b}{ACTION\_MENU\_STICK\_PRESS}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a2810980027b9a2cb04e7fcfda8f7147b}{IggyPlayerCallMethodRS}}\ (\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ,\ \&result,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a496df6a2bb4b0dc3008aa02abd996f84}{IggyPlayerRootPath}}(\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ),\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a449375d9f595944c6b4886c5c3d55a9c}{m\_funcCapsButtonPressed}},\ 0\ ,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}}\ ==\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7afeefe142efc9b9f9946bee606e4300f8}{ACTION\_MENU\_LEFT\_SCROLL}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a2810980027b9a2cb04e7fcfda8f7147b}{IggyPlayerCallMethodRS}}\ (\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ,\ \&result,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a496df6a2bb4b0dc3008aa02abd996f84}{IggyPlayerRootPath}}(\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ),\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a49565c993878023717e5eac6f0bea836}{m\_funcCursorLeftButtonPressed}},\ 0\ ,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}}\ ==\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a696de02f9f19a5fba2ffd467a4d8fbed}{ACTION\_MENU\_RIGHT\_SCROLL}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a2810980027b9a2cb04e7fcfda8f7147b}{IggyPlayerCallMethodRS}}\ (\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ,\ \&result,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a496df6a2bb4b0dc3008aa02abd996f84}{IggyPlayerRootPath}}(\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ),\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_ab76bbcab8748f5c04e3e3ae657d07183}{m\_funcCursorRightButtonPressed}},\ 0\ ,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ handled\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a6bde1c0687cd0f450c7d4daffb394c25}{ACTION\_MENU\_PAUSEMENU}}:\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Start}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!m\_bKeyboardDonePressed)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a2810980027b9a2cb04e7fcfda8f7147b}{IggyPlayerCallMethodRS}}\ (\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ,\ \&result,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a496df6a2bb4b0dc3008aa02abd996f84}{IggyPlayerRootPath}}(\ \doxymbox{\hyperlink{class_u_i_scene_a776125bd120542be4baa96dad14e9b87}{getMovie}}()\ ),\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a0ca23f49f2d617698434c9598aba1edb}{m\_funcDoneButtonPressed}},\ 0\ ,\ \textcolor{keyword}{nullptr}\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ kick\ off\ done\ timer}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_aa7397c3820c68677df7308790e927e64}{addTimer}}(\doxymbox{\hyperlink{_u_i_scene___keyboard_8cpp_a1d35924f2e45b6e9f12b1ac11af7e73b}{KEYBOARD\_DONE\_TIMER\_ID}},\doxymbox{\hyperlink{_u_i_scene___keyboard_8cpp_af7e7778764180b6e31724255f939fb4f}{KEYBOARD\_DONE\_TIMER\_TIME}});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_bKeyboardDonePressed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ handled\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00320}00320\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00322}00322\ \ \ \ \ \textcolor{keywordflow}{switch}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00323}00323\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00324}00324\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7af3f318c1f3477b7d78855732a3d2e6d2}{ACTION\_MENU\_OK}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00325}00325\ \textcolor{preprocessor}{\#ifdef\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bPCMode)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ pressing\ enter\ sometimes\ causes\ a\ "{}y"{}\ to\ be\ entered.}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ handled\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00332}00332\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ fall\ through\ for\ controller\ mode}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00334}00334\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7ab4aa02a41cfebe9941125ebfafffbd71}{ACTION\_MENU\_LEFT}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00335}00335\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a58212aa19fe9c0223fb2b4fcddf01e39}{ACTION\_MENU\_RIGHT}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00336}00336\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7aaff95c01bfb4a5cc7c075051c1c0754c}{ACTION\_MENU\_UP}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00337}00337\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a94c204514afcc17d81251e640e64bb8b}{ACTION\_MENU\_DOWN}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00338}00338\ \textcolor{preprocessor}{\#ifdef\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_bPCMode)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00340}00340\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_a63634396502a68f08782d6cf2f80ab57}{sendInputToMovie}}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}},\ repeat,\ pressed,\ released);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ handled\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00344}00344\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00345}00345\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00347}\doxymbox{\hyperlink{class_u_i_scene___keyboard_ac98ce7f9816e149474a134a0144c6806}{00347}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_ac98ce7f9816e149474a134a0144c6806}{UIScene\_Keyboard::handlePress}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_ab2d8260a86f8d9d700fea930b54fa142}{F64}}\ controlId,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_ab2d8260a86f8d9d700fea930b54fa142}{F64}}\ childId)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00348}00348\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00349}00349\ \ \ \ \ \textcolor{keywordflow}{if}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(controlId)\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00350}00350\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Done\ has\ been\ pressed.\ At\ this\ point\ we\ can\ query\ for\ the\ input\ string\ and\ pass\ it\ on\ to\ wherever\ it\ is\ needed.}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ can\ not\ query\ for\ m\_KeyboardTextInput.getLabel()\ here\ because\ we're\ in\ an\ iggy\ callback\ so\ we\ need\ to\ wait\ a\ frame.}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!m\_bKeyboardDonePressed)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ kick\ off\ done\ timer}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_aa7397c3820c68677df7308790e927e64}{addTimer}}(\doxymbox{\hyperlink{_u_i_scene___keyboard_8cpp_a1d35924f2e45b6e9f12b1ac11af7e73b}{KEYBOARD\_DONE\_TIMER\_ID}},\doxymbox{\hyperlink{_u_i_scene___keyboard_8cpp_af7e7778764180b6e31724255f939fb4f}{KEYBOARD\_DONE\_TIMER\_TIME}});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ m\_bKeyboardDonePressed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00359}00359\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00360}00360\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00361}00361\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00362}\doxymbox{\hyperlink{class_u_i_scene___keyboard_ae52590023393646e29d78d8e9e327f64}{00362}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_ae52590023393646e29d78d8e9e327f64}{UIScene\_Keyboard::handleTimerComplete}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00363}00363\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00364}00364\ \ \ \ \ \textcolor{keywordflow}{if}(\textcolor{keywordtype}{id}\ ==\ \doxymbox{\hyperlink{_u_i_scene___keyboard_8cpp_a1d35924f2e45b6e9f12b1ac11af7e73b}{KEYBOARD\_DONE\_TIMER\_ID}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00365}00365\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ remove\ timer}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_a4dad37413cd2141221c294c75808a693}{killTimer}}(\doxymbox{\hyperlink{_u_i_scene___keyboard_8cpp_a1d35924f2e45b6e9f12b1ac11af7e73b}{KEYBOARD\_DONE\_TIMER\_ID}});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00368}00368\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we're\ done\ here!}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ KeyboardDonePressed();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00371}00371\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00372}00372\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00373}00373\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00374}00374\ \textcolor{keywordtype}{void}\ UIScene\_Keyboard::KeyboardDonePressed()}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00375}00375\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00376}00376\ \textcolor{preprocessor}{\#ifdef\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00377}00377\ \ \ \ \ \textcolor{comment}{//\ Use\ getLabel()\ here\ —\ this\ is\ a\ timer\ callback\ (not\ an\ Iggy\ callback)\ so\ it's\ safe.}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00378}00378\ \ \ \ \ \textcolor{comment}{//\ getLabel()\ reflects\ both\ physical\ keyboard\ input\ (pushed\ via\ setLabel)\ and}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00379}00379\ \ \ \ \ \textcolor{comment}{//\ on-\/screen\ button\ input\ (set\ directly\ by\ Flash\ ActionScript).}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00380}00380\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}*\ finalText\ =\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a885dd4e47413faf5bfdd3dbe136da532}{m\_KeyboardTextInput}}.\doxymbox{\hyperlink{class_u_i_control___base_ad7d2cb6c1abb100bde2fd0a5964c596a}{getLabel}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00381}00381\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}UI\ Keyboard\ -\/\ DONE\ -\/\ [\%ls]\(\backslash\)n"{}},\ finalText);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00383}00383\ \ \ \ \ \textcolor{comment}{//\ Store\ the\ typed\ text\ so\ callbacks\ can\ retrieve\ it\ via\ Win64\_GetKeyboardText()}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00384}00384\ \ \ \ \ \doxymbox{\hyperlink{_ps3_stubs_8h_ade7434d4b51f2a59eab3d6d0fed3bd83}{wcsncpy\_s}}(g\_Win64KeyboardResult,\ 256,\ finalText,\ \_TRUNCATE);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00385}00385\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00386}00386\ \ \ \ \ \textcolor{comment}{//\ Cache\ callback\ and\ param\ before\ navigateBack()\ which\ destroys\ this\ scene}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00387}00387\ \ \ \ \ int(*cb)(\doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}},\ \textcolor{keyword}{const}\ bool)\ =\ m\_win64Callback;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00388}00388\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ cbParam\ =\ m\_win64CallbackParam;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00389}00389\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00390}00390\ \ \ \ \ \textcolor{comment}{//\ Navigate\ back\ so\ the\ scene\ stack\ is\ restored\ before\ the\ callback\ runs}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00391}00391\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_a18367b02f996b9140f1cceeb3185fb44}{navigateBack}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00392}00392\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00393}00393\ \ \ \ \ \textcolor{comment}{//\ Fire\ callback:\ bRes=true\ means\ confirmed}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00394}00394\ \ \ \ \ \textcolor{keywordflow}{if}\ (cb)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ cb(cbParam,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00396}00396\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00397}00397\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}UI\ Keyboard\ -\/\ DONE\ -\/\ [\%ls]\(\backslash\)n"{}},\ \doxymbox{\hyperlink{class_u_i_scene___keyboard_a885dd4e47413faf5bfdd3dbe136da532}{m\_KeyboardTextInput}}.\doxymbox{\hyperlink{class_u_i_control___base_ad7d2cb6c1abb100bde2fd0a5964c596a}{getLabel}}());}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00398}00398\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_a18367b02f996b9140f1cceeb3185fb44}{navigateBack}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00399}00399\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___keyboard_8cpp_source_l00400}00400\ \}}
+
+\end{DoxyCode}

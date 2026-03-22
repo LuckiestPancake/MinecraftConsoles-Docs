@@ -1,0 +1,1084 @@
+\doxysection{Sound\+Engine.\+cpp}
+\hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source}{}\label{_xbox_2_audio_2_sound_engine_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Xbox/Audio/SoundEngine.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Xbox/Audio/SoundEngine.cpp}}
+\doxymbox{\hyperlink{_xbox_2_audio_2_sound_engine_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_mth_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)Mth.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_random_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)Random.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_level_data_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)LevelData.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8h}{..\(\backslash\)..\(\backslash\)Minecraft.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_multi_player_local_player_8h}{..\(\backslash\)..\(\backslash\)MultiplayerLocalPlayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_xbox_2_audio_2_sound_engine_8h}{SoundEngine.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_texture_pack_repository_8h}{..\(\backslash\)..\(\backslash\)TexturePackRepository.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_texture_pack_8h}{..\(\backslash\)..\(\backslash\)TexturePack.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_d_l_c_audio_file_8h}{..\(\backslash\)..\(\backslash\)Common\(\backslash\)DLC\(\backslash\)DLCAudioFile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_d_l_c_texture_pack_8h}{..\(\backslash\)..\(\backslash\)DLCTexturePack.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00015}\doxymbox{\hyperlink{_xbox_2_audio_2_sound_engine_8cpp_a7d296aab1786b1e1cb363a97571c9cf5}{00015}}\ IXAudio2*\ \doxymbox{\hyperlink{_xbox_2_audio_2_sound_engine_8cpp_a7d296aab1786b1e1cb363a97571c9cf5}{g\_pXAudio2}}\ =\ \textcolor{keyword}{nullptr};\ \ \ \ \ \ \ \textcolor{comment}{//\ pointer\ to\ XAudio2\ instance\ used\ by\ QNet\ and\ XACT}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00016}\doxymbox{\hyperlink{_xbox_2_audio_2_sound_engine_8cpp_ad44a41b6d80721cd8cf40ab67a4dda83}{00016}}\ IXAudio2MasteringVoice*\ \doxymbox{\hyperlink{_xbox_2_audio_2_sound_engine_8cpp_ad44a41b6d80721cd8cf40ab67a4dda83}{g\_pXAudio2MasteringVoice}}\ =\ \textcolor{keyword}{nullptr};\ \ \textcolor{comment}{//\ pointer\ to\ XAudio2\ mastering\ voice}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00018}00018\ IXACT3Engine\ *SoundEngine::m\_pXACT3Engine\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00019}00019\ IXACT3WaveBank\ \ *SoundEngine::m\_pWaveBank\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00020}00020\ IXACT3WaveBank\ \ *SoundEngine::m\_pWaveBank2\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00021}00021\ IXACT3WaveBank\ \ *SoundEngine::m\_pStreamedWaveBank\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00022}00022\ IXACT3WaveBank\ \ *SoundEngine::m\_pStreamedWaveBankAdditional\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00023}00023\ IXACT3SoundBank\ *SoundEngine::m\_pSoundBank\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00024}00024\ IXACT3SoundBank\ *SoundEngine::m\_pSoundBank2\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00025}00025\ \doxymbox{\hyperlink{_orbis_stubs_8h_a18c881c9602dbf86a11ec558ec2cc990}{CRITICAL\_SECTION}}\ SoundEngine::m\_CS;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00027}00027\ X3DAUDIO\_HANDLE\ \ SoundEngine::m\_xact3dInstance;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00028}00028\ vector<SoundEngine::soundInfo\ *>\ SoundEngine::currentSounds;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00029}00029\ X3DAUDIO\_DSP\_SETTINGS\ \ \ SoundEngine::m\_DSPSettings;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00030}00030\ X3DAUDIO\_EMITTER\ \ \ \ \ \ \ \ SoundEngine::m\_emitter;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00031}00031\ X3DAUDIO\_LISTENER\ \ \ \ \ \ \ SoundEngine::m\_listeners[4];}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00032}00032\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SoundEngine::m\_validListenerCount\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00034}00034\ X3DAUDIO\_DISTANCE\_CURVE\_POINT\ SoundEngine::m\_VolumeCurvePoints[2]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00035}00035\ \ \ \ \ \{0.0f,\ 1.0f\},}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00036}00036\ \ \ \ \ \{1.0f,\ 0.0f\},}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00037}00037\ \};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00039}00039\ X3DAUDIO\_DISTANCE\_CURVE\_POINT\ SoundEngine::m\_DragonVolumeCurvePoints[2]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00040}00040\ \ \ \ \ \{0.0f,\ 1.0f\},}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00041}00041\ \ \ \ \ \{1.0f,\ 0.5f\},}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00042}00042\ \};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00043}00043\ X3DAUDIO\_DISTANCE\_CURVE\_POINT\ SoundEngine::m\_VolumeCurvePointsNoDecay[2]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00044}00044\ \ \ \ \ \{0.0f,\ 1.0f\},}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00045}00045\ \ \ \ \ \{1.0f,\ 1.0f\},}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00046}00046\ \};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00048}00048\ X3DAUDIO\_DISTANCE\_CURVE\ SoundEngine::m\_VolumeCurve;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00049}00049\ X3DAUDIO\_DISTANCE\_CURVE\ SoundEngine::m\_DragonVolumeCurve;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00050}00050\ X3DAUDIO\_DISTANCE\_CURVE\ SoundEngine::m\_VolumeCurveNoDecay;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00052}\doxymbox{\hyperlink{class_sound_engine_a99f7d455129ff752994d6ba5f30332c0}{00052}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a99f7d455129ff752994d6ba5f30332c0}{SoundEngine::setXACTEngine}}(\ IXACT3Engine\ *pXACT3Engine)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00053}00053\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00054}00054\ \ \ \ \ m\_pXACT3Engine\ =\ pXACT3Engine;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00055}00055\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00057}00057\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a6c059b2452661429004a780a44093241}{SoundEngine::destroy}}()}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00058}00058\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00059}00059\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00061}00061\ \doxymbox{\hyperlink{class_sound_engine_ac5863ba4d2022eb8c76b78b95584496c}{SoundEngine::SoundEngine}}()}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00062}00062\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00063}00063\ \ \ \ \ random\ =\ \textcolor{keyword}{new}\ Random();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00064}00064\ \ \ \ \ noMusicDelay\ =\ random-\/>nextInt(20\ *\ 60\ *\ 10);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00066}00066\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a1078089d09549c80df3d4320d5798d24}{ZeroMemory}}(\&m\_MusicInfo,\textcolor{keyword}{sizeof}(soundInfo));}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00067}00067\ \ \ \ \ \textcolor{comment}{//bIsPlayingStreamingCDMusic=false;}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00068}00068\ \ \ \ \ \textcolor{comment}{//m\_bIsPlayingStreamingGameMusic=false;}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00069}00069\ \ \ \ \ \doxymbox{\hyperlink{class_console_sound_engine_a648b69157221cc0cecec1b512a9d53fe}{SetIsPlayingEndMusic}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00070}00070\ \ \ \ \ \doxymbox{\hyperlink{class_console_sound_engine_a16932a7e09ee8dc3f831d72e3be9a29f}{SetIsPlayingNetherMusic}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00071}00071\ \ \ \ \ m\_VolumeCurve.PointCount\ =\ 2;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00072}00072\ \ \ \ \ m\_VolumeCurve.pPoints\ =\ m\_VolumeCurvePoints;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00073}00073\ \ \ \ \ m\_DragonVolumeCurve.PointCount\ =\ 2;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00074}00074\ \ \ \ \ m\_DragonVolumeCurve.pPoints\ =\ m\_DragonVolumeCurvePoints;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00075}00075\ \ \ \ \ m\_VolumeCurveNoDecay.PointCount\ =\ 2;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00076}00076\ \ \ \ \ m\_VolumeCurveNoDecay.pPoints\ =\ m\_VolumeCurvePointsNoDecay;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00078}00078\ \ \ \ \ m\_bStreamingMusicReady=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00079}00079\ \ \ \ \ m\_bStreamingWaveBank1Ready=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00080}00080\ \ \ \ \ m\_bStreamingWaveBank2Ready=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00081}00081\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00083}00083\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a1671272a18fa6c1c7de26d00e51001a6}{SoundEngine::init}}(\doxymbox{\hyperlink{class_options}{Options}}\ *pOptions)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00084}00084\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00085}00085\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_af41f87535f6c7854166e69f18e0c123a}{InitializeCriticalSection}}(\&m\_CS);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00087}00087\ \ \ \ \ \textcolor{comment}{//\ Iniatialise\ XACT\ itself}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00088}00088\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a3cc49f3164c43289d0bcb2abafc399bc}{HRESULT}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00089}00089\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}\ (\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ XACT3CreateEngine(\ 0,\ \&m\_pXACT3Engine\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00090}00090\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\ \textcolor{keyword}{false}\ );}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00094}00094\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00096}00096\ \ \ \ \ \textcolor{comment}{//\ Load\ global\ settings\ file}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00097}00097\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ move\ this\ to\ the\ title\ update,\ since\ we've\ corrected\ it\ to\ allow\ sounds\ to\ be\ pitch\ varied\ when\ they\ weren't\ before}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00098}00098\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ file;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00099}00099\ \textcolor{preprocessor}{\#ifdef\ \_TU\_BUILD}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00100}00100\ \ \ \ \ file\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(\textcolor{stringliteral}{"{}UPDATE:\(\backslash\)\(\backslash\)res\(\backslash\)\(\backslash\)audio\(\backslash\)\(\backslash\)Minecraft.xgs"{}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9eacf8ab0ad74fb7d64e79c37bf670eb}{OPEN\_ALWAYS}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00101}00101\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00102}00102\ \ \ \ \ file\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(\textcolor{stringliteral}{"{}GAME:\(\backslash\)\(\backslash\)res\(\backslash\)\(\backslash\)TitleUpdate\(\backslash\)\(\backslash\)audio\(\backslash\)\(\backslash\)Minecraft.xgs"{}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9eacf8ab0ad74fb7d64e79c37bf670eb}{OPEN\_ALWAYS}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00103}00103\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00104}00104\ \ \ \ \ \textcolor{keywordflow}{if}(\ file\ ==\ \doxymbox{\hyperlink{_orbis_stubs_8h_a5fdc7facea201bfce4ad308105f88d0c}{INVALID\_HANDLE\_VALUE}}\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00105}00105\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00109}00109\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00110}00110\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwFileSize\ =\ \doxymbox{\hyperlink{_durango_stubs_8cpp_a6464fa27d98db8b320f1e7907dee5a6e}{GetFileSize}}(file,\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00111}00111\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ bytesRead\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00112}00112\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ memFlags\ =\ MAKE\_XALLOC\_ATTRIBUTES(0,\doxymbox{\hyperlink{stb__vorbis_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}},\doxymbox{\hyperlink{stb__vorbis_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{TRUE}},\doxymbox{\hyperlink{stb__vorbis_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}},0,XALLOC\_PHYSICAL\_ALIGNMENT\_DEFAULT,XALLOC\_MEMPROTECT\_READWRITE,\doxymbox{\hyperlink{stb__vorbis_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}},XALLOC\_MEMTYPE\_PHYSICAL);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00113}00113\ \ \ \ \ \textcolor{keywordtype}{void}\ *pvGlobalSettings\ =\ \ XMemAlloc(dwFileSize,\ memFlags);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00114}00114\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a0283336b536ee747a7b1cb7834a389ef}{ReadFile}}(file,pvGlobalSettings,dwFileSize,\&bytesRead,\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00115}00115\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a235df26c9ee719cb6c07ee55252f512e}{CloseHandle}}(file);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00117}00117\ \ \ \ \ XACT\_RUNTIME\_PARAMETERS\ EngineParameters\ =\ \{0\};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00118}00118\ \ \ \ \ EngineParameters.lookAheadTime\ =\ XACT\_ENGINE\_LOOKAHEAD\_DEFAULT;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00119}00119\ \ \ \ \ EngineParameters.fnNotificationCallback\ =\ \&this-\/>XACTNotificationCallback;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00120}00120\ \ \ \ \ EngineParameters.pGlobalSettingsBuffer\ =\ pvGlobalSettings;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00121}00121\ \ \ \ \ EngineParameters.globalSettingsBufferSize\ =\ dwFileSize;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00122}00122\ \ \ \ \ EngineParameters.globalSettingsFlags\ =\ XACT\_FLAG\_GLOBAL\_SETTINGS\_MANAGEDATA;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00123}00123\ \ \ \ \ EngineParameters.pXAudio2\ =\ \doxymbox{\hyperlink{_xbox_2_audio_2_sound_engine_8cpp_a7d296aab1786b1e1cb363a97571c9cf5}{g\_pXAudio2}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00124}00124\ \ \ \ \ EngineParameters.pMasteringVoice\ =\ \doxymbox{\hyperlink{_xbox_2_audio_2_sound_engine_8cpp_ad44a41b6d80721cd8cf40ab67a4dda83}{g\_pXAudio2MasteringVoice}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00126}00126\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}\ (\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ m\_pXACT3Engine-\/>Initialize(\ \&EngineParameters\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00127}00127\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\ \textcolor{keyword}{false}\ );}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00131}00131\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00133}00133\ \ \ \ \ \textcolor{comment}{//\ \ printf("{}XACT\ initialisation\ complete\(\backslash\)n"{});}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00135}00135\ \ \ \ \ \textcolor{comment}{//\ Initialise\ X3D}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00136}00136\ \ \ \ \ XACT3DInitialize(m\_pXACT3Engine,m\_xact3dInstance);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00138}00138\ \ \ \ \ \textcolor{comment}{//\ Set\ up\ common\ structures\ that\ can\ be\ re-\/used\ between\ sounds\ \&\ just\ have\ required\ bits\ updated}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00139}00139\ \ \ \ \ memset(\&m\_DSPSettings,0,\textcolor{keyword}{sizeof}(X3DAUDIO\_DSP\_SETTINGS));}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00140}00140\ \ \ \ \ WAVEFORMATEXTENSIBLE\ format;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00141}00141\ \ \ \ \ m\_pXACT3Engine-\/>GetFinalMixFormat(\&format);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00142}00142\ \ \ \ \ m\_DSPSettings.SrcChannelCount\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00143}00143\ \ \ \ \ m\_DSPSettings.DstChannelCount\ =\ format.Format.nChannels;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00144}00144\ \ \ \ \ \textcolor{comment}{//\ \ printf("{}\%d\ channels\(\backslash\)n"{},\ format.Format.nChannels);}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00145}00145\ \ \ \ \ m\_DSPSettings.pMatrixCoefficients\ =\ \textcolor{keyword}{new}\ FLOAT32[m\_DSPSettings.SrcChannelCount\ *\ m\_DSPSettings.DstChannelCount];}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00147}00147\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 4;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00148}00148\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ memset(\&m\_listeners[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}],0,\textcolor{keyword}{sizeof}(X3DAUDIO\_LISTENER));}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ m\_listeners[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].OrientFront.z\ =\ 1.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ m\_listeners[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].OrientTop.y\ =\ 1.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00152}00152\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00153}00153\ \ \ \ \ m\_validListenerCount\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00154}00154\ \ \ \ \ memset(\&m\_emitter,0,\textcolor{keyword}{sizeof}(X3DAUDIO\_EMITTER));}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00155}00155\ \ \ \ \ m\_emitter.ChannelCount\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00156}00156\ \ \ \ \ m\_emitter.pVolumeCurve\ =\ \&m\_VolumeCurve;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00157}00157\ \ \ \ \ m\_emitter.pLFECurve\ =\ \&m\_VolumeCurve;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00158}00158\ \ \ \ \ m\_emitter.CurveDistanceScaler\ =\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00159}00159\ \ \ \ \ m\_emitter.OrientFront.z\ =\ 1.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00160}00160\ \ \ \ \ m\_emitter.OrientTop.y\ =\ 1.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00162}00162\ \ \ \ \ \textcolor{comment}{//\ Create\ resident\ wave\ bank\ -\/\ leave\ memory\ for\ this\ managed\ by\ xact\ so\ it\ can\ free\ it}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00164}00164\ \ \ \ \ file\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(\textcolor{stringliteral}{"{}GAME:\(\backslash\)\(\backslash\)res\(\backslash\)\(\backslash\)audio\(\backslash\)\(\backslash\)resident.xwb"{}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9eacf8ab0ad74fb7d64e79c37bf670eb}{OPEN\_ALWAYS}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00165}00165\ \ \ \ \ \textcolor{keywordflow}{if}(\ file\ ==\ \doxymbox{\hyperlink{_orbis_stubs_8h_a5fdc7facea201bfce4ad308105f88d0c}{INVALID\_HANDLE\_VALUE}}\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00166}00166\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00170}00170\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00171}00171\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00172}00172\ \ \ \ \ dwFileSize\ =\ \doxymbox{\hyperlink{_durango_stubs_8cpp_a6464fa27d98db8b320f1e7907dee5a6e}{GetFileSize}}(file,\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00173}00173\ \ \ \ \ \textcolor{keywordtype}{void}\ *pvWaveBank\ =\ \ XMemAlloc(dwFileSize,\ memFlags);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00174}00174\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a0283336b536ee747a7b1cb7834a389ef}{ReadFile}}(file,pvWaveBank,dwFileSize,\&bytesRead,\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00175}00175\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a235df26c9ee719cb6c07ee55252f512e}{CloseHandle}}(file);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00176}00176\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00177}00177\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ m\_pXACT3Engine-\/>CreateInMemoryWaveBank(\ pvWaveBank,\ dwFileSize,\ XACT\_FLAG\_ENGINE\_CREATE\_MANAGEDATA,\ memFlags,\ \&m\_pWaveBank\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00178}00178\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00182}00182\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00184}00184\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ add\ new\ sounds\ wavebank}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00185}00185\ \textcolor{preprocessor}{\#ifdef\ \_TU\_BUILD}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00186}00186\ \ \ \ \ file\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(\textcolor{stringliteral}{"{}UPDATE:\(\backslash\)\(\backslash\)res\(\backslash\)\(\backslash\)audio\(\backslash\)\(\backslash\)additional.xwb"{}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9eacf8ab0ad74fb7d64e79c37bf670eb}{OPEN\_ALWAYS}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00187}00187\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00188}00188\ \ \ \ \ file\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(\textcolor{stringliteral}{"{}GAME:\(\backslash\)\(\backslash\)res\(\backslash\)\(\backslash\)TitleUpdate\(\backslash\)\(\backslash\)audio\(\backslash\)\(\backslash\)additional.xwb"{}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9eacf8ab0ad74fb7d64e79c37bf670eb}{OPEN\_ALWAYS}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00189}00189\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00190}00190\ \ \ \ \ \textcolor{keywordflow}{if}(\ file\ ==\ \doxymbox{\hyperlink{_orbis_stubs_8h_a5fdc7facea201bfce4ad308105f88d0c}{INVALID\_HANDLE\_VALUE}}\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00191}00191\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00194}00194\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00195}00195\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00196}00196\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00197}00197\ \ \ \ \ dwFileSize\ =\ \doxymbox{\hyperlink{_durango_stubs_8cpp_a6464fa27d98db8b320f1e7907dee5a6e}{GetFileSize}}(file,\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00198}00198\ \ \ \ \ \textcolor{keywordtype}{void}\ *pvWaveBank2\ =\ \ XMemAlloc(dwFileSize,\ memFlags);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00199}00199\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a0283336b536ee747a7b1cb7834a389ef}{ReadFile}}(file,pvWaveBank2,dwFileSize,\&bytesRead,\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00200}00200\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a235df26c9ee719cb6c07ee55252f512e}{CloseHandle}}(file);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00201}00201\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00202}00202\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ m\_pXACT3Engine-\/>CreateInMemoryWaveBank(\ pvWaveBank2,\ dwFileSize,\ XACT\_FLAG\_ENGINE\_CREATE\_MANAGEDATA,\ memFlags,\ \&m\_pWaveBank2\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00203}00203\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00207}00207\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00209}00209\ \ \ \ \ \textcolor{comment}{//\ Create\ streamed\ sound\ bank}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00211}00211\ \ \ \ \ file\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(\textcolor{stringliteral}{"{}GAME:\(\backslash\)\(\backslash\)res\(\backslash\)\(\backslash\)audio\(\backslash\)\(\backslash\)streamed.xwb"{}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9eacf8ab0ad74fb7d64e79c37bf670eb}{OPEN\_ALWAYS}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a51a0deefb38d935ac8a1c3b0dea62dd0}{FILE\_FLAG\_OVERLAPPED}}\ |\ \doxymbox{\hyperlink{_orbis_stubs_8h_a5a3093e43ba688f4baccec3999381021}{FILE\_FLAG\_NO\_BUFFERING}},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00213}00213\ \ \ \ \ \textcolor{keywordflow}{if}(\ file\ ==\ \doxymbox{\hyperlink{_orbis_stubs_8h_a5fdc7facea201bfce4ad308105f88d0c}{INVALID\_HANDLE\_VALUE}}\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00214}00214\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00218}00218\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00220}00220\ \ \ \ \ XACT\_WAVEBANK\_STREAMING\_PARAMETERS\ streamParams;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00221}00221\ \ \ \ \ streamParams.file\ =\ file;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00222}00222\ \ \ \ \ streamParams.offset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00223}00223\ \ \ \ \ streamParams.flags\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00224}00224\ \ \ \ \ streamParams.packetSize\ =\ 16;\ \ \ \textcolor{comment}{//\ Not\ sure\ what\ to\ pick\ for\ this\ -\/\ suggests\ a\ "{}multiple\ of\ 16"{}\ for\ DVD\ playback}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00225}00225\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00226}00226\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ m\_pXACT3Engine-\/>CreateStreamingWaveBank(\ \&streamParams,\ \&m\_pStreamedWaveBank\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00227}00227\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00231}00231\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00232}00232\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00233}00233\ \ \ \ \ \textcolor{comment}{//\ Create\ streamed\ sound\ bank}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00234}00234\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00235}00235\ \ \ \ \ \textcolor{comment}{//file\ =\ CreateFile("{}GAME:\(\backslash\)\(\backslash\)res\(\backslash\)\(\backslash\)audio\(\backslash\)\(\backslash\)AdditionalMusic.xwb"{},\ GENERIC\_READ,\ 0,\ nullptr,\ OPEN\_ALWAYS,\ FILE\_FLAG\_OVERLAPPED\ |\ FILE\_FLAG\_NO\_BUFFERING,\ nullptr);}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00236}00236\ \textcolor{preprocessor}{\#ifdef\ \_TU\_BUILD}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00237}00237\ \ \ \ \ file\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(\textcolor{stringliteral}{"{}UPDATE:\(\backslash\)\(\backslash\)res\(\backslash\)\(\backslash\)audio\(\backslash\)\(\backslash\)AdditionalMusic.xwb"{}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9eacf8ab0ad74fb7d64e79c37bf670eb}{OPEN\_ALWAYS}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00238}00238\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00239}00239\ \ \ \ \ file\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(\textcolor{stringliteral}{"{}GAME:\(\backslash\)\(\backslash\)res\(\backslash\)\(\backslash\)TitleUpdate\(\backslash\)\(\backslash\)audio\(\backslash\)\(\backslash\)AdditionalMusic.xwb"{}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9eacf8ab0ad74fb7d64e79c37bf670eb}{OPEN\_ALWAYS}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00240}00240\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00241}00241\ \ \ \ \ \textcolor{keywordflow}{if}(\ file\ ==\ \doxymbox{\hyperlink{_orbis_stubs_8h_a5fdc7facea201bfce4ad308105f88d0c}{INVALID\_HANDLE\_VALUE}}\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00242}00242\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00243}00243\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00244}00244\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00246}00246\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00247}00247\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00248}00248\ \ \ \ \ streamParams.file\ =\ file;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00249}00249\ \ \ \ \ streamParams.offset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00250}00250\ \ \ \ \ streamParams.flags\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00251}00251\ \ \ \ \ streamParams.packetSize\ =\ 16;\ \ \ \textcolor{comment}{//\ Not\ sure\ what\ to\ pick\ for\ this\ -\/\ suggests\ a\ "{}multiple\ of\ 16"{}\ for\ DVD\ playback}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00252}00252\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00253}00253\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ m\_pXACT3Engine-\/>CreateStreamingWaveBank(\ \&streamParams,\ \&m\_pStreamedWaveBankAdditional\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00254}00254\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00256}00256\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00258}00258\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00259}00259\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00260}00260\ \ \ \ \ \textcolor{comment}{//\ Create\ sound\ bank\ -\/\ leave\ memory\ for\ this\ managed\ by\ xact\ so\ it\ can\ free\ it}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00261}00261\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ updated\ for\ the\ TU}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00262}00262\ \ \ \ \ \textcolor{comment}{//file\ =\ CreateFile("{}GAME:\(\backslash\)\(\backslash\)res\(\backslash\)\(\backslash\)audio\(\backslash\)\(\backslash\)minecraft.xsb"{},\ GENERIC\_READ,\ 0,\ nullptr,\ OPEN\_ALWAYS,\ FILE\_ATTRIBUTE\_NORMAL,\ nullptr);}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00263}00263\ \textcolor{preprocessor}{\#ifdef\ \_TU\_BUILD}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00264}00264\ \ \ \ \ file\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(\textcolor{stringliteral}{"{}UPDATE:\(\backslash\)\(\backslash\)res\(\backslash\)\(\backslash\)audio\(\backslash\)\(\backslash\)minecraft.xsb"{}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9eacf8ab0ad74fb7d64e79c37bf670eb}{OPEN\_ALWAYS}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00265}00265\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00266}00266\ \ \ \ \ file\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(\textcolor{stringliteral}{"{}GAME:\(\backslash\)\(\backslash\)res\(\backslash\)\(\backslash\)TitleUpdate\(\backslash\)\(\backslash\)audio\(\backslash\)\(\backslash\)minecraft.xsb"{}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9eacf8ab0ad74fb7d64e79c37bf670eb}{OPEN\_ALWAYS}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00267}00267\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00268}00268\ \ \ \ \ \textcolor{keywordflow}{if}(\ file\ ==\ \doxymbox{\hyperlink{_orbis_stubs_8h_a5fdc7facea201bfce4ad308105f88d0c}{INVALID\_HANDLE\_VALUE}}\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00269}00269\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00273}00273\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00274}00274\ \ \ \ \ dwFileSize\ =\ \doxymbox{\hyperlink{_durango_stubs_8cpp_a6464fa27d98db8b320f1e7907dee5a6e}{GetFileSize}}(file,\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00275}00275\ \ \ \ \ \textcolor{keywordtype}{void}\ *pvSoundBank\ =\ \ XMemAlloc(dwFileSize,\ memFlags);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00276}00276\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a0283336b536ee747a7b1cb7834a389ef}{ReadFile}}(file,pvSoundBank,dwFileSize,\&bytesRead,\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00277}00277\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a235df26c9ee719cb6c07ee55252f512e}{CloseHandle}}(file);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00279}00279\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ m\_pXACT3Engine-\/>CreateSoundBank(\ pvSoundBank,\ dwFileSize,\ XACT\_FLAG\_ENGINE\_CREATE\_MANAGEDATA,\ memFlags,\ \&m\_pSoundBank\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00280}00280\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00281}00281\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00284}00284\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00285}00285\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00286}00286\ \ \ \ \ \textcolor{comment}{//\ Create\ sound\ bank2\ -\/\ leave\ memory\ for\ this\ managed\ by\ xact\ so\ it\ can\ free\ it}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00287}00287\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00288}00288\ \textcolor{preprocessor}{\#ifdef\ \_TU\_BUILD}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00289}00289\ \ \ \ \ file\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(\textcolor{stringliteral}{"{}UPDATE:\(\backslash\)\(\backslash\)res\(\backslash\)\(\backslash\)audio\(\backslash\)\(\backslash\)additional.xsb"{}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9eacf8ab0ad74fb7d64e79c37bf670eb}{OPEN\_ALWAYS}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00290}00290\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00291}00291\ \ \ \ \ file\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(\textcolor{stringliteral}{"{}GAME:\(\backslash\)\(\backslash\)res\(\backslash\)\(\backslash\)TitleUpdate\(\backslash\)\(\backslash\)audio\(\backslash\)\(\backslash\)additional.xsb"{}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9eacf8ab0ad74fb7d64e79c37bf670eb}{OPEN\_ALWAYS}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00292}00292\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00293}00293\ \ \ \ \ \textcolor{keywordflow}{if}(\ file\ ==\ \doxymbox{\hyperlink{_orbis_stubs_8h_a5fdc7facea201bfce4ad308105f88d0c}{INVALID\_HANDLE\_VALUE}}\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00294}00294\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00296}00296\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00298}00298\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00299}00299\ \ \ \ \ dwFileSize\ =\ \doxymbox{\hyperlink{_durango_stubs_8cpp_a6464fa27d98db8b320f1e7907dee5a6e}{GetFileSize}}(file,\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00300}00300\ \ \ \ \ \textcolor{keywordtype}{void}\ *pvSoundBank2\ =\ \ XMemAlloc(dwFileSize,\ memFlags);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00301}00301\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a0283336b536ee747a7b1cb7834a389ef}{ReadFile}}(file,pvSoundBank2,dwFileSize,\&bytesRead,\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00302}00302\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a235df26c9ee719cb6c07ee55252f512e}{CloseHandle}}(file);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00303}00303\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00304}00304\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ m\_pXACT3Engine-\/>CreateSoundBank(\ pvSoundBank2,\ dwFileSize,\ XACT\_FLAG\_ENGINE\_CREATE\_MANAGEDATA,\ memFlags,\ \&m\_pSoundBank2\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00305}00305\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_console_minecraft_app_a7832a0494ac2d9d9ea33b91deb8eb9ec}{FatalLoadError}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00309}00309\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00310}00310\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00311}00311\ \ \ \ \ XACT\_NOTIFICATION\_DESCRIPTION\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7b87714a92d59dc3a36ae9f13a4e227c}{desc}}\ =\ \{0\};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00312}00312\ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7b87714a92d59dc3a36ae9f13a4e227c}{desc}}.flags\ =\ XACT\_FLAG\_NOTIFICATION\_PERSIST;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00313}00313\ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7b87714a92d59dc3a36ae9f13a4e227c}{desc}}.type\ =\ XACTNOTIFICATIONTYPE\_WAVEBANKPREPARED;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00314}00314\ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7b87714a92d59dc3a36ae9f13a4e227c}{desc}}.pvContext=\textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00315}00315\ \ \ \ \ m\_pXACT3Engine-\/>RegisterNotification(\&\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7b87714a92d59dc3a36ae9f13a4e227c}{desc}});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00316}00316\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00317}00317\ \ \ \ \ \textcolor{comment}{//\ get\ the\ category\ to\ manage\ the\ sfx\ (Default)}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00318}00318\ \ \ \ \ m\_xactSFX\ =\ m\_pXACT3Engine-\/>GetCategory(\textcolor{stringliteral}{"{}Default"{}});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00319}00319\ \ \ \ \ m\_xactMusic\ =\ m\_pXACT3Engine-\/>GetCategory(\textcolor{stringliteral}{"{}Music"{}});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00320}00320\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00322}\doxymbox{\hyperlink{class_sound_engine_a690f002cad88ea4556e80297aa776fff}{00322}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a690f002cad88ea4556e80297aa776fff}{SoundEngine::CreateStreamingWavebank}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *pchName,\ IXACT3WaveBank\ **ppStreamedWaveBank)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00323}00323\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00324}00324\ \ \ \ \ \textcolor{comment}{//\ Create\ streamed\ sound\ bank}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00325}00325\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a3cc49f3164c43289d0bcb2abafc399bc}{HRESULT}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00326}00326\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00327}00327\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ file\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(pchName,\ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9eacf8ab0ad74fb7d64e79c37bf670eb}{OPEN\_ALWAYS}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a51a0deefb38d935ac8a1c3b0dea62dd0}{FILE\_FLAG\_OVERLAPPED}}\ |\ \doxymbox{\hyperlink{_orbis_stubs_8h_a5a3093e43ba688f4baccec3999381021}{FILE\_FLAG\_NO\_BUFFERING}},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00329}00329\ \ \ \ \ \textcolor{keywordflow}{if}(\ file\ ==\ \doxymbox{\hyperlink{_orbis_stubs_8h_a5fdc7facea201bfce4ad308105f88d0c}{INVALID\_HANDLE\_VALUE}}\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00330}00330\ \ \ \ \ \{\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.FatalLoadError();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00334}00334\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00336}00336\ \ \ \ \ XACT\_WAVEBANK\_STREAMING\_PARAMETERS\ streamParams;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00337}00337\ \ \ \ \ streamParams.file\ =\ file;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00338}00338\ \ \ \ \ streamParams.offset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00339}00339\ \ \ \ \ streamParams.flags\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00340}00340\ \ \ \ \ streamParams.packetSize\ =\ 16;\ \ \ \textcolor{comment}{//\ Not\ sure\ what\ to\ pick\ for\ this\ -\/\ suggests\ a\ "{}multiple\ of\ 16"{}\ for\ DVD\ playback}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00341}00341\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00342}00342\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ m\_pXACT3Engine-\/>CreateStreamingWaveBank(\ \&streamParams,\ ppStreamedWaveBank\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00343}00343\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00344}00344\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.FatalLoadError();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00347}00347\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00348}00348\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00349}00349\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00350}\doxymbox{\hyperlink{class_sound_engine_a4c73b1c738bcba16adbae0ef549b27e9}{00350}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a4c73b1c738bcba16adbae0ef549b27e9}{SoundEngine::CreateSoundbank}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *pchName,\ IXACT3SoundBank\ **ppSoundBank)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00351}00351\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00352}00352\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a3cc49f3164c43289d0bcb2abafc399bc}{HRESULT}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00353}00353\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ file\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(pchName,\ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9eacf8ab0ad74fb7d64e79c37bf670eb}{OPEN\_ALWAYS}},\ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}},\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00354}00354\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00355}00355\ \ \ \ \ \textcolor{keywordflow}{if}(\ file\ ==\ \doxymbox{\hyperlink{_orbis_stubs_8h_a5fdc7facea201bfce4ad308105f88d0c}{INVALID\_HANDLE\_VALUE}}\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00356}00356\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.FatalLoadError();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00360}00360\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00361}00361\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwFileSize\ =\ \doxymbox{\hyperlink{_durango_stubs_8cpp_a6464fa27d98db8b320f1e7907dee5a6e}{GetFileSize}}(file,\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00362}00362\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ bytesRead\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00363}00363\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ memFlags\ =\ MAKE\_XALLOC\_ATTRIBUTES(0,\doxymbox{\hyperlink{stb__vorbis_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}},\doxymbox{\hyperlink{stb__vorbis_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{TRUE}},\doxymbox{\hyperlink{stb__vorbis_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}},0,XALLOC\_PHYSICAL\_ALIGNMENT\_DEFAULT,XALLOC\_MEMPROTECT\_READWRITE,\doxymbox{\hyperlink{stb__vorbis_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}},XALLOC\_MEMTYPE\_PHYSICAL);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00364}00364\ \ \ \ \ \textcolor{keywordtype}{void}\ *pvSoundBank\ =\ \ XMemAlloc(dwFileSize,\ memFlags);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00365}00365\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a0283336b536ee747a7b1cb7834a389ef}{ReadFile}}(file,pvSoundBank,dwFileSize,\&bytesRead,\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00366}00366\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a235df26c9ee719cb6c07ee55252f512e}{CloseHandle}}(file);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00367}00367\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00368}00368\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ m\_pXACT3Engine-\/>CreateSoundBank(\ pvSoundBank,\ dwFileSize,\ XACT\_FLAG\_ENGINE\_CREATE\_MANAGEDATA,\ memFlags,\ ppSoundBank\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00369}00369\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.FatalLoadError();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00373}00373\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00374}00374\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00375}00375\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00376}00376\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_sound_engine_ab06474cec4d4d78f48426eb75e5b3f2e}{SoundEngine::isStreamingWavebankReady}}()}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00377}00377\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00378}00378\ \ \ \ \ \textcolor{keywordflow}{if}(m\_bStreamingMusicReady==\textcolor{keyword}{false})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00379}00379\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwState;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ m\_pSoundBank-\/>GetState(\&dwState);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00382}00382\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(dwState\&XACT\_WAVEBANKSTATE\_PREPARED)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00383}00383\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ m\_bStreamingWaveBank1Ready=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ m\_pSoundBank2-\/>GetState(\&dwState);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(dwState\&XACT\_WAVEBANKSTATE\_PREPARED)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ m\_bStreamingWaveBank2Ready=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00391}00391\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00392}00392\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_bStreamingWaveBank1Ready\ \&\&\ m\_bStreamingWaveBank2Ready)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00393}00393\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ m\_bStreamingMusicReady=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00396}00396\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00397}00397\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00398}00398\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_bStreamingMusicReady;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00399}00399\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00400}00400\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00401}00401\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00402}00402\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_sound_engine_ab06474cec4d4d78f48426eb75e5b3f2e}{SoundEngine::isStreamingWavebankReady}}(IXACT3WaveBank\ *pWaveBank)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00403}00403\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00404}00404\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwState;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00405}00405\ \ \ \ \ pWaveBank-\/>GetState(\&dwState);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00406}00406\ \ \ \ \ \textcolor{keywordflow}{if}(dwState\&XACT\_WAVEBANKSTATE\_PREPARED)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00407}00407\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00408}00408\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00409}00409\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00410}00410\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00411}00411\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00412}00412\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00413}00413\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00414}00414\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00415}00415\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00416}00416\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00417}00417\ \textcolor{keywordtype}{void}\ SoundEngine::XACTNotificationCallback(\ \textcolor{keyword}{const}\ XACT\_NOTIFICATION*\ pNotification\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00418}00418\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00419}00419\ \ \ \ \ \textcolor{keywordflow}{if}(pNotification-\/>pvContext!=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00420}00420\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00421}00421\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(pNotification-\/>type==XACTNOTIFICATIONTYPE\_WAVEBANKPREPARED)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00422}00422\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00423}00423\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sound_engine_ac5863ba4d2022eb8c76b78b95584496c}{SoundEngine}}\ *pSoundEngine=\textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_sound_engine_ac5863ba4d2022eb8c76b78b95584496c}{SoundEngine}}\ *\textcolor{keyword}{>}(pNotification-\/>pvContext);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00424}00424\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(pNotification-\/>waveBank.pWaveBank==pSoundEngine-\/>m\_pStreamedWaveBank)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00425}00425\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00426}00426\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pSoundEngine-\/>m\_bStreamingWaveBank1Ready=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00427}00427\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(pNotification-\/>waveBank.pWaveBank==pSoundEngine-\/>m\_pStreamedWaveBankAdditional)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pSoundEngine-\/>m\_bStreamingWaveBank2Ready=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00431}00431\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00432}00432\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00433}00433\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(pSoundEngine-\/>m\_bStreamingWaveBank1Ready\ \&\&\ pSoundEngine-\/>m\_bStreamingWaveBank2Ready)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00434}00434\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00435}00435\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pSoundEngine-\/>m\_bStreamingMusicReady=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00436}00436\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00437}00437\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00438}00438\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00439}00439\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00440}00440\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00441}00441\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_sound_engine_ad00c27e158817f6fbf407beba58c9789}{SoundEngine::ConvertSoundPathToName}}(\textcolor{keyword}{const}\ wstring\&\ name,\ \textcolor{keywordtype}{bool}\ bConvertSpaces)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00442}00442\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00443}00443\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}[256];}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00444}00444\ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\doxymbox{\hyperlink{namespace_sentient_a8f7f643029c0ccdd11803cfac462eed3}{name}}.length()<256);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00445}00445\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{namespace_sentient_a8f7f643029c0ccdd11803cfac462eed3}{name}}.length();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00446}00446\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00447}00447\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ c\ =\ \doxymbox{\hyperlink{namespace_sentient_a8f7f643029c0ccdd11803cfac462eed3}{name}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00448}00448\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(c==\textcolor{charliteral}{'.'})\ c=\textcolor{charliteral}{'\_'};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00449}00449\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(c);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00450}00450\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00451}00451\ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}[\doxymbox{\hyperlink{namespace_sentient_a8f7f643029c0ccdd11803cfac462eed3}{name}}.length()]\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00452}00452\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00453}00453\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00454}00454\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00455}00455\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a7f320663236a680ad83c887d60162790}{SoundEngine::play}}(\textcolor{keywordtype}{int}\ iSound,\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z,\ \textcolor{keywordtype}{float}\ volume,\ \textcolor{keywordtype}{float}\ pitch)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00456}00456\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00457}00457\ \ \ \ \ \textcolor{keywordflow}{if}(iSound==-\/1)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00458}00458\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00459}00459\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(6,\textcolor{stringliteral}{"{}PlaySound\ with\ sound\ of\ -\/1\ !!!!!!!!!!!!!!!\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00460}00460\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00461}00461\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00462}00462\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00463}00463\ \ \ \ \ \textcolor{keywordtype}{bool}\ bSoundbank1=(iSound<=\doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87a5890f0b38a23b56cd271f535cd11dcfa}{eSoundType\_STEP\_SAND}});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00464}00464\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00465}00465\ \ \ \ \ \textcolor{keywordflow}{if}(\ (m\_pSoundBank\ ==\ \textcolor{keyword}{nullptr}\ )\ ||\ (m\_pSoundBank2\ ==\ \textcolor{keyword}{nullptr}))\textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00466}00466\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00467}00467\ \ \ \ \ \textcolor{keywordflow}{if}(\ currentSounds.size()\ >\ MAX\_POLYPHONY\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00468}00468\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00469}00469\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00470}00470\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00471}00471\ \ \ \ \ wstring\ \doxymbox{\hyperlink{namespace_sentient_a8f7f643029c0ccdd11803cfac462eed3}{name}}\ =\ \doxymbox{\hyperlink{class_console_sound_engine_a592f31c82954628827db27ea9c8e0f71}{wchSoundNames}}[iSound];}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00472}00472\ \ \ \ \ \textcolor{comment}{//const\ unsigned\ char\ *name=ucSoundNames[iSound];}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00473}00473\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00474}00474\ \ \ \ \ \textcolor{keywordtype}{char}\ *xboxName\ =\ \doxymbox{\hyperlink{class_sound_engine_ad00c27e158817f6fbf407beba58c9789}{ConvertSoundPathToName}}(name);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00475}00475\ \ \ \ \ XACTINDEX\ idx;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00476}00476\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00477}00477\ \ \ \ \ \textcolor{keywordflow}{if}(bSoundbank1)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00478}00478\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00479}00479\ \ \ \ \ \ \ \ \ idx\ =\ m\_pSoundBank-\/>GetCueIndex(xboxName);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00480}00480\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00481}00481\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00482}00482\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00483}00483\ \ \ \ \ \ \ \ \ idx\ =\ m\_pSoundBank2-\/>GetCueIndex(xboxName);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00484}00484\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00485}00485\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00486}00486\ \ \ \ \ \textcolor{keywordflow}{if}(\ idx\ ==\ XACTINDEX\_INVALID\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00487}00487\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00488}00488\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00489}00489\ \textcolor{preprocessor}{\#ifdef\ \_DEBUG}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00490}00490\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a836a58a917bc9dcc3256ceecb2717746}{\_\_debugbreak}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00491}00491\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00492}00492\ \ \ \ \ \ \ \ \ \textcolor{comment}{//wprintf(L"{}WARNING:\ Sound\ cue\ not\ found\ -\/\ \%ls\(\backslash\)n"{},\ name.c\_str()\ );}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00493}00493\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}Not\ found:\ \%s\(\backslash\)n"{}},xboxName);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00494}00494\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00495}00495\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00496}00496\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00497}00497\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00498}00498\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ check\ how\ many\ of\ this\ cue\ are\ already\ playing\ and\ ignore\ if\ there\ are\ loads}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00499}00499\ \ \ \ \ \textcolor{keywordtype}{int}\ iSameSoundC=0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00500}00500\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ currentSounds.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00501}00501\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00502}00502\ \ \ \ \ \ \ \ \ SoundEngine::soundInfo\ *info\ =\ currentSounds[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00503}00503\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00504}00504\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((info-\/>idx==idx)\ \&\&\ (info-\/>iSoundBank==(bSoundbank1?0:1)))}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00505}00505\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00506}00506\ \ \ \ \ \ \ \ \ \ \ \ \ iSameSoundC++;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00507}00507\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00508}00508\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00509}00509\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00510}00510\ \ \ \ \ \textcolor{keywordflow}{if}(iSameSoundC>MAX\_SAME\_SOUNDS\_PLAYING)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00511}00511\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00512}00512\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00513}00513\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00514}00514\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00515}00515\ \ \ \ \ IXACT3Cue\ *cueInstance;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00516}00516\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a3cc49f3164c43289d0bcb2abafc399bc}{HRESULT}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00517}00517\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(31);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00518}00518\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00519}00519\ \ \ \ \ \textcolor{keywordflow}{if}(bSoundbank1)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00520}00520\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00521}00521\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ m\_pSoundBank-\/>Prepare(idx,\ 0,\ 0,\ \&cueInstance\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00522}00522\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00523}00523\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00524}00524\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ printf("{}Sound\ prep\ failed\(\backslash\)n"{});}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00525}00525\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00526}00526\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00527}00527\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00528}00528\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00529}00529\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00530}00530\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ m\_pSoundBank2-\/>Prepare(idx,\ 0,\ 0,\ \&cueInstance\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00531}00531\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00532}00532\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00533}00533\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ printf("{}Sound\ prep\ failed\(\backslash\)n"{});}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00534}00534\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00535}00535\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00536}00536\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00537}00537\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00538}00538\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00539}00539\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00540}00540\ \ \ \ \ \textcolor{comment}{//\ Register\ to\ receive\ callbacks\ for\ cues\ stopping\ so\ we\ can\ keep\ a\ track\ of\ active\ sounds}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00541}00541\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00542}00542\ \ \ \ \ soundInfo\ *info\ =\ \textcolor{keyword}{new}\ soundInfo();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00543}00543\ \ \ \ \ info-\/>idx\ =\ idx;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00544}00544\ \ \ \ \ info-\/>eSoundID\ =\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87}{eSOUND\_TYPE}}\textcolor{keyword}{>}(iSound);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00545}00545\ \ \ \ \ info-\/>iSoundBank\ =\ bSoundbank1?0:1;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00546}00546\ \ \ \ \ info-\/>x\ =\ x;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00547}00547\ \ \ \ \ info-\/>y\ =\ y;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00548}00548\ \ \ \ \ info-\/>z\ =\ z;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00549}00549\ \ \ \ \ info-\/>volume\ =\ volume;\textcolor{comment}{//*m\_fSoundEffectsVolume;}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00550}00550\ \ \ \ \ info-\/>pitch\ =\ pitch;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00551}00551\ \ \ \ \ info-\/>pCue\ =\ cueInstance;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00552}00552\ \ \ \ \ info-\/>updatePos\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00553}00553\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&m\_CS);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00554}00554\ \ \ \ \ currentSounds.push\_back(info);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00555}00555\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&m\_CS);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00556}00556\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00557}00557\ \ \ \ \ XACTVARIABLEINDEX\ vidx\ =\ cueInstance-\/>GetVariableIndex(\textcolor{stringliteral}{"{}Pitch"{}});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00558}00558\ \ \ \ \ \textcolor{keywordflow}{if}(\ vidx\ !=\ XACTVARIABLEINDEX\_INVALID\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00559}00559\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00560}00560\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Convert\ pitch\ multiplier\ to\ semitones}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00561}00561\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ semiTones\ =\ (log(pitch)/log(2.0f))\ *\ 12.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00562}00562\ \ \ \ \ \ \ \ \ cueInstance-\/>SetVariable(\ vidx,\ semiTones\ );}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00563}00563\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00564}00564\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00565}00565\ \ \ \ \ update3DPosition(info);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00566}00566\ \ \ \ \ cueInstance-\/>Play();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00567}00567\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00568}00568\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00569}00569\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_aed44e7ce4cdc8516776b672f0040c340}{SoundEngine::playUI}}(\textcolor{keywordtype}{int}\ iSound,\ \textcolor{keywordtype}{float},\ \textcolor{keywordtype}{float})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00570}00570\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00571}00571\ \ \ \ \ \textcolor{keywordtype}{bool}\ bSoundBank1=(iSound<=\doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87a5890f0b38a23b56cd271f535cd11dcfa}{eSoundType\_STEP\_SAND}});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00572}00572\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00573}00573\ \ \ \ \ \textcolor{keywordflow}{if}(\ (m\_pSoundBank\ ==\ \textcolor{keyword}{nullptr}\ )\ ||\ (m\_pSoundBank2\ ==\ \textcolor{keyword}{nullptr}))\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00574}00574\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00575}00575\ \ \ \ \ \textcolor{keywordflow}{if}(\ currentSounds.size()\ >\ MAX\_POLYPHONY\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00576}00576\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00577}00577\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00578}00578\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00579}00579\ \ \ \ \ wstring\ \doxymbox{\hyperlink{namespace_sentient_a8f7f643029c0ccdd11803cfac462eed3}{name}}\ =\ \doxymbox{\hyperlink{class_console_sound_engine_a592f31c82954628827db27ea9c8e0f71}{wchSoundNames}}[iSound];}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00580}00580\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00581}00581\ \ \ \ \ \textcolor{keywordtype}{char}\ *xboxName\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_sound_engine_ad00c27e158817f6fbf407beba58c9789}{ConvertSoundPathToName}}(name));}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00582}00582\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00583}00583\ \ \ \ \ XACTINDEX\ idx\ =\ m\_pSoundBank-\/>GetCueIndex(xboxName);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00584}00584\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00585}00585\ \ \ \ \ \textcolor{keywordflow}{if}(\ idx\ ==\ XACTINDEX\_INVALID\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00586}00586\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00587}00587\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ soundbank\ 2}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00588}00588\ \ \ \ \ \ \ \ \ idx\ =\ m\_pSoundBank2-\/>GetCueIndex(xboxName);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00589}00589\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ idx\ ==\ XACTINDEX\_INVALID\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00590}00590\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00591}00591\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}Not\ found\ UI:\ \%s\(\backslash\)n"{}},xboxName);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00593}00593\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00594}00594\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00595}00595\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00596}00596\ \ \ \ \ \ \ \ \ bSoundBank1=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00597}00597\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00598}00598\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00599}00599\ \ \ \ \ IXACT3Cue\ *cueInstance;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00600}00600\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a3cc49f3164c43289d0bcb2abafc399bc}{HRESULT}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00601}00601\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00602}00602\ \ \ \ \ \textcolor{keywordflow}{if}(bSoundBank1)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00603}00603\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00604}00604\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ m\_pSoundBank-\/>Prepare(idx,\ 0,\ 0,\ \&cueInstance\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00605}00605\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ printf("{}Sound\ prep\ failed\(\backslash\)n"{});}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00608}00608\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00609}00609\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00610}00610\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00611}00611\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00612}00612\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ m\_pSoundBank2-\/>Prepare(idx,\ 0,\ 0,\ \&cueInstance\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00613}00613\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00614}00614\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ printf("{}Sound\ prep\ failed\(\backslash\)n"{});}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00615}00615\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00616}00616\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00617}00617\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00618}00618\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00619}00619\ \ \ \ \ \textcolor{comment}{//\ Add\ sound\ info\ just\ so\ we\ can\ detect\ end\ of\ this\ sound}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00620}00620\ \ \ \ \ soundInfo\ *info\ =\ \textcolor{keyword}{new}\ soundInfo();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00621}00621\ \ \ \ \ info-\/>eSoundID\ =\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87}{eSOUND\_TYPE}}\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00622}00622\ \ \ \ \ info-\/>iSoundBank\ =\ bSoundBank1?0:1;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00623}00623\ \ \ \ \ info-\/>idx\ =idx;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00624}00624\ \ \ \ \ info-\/>x\ =\ 0.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00625}00625\ \ \ \ \ info-\/>y\ =\ 0.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00626}00626\ \ \ \ \ info-\/>z\ =\ 0.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00627}00627\ \ \ \ \ info-\/>volume\ =\ 0.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00628}00628\ \ \ \ \ info-\/>pitch\ =\ 0.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00629}00629\ \ \ \ \ info-\/>pCue\ =\ cueInstance;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00630}00630\ \ \ \ \ info-\/>updatePos\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00631}00631\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&m\_CS);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00632}00632\ \ \ \ \ currentSounds.push\_back(info);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00633}00633\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&m\_CS);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00634}00634\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00635}00635\ \ \ \ \ cueInstance-\/>Play();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00636}00636\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00637}00637\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00638}00638\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_ab7b81993e0b29116d8539aea01ad425d}{SoundEngine::playStreaming}}(\textcolor{keyword}{const}\ wstring\&\ name,\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z,\ \textcolor{keywordtype}{float}\ vol,\ \textcolor{keywordtype}{float}\ pitch,\ \textcolor{keywordtype}{bool}\ bMusicDelay)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00639}00639\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00640}00640\ \ \ \ \ IXACT3SoundBank\ *pSoundBank=\textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00641}00641\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00642}00642\ \ \ \ \ \textcolor{keywordtype}{bool}\ bSoundBank2=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00643}00643\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(34);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00644}00644\ \ \ \ \ \textcolor{keywordflow}{if}(m\_MusicInfo.pCue!=\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00645}00645\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00646}00646\ \ \ \ \ \ \ \ \ m\_MusicInfo.pCue-\/>Stop(0);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00647}00647\ \ \ \ \ \ \ \ \ m\_MusicInfo.pCue-\/>Destroy();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00648}00648\ \ \ \ \ \ \ \ \ m\_MusicInfo.pCue\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00649}00649\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00650}00650\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00651}00651\ \ \ \ \ m\_MusicInfo.volume\ =\ 1.0f;\textcolor{comment}{//m\_fMusicVolume;}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00652}00652\ \ \ \ \ m\_MusicInfo.pitch\ =\ 1.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00653}00653\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00654}00654\ \ \ \ \ \doxymbox{\hyperlink{class_console_sound_engine_a648b69157221cc0cecec1b512a9d53fe}{SetIsPlayingEndMusic}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00655}00655\ \ \ \ \ \doxymbox{\hyperlink{class_console_sound_engine_a16932a7e09ee8dc3f831d72e3be9a29f}{SetIsPlayingNetherMusic}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00656}00656\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00657}00657\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{namespace_sentient_a8f7f643029c0ccdd11803cfac462eed3}{name}}.empty())}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00658}00658\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00659}00659\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_console_sound_engine_a3cf65960395ebefac571c3d774b3ee1b}{SetIsPlayingStreamingCDMusic}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00660}00660\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_console_sound_engine_aa3e15cf4fe022da1a3f82fbf7542769d}{SetIsPlayingStreamingGameMusic}}(\textcolor{keyword}{false});\textcolor{comment}{//\ will\ be\ set\ to\ true\ when\ the\ sound\ is\ started\ in\ the\ tick}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00661}00661\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(bMusicDelay)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00662}00662\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00663}00663\ \ \ \ \ \ \ \ \ \ \ \ \ noMusicDelay\ =\ random-\/>nextInt(20\ *\ 60\ *\ 10)\ +\ 20\ *\ 60\ *\ 10;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00664}00664\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00665}00665\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00666}00666\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00667}00667\ \ \ \ \ \ \ \ \ \ \ \ \ noMusicDelay=0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00668}00668\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00669}00669\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ if\ we\ have\ a\ local\ player\ in\ The\ Nether\ or\ in\ The\ End,\ and\ play\ that\ music\ if\ they\ are}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00670}00670\ \ \ \ \ \ \ \ \ Minecraft\ *pMinecraft=\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00671}00671\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ playerInEnd=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00672}00672\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ playerInNether=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00673}00673\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00674}00674\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}=0;\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}<\doxymbox{\hyperlink{extra_x64_8h_a1365084304888cf899650a443d55b9a9}{XUSER\_MAX\_COUNT}};\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00675}00675\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00676}00676\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(pMinecraft-\/>\doxymbox{\hyperlink{class_minecraft_a7210d12b17639bbe0d615e334cc88e7e}{localplayers}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]!=\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00677}00677\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00678}00678\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(pMinecraft-\/>\doxymbox{\hyperlink{class_minecraft_a7210d12b17639bbe0d615e334cc88e7e}{localplayers}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>dimension==\doxymbox{\hyperlink{class_level_data_ad70c6f70aaebb0204f610b25d4a12443ae4095bd70bb7220144fccd77bf3a20fc}{LevelData::DIMENSION\_END}})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00679}00679\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00680}00680\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ playerInEnd=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00681}00681\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00682}00682\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(pMinecraft-\/>\doxymbox{\hyperlink{class_minecraft_a7210d12b17639bbe0d615e334cc88e7e}{localplayers}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>dimension==\doxymbox{\hyperlink{class_level_data_ad70c6f70aaebb0204f610b25d4a12443a3cfe4518a0054d45c8b8fd4959c027e9}{LevelData::DIMENSION\_NETHER}})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00683}00683\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00684}00684\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ playerInNether=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00685}00685\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00686}00686\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00687}00687\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00688}00688\ \ \ \ \ \ \ \ \ TexturePack\ *pTexPack=\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_a738e15914c98be70aeb8e9c0312108dc}{skins}}-\/>\doxymbox{\hyperlink{class_texture_pack_repository_a55e21ca7bdf92ef2b268bdee424a80f5}{getSelected}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00689}00689\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00690}00690\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>skins-\/>isUsingDefaultSkin()\ ||\ pTexPack-\/>\doxymbox{\hyperlink{class_texture_pack_af8e794b284bf1dab5fd6c9343238c58f}{hasAudio}}()==\textcolor{keyword}{false})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00691}00691\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00692}00692\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(playerInEnd\ ||\ playerInNether)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00693}00693\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00694}00694\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pSoundBank=m\_pSoundBank2;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00695}00695\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00696}00696\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00697}00697\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00698}00698\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pSoundBank=m\_pSoundBank;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00699}00699\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00700}00700\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00701}00701\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00702}00702\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00703}00703\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ get\ the\ dlc\ texture\ pack}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00704}00704\ \ \ \ \ \ \ \ \ \ \ \ \ DLCTexturePack\ *pDLCTexPack=\textcolor{keyword}{static\_cast<}DLCTexturePack\ *\textcolor{keyword}{>}(pTexPack);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00705}00705\ \ \ \ \ \ \ \ \ \ \ \ \ pSoundBank=pDLCTexPack-\/>m\_pSoundBank;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00706}00706\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00707}00707\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ we\ can\ play\ the\ sound}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00708}00708\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_sound_engine_ab06474cec4d4d78f48426eb75e5b3f2e}{isStreamingWavebankReady}}(pDLCTexPack-\/>m\_pStreamedWaveBank)==\textcolor{keyword}{false})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00709}00709\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00710}00710\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00711}00711\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00712}00712\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00713}00713\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00714}00714\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(playerInEnd)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00715}00715\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00716}00716\ \ \ \ \ \ \ \ \ \ \ \ \ m\_musicIDX\ =\ pSoundBank-\/>GetCueIndex(\textcolor{stringliteral}{"{}the\_end\_dragon"{}});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00717}00717\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_console_sound_engine_a648b69157221cc0cecec1b512a9d53fe}{SetIsPlayingEndMusic}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00718}00718\ \ \ \ \ \ \ \ \ \ \ \ \ bSoundBank2=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00719}00719\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00720}00720\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(playerInNether)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00721}00721\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00722}00722\ \ \ \ \ \ \ \ \ \ \ \ \ m\_musicIDX\ =\ pSoundBank-\/>GetCueIndex(\textcolor{stringliteral}{"{}nether"{}});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00723}00723\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_console_sound_engine_a16932a7e09ee8dc3f831d72e3be9a29f}{SetIsPlayingNetherMusic}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00724}00724\ \ \ \ \ \ \ \ \ \ \ \ \ bSoundBank2=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00725}00725\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00726}00726\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00727}00727\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00728}00728\ \ \ \ \ \ \ \ \ \ \ \ \ m\_musicIDX\ =\ pSoundBank-\/>GetCueIndex(\textcolor{stringliteral}{"{}music"{}});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00729}00729\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00730}00730\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00731}00731\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00732}00732\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00733}00733\ \ \ \ \ \ \ \ \ pSoundBank=m\_pSoundBank;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00734}00734\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_console_sound_engine_a3cf65960395ebefac571c3d774b3ee1b}{SetIsPlayingStreamingCDMusic}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00735}00735\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_console_sound_engine_aa3e15cf4fe022da1a3f82fbf7542769d}{SetIsPlayingStreamingGameMusic}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00736}00736\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00737}00737\ \ \ \ \ \ \ \ \ m\_musicIDX\ =\ pSoundBank-\/>GetCueIndex(\doxymbox{\hyperlink{class_sound_engine_ad00c27e158817f6fbf407beba58c9789}{ConvertSoundPathToName}}(name));}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00738}00738\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00739}00739\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00740}00740\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a3cc49f3164c43289d0bcb2abafc399bc}{HRESULT}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00741}00741\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00742}00742\ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ pSoundBank-\/>Prepare(m\_musicIDX,\ 0,\ 0,\ \&m\_MusicInfo.pCue\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00743}00743\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00744}00744\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ printf("{}Sound\ prep\ failed\(\backslash\)n"{});}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00745}00745\ \ \ \ \ \ \ \ \ m\_musicIDX\ =\ XACTINDEX\_INVALID;\ \textcolor{comment}{//\ don't\ do\ anything\ in\ the\ tick}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00746}00746\ \ \ \ \ \ \ \ \ m\_MusicInfo.pCue=\textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00747}00747\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00748}00748\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00749}00749\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00750}00750\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00751}00751\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00752}00752\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_console_sound_engine_a81965f18f504abfe40fa0597f90b1640}{GetIsPlayingStreamingCDMusic}}())}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00753}00753\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00754}00754\ \ \ \ \ \ \ \ \ m\_MusicInfo.x\ =\ x;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00755}00755\ \ \ \ \ \ \ \ \ m\_MusicInfo.y\ =\ y;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00756}00756\ \ \ \ \ \ \ \ \ m\_MusicInfo.z\ =\ z;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00757}00757\ \ \ \ \ \ \ \ \ m\_MusicInfo.updatePos\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00758}00758\ \ \ \ \ \ \ \ \ update3DPosition(\&m\_MusicInfo,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00759}00759\ \ \ \ \ \ \ \ \ m\_MusicInfo.pCue-\/>Play();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00760}00760\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00761}00761\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00762}00762\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00763}00763\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ don't\ play\ the\ game\ music\ -\/\ it\ will\ start\ playing\ in\ the\ tick\ when\ noMusicDelay\ is\ 0}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00764}00764\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00765}00765\ \ \ \ \ \ \ \ \ m\_MusicInfo.x\ =\ 0.0f;\ \textcolor{comment}{//\ will\ be\ overridden\ by\ the\ bPlaceEmitterAtListener}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00766}00766\ \ \ \ \ \ \ \ \ m\_MusicInfo.y\ =\ 0.0f;\ \textcolor{comment}{//\ will\ be\ overridden\ by\ the\ bPlaceEmitterAtListener}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00767}00767\ \ \ \ \ \ \ \ \ m\_MusicInfo.z\ =\ 0.0f;\ \textcolor{comment}{//\ will\ be\ overridden\ by\ the\ bPlaceEmitterAtListener}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00768}00768\ \ \ \ \ \ \ \ \ m\_MusicInfo.updatePos\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00769}00769\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00770}00770\ \ \ \ \ \ \ \ \ update3DPosition(\&m\_MusicInfo,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00771}00771\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00772}00772\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00773}00773\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00774}00774\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00775}00775\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a4c31dd1b58eb0e027fcfd1d2275926bf}{SoundEngine::playMusicTick}}()}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00776}00776\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00777}00777\ \ \ \ \ \textcolor{keywordflow}{if}(\ (m\_pSoundBank\ ==\ \textcolor{keyword}{nullptr}\ )\ ||\ (m\_pSoundBank2\ ==\ \textcolor{keyword}{nullptr}))\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00778}00778\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00779}00779\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_musicIDX\ ==\ XACTINDEX\_INVALID\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00780}00780\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00781}00781\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ printf("{}Not\ found\ music\(\backslash\)n"{});}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00782}00782\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00783}00783\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00784}00784\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00785}00785\ \ \ \ \ \textcolor{comment}{//\ check\ to\ see\ if\ the\ sound\ has\ stopped\ playing}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00786}00786\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ state;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00787}00787\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a3cc49f3164c43289d0bcb2abafc399bc}{HRESULT}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00788}00788\ \ \ \ \ \textcolor{keywordflow}{if}(m\_MusicInfo.pCue!=\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00789}00789\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00790}00790\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ m\_MusicInfo.pCue-\/>GetState(\&state)\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00791}00791\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00792}00792\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00793}00793\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00794}00794\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00795}00795\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00796}00796\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ state\ ==\ XACT\_CUESTATE\_STOPPED\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00797}00797\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00798}00798\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ remove\ the\ sound\ and\ reset\ the\ music}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00799}00799\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sound_engine_ab7b81993e0b29116d8539aea01ad425d}{playStreaming}}(L\textcolor{stringliteral}{"{}"{}},\ 0,\ 0,\ 0,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00800}00800\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00801}00801\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00802}00802\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00803}00803\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00804}00804\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00805}00805\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_console_sound_engine_af669f26c4463789c60b2ba82c78527ab}{GetIsPlayingStreamingGameMusic}}())}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00806}00806\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00807}00807\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_MusicInfo.pCue!=\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00808}00808\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00809}00809\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ playerInEnd\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00810}00810\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ playerInNether=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00811}00811\ \ \ \ \ \ \ \ \ \ \ \ \ Minecraft\ *pMinecraft\ =\ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00812}00812\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{extra_x64_8h_a1365084304888cf899650a443d55b9a9}{XUSER\_MAX\_COUNT}};\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00813}00813\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00814}00814\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(pMinecraft-\/>\doxymbox{\hyperlink{class_minecraft_a7210d12b17639bbe0d615e334cc88e7e}{localplayers}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]!=\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00815}00815\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00816}00816\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(pMinecraft-\/>\doxymbox{\hyperlink{class_minecraft_a7210d12b17639bbe0d615e334cc88e7e}{localplayers}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>dimension==\doxymbox{\hyperlink{class_level_data_ad70c6f70aaebb0204f610b25d4a12443ae4095bd70bb7220144fccd77bf3a20fc}{LevelData::DIMENSION\_END}})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00817}00817\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00818}00818\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ playerInEnd=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00819}00819\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00820}00820\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(pMinecraft-\/>\doxymbox{\hyperlink{class_minecraft_a7210d12b17639bbe0d615e334cc88e7e}{localplayers}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>dimension==\doxymbox{\hyperlink{class_level_data_ad70c6f70aaebb0204f610b25d4a12443a3cfe4518a0054d45c8b8fd4959c027e9}{LevelData::DIMENSION\_NETHER}})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00821}00821\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00822}00822\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ playerInNether=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00823}00823\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00824}00824\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00825}00825\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00826}00826\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00827}00827\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((playerInEnd\ \&\&\ !\doxymbox{\hyperlink{class_console_sound_engine_a8f129c68bff8daab68e17eb67815857f}{GetIsPlayingEndMusic}}())\ ||(!playerInEnd\ \&\&\ \doxymbox{\hyperlink{class_console_sound_engine_a8f129c68bff8daab68e17eb67815857f}{GetIsPlayingEndMusic}}()))}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00828}00828\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00829}00829\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ remove\ the\ sound\ and\ reset\ the\ music}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00830}00830\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sound_engine_ab7b81993e0b29116d8539aea01ad425d}{playStreaming}}(L\textcolor{stringliteral}{"{}"{}},\ 0,\ 0,\ 0,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00831}00831\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00832}00832\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ ((playerInNether\ \&\&\ !\doxymbox{\hyperlink{class_console_sound_engine_a64a8a3f94adfa589730cde5dae530c12}{GetIsPlayingNetherMusic}}())\ ||(!playerInNether\ \&\&\ \doxymbox{\hyperlink{class_console_sound_engine_a64a8a3f94adfa589730cde5dae530c12}{GetIsPlayingNetherMusic}}()))}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00833}00833\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00834}00834\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ remove\ the\ sound\ and\ reset\ the\ music}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00835}00835\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sound_engine_ab7b81993e0b29116d8539aea01ad425d}{playStreaming}}(L\textcolor{stringliteral}{"{}"{}},\ 0,\ 0,\ 0,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00836}00836\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00837}00837\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00838}00838\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ not\ positional\ so\ doesn't\ need\ ticked}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00839}00839\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00840}00840\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00841}00841\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00842}00842\ \ \ \ \ \textcolor{comment}{//\ is\ this\ cd\ music?\ If\ so,\ we\ need\ to\ tick\ it}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00843}00843\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_console_sound_engine_a81965f18f504abfe40fa0597f90b1640}{GetIsPlayingStreamingCDMusic}}())}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00844}00844\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00845}00845\ \ \ \ \ \ \ \ \ update3DPosition(\&m\_MusicInfo,\ \textcolor{keyword}{false},\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00846}00846\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00847}00847\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00848}00848\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00849}00849\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (noMusicDelay\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00850}00850\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00851}00851\ \ \ \ \ \ \ \ \ \ \ \ \ noMusicDelay-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00852}00852\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00853}00853\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00854}00854\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00855}00855\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_MusicInfo.pCue!=\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00856}00856\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00857}00857\ \ \ \ \ \ \ \ \ \ \ \ \ update3DPosition(\&m\_MusicInfo,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00858}00858\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_console_sound_engine_aa3e15cf4fe022da1a3f82fbf7542769d}{SetIsPlayingStreamingGameMusic}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00859}00859\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ and\ play\ the\ game\ music\ here}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00860}00860\ \ \ \ \ \ \ \ \ \ \ \ \ m\_MusicInfo.pCue-\/>Play();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00861}00861\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00862}00862\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00863}00863\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00864}00864\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00865}00865\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a0c3300fb75012e267c7ab3dfeef438d3}{SoundEngine::updateMusicVolume}}(\textcolor{keywordtype}{float}\ fVal)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00866}00866\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00867}00867\ \ \ \ \ XACTVOLUME\ xactVol=fVal;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00868}00868\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a3cc49f3164c43289d0bcb2abafc399bc}{HRESULT}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}=m\_pXACT3Engine-\/>SetVolume(m\_xactMusic,fVal);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00869}00869\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00870}00870\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00871}00871\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_ae84db931159772145ce2eceef5b595e3}{SoundEngine::updateSystemMusicPlaying}}(\textcolor{keywordtype}{bool}\ isPlaying)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00872}00872\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00873}00873\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00874}00874\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00875}00875\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_ac0b091df2437c80187e2b74c1149a5b5}{SoundEngine::updateSoundEffectVolume}}(\textcolor{keywordtype}{float}\ fVal)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00876}00876\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00877}00877\ \ \ \ \ XACTVOLUME\ xactVol=fVal;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00878}00878\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a3cc49f3164c43289d0bcb2abafc399bc}{HRESULT}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}=m\_pXACT3Engine-\/>SetVolume(m\_xactSFX,fVal);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00879}00879\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00880}00880\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00881}00881\ \textcolor{keywordtype}{void}\ SoundEngine::update3DPosition(SoundEngine::soundInfo\ *pInfo,\ \textcolor{keywordtype}{bool}\ bPlaceEmitterAtListener,\textcolor{keywordtype}{bool}\ bIsCDMusic)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00882}00882\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00883}00883\ \ \ \ \ X3DAUDIO\_LISTENER\ *listener\ =\ \&m\_listeners[0];\ \ \textcolor{comment}{//\ Default\ case\ for\ single\ listener}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00884}00884\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00885}00885\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ m\_validListenerCount\ >\ 1\ )\ \&\&\ !bPlaceEmitterAtListener\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00886}00886\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00887}00887\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ More\ than\ one\ listener.\ Find\ out\ which\ one\ is\ closest}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00888}00888\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ nearDistSq\ =\ \ (\ listener-\/>Position.x\ -\/\ pInfo-\/>x\ )\ *\ (\ listener-\/>Position.x\ -\/\ pInfo-\/>x\ )\ +}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00889}00889\ \ \ \ \ \ \ \ \ \ \ \ \ (\ listener-\/>Position.y\ -\/\ pInfo-\/>y\ )\ *\ (\ listener-\/>Position.y\ -\/\ pInfo-\/>y\ )\ +}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00890}00890\ \ \ \ \ \ \ \ \ \ \ \ \ (\ listener-\/>Position.z\ +\ pInfo-\/>z\ )\ *\ (\ listener-\/>Position.z\ +\ pInfo-\/>z\ );}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00891}00891\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00892}00892\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 1;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_validListenerCount;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00893}00893\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00894}00894\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ distSq\ =\ \ (\ m\_listeners[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].Position.x\ -\/\ pInfo-\/>x\ )\ *\ (\ m\_listeners[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].Position.x\ -\/\ pInfo-\/>x\ )\ +}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00895}00895\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\ m\_listeners[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].Position.y\ -\/\ pInfo-\/>y\ )\ *\ (\ m\_listeners[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].Position.y\ -\/\ pInfo-\/>y\ )\ +}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00896}00896\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\ m\_listeners[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].Position.z\ +\ pInfo-\/>z\ )\ *\ (\ m\_listeners[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].Position.z\ +\ pInfo-\/>z\ );}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00897}00897\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ distSq\ <\ nearDistSq\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00898}00898\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00899}00899\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ listener\ =\ \&m\_listeners[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00900}00900\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nearDistSq\ =\ distSq;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00901}00901\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00902}00902\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00903}00903\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00904}00904\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ More\ than\ one\ listener,\ don't\ do\ directional\ sounds\ -\/\ point\ our\ listener\ towards\ the\ sound}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00905}00905\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xzDist\ =\ \ sqrtf(\ (\ listener-\/>Position.x\ -\/\ pInfo-\/>x\ )\ *\ (\ listener-\/>Position.x\ -\/\ pInfo-\/>x\ )\ +}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00906}00906\ \ \ \ \ \ \ \ \ \ \ \ \ (\ listener-\/>Position.z\ +\ pInfo-\/>z\ )\ *\ (\ listener-\/>Position.z\ +\ pInfo-\/>z\ )\ );}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00907}00907\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Don't\ orientate\ if\ its\ too\ near\ to\ work\ out\ a\ distance}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00908}00908\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ xzDist\ >\ 0.001f)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00909}00909\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00910}00910\ \ \ \ \ \ \ \ \ \ \ \ \ listener-\/>OrientFront.x\ =\ (\ pInfo-\/>x\ -\/\ listener-\/>Position.x\ )\ /\ xzDist;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00911}00911\ \ \ \ \ \ \ \ \ \ \ \ \ listener-\/>OrientFront.y\ =\ 0.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00912}00912\ \ \ \ \ \ \ \ \ \ \ \ \ listener-\/>OrientFront.z\ =\ (\ -\/\ pInfo-\/>z\ -\/\ listener-\/>Position.z\ )\ /\ xzDist;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00913}00913\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00914}00914\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00915}00915\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00916}00916\ \ \ \ \ \textcolor{keywordflow}{if}(bPlaceEmitterAtListener)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00917}00917\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00918}00918\ \ \ \ \ \ \ \ \ m\_emitter.Position.x\ =\ listener-\/>Position.x;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00919}00919\ \ \ \ \ \ \ \ \ m\_emitter.Position.y\ =\ listener-\/>Position.y;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00920}00920\ \ \ \ \ \ \ \ \ m\_emitter.Position.z\ =\ listener-\/>Position.z;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00921}00921\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00922}00922\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00923}00923\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00924}00924\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Update\ the\ position\ of\ the\ emitter\ -\/\ we\ aren't\ dynamically\ changing\ anything\ else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00925}00925\ \ \ \ \ \ \ \ \ m\_emitter.Position.x\ =\ pInfo-\/>x;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00926}00926\ \ \ \ \ \ \ \ \ m\_emitter.Position.y\ =\ pInfo-\/>y;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00927}00927\ \ \ \ \ \ \ \ \ m\_emitter.Position.z\ =\ -\/pInfo-\/>z;\ \ \ \textcolor{comment}{//\ Flipped\ sign\ of\ z\ as\ x3daudio\ is\ expecting\ left\ handed\ coord\ system}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00928}00928\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00929}00929\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00930}00930\ \ \ \ \ \textcolor{comment}{//\ If\ this\ is\ the\ CD\ music,\ then\ make\ the\ distance\ scaler\ 4\ x\ normal}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00931}00931\ \ \ \ \ \textcolor{keywordflow}{if}(bIsCDMusic)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00932}00932\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00933}00933\ \ \ \ \ \ \ \ \ m\_emitter.CurveDistanceScaler=64.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00934}00934\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00935}00935\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00936}00936\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00937}00937\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}(pInfo-\/>eSoundID)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00938}00938\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00939}00939\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Is\ this\ the\ Dragon?}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00940}00940\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87a7decc974e81032d6f2eaf368c2b0cfd6}{eSoundType\_MOB\_ENDERDRAGON\_GROWL}}:}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00941}00941\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87aacace1e2f783f460b37ee19b929880af}{eSoundType\_MOB\_ENDERDRAGON\_MOVE}}:}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00942}00942\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87af42e0d274712e9d445fb7f113ba1f2fa}{eSoundType\_MOB\_ENDERDRAGON\_END}}:}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00943}00943\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87a990e70e21282843fcdff1a8834aebc37}{eSoundType\_MOB\_ENDERDRAGON\_HIT}}:}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00944}00944\ \ \ \ \ \ \ \ \ \ \ \ \ m\_emitter.CurveDistanceScaler=100.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00945}00945\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00946}00946\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87a28c15c6c15d113a69b740dd73878be4d}{eSoundType\_MOB\_GHAST\_MOAN}}:}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00947}00947\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87a9cc67a39284c99e7fe6ccfd0f4bd6f8a}{eSoundType\_MOB\_GHAST\_SCREAM}}:}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00948}00948\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87a4eca3fb6065c29dad22f766332a7ac8a}{eSoundType\_MOB\_GHAST\_DEATH}}:}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00949}00949\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87a9d76553dd4f8739689ea03daa1994336}{eSoundType\_MOB\_GHAST\_CHARGE}}:}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00950}00950\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87ae62bbcfe84aef9e5bba93522a2e9345f}{eSoundType\_MOB\_GHAST\_FIREBALL}}:}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00951}00951\ \ \ \ \ \ \ \ \ \ \ \ \ m\_emitter.CurveDistanceScaler=30.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00952}00952\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00953}00953\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00954}00954\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00955}00955\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00956}00956\ \ \ \ \ \textcolor{comment}{//\ 10000.0f\ is\ passed\ as\ the\ volume\ for\ thunder...\ treat\ this\ as\ a\ special\ case,\ and\ use\ a\ volume\ curve\ that\ doesn't\ decay\ with\ distance}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00957}00957\ \ \ \ \ \textcolor{comment}{//\ rather\ than\ just\ trying\ to\ guess\ at\ making\ something\ really\ really\ loud...}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00958}00958\ \ \ \ \ \textcolor{keywordflow}{if}(\ pInfo-\/>volume\ ==\ 10000.0f\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00959}00959\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00960}00960\ \ \ \ \ \ \ \ \ m\_emitter.pVolumeCurve\ =\ \&m\_VolumeCurveNoDecay;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00961}00961\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00962}00962\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00963}00963\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00964}00964\ \ \ \ \ \ \ \ \ m\_emitter.pVolumeCurve\ =\ \&m\_VolumeCurve;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00965}00965\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00966}00966\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00967}00967\ \ \ \ \ \textcolor{comment}{//\ Calculate\ all\ the\ 3D\ things}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00968}00968\ \ \ \ \ XACT3DCalculate(\ m\_xact3dInstance,\ listener,\ \&m\_emitter,\ \&m\_DSPSettings\ );}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00969}00969\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00970}00970\ \ \ \ \ \textcolor{comment}{//\ Put\ volume\ curve\ back\ to\ default\ in\ case\ something\ else\ is\ depending\ on\ this}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00971}00971\ \ \ \ \ m\_emitter.pVolumeCurve\ =\ \&m\_VolumeCurve;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00972}00972\ \ \ \ \ \textcolor{comment}{//m\_emitter.pLFECurve\ =\ \&m\_VolumeCurve;}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00973}00973\ \ \ \ \ m\_emitter.CurveDistanceScaler=16.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00974}00974\ \ \ \ \ \textcolor{comment}{//\ Apply\ our\ general\ volume\ too\ by\ scaling\ the\ calculated\ coefficients\ -\/\ so\ long\ as\ this\ isn't\ our\ special\ case\ of\ 10000.0f\ (see\ comment\ above)}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00975}00975\ \ \ \ \ \textcolor{keywordflow}{if}(\ pInfo-\/>volume\ !=\ 10000.0f\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00976}00976\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00977}00977\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_DSPSettings.DstChannelCount;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00978}00978\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00979}00979\ \ \ \ \ \ \ \ \ \ \ \ \ m\_DSPSettings.pMatrixCoefficients[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ *=\ pInfo-\/>volume;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00980}00980\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00981}00981\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00982}00982\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00983}00983\ \ \ \ \ \textcolor{comment}{//\ Finally\ apply\ to\ the\ cue}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00984}00984\ \ \ \ \ XACT3DApply(\ \&m\_DSPSettings,\ pInfo-\/>pCue);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00985}00985\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00986}00986\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00987}00987\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_console_sound_engine_a42bc59b141fafe50c0371a33a2c91aec}{SoundEngine::tick}}(shared\_ptr<Mob>\ *players,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00988}00988\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00989}00989\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_pXACT3Engine\ ==\ \textcolor{keyword}{nullptr}\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00990}00990\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00991}00991\ \ \ \ \ \textcolor{comment}{//\ Creater\ listener\ array\ from\ the\ local\ players}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00992}00992\ \ \ \ \ \textcolor{keywordtype}{int}\ listenerCount\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00993}00993\ \ \ \ \ \textcolor{keywordtype}{bool}\ doPosUpdate\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00994}00994\ \ \ \ \ \textcolor{keywordflow}{if}(\ players\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00995}00995\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00996}00996\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 4;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00997}00997\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00998}00998\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l00999}00999\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01000}01000\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yRot\ =\ players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>yRotO\ +\ (players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>yRot\ -\/\ players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>yRotO)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01001}01001\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01002}01002\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_listeners[listenerCount].Position.x\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>xo\ +\ (players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>x\ -\/\ players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>xo)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01003}01003\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_listeners[listenerCount].Position.y\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>yo\ +\ (players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>y\ -\/\ players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>yo)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01004}01004\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_listeners[listenerCount].Position.z\ =\ -\/\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>zo\ +\ (players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>z\ -\/\ players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>zo)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});\ \textcolor{comment}{//\ Flipped\ sign\ of\ z\ as\ x3daudio\ is\ expecting\ left\ handed\ coord\ system}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01005}01005\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01006}01006\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yCos\ =\ (float)cos(-\/yRot\ *\ \doxymbox{\hyperlink{class_mth_ac279ddaf9be4ac783fa7ccd186a780d0}{Mth::RAD\_TO\_GRAD}}\ -\/\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01007}01007\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ ySin\ =\ (float)sin(-\/yRot\ *\ \doxymbox{\hyperlink{class_mth_ac279ddaf9be4ac783fa7ccd186a780d0}{Mth::RAD\_TO\_GRAD}}\ -\/\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01008}01008\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01009}01009\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_listeners[listenerCount].OrientFront.x\ =\ -\/ySin;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01010}01010\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_listeners[listenerCount].OrientFront.y\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01011}01011\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_listeners[listenerCount].OrientFront.z\ =\ yCos;\ \ \ \ \textcolor{comment}{//\ Flipped\ sign\ of\ z\ as\ x3daudio\ is\ expecting\ left\ handed\ coord\ system}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01012}01012\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01013}01013\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ listenerCount++;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01014}01014\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01015}01015\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01016}01016\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01017}01017\ \ \ \ \ \textcolor{comment}{//\ If\ there\ were\ no\ valid\ players\ set,\ make\ up\ a\ default\ listener}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01018}01018\ \ \ \ \ \textcolor{keywordflow}{if}(\ listenerCount\ ==\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01019}01019\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01020}01020\ \ \ \ \ \ \ \ \ doPosUpdate\ =\ \textcolor{keyword}{false};\ \ \ \ \textcolor{comment}{//\ Don't\ bother\ updating\ positions\ of\ sounds\ already\ placed}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01021}01021\ \ \ \ \ \ \ \ \ m\_listeners[listenerCount].Position.x\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01022}01022\ \ \ \ \ \ \ \ \ m\_listeners[listenerCount].Position.y\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01023}01023\ \ \ \ \ \ \ \ \ m\_listeners[listenerCount].Position.z\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01024}01024\ \ \ \ \ \ \ \ \ m\_listeners[listenerCount].OrientFront.x\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01025}01025\ \ \ \ \ \ \ \ \ m\_listeners[listenerCount].OrientFront.y\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01026}01026\ \ \ \ \ \ \ \ \ m\_listeners[listenerCount].OrientFront.z\ =\ 1.0f;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01027}01027\ \ \ \ \ \ \ \ \ listenerCount++;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01028}01028\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01029}01029\ \ \ \ \ m\_validListenerCount\ =\ listenerCount;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01030}01030\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01031}01031\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&m\_CS);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01032}01032\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ currentSounds.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01033}01033\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01034}01034\ \ \ \ \ \ \ \ \ SoundEngine::soundInfo\ *info\ =\ currentSounds[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01035}01035\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01036}01036\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ state;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01037}01037\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a3cc49f3164c43289d0bcb2abafc399bc}{HRESULT}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01038}01038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_orbis_stubs_8h_aca3919e6cf22894d07999a67e24bfded}{FAILED}}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a87d79f8ba18f1d6436291bd894b913bb}{hr}}\ =\ info-\/>pCue-\/>GetState(\&state)\ )\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01039}01039\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01040}01040\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01041}01041\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01042}01042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01043}01043\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01044}01044\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ state\ ==\ XACT\_CUESTATE\_STOPPED\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01045}01045\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01046}01046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ info-\/>pCue-\/>Destroy();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01047}01047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ currentSounds[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01048}01048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ currentSounds[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ currentSounds.back();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01049}01049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ currentSounds.pop\_back();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01050}01050\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01051}01051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01052}01052\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01053}01053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ info-\/>updatePos\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01054}01054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01055}01055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ doPosUpdate\ )}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01056}01056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01057}01057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ update3DPosition(info);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01058}01058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01059}01059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01060}01060\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01061}01061\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01062}01062\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01063}01063\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01064}01064\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&m\_CS);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01065}01065\ \ \ \ \ m\_pXACT3Engine-\/>DoWork();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01066}01066\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01067}01067\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01068}01068\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a77ab855cbd08ea84358c1ee06f71fc8c}{SoundEngine::add}}(\textcolor{keyword}{const}\ wstring\&\ name,\ \doxymbox{\hyperlink{class_file}{File}}\ *file)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01069}01069\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01070}01070\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01071}01071\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01072}01072\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a03f1344e9194001e3d4c63c35b2f27a3}{SoundEngine::addMusic}}(\textcolor{keyword}{const}\ wstring\&\ name,\ \doxymbox{\hyperlink{class_file}{File}}\ *file)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01073}01073\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01074}01074\ \}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01075}01075\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01076}01076\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a760db60d0dfba1c491bbb92d82d07c5a}{SoundEngine::addStreaming}}(\textcolor{keyword}{const}\ wstring\&\ name,\ \doxymbox{\hyperlink{class_file}{File}}\ *file)}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01077}01077\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8cpp_source_l01078}01078\ \}}
+
+\end{DoxyCode}

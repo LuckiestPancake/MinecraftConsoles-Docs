@@ -1,0 +1,589 @@
+\doxysection{Player\+Renderer.\+cpp}
+\hypertarget{_player_renderer_8cpp_source}{}\label{_player_renderer_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PlayerRenderer.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PlayerRenderer.cpp}}
+\doxymbox{\hyperlink{_player_renderer_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_client_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_player_renderer_8h}{PlayerRenderer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_skull_tile_renderer_8h}{SkullTileRenderer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_humanoid_mob_renderer_8h}{HumanoidMobRenderer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_humanoid_model_8h}{HumanoidModel.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_model_part_8h}{ModelPart.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_local_player_8h}{LocalPlayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_multi_player_local_player_8h}{MultiPlayerLocalPlayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_entity_render_dispatcher_8h}{entityRenderDispatcher.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8player_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.player.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8tile_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.tile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_helpers_8h}{..\(\backslash\)Minecraft.World\(\backslash\)StringHelpers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00017}00017\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ nametagColorForIndex(\textcolor{keywordtype}{int}\ index)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00018}00018\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00019}00019\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ s\_firstColors[]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00020}00020\ \ \ \ \ \ \ \ \ 0xff000000,\ \textcolor{comment}{//\ WHITE\ (represents\ the\ "{}white"{}\ player,\ but\ using\ black\ as\ the\ colour)}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00021}00021\ \ \ \ \ \ \ \ \ 0xff33cc33,\ \textcolor{comment}{//\ GREEN}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00022}00022\ \ \ \ \ \ \ \ \ 0xffcc3333,\ \textcolor{comment}{//\ RED}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00023}00023\ \ \ \ \ \ \ \ \ 0xff3333cc,\ \textcolor{comment}{//\ BLUE}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00024}00024\ \ \ \ \ \ \ \ \ 0xffcc33cc,\ \textcolor{comment}{//\ PINK}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00025}00025\ \ \ \ \ \ \ \ \ 0xffcc6633,\ \textcolor{comment}{//\ ORANGE}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00026}00026\ \ \ \ \ \ \ \ \ 0xffcccc33,\ \textcolor{comment}{//\ YELLOW}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00027}00027\ \ \ \ \ \ \ \ \ 0xff33dccc\ \textcolor{comment}{//\ TURQUOISE}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00028}00028\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00029}00029\ \textcolor{preprocessor}{\#ifndef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00030}00030\ \ \ \ \ \textcolor{keywordflow}{if}\ (index\ >=\ 0\ \&\&\ index\ <\ 8)\ \textcolor{comment}{//\ Use\ original\ colors\ for\ the\ first\ 8\ players}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ s\_firstColors[index];}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00032}00032\ \ \ \ \ \textcolor{keywordflow}{if}\ (index\ >=\ 8\ \&\&\ index\ <\ \doxymbox{\hyperlink{extra_8h_aa9a003390f52d96da6d9c9b12d302c92}{MINECRAFT\_NET\_MAX\_PLAYERS}})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00033}00033\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ h\ =\ (float)((index\ *\ 137)\ \%\ 360)\ /\ 60.f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ (int)h;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ f\ =\ h\ -\/\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ q\ =\ 1.f\ -\/\ f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ t\ =\ 1.f\ -\/\ (1.f\ -\/\ f);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ r\ =\ 0.f,\ g\ =\ 0.f,\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ 0.f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ \%\ 6)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00041}00041\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 0:\ r\ =\ 1.f;\ g\ =\ t;\ \ \ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ 0.f;\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 1:\ r\ =\ q;\ \ \ g\ =\ 1.f;\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ 0.f;\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 2:\ r\ =\ 0.f;\ g\ =\ 1.f;\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ t;\ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 3:\ r\ =\ 0.f;\ g\ =\ q;\ \ \ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ 1.f;\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 4:\ r\ =\ t;\ \ \ g\ =\ 0.f;\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ 1.f;\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:\ r\ =\ 1.f;\ g\ =\ 0.f;\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ q;\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00048}00048\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00049}00049\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ri\ =\ (int)(r\ *\ 255.f)\ \&\ 0xff,\ gi\ =\ (int)(g\ *\ 255.f)\ \&\ 0xff,\ bi\ =\ (int)(\doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ *\ 255.f)\ \&\ 0xff;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0xff000000u\ |\ (ri\ <<\ 16)\ |\ (gi\ <<\ 8)\ |\ bi;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00051}00051\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00052}00052\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00053}00053\ \ \ \ \ \textcolor{keywordflow}{return}\ 0xFF000000;\ \textcolor{comment}{//Fallback\ if\ exceeds\ 256\ somehow}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00054}00054\ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00056}00056\ \doxymbox{\hyperlink{class_resource_location}{ResourceLocation}}\ \doxymbox{\hyperlink{class_player_renderer_af1e854c02bc65dd04d5a041c3e8b959f}{PlayerRenderer::DEFAULT\_LOCATION}}\ =\ \doxymbox{\hyperlink{class_resource_location}{ResourceLocation}}(\doxymbox{\hyperlink{_textures_8h_a3bc692de7f45db575aad1a0adbeb12f3a96c41ae3648e1499cc95200223643ee7}{TN\_MOB\_CHAR}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00058}\doxymbox{\hyperlink{class_player_renderer_a2d52e6236b2cd29ae9a7597ef4fddf65}{00058}}\ \doxymbox{\hyperlink{class_player_renderer_a2d52e6236b2cd29ae9a7597ef4fddf65}{PlayerRenderer::PlayerRenderer}}()\ :\ \doxymbox{\hyperlink{class_living_entity_renderer_a8a77f00d08e81ce794b3a5529c0146bf}{LivingEntityRenderer}}(\ new\ \doxymbox{\hyperlink{class_humanoid_model}{HumanoidModel}}(0),\ 0.5f\ )}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00059}00059\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00060}00060\ \ \ \ \ humanoidModel\ =\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_humanoid_model}{HumanoidModel}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_entity_renderer_a58bf6798481621deea103197a6d6217d}{model}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00062}00062\ \ \ \ \ armorParts1\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_humanoid_model}{HumanoidModel}}(1.0f);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00063}00063\ \ \ \ \ armorParts2\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_humanoid_model}{HumanoidModel}}(0.5f);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00064}00064\ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00066}\doxymbox{\hyperlink{class_player_renderer_a94b42252627468b87ce5cb026d2407fb}{00066}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_player_renderer_a94b42252627468b87ce5cb026d2407fb}{PlayerRenderer::getNametagColour}}(\textcolor{keywordtype}{int}\ index)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00067}00067\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00068}00068\ \ \ \ \ \textcolor{keywordflow}{if}(\ index\ >=\ 0\ \&\&\ index\ <\ \doxymbox{\hyperlink{extra_8h_aa9a003390f52d96da6d9c9b12d302c92}{MINECRAFT\_NET\_MAX\_PLAYERS}})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ nametagColorForIndex(index);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{return}\ 0xFF000000;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00071}00071\ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00073}\doxymbox{\hyperlink{class_player_renderer_acfd1f7b546b5d3659db8e9121b40fc0a}{00073}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_player_renderer_acfd1f7b546b5d3659db8e9121b40fc0a}{PlayerRenderer::prepareArmor}}(shared\_ptr<LivingEntity>\ \_player,\ \textcolor{keywordtype}{int}\ layer,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00074}00074\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00075}00075\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ dynamic\ cast\ required\ because\ we\ aren't\ using\ templates/generics\ in\ our\ version}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00076}00076\ \ \ \ \ shared\_ptr<Player>\ player\ =\ dynamic\_pointer\_cast<Player>(\_player);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00078}00078\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ need\ to\ disable\ rendering\ armour\ for\ some\ special\ skins\ (Daleks)}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00079}00079\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ uiAnimOverrideBitmask=player-\/>getAnimOverrideBitmask();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00080}00080\ \ \ \ \ \textcolor{keywordflow}{if}(uiAnimOverrideBitmask\&(1<<\doxymbox{\hyperlink{class_humanoid_model_a45f822ff9005ab3e91bd0138948c5d84ac43242ad1e8f2e7677108024bbbaf5cd}{HumanoidModel::eAnim\_DontRenderArmour}}))}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00081}00081\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00083}00083\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00085}00085\ \ \ \ \ shared\_ptr<ItemInstance>\ itemInstance\ =\ player-\/>inventory-\/>getArmor(3\ -\/\ layer);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00086}00086\ \ \ \ \ \textcolor{keywordflow}{if}\ (itemInstance\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00087}00087\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item}{Item}}\ *\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ itemInstance-\/>getItem();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{dynamic\_cast<}\doxymbox{\hyperlink{class_armor_item}{ArmorItem}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}))}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_armor_item}{ArmorItem}}\ *armorItem\ =\ \textcolor{keyword}{dynamic\_cast<}\doxymbox{\hyperlink{class_armor_item}{ArmorItem}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_player_renderer_ad7cc4751302308407df80c53910f1207}{bindTexture}}(\doxymbox{\hyperlink{class_humanoid_mob_renderer_ac9dec8f5c90fe3e4b774cbdfa2ceeb4d}{HumanoidMobRenderer::getArmorLocation}}(armorItem,\ layer));}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_humanoid_model}{HumanoidModel}}\ *\doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}}\ =\ layer\ ==\ 2\ ?\ armorParts2\ :\ armorParts1;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}}-\/>head-\/>visible\ =\ layer\ ==\ 0;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}}-\/>hair-\/>visible\ =\ layer\ ==\ 0;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}}-\/>body-\/>visible\ =\ layer\ ==\ 1\ ||\ layer\ ==\ 2;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}}-\/>arm0-\/>visible\ =\ layer\ ==\ 1;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}}-\/>arm1-\/>visible\ =\ layer\ ==\ 1;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}}-\/>leg0-\/>visible\ =\ layer\ ==\ 2\ ||\ layer\ ==\ 3;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}}-\/>leg1-\/>visible\ =\ layer\ ==\ 2\ ||\ layer\ ==\ 3;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_aeafbecfbb4b55aacc7ea9f1c7793f8b9}{setArmor}}(\doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}}\ !=\ \textcolor{keyword}{nullptr})\ \doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}}-\/>attackTime\ =\ \doxymbox{\hyperlink{class_entity_renderer_a58bf6798481621deea103197a6d6217d}{model}}-\/>attackTime;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}}\ !=\ \textcolor{keyword}{nullptr})\ \doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}}-\/>riding\ =\ \doxymbox{\hyperlink{class_entity_renderer_a58bf6798481621deea103197a6d6217d}{model}}-\/>riding;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}}\ !=\ \textcolor{keyword}{nullptr})\ \doxymbox{\hyperlink{class_living_entity_renderer_a31df39ac72b3294548e0bcd4fbb6f3d7}{armor}}-\/>young\ =\ \doxymbox{\hyperlink{class_entity_renderer_a58bf6798481621deea103197a6d6217d}{model}}-\/>young;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ brightness\ =\ \doxymbox{\hyperlink{class_shared_constants_a64311123b800f4ae1c6e92968b4eb7b9}{SharedConstants::TEXTURE\_LIGHTING}}\ ?\ 1\ :\ player-\/>getBrightness(\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (armorItem-\/>\doxymbox{\hyperlink{class_armor_item_aeac263810c3643cebf649d6144b0118e}{getMaterial}}()\ ==\ \doxymbox{\hyperlink{class_armor_item_1_1_armor_material_a828b5d8c0ff7f525b94e78a56d65f0ec}{ArmorItem::ArmorMaterial::CLOTH}})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ color\ =\ armorItem-\/>\doxymbox{\hyperlink{class_armor_item_af1996524baa3371e65189f0eb1300a96}{getColor}}(itemInstance);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ red\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}((color\ >>\ 16)\ \&\ 0xFF)\ /\ 0xFF;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ green\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}((color\ >>\ 8)\ \&\ 0xFF)\ /\ 0xFF;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ blue\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(color\ \&\ 0xFF)\ /\ 0xFF;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a59532c894955c2a112042f21f0a9c317}{glColor3f}}(brightness\ *\ red,\ brightness\ *\ green,\ brightness\ *\ blue);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (itemInstance-\/>isEnchanted())\ \textcolor{keywordflow}{return}\ 0x1f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0x10;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a59532c894955c2a112042f21f0a9c317}{glColor3f}}(brightness,\ brightness,\ brightness);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (itemInstance-\/>isEnchanted())\ \textcolor{keywordflow}{return}\ 0xf;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00130}00130\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00131}00131\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00133}00133\ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00135}\doxymbox{\hyperlink{class_player_renderer_a0b0e2d8b858eab18e58d345f2312c05c}{00135}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_player_renderer_a0b0e2d8b858eab18e58d345f2312c05c}{PlayerRenderer::prepareSecondPassArmor}}(shared\_ptr<LivingEntity>\ \_player,\ \textcolor{keywordtype}{int}\ layer,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00136}00136\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00137}00137\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ dynamic\ cast\ required\ because\ we\ aren't\ using\ templates/generics\ in\ our\ version}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00138}00138\ \ \ \ \ shared\_ptr<Player>\ player\ =\ dynamic\_pointer\_cast<Player>(\_player);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00139}00139\ \ \ \ \ shared\_ptr<ItemInstance>\ itemInstance\ =\ player-\/>inventory-\/>getArmor(3\ -\/\ layer);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00140}00140\ \ \ \ \ \textcolor{keywordflow}{if}\ (itemInstance\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00141}00141\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item}{Item}}\ *\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ itemInstance-\/>getItem();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{dynamic\_cast<}\doxymbox{\hyperlink{class_armor_item}{ArmorItem}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}))}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_armor_item}{ArmorItem}}\ *armorItem\ =\ \textcolor{keyword}{dynamic\_cast<}\doxymbox{\hyperlink{class_armor_item}{ArmorItem}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_player_renderer_ad7cc4751302308407df80c53910f1207}{bindTexture}}(\doxymbox{\hyperlink{class_humanoid_mob_renderer_ac9dec8f5c90fe3e4b774cbdfa2ceeb4d}{HumanoidMobRenderer::getArmorLocation}}(\textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_armor_item}{ArmorItem}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}),\ layer,\ \textcolor{keyword}{true}));}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ brightness\ =\ \doxymbox{\hyperlink{class_shared_constants_a64311123b800f4ae1c6e92968b4eb7b9}{SharedConstants::TEXTURE\_LIGHTING}}\ ?\ 1\ :\ player-\/>getBrightness(\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a59532c894955c2a112042f21f0a9c317}{glColor3f}}(brightness,\ brightness,\ brightness);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00151}00151\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00152}00152\ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00153}00153\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00154}\doxymbox{\hyperlink{class_player_renderer_af1b54d4aa5ea244fdce7c1f5d78b7b26}{00154}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_player_renderer_af1b54d4aa5ea244fdce7c1f5d78b7b26}{PlayerRenderer::render}}(shared\_ptr<Entity>\ \_mob,\ \textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y,\ \textcolor{keywordtype}{double}\ z,\ \textcolor{keywordtype}{float}\ rot,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00155}00155\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00156}00156\ \ \ \ \ \textcolor{keywordflow}{if}\ (\_mob\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00157}00157\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00159}00159\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00161}00161\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ dynamic\ cast\ required\ because\ we\ aren't\ using\ templates/generics\ in\ our\ version}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00162}00162\ \ \ \ \ shared\_ptr<Player>\ mob\ =\ dynamic\_pointer\_cast<Player>(\_mob);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00164}00164\ \ \ \ \ \textcolor{keywordflow}{if}(mob\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00165}00165\ \ \ \ \ \textcolor{keywordflow}{if}(mob-\/>hasInvisiblePrivilege())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00167}00167\ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ mob-\/>inventory-\/>getSelected();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00168}00168\ \ \ \ \ armorParts1-\/>holdingRightHand\ =\ armorParts2-\/>holdingRightHand\ =\ humanoidModel-\/>holdingRightHand\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr}\ ?\ 1\ :\ 0;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00169}00169\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00170}00170\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mob-\/>getUseItemDuration()\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_use_anim_8h_aa20d8f9459bee868bc09e8b36845889f}{UseAnim}}\ anim\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getUseAnimation();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (anim\ ==\ \doxymbox{\hyperlink{_use_anim_8h_aa20d8f9459bee868bc09e8b36845889faeaee4cb4cab72ebcde650185a46a402c}{UseAnim\_block}})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ armorParts1-\/>holdingRightHand\ =\ armorParts2-\/>holdingRightHand\ =\ humanoidModel-\/>holdingRightHand\ =\ 3;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (anim\ ==\ \doxymbox{\hyperlink{_use_anim_8h_aa20d8f9459bee868bc09e8b36845889fa5c184cd08dd6911694d4a81294bd3eef}{UseAnim\_bow}})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ armorParts1-\/>bowAndArrow\ =\ armorParts2-\/>bowAndArrow\ =\ humanoidModel-\/>bowAndArrow\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00183}00183\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00184}00184\ \ \ \ \ \textcolor{comment}{//\ 4J\ added,\ for\ 3rd\ person\ view\ of\ eating}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00185}00185\ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ mob-\/>getUseItemDuration()\ >\ 0\ \&\&\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getUseAnimation()\ ==\ \doxymbox{\hyperlink{_use_anim_8h_aa20d8f9459bee868bc09e8b36845889fa570ca06a711af2f5be4ce1fa5fbd2f02}{UseAnim\_eat}}\ )}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00186}00186\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ These\ factors\ are\ largely\ lifted\ from\ ItemInHandRenderer\ to\ try\ and\ keep\ the\ 3rd\ person\ eating\ animation\ as\ similar\ as\ possible}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ t\ =\ (mob-\/>getUseItemDuration()\ -\/\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ swing\ =\ 1\ -\/\ (t\ /\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getUseDuration());}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ armorParts1-\/>eating\ =\ armorParts2-\/>eating\ =\ humanoidModel-\/>eating\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ armorParts1-\/>eating\_t\ =\ armorParts2-\/>eating\_t\ =\ humanoidModel-\/>eating\_t\ =\ t;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ armorParts1-\/>eating\_swing\ =\ armorParts2-\/>eating\_swing\ =\ humanoidModel-\/>eating\_swing\ =\ swing;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00193}00193\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00194}00194\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00195}00195\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ armorParts1-\/>eating\ =\ armorParts2-\/>eating\ =\ humanoidModel-\/>eating\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00197}00197\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00199}00199\ \ \ \ \ armorParts1-\/>sneaking\ =\ armorParts2-\/>sneaking\ =\ humanoidModel-\/>sneaking\ =\ mob-\/>isSneaking();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00201}00201\ \ \ \ \ \textcolor{keywordtype}{double}\ yp\ =\ y\ -\/\ mob-\/>heightOffset;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00202}00202\ \ \ \ \ \textcolor{keywordflow}{if}\ (mob-\/>isSneaking()\ \&\&\ !mob-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a862cd7927ec1947816427ade7fae54b9}{eTYPE\_LOCALPLAYER}}))}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00203}00203\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ yp\ -\/=\ 2\ /\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00205}00205\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00206}00206\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00207}00207\ \ \ \ \ \textcolor{comment}{//\ Check\ if\ an\ idle\ animation\ is\ needed}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00208}00208\ \ \ \ \ \textcolor{keywordflow}{if}(mob-\/>getAnimOverrideBitmask()\&(1<<\doxymbox{\hyperlink{class_humanoid_model_a45f822ff9005ab3e91bd0138948c5d84a8e7e42e25314715bf3fcab7b08ab9363}{HumanoidModel::eAnim\_HasIdle}}))}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00209}00209\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(mob-\/>isIdle())}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ humanoidModel-\/>idle=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ armorParts1-\/>idle=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ armorParts2-\/>idle=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ humanoidModel-\/>idle=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ armorParts1-\/>idle=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ armorParts2-\/>idle=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00222}00222\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00223}00223\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00224}00224\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ humanoidModel-\/>idle=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ armorParts1-\/>idle=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ armorParts2-\/>idle=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00228}00228\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00229}00229\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00230}00230\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ any\ additional\ parts\ to\ turn\ on\ for\ this\ player\ (skin\ dependent)}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00231}00231\ \ \ \ \ vector<ModelPart\ *>\ *pAdditionalModelParts=mob-\/>GetAdditionalModelParts();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00232}00232\ \ \ \ \ \textcolor{comment}{//turn\ them\ on}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00233}00233\ \ \ \ \ \textcolor{keywordflow}{if}(pAdditionalModelParts!=\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00234}00234\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\doxymbox{\hyperlink{class_model_part}{ModelPart}}\ *pModelPart\ :\ *pAdditionalModelParts)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ pModelPart-\/>visible=\textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00239}00239\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00241}00241\ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a58475eb0d545a605f52e931c52f5854c}{LivingEntityRenderer::render}}(mob,\ x,\ yp,\ z,\ rot,\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00243}00243\ \ \ \ \ \textcolor{comment}{//\ turn\ them\ off\ again}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00244}00244\ \ \ \ \ \textcolor{keywordflow}{if}(pAdditionalModelParts\ \&\&\ pAdditionalModelParts-\/>size()!=0)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00245}00245\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\doxymbox{\hyperlink{class_model_part}{ModelPart}}\ *pModelPart\ :\ *pAdditionalModelParts)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ pModelPart-\/>visible=\textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00250}00250\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00251}00251\ \ \ \ \ armorParts1-\/>bowAndArrow\ =\ armorParts2-\/>bowAndArrow\ =\ humanoidModel-\/>bowAndArrow\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00252}00252\ \ \ \ \ armorParts1-\/>sneaking\ =\ armorParts2-\/>sneaking\ =\ humanoidModel-\/>sneaking\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00253}00253\ \ \ \ \ armorParts1-\/>holdingRightHand\ =\ armorParts2-\/>holdingRightHand\ =\ humanoidModel-\/>holdingRightHand\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00255}00255\ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00256}00256\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00257}\doxymbox{\hyperlink{class_player_renderer_ad65cbc5e3216ed13eab8b8734cb1eec9}{00257}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_player_renderer_ad65cbc5e3216ed13eab8b8734cb1eec9}{PlayerRenderer::additionalRendering}}(shared\_ptr<LivingEntity>\ \_mob,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00258}00258\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00259}00259\ \ \ \ \ \textcolor{keywordtype}{float}\ brightness\ =\ \doxymbox{\hyperlink{class_shared_constants_a64311123b800f4ae1c6e92968b4eb7b9}{SharedConstants::TEXTURE\_LIGHTING}}\ ?\ 1\ :\ \_mob-\/>getBrightness(\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00260}00260\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a59532c894955c2a112042f21f0a9c317}{glColor3f}}(brightness,\ brightness,\ brightness);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00262}00262\ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a2ec9d739853fb0ec8fdb80379d901a88}{LivingEntityRenderer::additionalRendering}}(\_mob,\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00263}00263\ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a325555bb733d149a7e160543b0fd689d}{LivingEntityRenderer::renderArrows}}(\_mob,\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00264}00264\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00265}00265\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ dynamic\ cast\ required\ because\ we\ aren't\ using\ templates/generics\ in\ our\ version}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00266}00266\ \ \ \ \ shared\_ptr<Player>\ mob\ =\ dynamic\_pointer\_cast<Player>(\_mob);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00267}00267\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00268}00268\ \ \ \ \ shared\_ptr<ItemInstance>\ headGear\ =\ mob-\/>inventory-\/>getArmor(3);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00269}00269\ \ \ \ \ \textcolor{keywordflow}{if}\ (headGear\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00270}00270\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ don't\ render\ the\ pumpkin\ for\ the\ skins}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ uiAnimOverrideBitmask\ =\ mob-\/>getSkinAnimOverrideBitmask(\ mob-\/>getCustomSkin());}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00273}00273\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((uiAnimOverrideBitmask\&(1<<\doxymbox{\hyperlink{class_humanoid_model_a45f822ff9005ab3e91bd0138948c5d84ac43242ad1e8f2e7677108024bbbaf5cd}{HumanoidModel::eAnim\_DontRenderArmour}}))==0)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00275}00275\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ humanoidModel-\/>head-\/>translateTo(1\ /\ 16.0f);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(headGear-\/>getItem()-\/>id\ <\ 256)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tile_renderer_aced3926549b06661d380bac06f0b2d1b}{TileRenderer::canRender}}(\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[headGear-\/>id]-\/>getRenderShape()))}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ s\ =\ 10\ /\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00284}00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(-\/0\ /\ 16.0f,\ -\/4\ /\ 16.0f,\ 0\ /\ 16.0f);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(90,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00286}00286\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(s,\ -\/s,\ s);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00288}00288\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_ae8cfa0d99ad1efd53d0de0100e256606}{entityRenderDispatcher}}-\/>itemInHandRenderer-\/>renderItem(mob,\ headGear,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (headGear-\/>getItem()-\/>id\ ==\ \doxymbox{\hyperlink{class_item_a1d7eb1a873e1cfdb25fd2e44f1731359}{Item::skull\_Id}})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ s\ =\ 17\ /\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(s,\ -\/s,\ -\/s);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00295}00295\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wstring\ extra\ =\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (headGear-\/>hasTag()\ \&\&\ headGear-\/>getTag()-\/>contains(L\textcolor{stringliteral}{"{}SkullOwner"{}}))}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ extra\ =\ headGear-\/>getTag()-\/>getString(L\textcolor{stringliteral}{"{}SkullOwner"{}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_skull_tile_renderer_abfae071c2f76df1580d06481ef6805eb}{SkullTileRenderer::instance}}-\/>renderSkull(-\/0.5f,\ 0,\ -\/0.5f,\ \doxymbox{\hyperlink{class_facing_aef75781108db81797622b4af17a52f8b}{Facing::UP}},\ 180,\ headGear-\/>getAuxValue(),\ extra);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00303}00303\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00306}00306\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00307}00307\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00308}00308\ \ \ \ \ \textcolor{comment}{//\ need\ to\ add\ a\ custom\ texture\ for\ deadmau5}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00309}00309\ \ \ \ \ \textcolor{keywordflow}{if}\ (mob\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.isXuidDeadmau5(\ mob-\/>getXuid()\ )\ \&\&\ \doxymbox{\hyperlink{class_player_renderer_ad7cc4751302308407df80c53910f1207}{bindTexture}}(mob-\/>customTextureUrl,\ L\textcolor{stringliteral}{"{}"{}}\ ))}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00310}00310\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 2;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yr\ =\ (mob-\/>yRotO\ +\ (mob-\/>yRot\ -\/\ mob-\/>yRotO)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})\ -\/\ (mob-\/>yBodyRotO\ +\ (mob-\/>yBodyRot\ -\/\ mob-\/>yBodyRotO)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xr\ =\ mob-\/>xRotO\ +\ (mob-\/>xRot\ -\/\ mob-\/>xRotO)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(yr,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(xr,\ 1,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}((6\ /\ 16.0f)\ *\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ *\ 2\ -\/\ 1),\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(0,\ -\/6\ /\ 16.0f,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(-\/xr,\ 1,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(-\/yr,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00322}00322\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ s\ =\ 8\ /\ 6.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(s,\ s,\ s);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ humanoidModel-\/>renderEars(1\ /\ 16.0f,\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00328}00328\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00329}00329\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00330}00330\ \ \ \ \ \textcolor{comment}{//\ 4J:\ removed}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00331}00331\ \ \ \ \ \textcolor{comment}{/*boolean\ loaded\ =\ mob-\/>getCloakTexture()-\/>isLoaded();}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00332}00332\ \textcolor{comment}{\ \ \ \ boolean\ b1\ =\ !mob-\/>isInvisible();}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00333}00333\ \textcolor{comment}{\ \ \ \ boolean\ b2\ =\ !mob-\/>isCapeHidden();*/}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00334}00334\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_player_renderer_ad7cc4751302308407df80c53910f1207}{bindTexture}}(mob-\/>customTextureUrl2,\ L\textcolor{stringliteral}{"{}"{}})\ \&\&\ !mob-\/>isInvisible())}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00335}00335\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00336}00336\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(0,\ 0,\ 2\ /\ 16.0f);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00338}00338\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xd\ =\ (mob-\/>xCloakO\ +\ (mob-\/>xCloak\ -\/\ mob-\/>xCloakO)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})\ -\/\ (mob-\/>xo\ +\ (mob-\/>x\ -\/\ mob-\/>xo)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ yd\ =\ (mob-\/>yCloakO\ +\ (mob-\/>yCloak\ -\/\ mob-\/>yCloakO)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})\ -\/\ (mob-\/>yo\ +\ (mob-\/>y\ -\/\ mob-\/>yo)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ zd\ =\ (mob-\/>zCloakO\ +\ (mob-\/>zCloak\ -\/\ mob-\/>zCloakO)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})\ -\/\ (mob-\/>zo\ +\ (mob-\/>z\ -\/\ mob-\/>zo)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00342}00342\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yr\ =\ mob-\/>yBodyRotO\ +\ (mob-\/>yBodyRot\ -\/\ mob-\/>yBodyRotO)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00344}00344\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xa\ =\ \doxymbox{\hyperlink{class_mth_a504719e86988c740047029e16d73f79b}{Mth::sin}}(yr\ *\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}\ /\ 180);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ za\ =\ -\/\doxymbox{\hyperlink{class_mth_a0375fc62984b40bd91df0ce8d7b179ae}{Mth::cos}}(yr\ *\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}\ /\ 180);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00347}00347\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ flap\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(yd)\ *\ 10;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (flap\ <\ -\/6)\ flap\ =\ -\/6;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (flap\ >\ 32)\ flap\ =\ 32;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ lean\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(xd\ *\ xa\ +\ zd\ *\ za)\ *\ 100;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ lean2\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(xd\ *\ za\ -\/\ zd\ *\ xa)\ *\ 100;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (lean\ <\ 0)\ lean\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00354}00354\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ pow\ =\ mob-\/>oBob\ +\ (mob-\/>bob\ -\/\ mob-\/>oBob)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00356}00356\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ flap\ +=\ sin((mob-\/>walkDistO\ +\ (mob-\/>walkDist\ -\/\ mob-\/>walkDistO)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})\ *\ 6)\ *\ 32\ *\ pow;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mob-\/>isSneaking())}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ flap\ +=\ 25;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00361}00361\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00362}00362\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Fix\ for\ sprint-\/flying\ causing\ the\ cape\ to\ rotate\ up\ by\ 180\ degrees\ or\ more}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00364}00364\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xRot\ =\ 6.0f\ +\ lean\ /\ 2\ +\ flap;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(xRot\ >\ 64.0f)\ xRot\ =\ 64.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00366}00366\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(xRot,\ 1,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(lean2\ /\ 2,\ 0,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(-\/lean2\ /\ 2,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(180,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ humanoidModel-\/>renderCloak(1\ /\ 16.0f,\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00373}00373\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00374}00374\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00375}00375\ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ mob-\/>inventory-\/>getSelected();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00376}00376\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00377}00377\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00378}00378\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00379}00379\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ humanoidModel-\/>arm0-\/>translateTo(1\ /\ 16.0f);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(-\/1\ /\ 16.0f,\ 7\ /\ 16.0f,\ 1\ /\ 16.0f);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00383}00383\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mob-\/>fishing\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00384}00384\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ std::make\_shared<ItemInstance>(\doxymbox{\hyperlink{class_item_aabc23eee72eb148123a937470c6138b5}{Item::stick}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00387}00387\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_use_anim_8h_aa20d8f9459bee868bc09e8b36845889f}{UseAnim}}\ anim\ =\ \doxymbox{\hyperlink{_use_anim_8h_aa20d8f9459bee868bc09e8b36845889fae309130086c9ea24d8ae90cbc0993963}{UseAnim\_none}};\textcolor{comment}{//null;}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mob-\/>getUseItemDuration()\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ \ \ anim\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getUseAnimation();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00392}00392\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00393}00393\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00394}00394\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id\ <\ 256\ \&\&\ \doxymbox{\hyperlink{class_tile_renderer_aced3926549b06661d380bac06f0b2d1b}{TileRenderer::canRender}}(\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id]-\/>getRenderShape()))}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ s\ =\ 8\ /\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00397}00397\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(-\/0\ /\ 16.0f,\ 3\ /\ 16.0f,\ -\/5\ /\ 16.0f);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ s\ *=\ 0.75f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00399}00399\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(20,\ 1,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(45,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(-\/s,\ -\/s,\ s);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00403}00403\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id\ ==\ \doxymbox{\hyperlink{class_item_a7942f0e4310aa0c815b4258031f03127}{Item::bow}}-\/>id)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00404}00404\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00405}00405\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ s\ =\ 10\ /\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00406}00406\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(0\ /\ 16.0f,\ 2\ /\ 16.0f,\ 5\ /\ 16.0f);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00407}00407\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(-\/20,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00408}00408\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(s,\ -\/s,\ s);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00409}00409\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(-\/100,\ 1,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00410}00410\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(45,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00411}00411\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00412}00412\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_item_a8aa5718011a032c9b93d15dfcbc362f7}{Item::items}}[\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id]-\/>isHandEquipped())}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00413}00413\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ s\ =\ 10\ /\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_item_a8aa5718011a032c9b93d15dfcbc362f7}{Item::items}}[\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id]-\/>isMirroredArt())}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00416}00416\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00417}00417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(180,\ 0,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00418}00418\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(0,\ -\/2\ /\ 16.0f,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00420}00420\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mob-\/>getUseItemDuration()\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00421}00421\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00422}00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (anim\ ==\ \doxymbox{\hyperlink{_use_anim_8h_aa20d8f9459bee868bc09e8b36845889faeaee4cb4cab72ebcde650185a46a402c}{UseAnim\_block}})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00423}00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00424}00424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(0.05f,\ 0,\ -\/0.1f);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00425}00425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(-\/50,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00426}00426\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(-\/10,\ 1,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00427}00427\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(-\/60,\ 0,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(0,\ 3\ /\ 16.0f,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00431}00431\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(s,\ -\/s,\ s);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00432}00432\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(-\/100,\ 1,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00433}00433\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(45,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00434}00434\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00435}00435\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00436}00436\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00437}00437\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ s\ =\ 6\ /\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(+4\ /\ 16.0f,\ +3\ /\ 16.0f,\ -\/3\ /\ 16.0f);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(s,\ s,\ s);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(60,\ 0,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(-\/90,\ 1,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00442}00442\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(20,\ 0,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00443}00443\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00444}00444\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00445}00445\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getItem()-\/>hasMultipleSpriteLayers())}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00446}00446\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00447}00447\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ layer\ =\ 0;\ layer\ <=\ 1;\ layer++)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00448}00448\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00449}00449\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ col\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getItem()-\/>getColor(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},layer);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00450}00450\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ red\ =\ ((col\ >>\ 16)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00451}00451\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ g\ =\ ((col\ >>\ 8)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00452}00452\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ ((col)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00453}00453\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00454}00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}(red,\ g,\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}},\ 1);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00455}00455\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\doxymbox{\hyperlink{class_entity_renderer_ae8cfa0d99ad1efd53d0de0100e256606}{entityRenderDispatcher}}-\/>itemInHandRenderer-\/>renderItem(mob,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ layer,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00456}00456\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00457}00457\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00458}00458\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00459}00459\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00460}00460\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ col\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getItem()-\/>getColor(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ red\ =\ ((col\ >>\ 16)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00462}00462\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ g\ =\ ((col\ >>\ 8)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00463}00463\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ ((col)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00464}00464\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}(red,\ g,\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}},\ 1);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00466}00466\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\doxymbox{\hyperlink{class_entity_renderer_ae8cfa0d99ad1efd53d0de0100e256606}{entityRenderDispatcher}}-\/>itemInHandRenderer-\/>renderItem(mob,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00467}00467\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00468}00468\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00469}00469\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00470}00470\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00471}00471\ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00472}00472\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00473}\doxymbox{\hyperlink{class_player_renderer_a357097dd0df4d31c34889ade93377897}{00473}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_player_renderer_a357097dd0df4d31c34889ade93377897}{PlayerRenderer::renderNameTags}}(shared\_ptr<LivingEntity>\ player,\ \textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y,\ \textcolor{keywordtype}{double}\ z,\ wstring\ msg,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_player_renderer_ad611dcff154b26277059fa933e057dfd}{scale}},\ \textcolor{keywordtype}{double}\ dist)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00474}00474\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00475}00475\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00476}00476\ \ \ \ \ \textcolor{keywordflow}{if}\ (dist\ <\ 10\ *\ 10)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00477}00477\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00478}00478\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_scoreboard}{Scoreboard}}\ *scoreboard\ =\ player-\/>getScoreboard();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00479}00479\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_objective}{Objective}}\ *objective\ =\ scoreboard-\/>\doxymbox{\hyperlink{class_scoreboard_a1515a753f2c21227e37b9736c6c142a4}{getDisplayObjective}}(\doxymbox{\hyperlink{class_scoreboard_aa2cacf7c1f4e1d483db452ce8c3e8765}{Scoreboard::DISPLAY\_SLOT\_BELOW\_NAME}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00480}00480\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00481}00481\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (objective\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00482}00482\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_score}{Score}}\ *score\ =\ scoreboard-\/>\doxymbox{\hyperlink{class_scoreboard_af223f82305abdaf4969f813eaa4f18f9}{getPlayerScore}}(player-\/>getAName(),\ objective);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00484}00484\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (player-\/>isSleeping())}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a560090d87d05d9b8013d3addd457a2a7}{renderNameTag}}(player,\ score-\/>\doxymbox{\hyperlink{class_score_a8627c93270c188a3fd28a25b1d07a9e7}{getScore}}()\ +\ \textcolor{stringliteral}{"{}\ "{}}\ +\ objective-\/>\doxymbox{\hyperlink{class_objective_a3897ec83938dca36d34042272e83f0fd}{getDisplayName}}(),\ x,\ y\ -\/\ 1.5f,\ z,\ 64);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00490}00490\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00491}00491\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a560090d87d05d9b8013d3addd457a2a7}{renderNameTag}}(player,\ score-\/>\doxymbox{\hyperlink{class_score_a8627c93270c188a3fd28a25b1d07a9e7}{getScore}}()\ +\ \textcolor{stringliteral}{"{}\ "{}}\ +\ objective-\/>\doxymbox{\hyperlink{class_objective_a3897ec83938dca36d34042272e83f0fd}{getDisplayName}}(),\ x,\ y,\ z,\ 64);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00493}00493\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \ \ y\ +=\ \doxymbox{\hyperlink{class_entity_renderer_af3852f229891d21e51129a8386e37fc6}{getFont}}()-\/>lineHeight\ *\ 1.15f\ *\ \doxymbox{\hyperlink{class_player_renderer_ad611dcff154b26277059fa933e057dfd}{scale}};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00495}00495\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00496}00496\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00497}00497\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00498}00498\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00499}00499\ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a6ee00a287409222da5d5cd4145857825}{LivingEntityRenderer::renderNameTags}}(player,\ x,\ y,\ z,\ msg,\ \doxymbox{\hyperlink{class_player_renderer_ad611dcff154b26277059fa933e057dfd}{scale}},\ dist);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00500}00500\ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00501}00501\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00502}\doxymbox{\hyperlink{class_player_renderer_ad611dcff154b26277059fa933e057dfd}{00502}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_player_renderer_ad611dcff154b26277059fa933e057dfd}{PlayerRenderer::scale}}(shared\_ptr<LivingEntity>\ player,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00503}00503\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00504}00504\ \ \ \ \ \textcolor{keywordtype}{float}\ s\ =\ 15\ /\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00505}00505\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(s,\ s,\ s);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00506}00506\ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00507}00507\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00508}\doxymbox{\hyperlink{class_player_renderer_a2043d108e1b67700517c5fb115569f2f}{00508}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_player_renderer_a2043d108e1b67700517c5fb115569f2f}{PlayerRenderer::renderHand}}()}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00509}00509\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00510}00510\ \ \ \ \ \textcolor{keywordtype}{float}\ brightness\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00511}00511\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a59532c894955c2a112042f21f0a9c317}{glColor3f}}(brightness,\ brightness,\ brightness);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00512}00512\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00513}00513\ \ \ \ \ humanoidModel-\/>m\_uiAnimOverrideBitmask\ =\ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_a369e606ca6b08329abda590514caab5b}{player}}-\/>getAnimOverrideBitmask();}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00514}00514\ \ \ \ \ armorParts1-\/>eating\ =\ armorParts2-\/>eating\ =\ humanoidModel-\/>eating\ =\ humanoidModel-\/>idle\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00515}00515\ \ \ \ \ humanoidModel-\/>attackTime\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00516}00516\ \ \ \ \ humanoidModel-\/>setupAnim(0,\ 0,\ 0,\ 0,\ 0,\ 1\ /\ 16.0f,\ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>player);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00517}00517\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ does\ this\ skin\ have\ its\ arm0\ disabled?\ (Dalek,\ etc)}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00518}00518\ \ \ \ \ \textcolor{keywordflow}{if}((humanoidModel-\/>m\_uiAnimOverrideBitmask\&(1<<\doxymbox{\hyperlink{class_humanoid_model_a45f822ff9005ab3e91bd0138948c5d84ad71a45179bb536097fbbf806f0bf3e31}{HumanoidModel::eAnim\_DisableRenderArm0}}))==0)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00519}00519\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00520}00520\ \ \ \ \ \ \ \ \ humanoidModel-\/>arm0-\/>render(1\ /\ 16.0f,\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00521}00521\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00522}00522\ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00523}00523\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00524}\doxymbox{\hyperlink{class_player_renderer_a24ff702264132869f403c283f514fa00}{00524}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_player_renderer_a24ff702264132869f403c283f514fa00}{PlayerRenderer::setupPosition}}(shared\_ptr<LivingEntity>\ \_mob,\ \textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y,\ \textcolor{keywordtype}{double}\ z)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00525}00525\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00526}00526\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ dynamic\ cast\ required\ because\ we\ aren't\ using\ templates/generics\ in\ our\ version}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00527}00527\ \ \ \ \ shared\_ptr<Player>\ mob\ =\ dynamic\_pointer\_cast<Player>(\_mob);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00528}00528\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00529}00529\ \ \ \ \ \textcolor{keywordflow}{if}\ (mob-\/>isAlive()\ \&\&\ mob-\/>isSleeping())}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00530}00530\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00531}00531\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a1b56493f7fda819dd5286f0e8daa0187}{LivingEntityRenderer::setupPosition}}(mob,\ x\ +\ mob-\/>bedOffsetX,\ y\ +\ mob-\/>bedOffsetY,\ z\ +\ mob-\/>bedOffsetZ);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00532}00532\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00533}00533\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00534}00534\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00535}00535\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00536}00536\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(mob-\/>isRiding()\ \&\&\ (mob-\/>getAnimOverrideBitmask()\&(1<<\doxymbox{\hyperlink{class_humanoid_model_a45f822ff9005ab3e91bd0138948c5d84aca53bb3257e550625d5cd92c8b8a6e36}{HumanoidModel::eAnim\_SmallModel}}))!=0)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00537}00537\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00538}00538\ \ \ \ \ \ \ \ \ \ \ \ \ y\ +=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00539}00539\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00540}00540\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_a1b56493f7fda819dd5286f0e8daa0187}{LivingEntityRenderer::setupPosition}}(mob,\ x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00541}00541\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00542}00542\ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00543}00543\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00544}\doxymbox{\hyperlink{class_player_renderer_a79a6970dfb40f9e9323911d4eaca5082}{00544}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_player_renderer_a79a6970dfb40f9e9323911d4eaca5082}{PlayerRenderer::setupRotations}}(shared\_ptr<LivingEntity>\ \_mob,\ \textcolor{keywordtype}{float}\ bob,\ \textcolor{keywordtype}{float}\ bodyRot,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00545}00545\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00546}00546\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ dynamic\ cast\ required\ because\ we\ aren't\ using\ templates/generics\ in\ our\ version}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00547}00547\ \ \ \ \ shared\_ptr<Player>\ mob\ =\ dynamic\_pointer\_cast<Player>(\_mob);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00548}00548\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00549}00549\ \ \ \ \ \textcolor{keywordflow}{if}\ (mob-\/>isAlive()\ \&\&\ mob-\/>isSleeping())}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00550}00550\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00551}00551\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(mob-\/>getSleepRotation(),\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00552}00552\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(\doxymbox{\hyperlink{class_living_entity_renderer_a48a49595a8a6edda4065590d7b0f0ae0}{getFlipDegrees}}(mob),\ 0,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00553}00553\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(270,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00554}00554\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00555}00555\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00556}00556\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00557}00557\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_renderer_ab877a7763c3a2047ac2feb07a79e18a1}{LivingEntityRenderer::setupRotations}}(mob,\ bob,\ bodyRot,\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00558}00558\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00559}00559\ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00560}00560\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00561}00561\ \textcolor{comment}{//\ 4J\ Added\ override\ to\ stop\ rendering\ shadow\ if\ player\ is\ invisible}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00562}00562\ \textcolor{keywordtype}{void}\ PlayerRenderer::renderShadow(shared\_ptr<Entity>\ e,\ \textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y,\ \textcolor{keywordtype}{double}\ z,\ \textcolor{keywordtype}{float}\ pow,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00563}00563\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00564}00564\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetGameHostOption(\doxymbox{\hyperlink{_app__enums_8h_a3039f4892c1f252d62bfbc8aeab1fb7aa815cfa19bf6addac80b1b8c6cdd4d0ba}{eGameHostOption\_HostCanBeInvisible}})\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00565}00565\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00566}00566\ \ \ \ \ \ \ \ \ shared\_ptr<Player>\ player\ =\ dynamic\_pointer\_cast<Player>(e);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00567}00567\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(player\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ player-\/>hasInvisiblePrivilege())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00568}00568\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00569}00569\ \ \ \ \ EntityRenderer::renderShadow(e,x,y,z,pow,\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00570}00570\ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00571}00571\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00572}00572\ \textcolor{comment}{//\ 4J\ Added\ override}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00573}\doxymbox{\hyperlink{class_player_renderer_ad7cc4751302308407df80c53910f1207}{00573}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_player_renderer_ad7cc4751302308407df80c53910f1207}{PlayerRenderer::bindTexture}}(shared\_ptr<Entity>\ entity)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00574}00574\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00575}00575\ \ \ \ \ shared\_ptr<Player>\ player\ =\ dynamic\_pointer\_cast<Player>(entity);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00576}00576\ \ \ \ \ \doxymbox{\hyperlink{class_player_renderer_ad7cc4751302308407df80c53910f1207}{bindTexture}}(player-\/>customTextureUrl,\ player-\/>getTexture());}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00577}00577\ \}}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00578}00578\ }
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00579}\doxymbox{\hyperlink{class_player_renderer_aa49f1cbe6b23710ddcad711167f75064}{00579}}\ \doxymbox{\hyperlink{class_resource_location}{ResourceLocation}}\ *\doxymbox{\hyperlink{class_player_renderer_aa49f1cbe6b23710ddcad711167f75064}{PlayerRenderer::getTextureLocation}}(shared\_ptr<Entity>\ entity)}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00580}00580\ \{}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00581}00581\ \ \ \ \ shared\_ptr<Player>\ player\ =\ dynamic\_pointer\_cast<Player>(entity);}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00582}00582\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_resource_location}{ResourceLocation}}(\textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{_textures_8h_a3bc692de7f45db575aad1a0adbeb12f3}{\_TEXTURE\_NAME}}\textcolor{keyword}{>}(player-\/>getTexture()));}
+\DoxyCodeLine{\Hypertarget{_player_renderer_8cpp_source_l00583}00583\ \}}
+
+\end{DoxyCode}

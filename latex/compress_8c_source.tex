@@ -1,0 +1,105 @@
+\doxysection{compress.\+c}
+\hypertarget{compress_8c_source}{}\label{compress_8c_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/zlib/compress.c@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/zlib/compress.c}}
+\doxymbox{\hyperlink{compress_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00001}00001\ \textcolor{comment}{/*\ compress.c\ -\/-\/\ compress\ a\ memory\ buffer}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00002}00002\ \textcolor{comment}{\ *\ Copyright\ (C)\ 1995-\/2026\ Jean-\/loup\ Gailly,\ Mark\ Adler}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00003}00003\ \textcolor{comment}{\ *\ For\ conditions\ of\ distribution\ and\ use,\ see\ copyright\ notice\ in\ zlib.h}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00004}00004\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00006}00006\ \textcolor{comment}{/*\ @(\#)\ \$Id\$\ */}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00008}\doxymbox{\hyperlink{compress_8c_a59d4d7ef4d73655c759211ec33a5d44f}{00008}}\ \textcolor{preprocessor}{\#define\ ZLIB\_INTERNAL}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_common_2zlib_2zlib_8h}{zlib.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00011}00011\ \textcolor{comment}{/*\ ===========================================================================}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00012}00012\ \textcolor{comment}{\ \ \ \ \ Compresses\ the\ source\ buffer\ into\ the\ destination\ buffer.\ The\ level}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00013}00013\ \textcolor{comment}{\ \ \ parameter\ has\ the\ same\ meaning\ as\ in\ deflateInit.\ \ sourceLen\ is\ the\ byte}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00014}00014\ \textcolor{comment}{\ \ \ length\ of\ the\ source\ buffer.\ Upon\ entry,\ destLen\ is\ the\ total\ size\ of\ the}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00015}00015\ \textcolor{comment}{\ \ \ destination\ buffer,\ which\ must\ be\ at\ least\ 0.1\%\ larger\ than\ sourceLen\ plus}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00016}00016\ \textcolor{comment}{\ \ \ 12\ bytes.\ Upon\ exit,\ destLen\ is\ the\ actual\ size\ of\ the\ compressed\ buffer.}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00017}00017\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00018}00018\ \textcolor{comment}{\ \ \ \ \ compress2\ returns\ Z\_OK\ if\ success,\ Z\_MEM\_ERROR\ if\ there\ was\ not\ enough}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00019}00019\ \textcolor{comment}{\ \ \ memory,\ Z\_BUF\_ERROR\ if\ there\ was\ not\ enough\ room\ in\ the\ output\ buffer,}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00020}00020\ \textcolor{comment}{\ \ \ Z\_STREAM\_ERROR\ if\ the\ level\ parameter\ is\ invalid.}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00021}00021\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00022}00022\ \textcolor{comment}{\ \ \ \ \ The\ \_z\ versions\ of\ the\ functions\ take\ size\_t\ length\ arguments.}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00023}00023\ \textcolor{comment}{*/}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00024}\doxymbox{\hyperlink{compress_8c_a0a5699a17e77040802c83844a2dfddc7}{00024}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{compress_8c_a0a5699a17e77040802c83844a2dfddc7}{compress2\_z}}(\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aeb722a888064be47e12d05f692e0f407}{Bytef}}\ *dest,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ *destLen,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aeb722a888064be47e12d05f692e0f407}{Bytef}}\ *source,}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00025}00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ sourceLen,\ \textcolor{keywordtype}{int}\ level)\ \{}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00026}00026\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_aa4751fbf6d882976fb300ea9815f5010}{z\_stream}}\ stream;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00027}00027\ \ \ \ \ \textcolor{keywordtype}{int}\ err;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00028}00028\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ max\ =\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}})-\/1;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00029}00029\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ left;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00031}00031\ \ \ \ \ \textcolor{keywordflow}{if}\ ((sourceLen\ >\ 0\ \&\&\ source\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})\ ||}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00032}00032\ \ \ \ \ \ \ \ \ destLen\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ ||\ (*destLen\ >\ 0\ \&\&\ dest\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}))}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00033}00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_aad97cde83a9a4bb77f5c3b03bb68e483}{Z\_STREAM\_ERROR}};}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00035}00035\ \ \ \ \ left\ =\ *destLen;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00036}00036\ \ \ \ \ *destLen\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00038}00038\ \ \ \ \ stream.\doxymbox{\hyperlink{structz__stream__s_a23a2299c384f808e76e9908f21216b0f}{zalloc}}\ =\ (\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a50aa48acceb621559596dfa8b7558321}{alloc\_func}})0;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00039}00039\ \ \ \ \ stream.\doxymbox{\hyperlink{structz__stream__s_a89eb750ade7f4f0b56bfdadf13344982}{zfree}}\ =\ (\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a002a1cda9686d40117da69d61c2a6dda}{free\_func}})0;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00040}00040\ \ \ \ \ stream.\doxymbox{\hyperlink{structz__stream__s_ab72467f908d2ce65d5b42ee6556ef8bb}{opaque}}\ =\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a04c731495379021454c8e61439dc88ec}{voidpf}})0;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00042}00042\ \ \ \ \ err\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ae7440c1c5a8becba6dbf410275dc0a5c}{deflateInit}}(\&stream,\ level);}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00043}00043\ \ \ \ \ \textcolor{keywordflow}{if}\ (err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}})\ \textcolor{keywordflow}{return}\ err;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00045}00045\ \ \ \ \ stream.\doxymbox{\hyperlink{structz__stream__s_a58f1e32c5e5e9860fc29267eab01c573}{next\_out}}\ =\ dest;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00046}00046\ \ \ \ \ stream.\doxymbox{\hyperlink{structz__stream__s_a45ad2364307af9d944fd39d4eca3ca3c}{avail\_out}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00047}00047\ \ \ \ \ stream.\doxymbox{\hyperlink{structz__stream__s_a1c9fd220f038a988fc6545262cb29802}{next\_in}}\ =\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a8dc97a57ad456f3016c710ee6507dbee}{z\_const}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aeb722a888064be47e12d05f692e0f407}{Bytef}}\ *)source;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00048}00048\ \ \ \ \ stream.\doxymbox{\hyperlink{structz__stream__s_a0cf177f50dbb49692f27480cbcfde794}{avail\_in}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00050}00050\ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00051}00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stream.\doxymbox{\hyperlink{structz__stream__s_a45ad2364307af9d944fd39d4eca3ca3c}{avail\_out}}\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ stream.\doxymbox{\hyperlink{structz__stream__s_a45ad2364307af9d944fd39d4eca3ca3c}{avail\_out}}\ =\ left\ >\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}})max\ ?\ max\ :\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}})left;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ left\ -\/=\ stream.\doxymbox{\hyperlink{structz__stream__s_a45ad2364307af9d944fd39d4eca3ca3c}{avail\_out}};}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00054}00054\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00055}00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stream.\doxymbox{\hyperlink{structz__stream__s_a0cf177f50dbb49692f27480cbcfde794}{avail\_in}}\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ stream.\doxymbox{\hyperlink{structz__stream__s_a0cf177f50dbb49692f27480cbcfde794}{avail\_in}}\ =\ sourceLen\ >\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}})max\ ?\ max\ :}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}})sourceLen;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ sourceLen\ -\/=\ stream.\doxymbox{\hyperlink{structz__stream__s_a0cf177f50dbb49692f27480cbcfde794}{avail\_in}};}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00059}00059\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00060}00060\ \ \ \ \ \ \ \ \ err\ =\ \doxymbox{\hyperlink{deflate_8c_aedba3a94d6e827d61b660443ae5b9f09}{deflate}}(\&stream,\ sourceLen\ ?\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ac3b62e37b9922d9496014515acd6083a}{Z\_NO\_FLUSH}}\ :\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a876a626ba14eb12eea4bbf6823b6ca50}{Z\_FINISH}});}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00061}00061\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (err\ ==\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}});}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00063}00063\ \ \ \ \ *destLen\ =\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}})(stream.\doxymbox{\hyperlink{structz__stream__s_a58f1e32c5e5e9860fc29267eab01c573}{next\_out}}\ -\/\ dest);}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00064}00064\ \ \ \ \ \doxymbox{\hyperlink{deflate_8c_ada68769789b1d84de7e708d6e848a075}{deflateEnd}}(\&stream);}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00065}00065\ \ \ \ \ \textcolor{keywordflow}{return}\ err\ ==\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a7d94a4a852228a899864a0053162e7a8}{Z\_STREAM\_END}}\ ?\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}}\ :\ err;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00066}00066\ \}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00067}\doxymbox{\hyperlink{compress_8c_aede7e438c033a969a1a40ba6b44f91f9}{00067}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{compress_8c_aede7e438c033a969a1a40ba6b44f91f9}{compress2}}(\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aeb722a888064be47e12d05f692e0f407}{Bytef}}\ *dest,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a0426a5a0ed418ec4ae15af8281c64254}{uLongf}}\ *destLen,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aeb722a888064be47e12d05f692e0f407}{Bytef}}\ *source,}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ sourceLen,\ \textcolor{keywordtype}{int}\ level)\ \{}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00069}00069\ \ \ \ \ \textcolor{keywordtype}{int}\ ret;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00070}00070\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ got\ =\ *destLen;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00071}00071\ \ \ \ \ ret\ =\ \doxymbox{\hyperlink{compress_8c_a0a5699a17e77040802c83844a2dfddc7}{compress2\_z}}(dest,\ \&got,\ source,\ sourceLen,\ level);}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00072}00072\ \ \ \ \ *destLen\ =\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}})got;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00073}00073\ \ \ \ \ \textcolor{keywordflow}{return}\ ret;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00074}00074\ \}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00075}00075\ \textcolor{comment}{/*\ ===========================================================================}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00076}00076\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00077}\doxymbox{\hyperlink{compress_8c_abe93bc342e8470d28b5b7440ae2b4d13}{00077}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{compress_8c_abe93bc342e8470d28b5b7440ae2b4d13}{compress\_z}}(\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aeb722a888064be47e12d05f692e0f407}{Bytef}}\ *dest,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ *destLen,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aeb722a888064be47e12d05f692e0f407}{Bytef}}\ *source,}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ sourceLen)\ \{}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00079}00079\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{compress_8c_a0a5699a17e77040802c83844a2dfddc7}{compress2\_z}}(dest,\ destLen,\ source,\ sourceLen,}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_af5387baee05124298e431ebe6fe96b17}{Z\_DEFAULT\_COMPRESSION}});}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00081}00081\ \}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00082}\doxymbox{\hyperlink{compress_8c_aef315743418d760a360e1be293d27cd1}{00082}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{compress_8c_aef315743418d760a360e1be293d27cd1}{compress}}(\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aeb722a888064be47e12d05f692e0f407}{Bytef}}\ *dest,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a0426a5a0ed418ec4ae15af8281c64254}{uLongf}}\ *destLen,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aeb722a888064be47e12d05f692e0f407}{Bytef}}\ *source,}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ sourceLen)\ \{}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00084}00084\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{compress_8c_aede7e438c033a969a1a40ba6b44f91f9}{compress2}}(dest,\ destLen,\ source,\ sourceLen,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_af5387baee05124298e431ebe6fe96b17}{Z\_DEFAULT\_COMPRESSION}});}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00085}00085\ \}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00087}00087\ \textcolor{comment}{/*\ ===========================================================================}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00088}00088\ \textcolor{comment}{\ \ \ \ \ If\ the\ default\ memLevel\ or\ windowBits\ for\ deflateInit()\ is\ changed,\ then}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00089}00089\ \textcolor{comment}{\ \ \ this\ function\ needs\ to\ be\ updated.}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00090}00090\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00091}\doxymbox{\hyperlink{compress_8c_a2e0f8ccf13c65fc8dd7bb890dc8c05f3}{00091}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{compress_8c_a2e0f8ccf13c65fc8dd7bb890dc8c05f3}{compressBound\_z}}(\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ sourceLen)\ \{}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00092}00092\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ bound\ =\ sourceLen\ +\ (sourceLen\ >>\ 12)\ +\ (sourceLen\ >>\ 14)\ +}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (sourceLen\ >>\ 25)\ +\ 13;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00094}00094\ \ \ \ \ \textcolor{keywordflow}{return}\ bound\ <\ sourceLen\ ?\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}})-\/1\ :\ bound;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00095}00095\ \}}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00096}\doxymbox{\hyperlink{compress_8c_a6bfd92b4426ff6008c841c2cc6f8fed3}{00096}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{compress_8c_a6bfd92b4426ff6008c841c2cc6f8fed3}{compressBound}}(\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}}\ sourceLen)\ \{}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00097}00097\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ bound\ =\ \doxymbox{\hyperlink{compress_8c_a2e0f8ccf13c65fc8dd7bb890dc8c05f3}{compressBound\_z}}(sourceLen);}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{return}\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}})bound\ !=\ bound\ ?\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}})-\/1\ :\ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_acd2a5701a3aecf6700d2c66c606ecb40}{uLong}})bound;}
+\DoxyCodeLine{\Hypertarget{compress_8c_source_l00099}00099\ \}}
+
+\end{DoxyCode}

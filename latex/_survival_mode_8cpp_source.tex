@@ -1,0 +1,212 @@
+\doxysection{Survival\+Mode.\+cpp}
+\hypertarget{_survival_mode_8cpp_source}{}\label{_survival_mode_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/SurvivalMode.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/SurvivalMode.cpp}}
+\doxymbox{\hyperlink{_survival_mode_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_client_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_survival_mode_8h}{SurvivalMode.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_demo_mode_8h}{DemoMode.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_level_renderer_8h}{LevelRenderer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_local_player_8h}{LocalPlayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8tile_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.tile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8player_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.player.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_client_constants_8h}{ClientConstants.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00012}\doxymbox{\hyperlink{class_survival_mode_af8662f9af327ac6cd2b8abf49216a5e5}{00012}}\ \doxymbox{\hyperlink{class_survival_mode_af8662f9af327ac6cd2b8abf49216a5e5}{SurvivalMode::SurvivalMode}}(\doxymbox{\hyperlink{class_minecraft}{Minecraft}}\ *\doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}})\ :\ \doxymbox{\hyperlink{class_game_mode_aba2c509de36c8f944990c7bb99396abe}{GameMode}}(\doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}})}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00013}00013\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00014}00014\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ added\ initialisers}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00015}00015\ \ \ \ \ xDestroyBlock\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00016}00016\ \ \ \ \ yDestroyBlock\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00017}00017\ \ \ \ \ zDestroyBlock\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00018}00018\ \ \ \ \ destroyProgress\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00019}00019\ \ \ \ \ oDestroyProgress\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00020}00020\ \ \ \ \ destroyTicks\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00021}00021\ \ \ \ \ destroyDelay\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00023}00023\ \ \ \ \textcolor{keywordflow}{if}\ (ClientConstants::IS\_DEMO\_VERSION)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00024}00024\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00025}00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{dynamic\_cast<}\doxymbox{\hyperlink{class_demo_mode}{DemoMode}}\ *\textcolor{keyword}{>}(\textcolor{keyword}{this})\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ )}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00026}00026\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00028}00028\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ throw\ new\ IllegalStateException("{}Invalid\ game\ mode"{});\ \ \ \ \ //\ 4J\ -\/\ removed}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00029}00029\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00030}\doxymbox{\hyperlink{class_demo_mode_a62a548cff482846730a3dfe1cf9c278a}{00030}}\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00031}00031\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00033}00033\ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Added\ this\ ctor\ so\ we\ can\ exit\ the\ tutorial\ and\ replace\ it\ with\ a\ standard}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00034}00034\ \textcolor{comment}{//\ survival\ mode}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00035}\doxymbox{\hyperlink{class_survival_mode_a9468a4b5b54ee05a32677a75418ef576}{00035}}\ \doxymbox{\hyperlink{class_survival_mode_af8662f9af327ac6cd2b8abf49216a5e5}{SurvivalMode::SurvivalMode}}(\doxymbox{\hyperlink{class_survival_mode_af8662f9af327ac6cd2b8abf49216a5e5}{SurvivalMode}}\ *copy)\ :\ \doxymbox{\hyperlink{class_game_mode_aba2c509de36c8f944990c7bb99396abe}{GameMode}}(\ copy-\/>\doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}\ )}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00036}00036\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00037}00037\ \ \ \ \ xDestroyBlock\ =\ copy-\/>xDestroyBlock;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00038}00038\ \ \ \ \ yDestroyBlock\ =\ copy-\/>yDestroyBlock;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00039}00039\ \ \ \ \ zDestroyBlock\ =\ copy-\/>zDestroyBlock;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00040}00040\ \ \ \ \ destroyProgress\ =\ copy-\/>destroyProgress;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00041}00041\ \ \ \ \ oDestroyProgress\ =\ copy-\/>oDestroyProgress;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00042}00042\ \ \ \ \ destroyTicks\ =\ copy-\/>destroyTicks;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00043}00043\ \ \ \ \ destroyDelay\ =\ copy-\/>destroyDelay;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00044}00044\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00046}\doxymbox{\hyperlink{class_survival_mode_a33cfaf8bbf25b23662201fe3369e9618}{00046}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_survival_mode_a33cfaf8bbf25b23662201fe3369e9618}{SurvivalMode::initPlayer}}(shared\_ptr<Player>\ player)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00047}00047\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00048}00048\ \ \ \ \ player-\/>yRot\ =\ -\/180;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00049}00049\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00051}\doxymbox{\hyperlink{class_survival_mode_af302fe9081a7e4d78712185911510a21}{00051}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_survival_mode_af302fe9081a7e4d78712185911510a21}{SurvivalMode::init}}()}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00052}00052\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00053}00053\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00055}\doxymbox{\hyperlink{class_survival_mode_acc1f4391e67e95b2246f8e168a339e3a}{00055}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_survival_mode_acc1f4391e67e95b2246f8e168a339e3a}{SurvivalMode::canHurtPlayer}}()}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00056}00056\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00057}00057\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00058}00058\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00060}\doxymbox{\hyperlink{class_survival_mode_ae0fb956a98e2109117cb684d82b6e142}{00060}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_survival_mode_ae0fb956a98e2109117cb684d82b6e142}{SurvivalMode::destroyBlock}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ face)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00061}00061\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00062}00062\ \ \ \ \ \textcolor{keywordtype}{int}\ t\ =\ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>level-\/>getTile(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00063}00063\ \ \ \ \ \textcolor{keywordtype}{int}\ data\ =\ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>level-\/>getData(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00064}00064\ \ \ \ \ \textcolor{keywordtype}{bool}\ changed\ =\ \doxymbox{\hyperlink{class_game_mode_abe23a3d7dde177a705b920e326e1703e}{GameMode::destroyBlock}}(x,\ y,\ z,\ face);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00066}00066\ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>player-\/>getSelectedItem();}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00067}00067\ \ \ \ \ \textcolor{keywordtype}{bool}\ couldDestroy\ =\ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>player-\/>canDestroy(\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t]);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00068}00068\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00069}00069\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>mineBlock(t,\ x,\ y,\ z,\ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>player);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>player-\/>removeSelectedItem();}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00075}00075\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00076}00076\ \ \ \ \ \textcolor{keywordflow}{if}\ (changed\ \&\&\ couldDestroy)\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00077}00077\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t]-\/>playerDestroy(\doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>level,\ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>player,\ x,\ y,\ z,\ data);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00079}00079\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00080}00080\ \ \ \ \ \textcolor{keywordflow}{return}\ changed;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00082}00082\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00084}\doxymbox{\hyperlink{class_survival_mode_a8b68b06e29a8a731785f0cd8488feb38}{00084}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_survival_mode_a8b68b06e29a8a731785f0cd8488feb38}{SurvivalMode::startDestroyBlock}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ face)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00085}00085\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00086}00086\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>player-\/>mayBuild(x,\ y,\ z))\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00087}00087\ \ \ \ \ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>level-\/>extinguishFire(\doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>player,\ x,\ y,\ z,\ face);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00088}00088\ \ \ \ \ \textcolor{keywordtype}{int}\ t\ =\ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>level-\/>getTile(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00089}00089\ \ \ \ \ \textcolor{keywordflow}{if}\ (t\ >\ 0\ \&\&\ destroyProgress\ ==\ 0)\ \doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t]-\/>attack(\doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>level,\ x,\ y,\ z,\ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>player);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00090}00090\ \ \ \ \ \textcolor{keywordflow}{if}\ (t\ >\ 0\ \&\&\ \doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t]-\/>getDestroyProgress(\doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>player)\ >=\ 1)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00091}00091\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_survival_mode_ae0fb956a98e2109117cb684d82b6e142}{destroyBlock}}(x,\ y,\ z,\ face);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00093}00093\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00094}00094\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00096}\doxymbox{\hyperlink{class_survival_mode_a8d9446f76811f56c5ce0e67a9ae803b1}{00096}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_survival_mode_a8d9446f76811f56c5ce0e67a9ae803b1}{SurvivalMode::stopDestroyBlock}}()}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00097}00097\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00098}00098\ \ \ \ \ destroyProgress\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00099}00099\ \ \ \ \ destroyDelay\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00100}00100\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00102}\doxymbox{\hyperlink{class_survival_mode_aa2e5dd36b366c89c2ca594e03b902f49}{00102}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_survival_mode_aa2e5dd36b366c89c2ca594e03b902f49}{SurvivalMode::continueDestroyBlock}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ face)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00103}00103\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00104}00104\ \ \ \ \ \textcolor{keywordflow}{if}\ (destroyDelay\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00105}00105\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ destroyDelay-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00108}00108\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00109}00109\ \ \ \ \ \textcolor{keywordflow}{if}\ (x\ ==\ xDestroyBlock\ \&\&\ y\ ==\ yDestroyBlock\ \&\&\ z\ ==\ zDestroyBlock)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00110}00110\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ t\ =\ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>level-\/>getTile(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>player-\/>mayBuild(x,\ y,\ z))\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (t\ ==\ 0)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tile}{Tile}}\ *tile\ =\ \doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t];}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ destroyProgress\ +=\ tile-\/>\doxymbox{\hyperlink{class_tile_af47ca7849237120e55a9a9852aa92a02}{getDestroyProgress}}(\doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>player);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (destroyTicks\ \%\ 4\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tile\ !=\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>soundEngine-\/>play(tile-\/>\doxymbox{\hyperlink{class_tile_a18e4fab262c9da9d5c3a50f090340f8a}{soundType}}-\/>\doxymbox{\hyperlink{class_tile_1_1_sound_type_a809bdfcc64ed7f4259bb8559ac9cc954}{getStepSound}}(),\ x\ +\ 0.5f,\ y\ +\ 0.5f,\ z\ +\ 0.5f,\ (tile-\/>\doxymbox{\hyperlink{class_tile_a18e4fab262c9da9d5c3a50f090340f8a}{soundType}}-\/>\doxymbox{\hyperlink{class_tile_1_1_sound_type_a083974179f68b5d791cd3f2e5ed9bc2e}{getVolume}}()\ +\ 1)\ /\ 8,\ tile-\/>\doxymbox{\hyperlink{class_tile_a18e4fab262c9da9d5c3a50f090340f8a}{soundType}}-\/>\doxymbox{\hyperlink{class_tile_1_1_sound_type_a87671d85689790088c1deb6f208920de}{getPitch}}()\ *\ 0.5f);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ destroyTicks++;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (destroyProgress\ >=\ 1)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_survival_mode_ae0fb956a98e2109117cb684d82b6e142}{destroyBlock}}(x,\ y,\ z,\ face);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ destroyProgress\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ oDestroyProgress\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ destroyTicks\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ destroyDelay\ =\ 5;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00136}00136\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00137}00137\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00138}00138\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ destroyProgress\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ oDestroyProgress\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ destroyTicks\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ xDestroyBlock\ =\ x;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ yDestroyBlock\ =\ y;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ zDestroyBlock\ =\ z;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00145}00145\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00147}00147\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00149}\doxymbox{\hyperlink{class_survival_mode_a2f680876004198a03900b2470b0bb584}{00149}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_survival_mode_a2f680876004198a03900b2470b0bb584}{SurvivalMode::render}}(\textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00150}00150\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00151}00151\ \ \ \ \ \textcolor{keywordflow}{if}\ (destroyProgress\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00152}00152\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>gui-\/>progress\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>levelRenderer-\/>destroyProgress\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00155}00155\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00156}00156\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00157}00157\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ dp\ =\ oDestroyProgress\ +\ (destroyProgress\ -\/\ oDestroyProgress)\ *\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}};}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>gui-\/>progress\ =\ dp;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_game_mode_a28846517aab0efd29e70e40e794fe750}{minecraft}}-\/>levelRenderer-\/>destroyProgress\ =\ dp;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00161}00161\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00162}00162\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00164}\doxymbox{\hyperlink{class_survival_mode_a667252212030ab328d57ecd1b58ad255}{00164}}\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_survival_mode_a667252212030ab328d57ecd1b58ad255}{SurvivalMode::getPickRange}}()}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00165}00165\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00166}00166\ \ \ \ \ \textcolor{keywordflow}{return}\ 4.0f;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00167}00167\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00169}\doxymbox{\hyperlink{class_survival_mode_a94f70048c1ddc3cf0101851031c99d68}{00169}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_survival_mode_a94f70048c1ddc3cf0101851031c99d68}{SurvivalMode::initLevel}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00170}00170\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00171}00171\ \ \ \ \ \doxymbox{\hyperlink{class_game_mode_a18fc612b6d152f5dc58d9a7e3ec04998}{GameMode::initLevel}}(level);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00172}00172\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00173}00173\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00174}\doxymbox{\hyperlink{class_survival_mode_ac8066d5f2e4fc0479982437fc1d0bd24}{00174}}\ shared\_ptr<Player>\ \doxymbox{\hyperlink{class_survival_mode_ac8066d5f2e4fc0479982437fc1d0bd24}{SurvivalMode::createPlayer}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00175}00175\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00176}00176\ \ \ \ \ shared\_ptr<Player>\ player\ =\ \doxymbox{\hyperlink{class_game_mode_ab6947f0094bfcc01429c6f82512d6fb1}{GameMode::createPlayer}}(level);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00177}00177\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ player.inventory.add(new\ ItemInstance(Item.pickAxe\_diamond));}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00178}00178\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ player.inventory.add(new\ ItemInstance(Item.hatchet\_diamond));}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00179}00179\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ player.inventory.add(new\ ItemInstance(Tile.torch,\ 64));}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00180}00180\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ player.inventory.add(new\ ItemInstance(Item.porkChop\_cooked,\ 4));}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00181}00181\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ player.inventory.add(new\ ItemInstance(Item.bow,\ 1));}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00182}00182\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ player.inventory.add(new\ ItemInstance(Item.arrow,\ 64));}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00183}00183\ \ \ \ \ \textcolor{keywordflow}{return}\ player;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00184}00184\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00186}\doxymbox{\hyperlink{class_survival_mode_a31f88eee29a36b258445428f3bbb8a65}{00186}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_survival_mode_a31f88eee29a36b258445428f3bbb8a65}{SurvivalMode::tick}}()}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00187}00187\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00188}00188\ \ \ \ \ oDestroyProgress\ =\ destroyProgress;}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00189}00189\ \ \ \ \ \textcolor{comment}{//minecraft-\/>soundEngine-\/>playMusicTick();}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00190}00190\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00192}\doxymbox{\hyperlink{class_survival_mode_a62a548cff482846730a3dfe1cf9c278a}{00192}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_survival_mode_a62a548cff482846730a3dfe1cf9c278a}{SurvivalMode::useItemOn}}(shared\_ptr<Player>\ player,\ \doxymbox{\hyperlink{class_level}{Level}}\ *level,\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ face,\ \textcolor{keywordtype}{bool}\ bTestUseOnOnly,\ \textcolor{keywordtype}{bool}\ *pbUsedItem)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00193}00193\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00194}00194\ \ \ \ \ \textcolor{keywordtype}{int}\ t\ =\ level-\/>\doxymbox{\hyperlink{class_level_af6c291e6d410b3b40ae101dbf1f41fac}{getTile}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00195}00195\ \ \ \ \ \textcolor{keywordflow}{if}\ (t\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00196}00196\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[t]-\/>use(level,\ x,\ y,\ z,\ player))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00198}00198\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00199}00199\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00200}00200\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>useOn(player,\ level,\ x,\ y,\ z,\ face);}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00201}00201\ \}}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00203}\doxymbox{\hyperlink{class_survival_mode_ae6a3155bd214e68a6fb39a2ce6681bd7}{00203}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_survival_mode_ae6a3155bd214e68a6fb39a2ce6681bd7}{SurvivalMode::hasExperience}}()}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00204}00204\ \{}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00205}00205\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_survival_mode_8cpp_source_l00206}00206\ \}}
+
+\end{DoxyCode}

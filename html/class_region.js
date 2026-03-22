@@ -1,0 +1,27 @@
+var class_region =
+[
+    [ "Region", "class_region.html#a8df1d93c15c63322ed4001ae494f64a7", null ],
+    [ "~Region", "class_region.html#a3c3670fff78f7511d156e3b2f0bc6266", null ],
+    [ "getBiome", "class_region.html#a80318117b06c54489e87619fe53955d0", null ],
+    [ "getBiomeSource", "class_region.html#a3983939fee54c2e857dc9aba293e00a8", null ],
+    [ "getBrightness", "class_region.html#a5ab963f3696b4fdc73973e2f45a9b0c9", null ],
+    [ "getBrightness", "class_region.html#ac927871a55084b74a88ef3ea78c7c818", null ],
+    [ "getBrightness", "class_region.html#ac562a1f54fbcbbd8f214b913e2e46997", null ],
+    [ "getBrightnessPropagate", "class_region.html#ade199ab713afd696f10a825c017fd3de", null ],
+    [ "getData", "class_region.html#a2b56ee8243429ad514871d8d2d8fa7f2", null ],
+    [ "getDirectSignal", "class_region.html#a81504ac9c56abbf7b1a8d14232630a48", null ],
+    [ "getLevelChunk", "class_region.html#af45f764db737430d8a7e901f1e62745e", null ],
+    [ "getLightColor", "class_region.html#aae10ad0104af9200994c2f6f9f46c555", null ],
+    [ "getMaterial", "class_region.html#a1f4774d67a93a2ef4881e580267893e2", null ],
+    [ "getMaxBuildHeight", "class_region.html#a7e6a3d88f5767ce2d414ca10314da8cf", null ],
+    [ "getRawBrightness", "class_region.html#a97ce6cd581586949da9173234fc96821", null ],
+    [ "getRawBrightness", "class_region.html#a3e5df702cd24f48105390fbeea911b2f", null ],
+    [ "getTile", "class_region.html#a93883058144bef826898a9fdb3238489", null ],
+    [ "getTileEntity", "class_region.html#ae780c9644244847f134be6c572e45999", null ],
+    [ "isAllEmpty", "class_region.html#a7904f2d72d7267cac28069ac50d9339c", null ],
+    [ "isEmptyTile", "class_region.html#a54d33ceb8259e4f090842a9bf3a7868d", null ],
+    [ "isSolidBlockingTile", "class_region.html#ac172c0aa3971f22de1555d042d1d8e2a", null ],
+    [ "isSolidRenderTile", "class_region.html#ad8cca9c21c4eddc5a942a88638a5f507", null ],
+    [ "isTopSolidBlocking", "class_region.html#a7f3338f09da61fa66f853e90c41d9774", null ],
+    [ "setCachedTiles", "class_region.html#a2ee69f8694b578fcd37c064cd4008917", null ]
+];

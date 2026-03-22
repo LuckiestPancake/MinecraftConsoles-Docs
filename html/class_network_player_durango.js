@@ -1,0 +1,25 @@
+var class_network_player_durango =
+[
+    [ "NetworkPlayerDurango", "class_network_player_durango.html#a7be5df649b990f6034a1e8ac2aa93196", null ],
+    [ "GetCurrentRtt", "class_network_player_durango.html#a870e0ea5e6773b35236048396d30896d", null ],
+    [ "GetDisplayName", "class_network_player_durango.html#a3f6b9e6d41c60409b399d76bf5ca451e", null ],
+    [ "GetOnlineName", "class_network_player_durango.html#a8e4fa160aed5056feaca22369046444a", null ],
+    [ "GetSendQueueSizeBytes", "class_network_player_durango.html#aab3b9cb7c37e1ad8f669e0e3465f094b", null ],
+    [ "GetSendQueueSizeMessages", "class_network_player_durango.html#ad6114681073a527ba7c99195394ca100", null ],
+    [ "GetSessionIndex", "class_network_player_durango.html#a189e4991afaae95d64bf7ce77868d828", null ],
+    [ "GetSmallId", "class_network_player_durango.html#a4abd394e36caed9afba23cfef187b5cc", null ],
+    [ "GetSocket", "class_network_player_durango.html#ad857d9aa8615bfa4bbb69abb09ac58d9", null ],
+    [ "GetUID", "class_network_player_durango.html#abb139bb68d47cbc2b6700b2cedc7257c", null ],
+    [ "GetUserIndex", "class_network_player_durango.html#a1261dde1d13e91ad559336c7b10bab6b", null ],
+    [ "HasCamera", "class_network_player_durango.html#a3930eedca9413c6308e6c84d199b4561", null ],
+    [ "HasVoice", "class_network_player_durango.html#a10109682abc5f67cdcc9d1dcf21a0ccd", null ],
+    [ "IsGuest", "class_network_player_durango.html#a71ee9f1407196b9ade718b02f3f4c446", null ],
+    [ "IsHost", "class_network_player_durango.html#a5df4f89e144b3883950ad47a61dac829", null ],
+    [ "IsLocal", "class_network_player_durango.html#a8efb2d10eb0fee998fa0e7805679a064", null ],
+    [ "IsMutedByLocalUser", "class_network_player_durango.html#a23e6c0c9c95eec973c997e39754d1570", null ],
+    [ "IsSameSystem", "class_network_player_durango.html#ac484ad0ef608e5b08f75c1524cd94703", null ],
+    [ "IsTalking", "class_network_player_durango.html#a29a3502228e7cc5c260990ce08e54389", null ],
+    [ "SendData", "class_network_player_durango.html#af5e700f584ecdf2767468f6cb1b60607", null ],
+    [ "SetSocket", "class_network_player_durango.html#a4de236f21c16417ec6f45c3b7b0eaab1", null ],
+    [ "SetUID", "class_network_player_durango.html#af51abd6816cb8d9fef9840347462e1fc", null ]
+];

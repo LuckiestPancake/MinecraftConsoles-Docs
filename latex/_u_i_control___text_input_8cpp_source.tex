@@ -1,0 +1,293 @@
+\doxysection{UIControl\+\_\+\+Text\+Input.\+cpp}
+\hypertarget{_u_i_control___text_input_8cpp_source}{}\label{_u_i_control___text_input_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/UI/UIControl\_TextInput.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/UI/UIControl\_TextInput.cpp}}
+\doxymbox{\hyperlink{_u_i_control___text_input_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_u_i_8h}{UI.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_u_i_control___text_input_8h}{UIControl\_TextInput.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00005}\doxymbox{\hyperlink{class_u_i_control___text_input_a6820667a765d85936378eb1869d6c528}{00005}}\ \doxymbox{\hyperlink{class_u_i_control___text_input_a6820667a765d85936378eb1869d6c528}{UIControl\_TextInput::UIControl\_TextInput}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00006}00006\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00007}00007\ \ \ \ \ m\_bHasFocus\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00008}00008\ \ \ \ \ m\_bHasCaret\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00009}00009\ \ \ \ \ m\_bCaretChecked\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#ifdef\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00011}00011\ \ \ \ \ m\_bDirectEditing\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00012}00012\ \ \ \ \ m\_iCursorPos\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00013}00013\ \ \ \ \ m\_iCharLimit\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00014}00014\ \ \ \ \ m\_iDirectEditCooldown\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00015}00015\ \ \ \ \ m\_iCaretBlinkTimer\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00016}00016\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00017}00017\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00019}\doxymbox{\hyperlink{class_u_i_control___text_input_ae75aed94d339c33d0b10adfb95a95474}{00019}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_u_i_control___text_input_ae75aed94d339c33d0b10adfb95a95474}{UIControl\_TextInput::setupControl}}(\doxymbox{\hyperlink{class_u_i_scene}{UIScene}}\ *scene,\ \doxymbox{\hyperlink{struct_iggy_value_path}{IggyValuePath}}\ *\doxymbox{\hyperlink{json_8hpp_a682088b120a3283ca341558cc23102d4}{parent}},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \&controlName)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00020}00020\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00021}00021\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control_a1a7a84c17a84edff0c305bcc3906bbf0}{UIControl::setControlType}}(\doxymbox{\hyperlink{class_u_i_control_a92402c0b6b3e1e37c87021468a0a8b56a6db45c2c0c7e2142a610c7ce5826ea74}{UIControl::eTextInput}});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00022}00022\ \ \ \ \ \textcolor{keywordtype}{bool}\ success\ =\ \doxymbox{\hyperlink{class_u_i_control___base_a62d8226591c2e89fafd07f762f5b1ee4}{UIControl\_Base::setupControl}}(scene,\doxymbox{\hyperlink{json_8hpp_a682088b120a3283ca341558cc23102d4}{parent}},controlName);}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00024}00024\ \ \ \ \ \textcolor{comment}{//TextInput\ specific\ initialisers}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00025}00025\ \ \ \ \ m\_textName\ =\ \doxymbox{\hyperlink{class_u_i_control_a32b1f9ace6c97d6c7535e3dec1c15e72}{registerFastName}}(L\textcolor{stringliteral}{"{}text"{}});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00026}00026\ \ \ \ \ m\_funcChangeState\ =\ \doxymbox{\hyperlink{class_u_i_control_a32b1f9ace6c97d6c7535e3dec1c15e72}{registerFastName}}(L\textcolor{stringliteral}{"{}ChangeState"{}});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00027}00027\ \ \ \ \ m\_funcSetCharLimit\ =\ \doxymbox{\hyperlink{class_u_i_control_a32b1f9ace6c97d6c7535e3dec1c15e72}{registerFastName}}(L\textcolor{stringliteral}{"{}SetCharLimit"{}});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00028}00028\ \ \ \ \ m\_funcSetCaretIndex\ =\ \doxymbox{\hyperlink{class_u_i_control_a32b1f9ace6c97d6c7535e3dec1c15e72}{registerFastName}}(L\textcolor{stringliteral}{"{}SetCaretIndex"{}});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00030}00030\ \ \ \ \ \textcolor{keywordflow}{return}\ success;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00031}00031\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00033}\doxymbox{\hyperlink{class_u_i_control___text_input_abff40c80cda2eaae786e977228104784}{00033}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_control___text_input_abff40c80cda2eaae786e977228104784}{UIControl\_TextInput::init}}(\doxymbox{\hyperlink{class_u_i_string}{UIString}}\ label,\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id})}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00034}00034\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00035}00035\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___base_a179fed65b7d63c634a06786a244f51ee}{m\_label}}\ =\ label;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00036}00036\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control_a873901e85c34cd2578583530b2d885ff}{m\_id}}\ =\ id;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00038}00038\ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_data_value}{IggyDataValue}}\ result;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00039}00039\ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_data_value}{IggyDataValue}}\ value[2];}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00040}00040\ \ \ \ \ value[0].type\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af2666d08dc7f762c6acf668c2a599859ac913048421eb6b0af7d177e8edaaee08}{IGGY\_DATATYPE\_string\_UTF16}};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00041}00041\ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_string_u_t_f16}{IggyStringUTF16}}\ stringVal;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00043}00043\ \ \ \ \ stringVal.\doxymbox{\hyperlink{struct_iggy_string_u_t_f16_a2cec9dbf97524658514aa3d9c713c6b2}{string}}\ =\ (\doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a42f8277161b0a5bc30ea491c35482fda}{IggyUTF16}}*)label.\doxymbox{\hyperlink{class_u_i_string_adffc3f288dc262753505724da4aad84a}{c\_str}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00044}00044\ \ \ \ \ stringVal.\doxymbox{\hyperlink{struct_iggy_string_u_t_f16_ae7cc34fbbb43fe9a633c324eda2e8d62}{length}}\ =\ label.\doxymbox{\hyperlink{class_u_i_string_ae9a414df777ca67aba01092825e1887d}{length}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00045}00045\ \ \ \ \ value[0].string16\ =\ stringVal;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00047}00047\ \ \ \ \ value[1].type\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af2666d08dc7f762c6acf668c2a599859a1c84931bae6a85d5a27afc68832d0856}{IGGY\_DATATYPE\_number}};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00048}00048\ \ \ \ \ value[1].number\ =\ id;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00049}00049\ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a219efe54cb83c9896187f36151869fbc}{IggyResult}}\ out\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a2810980027b9a2cb04e7fcfda8f7147b}{IggyPlayerCallMethodRS}}\ (\ \doxymbox{\hyperlink{class_u_i_control_aa5904001e2d8b987c769a5e45fd219c5}{m\_parentScene}}-\/>getMovie()\ ,\ \&result,\ \doxymbox{\hyperlink{class_u_i_control_a781942756a49184d01aef2e0a94bcd8e}{getIggyValuePath}}()\ ,\ \doxymbox{\hyperlink{class_u_i_control___base_af48438ea0fbebf7df16f07fae3aa1076}{m\_initFunc}}\ ,\ 2\ ,\ value\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00051}00051\ \textcolor{preprocessor}{\ \#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{comment}{//\ 4J-\/TomK\ -\/\ add\ this\ buttonlist\ to\ the\ vita\ touch\ box\ list}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00053}00053\ \ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00054}00054\ \ \ \ \ \textcolor{keywordflow}{switch}(\doxymbox{\hyperlink{class_u_i_control_aa5904001e2d8b987c769a5e45fd219c5}{m\_parentScene}}-\/>GetParentLayer()-\/>m\_iLayer)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00055}00055\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00056}00056\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_afca50fc70d0aabd97f6b413789fb1efcaf2d35e43f94b3fa69ab573859533731f}{eUILayer\_Fullscreen}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00057}00057\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_afca50fc70d0aabd97f6b413789fb1efca0c546fdf9a6b44573b0b7f0fefffbd7a}{eUILayer\_Scene}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00058}00058\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_u_i_enums_8h_afca50fc70d0aabd97f6b413789fb1efca48696a4287e14740a881de8a5e625c61}{eUILayer\_HUD}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.TouchBoxAdd(\textcolor{keyword}{this},\doxymbox{\hyperlink{class_u_i_control_aa5904001e2d8b987c769a5e45fd219c5}{m\_parentScene}});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00061}00061\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00062}00062\ \textcolor{preprocessor}{\ \#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00063}00063\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00065}\doxymbox{\hyperlink{class_u_i_control___text_input_a84797e5e5df950adb91becc567453826}{00065}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_control___text_input_a84797e5e5df950adb91becc567453826}{UIControl\_TextInput::ReInit}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00066}00066\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00067}00067\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control_a0fa5773cd8401eedd57ecf64c44f5f72}{UIControl\_Base::ReInit}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00069}00069\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_abff40c80cda2eaae786e977228104784}{init}}(\doxymbox{\hyperlink{class_u_i_control___base_a179fed65b7d63c634a06786a244f51ee}{m\_label}},\ \doxymbox{\hyperlink{class_u_i_control_a873901e85c34cd2578583530b2d885ff}{m\_id}});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00070}00070\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00072}\doxymbox{\hyperlink{class_u_i_control___text_input_ab9c8b5fc7a7ecb13c023f1ac069d077c}{00072}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_control___text_input_ab9c8b5fc7a7ecb13c023f1ac069d077c}{UIControl\_TextInput::setFocus}}(\textcolor{keywordtype}{bool}\ focus)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00073}00073\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00074}00074\ \ \ \ \ \textcolor{keywordflow}{if}(m\_bHasFocus\ !=\ focus)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00075}00075\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ m\_bHasFocus\ =\ focus;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_data_value}{IggyDataValue}}\ result;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_data_value}{IggyDataValue}}\ value[1];}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ value[0].type\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af2666d08dc7f762c6acf668c2a599859a1c84931bae6a85d5a27afc68832d0856}{IGGY\_DATATYPE\_number}};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ value[0].number\ =\ focus?0:1;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a219efe54cb83c9896187f36151869fbc}{IggyResult}}\ out\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a2810980027b9a2cb04e7fcfda8f7147b}{IggyPlayerCallMethodRS}}\ (\ \doxymbox{\hyperlink{class_u_i_control_aa5904001e2d8b987c769a5e45fd219c5}{m\_parentScene}}-\/>getMovie()\ ,\ \&result,\ \doxymbox{\hyperlink{class_u_i_control_a781942756a49184d01aef2e0a94bcd8e}{getIggyValuePath}}()\ ,\ m\_funcChangeState\ ,\ 1\ ,\ value\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00083}00083\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00084}00084\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00086}\doxymbox{\hyperlink{class_u_i_control___text_input_a62b55b7decffc1ee89d3daace343db2f}{00086}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_control___text_input_a62b55b7decffc1ee89d3daace343db2f}{UIControl\_TextInput::SetCharLimit}}(\textcolor{keywordtype}{int}\ iLimit)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00087}00087\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00088}00088\ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_data_value}{IggyDataValue}}\ result;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00089}00089\ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_data_value}{IggyDataValue}}\ value[1];}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00090}00090\ \ \ \ \ value[0].type\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af2666d08dc7f762c6acf668c2a599859a1c84931bae6a85d5a27afc68832d0856}{IGGY\_DATATYPE\_number}};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00091}00091\ \ \ \ \ value[0].number\ =\ iLimit;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00092}00092\ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a219efe54cb83c9896187f36151869fbc}{IggyResult}}\ out\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a2810980027b9a2cb04e7fcfda8f7147b}{IggyPlayerCallMethodRS}}\ (\ \doxymbox{\hyperlink{class_u_i_control_aa5904001e2d8b987c769a5e45fd219c5}{m\_parentScene}}-\/>getMovie()\ ,\ \&result,\ \doxymbox{\hyperlink{class_u_i_control_a781942756a49184d01aef2e0a94bcd8e}{getIggyValuePath}}()\ ,\ m\_funcSetCharLimit\ ,\ 1\ ,\ value\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00093}00093\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00095}\doxymbox{\hyperlink{class_u_i_control___text_input_a57d38103b7e472d5bb8a3d751e49a7f4}{00095}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_control___text_input_a57d38103b7e472d5bb8a3d751e49a7f4}{UIControl\_TextInput::setCaretVisible}}(\textcolor{keywordtype}{bool}\ visible)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00096}00096\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00097}00097\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_u_i_control_aa5904001e2d8b987c769a5e45fd219c5}{m\_parentScene}}\ ||\ !\doxymbox{\hyperlink{class_u_i_control_aa5904001e2d8b987c769a5e45fd219c5}{m\_parentScene}}-\/>getMovie())}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00100}00100\ \ \ \ \ \textcolor{comment}{//\ Check\ once\ whether\ this\ SWF's\ FJ\_TextInput\ actually\ has\ a\ m\_mcCaret\ child.}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00101}00101\ \ \ \ \ \textcolor{comment}{//\ IggyValuePathMakeNameRef\ always\ succeeds\ (creates\ a\ ref\ to\ undefined),}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00102}00102\ \ \ \ \ \textcolor{comment}{//\ so\ we\ validate\ by\ trying\ to\ read\ a\ property\ from\ the\ resolved\ path.}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00103}00103\ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_bCaretChecked)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00104}00104\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_value_path}{IggyValuePath}}\ caretPath;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a32b3e8d0387d8d3e71d1ea797d611245}{IggyValuePathMakeNameRef}}(\&caretPath,\ \doxymbox{\hyperlink{class_u_i_control_a781942756a49184d01aef2e0a94bcd8e}{getIggyValuePath}}(),\ \textcolor{stringliteral}{"{}m\_mcCaret"{}}))}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a6d651784c9e817541032599abec062cc}{rrbool}}\ test\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a219efe54cb83c9896187f36151869fbc}{IggyResult}}\ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a4513a50c6061eb76ef0752996e971677}{IggyValueGetBooleanRS}}(\&caretPath,\ \doxymbox{\hyperlink{class_u_i_control_ab0c9835642b79be54d5d046fa7a92f99}{m\_nameVisible}},\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}},\ \&test);}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ m\_bHasCaret\ =\ (\doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ ==\ 0);}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ m\_bHasCaret\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ m\_bCaretChecked\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00117}00117\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00118}00118\ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_bHasCaret)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00121}00121\ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_value_path}{IggyValuePath}}\ caretPath;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00122}00122\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a32b3e8d0387d8d3e71d1ea797d611245}{IggyValuePathMakeNameRef}}(\&caretPath,\ \doxymbox{\hyperlink{class_u_i_control_a781942756a49184d01aef2e0a94bcd8e}{getIggyValuePath}}(),\ \textcolor{stringliteral}{"{}m\_mcCaret"{}}))}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00123}00123\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a8e751b5bbd4e4c7aeed71b70aaaba8c0}{IggyValueSetBooleanRS}}(\&caretPath,\ \doxymbox{\hyperlink{class_u_i_control_ab0c9835642b79be54d5d046fa7a92f99}{m\_nameVisible}},\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}},\ visible);}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00125}00125\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00126}00126\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00128}\doxymbox{\hyperlink{class_u_i_control___text_input_ab39ee88c8f7d9914467c464e3e396c13}{00128}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_control___text_input_ab39ee88c8f7d9914467c464e3e396c13}{UIControl\_TextInput::setCaretIndex}}(\textcolor{keywordtype}{int}\ index)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00129}00129\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00130}00130\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_u_i_control_aa5904001e2d8b987c769a5e45fd219c5}{m\_parentScene}}\ ||\ !\doxymbox{\hyperlink{class_u_i_control_aa5904001e2d8b987c769a5e45fd219c5}{m\_parentScene}}-\/>getMovie())}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00133}00133\ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_data_value}{IggyDataValue}}\ result;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00134}00134\ \ \ \ \ \doxymbox{\hyperlink{struct_iggy_data_value}{IggyDataValue}}\ value[1];}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00135}00135\ \ \ \ \ value[0].type\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af2666d08dc7f762c6acf668c2a599859a1c84931bae6a85d5a27afc68832d0856}{IGGY\_DATATYPE\_number}};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00136}00136\ \ \ \ \ value[0].number\ =\ index;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00137}00137\ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a219efe54cb83c9896187f36151869fbc}{IggyResult}}\ out\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_a2810980027b9a2cb04e7fcfda8f7147b}{IggyPlayerCallMethodRS}}\ (\ \doxymbox{\hyperlink{class_u_i_control_aa5904001e2d8b987c769a5e45fd219c5}{m\_parentScene}}-\/>getMovie()\ ,\ \&result,\ \doxymbox{\hyperlink{class_u_i_control_a781942756a49184d01aef2e0a94bcd8e}{getIggyValuePath}}()\ ,\ m\_funcSetCaretIndex\ ,\ 1\ ,\ value\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00138}00138\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00140}00140\ \textcolor{preprocessor}{\#ifdef\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00142}00142\ \textcolor{keywordtype}{void}\ UIControl\_TextInput::beginDirectEdit(\textcolor{keywordtype}{int}\ charLimit)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00143}00143\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00144}00144\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}*\ current\ =\ \doxymbox{\hyperlink{class_u_i_control___base_ad7d2cb6c1abb100bde2fd0a5964c596a}{getLabel}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00145}00145\ \ \ \ \ m\_editBuffer\ =\ current\ ?\ current\ :\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00146}00146\ \ \ \ \ m\_textBeforeEdit\ =\ m\_editBuffer;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00147}00147\ \ \ \ \ m\_iCursorPos\ =\ (int)m\_editBuffer.length();}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00148}00148\ \ \ \ \ m\_iCharLimit\ =\ charLimit;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00149}00149\ \ \ \ \ m\_bDirectEditing\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00150}00150\ \ \ \ \ m\_iDirectEditCooldown\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00151}00151\ \ \ \ \ m\_iCaretBlinkTimer\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00152}00152\ \ \ \ \ g\_KBMInput.ClearCharBuffer();}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00153}00153\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_a57d38103b7e472d5bb8a3d751e49a7f4}{setCaretVisible}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00154}00154\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_ab39ee88c8f7d9914467c464e3e396c13}{setCaretIndex}}(m\_iCursorPos);}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00155}00155\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00157}00157\ UIControl\_TextInput::EDirectEditResult\ UIControl\_TextInput::tickDirectEdit()}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00158}00158\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00159}00159\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_iDirectEditCooldown\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ m\_iDirectEditCooldown-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00162}00162\ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_bDirectEditing)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00163}00163\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_a57d38103b7e472d5bb8a3d751e49a7f4}{setCaretVisible}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ eDirectEdit\_Continue;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00166}00166\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00168}00168\ \ \ \ \ \textcolor{comment}{//\ Enforce\ caret\ visibility\ and\ position\ every\ tick\ —\ setLabel()\ and\ Flash}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00169}00169\ \ \ \ \ \textcolor{comment}{//\ focus\ changes\ can\ reset\ both\ at\ any\ time.}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00170}00170\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_a57d38103b7e472d5bb8a3d751e49a7f4}{setCaretVisible}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00171}00171\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_ab39ee88c8f7d9914467c464e3e396c13}{setCaretIndex}}(m\_iCursorPos);}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00173}00173\ \ \ \ \ \textcolor{comment}{//\ For\ SWFs\ without\ m\_mcCaret,\ insert\ '\_'\ at\ the\ cursor\ position.}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00174}00174\ \ \ \ \ \textcolor{comment}{//\ All\ characters\ remain\ visible\ —\ '\_'\ sits\ between\ them\ like\ a\ cursor.}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00175}00175\ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_bHasCaret)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00176}00176\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ wstring\ display\ =\ m\_editBuffer;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ display.insert(m\_iCursorPos,\ 1,\ L\textcolor{charliteral}{'\_'});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___base_a7144b3e082fb1567086a0ed5186a1814}{setLabel}}(display.c\_str());}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00180}00180\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00182}00182\ \ \ \ \ EDirectEditResult\ result\ =\ eDirectEdit\_Continue;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00183}00183\ \ \ \ \ \textcolor{keywordtype}{bool}\ changed\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00184}00184\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00185}00185\ \ \ \ \ \textcolor{comment}{//\ Consume\ typed\ characters\ from\ the\ KBM\ buffer}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00186}00186\ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ ch;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00187}00187\ \ \ \ \ \textcolor{keywordflow}{while}\ (g\_KBMInput.ConsumeChar(ch))}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00188}00188\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ch\ ==\ 0x08)\ \textcolor{comment}{//\ Backspace}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_iCursorPos\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_editBuffer.erase(m\_iCursorPos\ -\/\ 1,\ 1);}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_iCursorPos-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ changed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (ch\ ==\ 0x0D)\ \textcolor{comment}{//\ Enter\ —\ confirm\ edit}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ m\_bDirectEditing\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ m\_iDirectEditCooldown\ =\ 4;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___base_a7144b3e082fb1567086a0ed5186a1814}{setLabel}}(m\_editBuffer.c\_str(),\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_a57d38103b7e472d5bb8a3d751e49a7f4}{setCaretVisible}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ eDirectEdit\_Confirmed;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (m\_iCharLimit\ <=\ 0\ ||\ (\textcolor{keywordtype}{int})m\_editBuffer.length()\ <\ m\_iCharLimit)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ m\_editBuffer.insert(m\_iCursorPos,\ 1,\ ch);}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ m\_iCursorPos++;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ changed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00212}00212\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00214}00214\ \ \ \ \ \textcolor{comment}{//\ Arrow\ keys,\ Home,\ End,\ Delete\ for\ cursor\ movement}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00215}00215\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_KBMInput.IsKeyPressed(VK\_LEFT)\ \&\&\ m\_iCursorPos\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00216}00216\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ m\_iCursorPos-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_ab39ee88c8f7d9914467c464e3e396c13}{setCaretIndex}}(m\_iCursorPos);}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00219}00219\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00220}00220\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_KBMInput.IsKeyPressed(VK\_RIGHT)\ \&\&\ m\_iCursorPos\ <\ (\textcolor{keywordtype}{int})m\_editBuffer.length())}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00221}00221\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ m\_iCursorPos++;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_ab39ee88c8f7d9914467c464e3e396c13}{setCaretIndex}}(m\_iCursorPos);}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00224}00224\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00225}00225\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_KBMInput.IsKeyPressed(VK\_HOME))}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00226}00226\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ m\_iCursorPos\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_ab39ee88c8f7d9914467c464e3e396c13}{setCaretIndex}}(m\_iCursorPos);}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00229}00229\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00230}00230\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_KBMInput.IsKeyPressed(VK\_END))}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00231}00231\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ m\_iCursorPos\ =\ (int)m\_editBuffer.length();}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_ab39ee88c8f7d9914467c464e3e396c13}{setCaretIndex}}(m\_iCursorPos);}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00234}00234\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00235}00235\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_KBMInput.IsKeyPressed(VK\_DELETE)\ \&\&\ m\_iCursorPos\ <\ (\textcolor{keywordtype}{int})m\_editBuffer.length())}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00236}00236\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00237}00237\ \ \ \ \ \ \ \ \ m\_editBuffer.erase(m\_iCursorPos,\ 1);}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ changed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00239}00239\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00241}00241\ \ \ \ \ \textcolor{comment}{//\ Escape\ —\ cancel\ edit\ and\ restore\ original\ text}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00242}00242\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_KBMInput.IsKeyPressed(\doxymbox{\hyperlink{_orbis_stubs_8h_ae822938b3cdd5d724c840f15c3d89c04}{VK\_ESCAPE}}))}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00243}00243\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00244}00244\ \ \ \ \ \ \ \ \ m\_editBuffer\ =\ m\_textBeforeEdit;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ m\_bDirectEditing\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ m\_iDirectEditCooldown\ =\ 4;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___base_a7144b3e082fb1567086a0ed5186a1814}{setLabel}}(m\_editBuffer.c\_str());}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_a57d38103b7e472d5bb8a3d751e49a7f4}{setCaretVisible}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ eDirectEdit\_Cancelled;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00250}00250\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00251}00251\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00252}00252\ \ \ \ \ \textcolor{keywordflow}{if}\ (changed)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00253}00253\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00254}00254\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bHasCaret)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___base_a7144b3e082fb1567086a0ed5186a1814}{setLabel}}(m\_editBuffer.c\_str());}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_ab39ee88c8f7d9914467c464e3e396c13}{setCaretIndex}}(m\_iCursorPos);}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SWFs\ without\ caret:\ the\ cursor\ block\ above\ already\ updates\ the\ label\ every\ tick}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00260}00260\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00262}00262\ \ \ \ \ \textcolor{keywordflow}{return}\ eDirectEdit\_Continue;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00263}00263\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00264}00264\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00265}00265\ \textcolor{keywordtype}{void}\ UIControl\_TextInput::cancelDirectEdit()}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00266}00266\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00267}00267\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bDirectEditing)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00268}00268\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ m\_editBuffer\ =\ m\_textBeforeEdit;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ m\_bDirectEditing\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ m\_iDirectEditCooldown\ =\ 4;}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___base_a7144b3e082fb1567086a0ed5186a1814}{setLabel}}(m\_editBuffer.c\_str(),\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_a57d38103b7e472d5bb8a3d751e49a7f4}{setCaretVisible}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00274}00274\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00275}00275\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00276}00276\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00277}00277\ \textcolor{keywordtype}{void}\ UIControl\_TextInput::confirmDirectEdit()}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00278}00278\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00279}00279\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bDirectEditing)}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00280}00280\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00281}00281\ \ \ \ \ \ \ \ \ m\_bDirectEditing\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___base_a7144b3e082fb1567086a0ed5186a1814}{setLabel}}(m\_editBuffer.c\_str(),\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_control___text_input_a57d38103b7e472d5bb8a3d751e49a7f4}{setCaretVisible}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00284}00284\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00285}00285\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{_u_i_control___text_input_8cpp_source_l00287}00287\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

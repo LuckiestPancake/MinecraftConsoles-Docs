@@ -1,0 +1,389 @@
+\doxysection{deflate.\+h}
+\hypertarget{deflate_8h_source}{}\label{deflate_8h_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/zlib/deflate.h@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/zlib/deflate.h}}
+\doxymbox{\hyperlink{deflate_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00001}00001\ \textcolor{comment}{/*\ deflate.h\ -\/-\/\ internal\ compression\ state}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00002}00002\ \textcolor{comment}{\ *\ Copyright\ (C)\ 1995-\/2026\ Jean-\/loup\ Gailly}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00003}00003\ \textcolor{comment}{\ *\ For\ conditions\ of\ distribution\ and\ use,\ see\ copyright\ notice\ in\ zlib.h}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00004}00004\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00006}00006\ \textcolor{comment}{/*\ WARNING:\ this\ file\ should\ *not*\ be\ used\ by\ applications.\ It\ is}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00007}00007\ \textcolor{comment}{\ \ \ part\ of\ the\ implementation\ of\ the\ compression\ library\ and\ is}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00008}00008\ \textcolor{comment}{\ \ \ subject\ to\ change.\ Applications\ should\ only\ use\ zlib.h.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00009}00009\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00011}00011\ \textcolor{comment}{/*\ @(\#)\ \$Id\$\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00013}00013\ \textcolor{preprocessor}{\#ifndef\ DEFLATE\_H}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00014}00014\ \textcolor{preprocessor}{\#define\ DEFLATE\_H}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{zutil_8h}{zutil.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00018}00018\ \textcolor{comment}{/*\ define\ NO\_GZIP\ when\ compiling\ if\ you\ want\ to\ disable\ gzip\ header\ and}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00019}00019\ \textcolor{comment}{\ \ \ trailer\ creation\ by\ deflate().\ \ NO\_GZIP\ would\ be\ used\ to\ avoid\ linking\ in}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00020}00020\ \textcolor{comment}{\ \ \ the\ crc\ code\ when\ it\ is\ not\ needed.\ \ For\ shared\ libraries,\ gzip\ encoding}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00021}00021\ \textcolor{comment}{\ \ \ should\ be\ left\ enabled.\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00022}00022\ \textcolor{preprocessor}{\#ifndef\ NO\_GZIP}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00023}\doxymbox{\hyperlink{deflate_8h_a9564352992f7a4001386d1c8e2977571}{00023}}\ \textcolor{preprocessor}{\#\ \ define\ GZIP}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00024}00024\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00026}00026\ \textcolor{comment}{/*\ define\ LIT\_MEM\ to\ slightly\ increase\ the\ speed\ of\ deflate\ (order\ 1\%\ to\ 2\%)\ at}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00027}00027\ \textcolor{comment}{\ \ \ the\ cost\ of\ a\ larger\ memory\ footprint\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00028}00028\ \textcolor{comment}{/*\ \#define\ LIT\_MEM\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00030}00030\ \textcolor{comment}{/*\ ===========================================================================}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00031}00031\ \textcolor{comment}{\ *\ Internal\ compression\ state.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00032}00032\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00034}\doxymbox{\hyperlink{deflate_8h_a8dd3b78c666b6592944b2acf1706e611}{00034}}\ \textcolor{preprocessor}{\#define\ LENGTH\_CODES\ 29}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00035}00035\ \textcolor{comment}{/*\ number\ of\ length\ codes,\ not\ counting\ the\ special\ END\_BLOCK\ code\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00037}\doxymbox{\hyperlink{deflate_8h_a3f59145500c9de746e7dc49fb98c29ef}{00037}}\ \textcolor{preprocessor}{\#define\ LITERALS\ \ 256}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00038}00038\ \textcolor{comment}{/*\ number\ of\ literal\ bytes\ 0..255\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00040}\doxymbox{\hyperlink{deflate_8h_a2b0cc00cc6a7d521fba8d208a1cae477}{00040}}\ \textcolor{preprocessor}{\#define\ L\_CODES\ (LITERALS+1+LENGTH\_CODES)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00041}00041\ \textcolor{comment}{/*\ number\ of\ Literal\ or\ Length\ codes,\ including\ the\ END\_BLOCK\ code\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00043}\doxymbox{\hyperlink{deflate_8h_a8798a9a526623abbd88fedb0727e21aa}{00043}}\ \textcolor{preprocessor}{\#define\ D\_CODES\ \ \ 30}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00044}00044\ \textcolor{comment}{/*\ number\ of\ distance\ codes\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00046}\doxymbox{\hyperlink{deflate_8h_a9e19158a493307d4f211cdf223da8319}{00046}}\ \textcolor{preprocessor}{\#define\ BL\_CODES\ \ 19}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00047}00047\ \textcolor{comment}{/*\ number\ of\ codes\ used\ to\ transfer\ the\ bit\ lengths\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00049}\doxymbox{\hyperlink{deflate_8h_a1b45302695680930829cac31d65e41e1}{00049}}\ \textcolor{preprocessor}{\#define\ HEAP\_SIZE\ (2*L\_CODES+1)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00050}00050\ \textcolor{comment}{/*\ maximum\ heap\ size\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00052}\doxymbox{\hyperlink{deflate_8h_a51c241e7ad52441b8d4c1fd5f498b3b9}{00052}}\ \textcolor{preprocessor}{\#define\ MAX\_BITS\ 15}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00053}00053\ \textcolor{comment}{/*\ All\ codes\ must\ not\ exceed\ MAX\_BITS\ bits\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00055}\doxymbox{\hyperlink{deflate_8h_a0c0213b942f7535235cf515e8fe23bf9}{00055}}\ \textcolor{preprocessor}{\#define\ Buf\_size\ 16}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00056}00056\ \textcolor{comment}{/*\ size\ of\ bit\ buffer\ in\ bi\_buf\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00058}\doxymbox{\hyperlink{deflate_8h_a96cb576b9a3b5f8cb90bd4bb7ee449d2}{00058}}\ \textcolor{preprocessor}{\#define\ INIT\_STATE\ \ \ \ 42\ \ \ \ }\textcolor{comment}{/*\ zlib\ header\ -\/>\ BUSY\_STATE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00059}00059\ \textcolor{preprocessor}{\#ifdef\ GZIP}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00060}\doxymbox{\hyperlink{deflate_8h_a0d46f879f2a2a146ccf41bf671dab932}{00060}}\ \textcolor{preprocessor}{\#\ \ define\ GZIP\_STATE\ \ 57\ \ \ \ }\textcolor{comment}{/*\ gzip\ header\ -\/>\ BUSY\_STATE\ |\ EXTRA\_STATE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00061}00061\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00062}\doxymbox{\hyperlink{deflate_8h_affc01bd472ba5f5ad1519c40e20a3778}{00062}}\ \textcolor{preprocessor}{\#define\ EXTRA\_STATE\ \ \ 69\ \ \ \ }\textcolor{comment}{/*\ gzip\ extra\ block\ -\/>\ NAME\_STATE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00063}\doxymbox{\hyperlink{deflate_8h_acec08b85e51457d214b759d489785e99}{00063}}\ \textcolor{preprocessor}{\#define\ NAME\_STATE\ \ \ \ 73\ \ \ \ }\textcolor{comment}{/*\ gzip\ file\ name\ -\/>\ COMMENT\_STATE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00064}\doxymbox{\hyperlink{deflate_8h_a06c47936258e98a0c4ca38dd31a5f6c7}{00064}}\ \textcolor{preprocessor}{\#define\ COMMENT\_STATE\ 91\ \ \ \ }\textcolor{comment}{/*\ gzip\ comment\ -\/>\ HCRC\_STATE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00065}\doxymbox{\hyperlink{deflate_8h_a09dffa22705cbe81ca94b8b379d43682}{00065}}\ \textcolor{preprocessor}{\#define\ HCRC\_STATE\ \ \ 103\ \ \ \ }\textcolor{comment}{/*\ gzip\ header\ CRC\ -\/>\ BUSY\_STATE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00066}\doxymbox{\hyperlink{deflate_8h_a4821f69a5605c2618cd4dc4d3f60979c}{00066}}\ \textcolor{preprocessor}{\#define\ BUSY\_STATE\ \ \ 113\ \ \ \ }\textcolor{comment}{/*\ deflate\ -\/>\ FINISH\_STATE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00067}\doxymbox{\hyperlink{deflate_8h_a0474cba74b039aa45fe9412c1de86bed}{00067}}\ \textcolor{preprocessor}{\#define\ FINISH\_STATE\ 666\ \ \ \ }\textcolor{comment}{/*\ stream\ complete\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00068}00068\ \textcolor{comment}{/*\ Stream\ status\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00071}00071\ \textcolor{comment}{/*\ Data\ structure\ describing\ a\ single\ value\ and\ its\ code\ string.\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00072}\doxymbox{\hyperlink{structct__data__s}{00072}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structct__data__s}{ct\_data\_s}}\ \{}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00073}00073\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00074}\doxymbox{\hyperlink{structct__data__s_a67cd3c3267ba768c4494b36d5929c4bf}{00074}}\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_a3754180d606d4ed15468d15d9665aa2e}{ush}}\ \ \doxymbox{\hyperlink{structct__data__s_a67cd3c3267ba768c4494b36d5929c4bf}{freq}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ frequency\ count\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00075}\doxymbox{\hyperlink{structct__data__s_a242f709ab288db2d155e28ce98c510c5}{00075}}\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_a3754180d606d4ed15468d15d9665aa2e}{ush}}\ \ \doxymbox{\hyperlink{structct__data__s_a242f709ab288db2d155e28ce98c510c5}{code}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ bit\ string\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00076}\doxymbox{\hyperlink{structct__data__s_ac2a28755105b0c70bd56cc7063424eb2}{00076}}\ \ \ \ \ \}\ \doxymbox{\hyperlink{structct__data__s_ac2a28755105b0c70bd56cc7063424eb2}{fc}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00077}00077\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00078}\doxymbox{\hyperlink{structct__data__s_a73955d00dbdac5ad4027804a00726bfa}{00078}}\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_a3754180d606d4ed15468d15d9665aa2e}{ush}}\ \ \doxymbox{\hyperlink{structct__data__s_a73955d00dbdac5ad4027804a00726bfa}{dad}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ father\ node\ in\ Huffman\ tree\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00079}\doxymbox{\hyperlink{structct__data__s_ad7f6929b2907e046dfbc8f091b494cfb}{00079}}\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_a3754180d606d4ed15468d15d9665aa2e}{ush}}\ \ \doxymbox{\hyperlink{structct__data__s_ad7f6929b2907e046dfbc8f091b494cfb}{len}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ length\ of\ bit\ string\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00080}\doxymbox{\hyperlink{structct__data__s_ac372a4a9a429bf69529de931eb78c30f}{00080}}\ \ \ \ \ \}\ \doxymbox{\hyperlink{structct__data__s_ac372a4a9a429bf69529de931eb78c30f}{dl}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00081}\doxymbox{\hyperlink{deflate_8h_a0a4b5df3b2254c627b8a59e038963118}{00081}}\ \}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aef060b3456fdcc093a7210a762d5f2ed}{FAR}}\ \doxymbox{\hyperlink{deflate_8h_a0a4b5df3b2254c627b8a59e038963118}{ct\_data}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00083}\doxymbox{\hyperlink{deflate_8h_a8bab2775fa423836b05f407d2f8bf6e2}{00083}}\ \textcolor{preprocessor}{\#define\ Freq\ fc.freq}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00084}\doxymbox{\hyperlink{deflate_8h_a068e76e6034d06450385bc98b69ea53e}{00084}}\ \textcolor{preprocessor}{\#define\ Code\ fc.code}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00085}\doxymbox{\hyperlink{deflate_8h_ad76da95d6074d29bacb152bc46d189d5}{00085}}\ \textcolor{preprocessor}{\#define\ Dad\ \ dl.dad}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00086}\doxymbox{\hyperlink{deflate_8h_a4490e644c06783cc69ad87c121e39e94}{00086}}\ \textcolor{preprocessor}{\#define\ Len\ \ dl.len}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00088}\doxymbox{\hyperlink{deflate_8h_a905910aabf6aabbe79ff0832e4a664cc}{00088}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structstatic__tree__desc__s}{static\_tree\_desc\_s}}\ \ \doxymbox{\hyperlink{deflate_8h_a905910aabf6aabbe79ff0832e4a664cc}{static\_tree\_desc}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00090}\doxymbox{\hyperlink{structtree__desc__s}{00090}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtree__desc__s}{tree\_desc\_s}}\ \{}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00091}\doxymbox{\hyperlink{structtree__desc__s_a5c79989c018b96c729e88e41f98a4920}{00091}}\ \ \ \ \ \doxymbox{\hyperlink{deflate_8h_a0a4b5df3b2254c627b8a59e038963118}{ct\_data}}\ *\doxymbox{\hyperlink{structtree__desc__s_a5c79989c018b96c729e88e41f98a4920}{dyn\_tree}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ the\ dynamic\ tree\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00092}\doxymbox{\hyperlink{structtree__desc__s_a11f42f2c0464693def462dcfdd871002}{00092}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \doxymbox{\hyperlink{structtree__desc__s_a11f42f2c0464693def462dcfdd871002}{max\_code}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ largest\ code\ with\ non\ zero\ frequency\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00093}\doxymbox{\hyperlink{structtree__desc__s_afc69be1c7b75c748e6b0bf1969a9560f}{00093}}\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{deflate_8h_a905910aabf6aabbe79ff0832e4a664cc}{static\_tree\_desc}}\ *\doxymbox{\hyperlink{structtree__desc__s_afc69be1c7b75c748e6b0bf1969a9560f}{stat\_desc}};\ \ \textcolor{comment}{/*\ the\ corresponding\ static\ tree\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00094}\doxymbox{\hyperlink{deflate_8h_ae978a66d78f0d68f945f48951f9151ff}{00094}}\ \}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aef060b3456fdcc093a7210a762d5f2ed}{FAR}}\ \doxymbox{\hyperlink{deflate_8h_ae978a66d78f0d68f945f48951f9151ff}{tree\_desc}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00096}\doxymbox{\hyperlink{deflate_8h_a80a8610ae675eaeead82013bacde10a1}{00096}}\ \textcolor{keyword}{typedef}\ \doxymbox{\hyperlink{zutil_8h_a3754180d606d4ed15468d15d9665aa2e}{ush}}\ \doxymbox{\hyperlink{class_pos}{Pos}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00097}\doxymbox{\hyperlink{deflate_8h_a7fc422ecb86afdd5f330dad6f7c1136b}{00097}}\ \textcolor{keyword}{typedef}\ \doxymbox{\hyperlink{class_pos}{Pos}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aef060b3456fdcc093a7210a762d5f2ed}{FAR}}\ \doxymbox{\hyperlink{deflate_8h_a7fc422ecb86afdd5f330dad6f7c1136b}{Posf}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00098}\doxymbox{\hyperlink{deflate_8h_ada696b787a46d01634b6365afcec1a9e}{00098}}\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \doxymbox{\hyperlink{deflate_8h_ada696b787a46d01634b6365afcec1a9e}{IPos}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00100}00100\ \textcolor{comment}{/*\ A\ Pos\ is\ an\ index\ in\ the\ character\ window.\ We\ use\ short\ instead\ of\ int\ to}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00101}00101\ \textcolor{comment}{\ *\ save\ space\ in\ the\ various\ tables.\ IPos\ is\ used\ only\ for\ parameter\ passing.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00102}00102\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00104}\doxymbox{\hyperlink{structinternal__state}{00104}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structinternal__state}{internal\_state}}\ \{}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00105}\doxymbox{\hyperlink{structinternal__state_aaf558a49ab8c6caea3d131c6b913db42}{00105}}\ \ \ \ \ \doxymbox{\hyperlink{_p_s_vita_2_p_s_vita_extras_2zlib_8h_a6ede25c84d3c9f8632305866acffb1d6}{z\_streamp}}\ \doxymbox{\hyperlink{structinternal__state_aaf558a49ab8c6caea3d131c6b913db42}{strm}};\ \ \ \ \ \ \textcolor{comment}{/*\ pointer\ back\ to\ this\ zlib\ stream\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00106}\doxymbox{\hyperlink{structinternal__state_a8756cacdbac452a2633f87e06fae6c52}{00106}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \doxymbox{\hyperlink{structinternal__state_a8756cacdbac452a2633f87e06fae6c52}{status}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ as\ the\ name\ implies\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00107}\doxymbox{\hyperlink{structinternal__state_ae5f393e8d0d569da6038749768f65b94}{00107}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aeb722a888064be47e12d05f692e0f407}{Bytef}}\ *\doxymbox{\hyperlink{structinternal__state_ae5f393e8d0d569da6038749768f65b94}{pending\_buf}};\ \ \textcolor{comment}{/*\ output\ still\ pending\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00108}\doxymbox{\hyperlink{structinternal__state_a9100ecccf2f8bb474f0bcc7c69f55c27}{00108}}\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_abd6f60bf9450af2ecb94097a32c19a64}{ulg}}\ \ \ \doxymbox{\hyperlink{structinternal__state_a9100ecccf2f8bb474f0bcc7c69f55c27}{pending\_buf\_size}};\ \textcolor{comment}{/*\ size\ of\ pending\_buf\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00109}\doxymbox{\hyperlink{structinternal__state_a6e15ed78675c3c7bdb312623b5eceb7a}{00109}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aeb722a888064be47e12d05f692e0f407}{Bytef}}\ *\doxymbox{\hyperlink{structinternal__state_a6e15ed78675c3c7bdb312623b5eceb7a}{pending\_out}};\ \ \textcolor{comment}{/*\ next\ pending\ byte\ to\ output\ to\ the\ stream\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00110}\doxymbox{\hyperlink{structinternal__state_a49a08fe5a8e2ff1a73419fea828790e4}{00110}}\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_abd6f60bf9450af2ecb94097a32c19a64}{ulg}}\ \ \ \doxymbox{\hyperlink{structinternal__state_a49a08fe5a8e2ff1a73419fea828790e4}{pending}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ nb\ of\ bytes\ in\ the\ pending\ buffer\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00111}\doxymbox{\hyperlink{structinternal__state_ae80327ea7ad4ad0ef5baeef5ef3a6807}{00111}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \doxymbox{\hyperlink{structinternal__state_ae80327ea7ad4ad0ef5baeef5ef3a6807}{wrap}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ bit\ 0\ true\ for\ zlib,\ bit\ 1\ true\ for\ gzip\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00112}\doxymbox{\hyperlink{structinternal__state_ac023d0c9e6112dfe6cbd049a56484997}{00112}}\ \ \ \ \ \doxymbox{\hyperlink{_p_s_vita_2_p_s_vita_extras_2zlib_8h_a40e9dcc294796d99b25e98fb06477fc8}{gz\_headerp}}\ \ \doxymbox{\hyperlink{structinternal__state_ac023d0c9e6112dfe6cbd049a56484997}{gzhead}};\ \ \textcolor{comment}{/*\ gzip\ header\ information\ to\ write\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00113}\doxymbox{\hyperlink{structinternal__state_ad8c827b0dedac12ec6a10493b4b7e3b9}{00113}}\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_abd6f60bf9450af2ecb94097a32c19a64}{ulg}}\ \ \ \doxymbox{\hyperlink{structinternal__state_ad8c827b0dedac12ec6a10493b4b7e3b9}{gzindex}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ where\ in\ extra,\ name,\ or\ comment\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00114}\doxymbox{\hyperlink{structinternal__state_aeb38f8a255e975e703595577ea43220b}{00114}}\ \ \ \ \ \doxymbox{\hyperlink{class_byte}{Byte}}\ \ \doxymbox{\hyperlink{structinternal__state_aeb38f8a255e975e703595577ea43220b}{method}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ can\ only\ be\ DEFLATED\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00115}\doxymbox{\hyperlink{structinternal__state_aa9517fd4120306e1f07a05563a6fe40b}{00115}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \doxymbox{\hyperlink{structinternal__state_aa9517fd4120306e1f07a05563a6fe40b}{last\_flush}};\ \ \ \ \textcolor{comment}{/*\ value\ of\ flush\ param\ for\ previous\ deflate\ call\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ used\ by\ deflate.c:\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00119}\doxymbox{\hyperlink{structinternal__state_a875579bf4d0e9d9f9c04ff288d22bb90}{00119}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \ \doxymbox{\hyperlink{structinternal__state_a875579bf4d0e9d9f9c04ff288d22bb90}{w\_size}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ LZ77\ window\ size\ (32K\ by\ default)\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00120}\doxymbox{\hyperlink{structinternal__state_a016f4538a10e71ab601017a052c0a05f}{00120}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \ \doxymbox{\hyperlink{structinternal__state_a016f4538a10e71ab601017a052c0a05f}{w\_bits}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ log2(w\_size)\ \ (8..16)\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00121}\doxymbox{\hyperlink{structinternal__state_a19aca516cb19d15cd0c2ea3c72cbe9a5}{00121}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \ \doxymbox{\hyperlink{structinternal__state_a19aca516cb19d15cd0c2ea3c72cbe9a5}{w\_mask}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ w\_size\ -\/\ 1\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00123}\doxymbox{\hyperlink{structinternal__state_a8d5cccc7e4dd85927c84bb8efc645533}{00123}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aeb722a888064be47e12d05f692e0f407}{Bytef}}\ *\doxymbox{\hyperlink{structinternal__state_a8d5cccc7e4dd85927c84bb8efc645533}{window}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00124}00124\ \ \ \ \ \textcolor{comment}{/*\ Sliding\ window.\ Input\ bytes\ are\ read\ into\ the\ second\ half\ of\ the\ window,}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00125}00125\ \textcolor{comment}{\ \ \ \ \ *\ and\ move\ to\ the\ first\ half\ later\ to\ keep\ a\ dictionary\ of\ at\ least\ wSize}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00126}00126\ \textcolor{comment}{\ \ \ \ \ *\ bytes.\ With\ this\ organization,\ matches\ are\ limited\ to\ a\ distance\ of}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00127}00127\ \textcolor{comment}{\ \ \ \ \ *\ wSize-\/MAX\_MATCH\ bytes,\ but\ this\ ensures\ that\ IO\ is\ always}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00128}00128\ \textcolor{comment}{\ \ \ \ \ *\ performed\ with\ a\ length\ multiple\ of\ the\ block\ size.\ Also,\ it\ limits}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00129}00129\ \textcolor{comment}{\ \ \ \ \ *\ the\ window\ size\ to\ 64K,\ which\ is\ quite\ useful\ on\ MSDOS.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00130}00130\ \textcolor{comment}{\ \ \ \ \ *\ To\ do:\ use\ the\ user\ input\ buffer\ as\ sliding\ window.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00131}00131\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00133}\doxymbox{\hyperlink{structinternal__state_a4e45f5ef1c4d9d599a5fb11fa283806c}{00133}}\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_abd6f60bf9450af2ecb94097a32c19a64}{ulg}}\ \doxymbox{\hyperlink{structinternal__state_a4e45f5ef1c4d9d599a5fb11fa283806c}{window\_size}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00134}00134\ \ \ \ \ \textcolor{comment}{/*\ Actual\ size\ of\ window:\ 2*wSize,\ except\ when\ the\ user\ input\ buffer}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00135}00135\ \textcolor{comment}{\ \ \ \ \ *\ is\ directly\ used\ as\ sliding\ window.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00136}00136\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00138}\doxymbox{\hyperlink{structinternal__state_a93a7407be4c9df81f71a389eb1ff6c57}{00138}}\ \ \ \ \ \doxymbox{\hyperlink{deflate_8h_a7fc422ecb86afdd5f330dad6f7c1136b}{Posf}}\ *\doxymbox{\hyperlink{structinternal__state_a93a7407be4c9df81f71a389eb1ff6c57}{prev}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00139}00139\ \ \ \ \ \textcolor{comment}{/*\ Link\ to\ older\ string\ with\ same\ hash\ index.\ To\ limit\ the\ size\ of\ this}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00140}00140\ \textcolor{comment}{\ \ \ \ \ *\ array\ to\ 64K,\ this\ link\ is\ maintained\ only\ for\ the\ last\ 32K\ strings.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00141}00141\ \textcolor{comment}{\ \ \ \ \ *\ An\ index\ in\ this\ array\ is\ thus\ a\ window\ index\ modulo\ 32K.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00142}00142\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00144}\doxymbox{\hyperlink{structinternal__state_aafd9ba338599f15de29386ff7a0218f4}{00144}}\ \ \ \ \ \doxymbox{\hyperlink{deflate_8h_a7fc422ecb86afdd5f330dad6f7c1136b}{Posf}}\ *\doxymbox{\hyperlink{structinternal__state_aafd9ba338599f15de29386ff7a0218f4}{head}};\ \textcolor{comment}{/*\ Heads\ of\ the\ hash\ chains\ or\ NIL.\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00145}00145\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00146}\doxymbox{\hyperlink{structinternal__state_a8cf437698f428195122d3c530929a80c}{00146}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \ \doxymbox{\hyperlink{structinternal__state_a8cf437698f428195122d3c530929a80c}{ins\_h}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ hash\ index\ of\ string\ to\ be\ inserted\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00147}\doxymbox{\hyperlink{structinternal__state_aad05d6c37eb87eefafca51e05468f349}{00147}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \ \doxymbox{\hyperlink{structinternal__state_aad05d6c37eb87eefafca51e05468f349}{hash\_size}};\ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ elements\ in\ hash\ table\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00148}\doxymbox{\hyperlink{structinternal__state_a5dbd3a26550651a746a8829210252715}{00148}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \ \doxymbox{\hyperlink{structinternal__state_a5dbd3a26550651a746a8829210252715}{hash\_bits}};\ \ \ \ \ \ \textcolor{comment}{/*\ log2(hash\_size)\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00149}\doxymbox{\hyperlink{structinternal__state_a824166a384dcbf6d508c0f6b97a1cb89}{00149}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \ \doxymbox{\hyperlink{structinternal__state_a824166a384dcbf6d508c0f6b97a1cb89}{hash\_mask}};\ \ \ \ \ \ \textcolor{comment}{/*\ hash\_size-\/1\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00151}\doxymbox{\hyperlink{structinternal__state_aec996517ec9d4c0741647c487d2c513c}{00151}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \ \doxymbox{\hyperlink{structinternal__state_aec996517ec9d4c0741647c487d2c513c}{hash\_shift}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00152}00152\ \ \ \ \ \textcolor{comment}{/*\ Number\ of\ bits\ by\ which\ ins\_h\ must\ be\ shifted\ at\ each\ input}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00153}00153\ \textcolor{comment}{\ \ \ \ \ *\ step.\ It\ must\ be\ such\ that\ after\ MIN\_MATCH\ steps,\ the\ oldest}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00154}00154\ \textcolor{comment}{\ \ \ \ \ *\ byte\ no\ longer\ takes\ part\ in\ the\ hash\ key,\ that\ is:}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00155}00155\ \textcolor{comment}{\ \ \ \ \ *\ \ \ hash\_shift\ *\ MIN\_MATCH\ >=\ hash\_bits}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00156}00156\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00158}\doxymbox{\hyperlink{structinternal__state_a4ba16849758dfa969066693ca2cae880}{00158}}\ \ \ \ \ \textcolor{keywordtype}{long}\ \doxymbox{\hyperlink{structinternal__state_a4ba16849758dfa969066693ca2cae880}{block\_start}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00159}00159\ \ \ \ \ \textcolor{comment}{/*\ Window\ position\ at\ the\ beginning\ of\ the\ current\ output\ block.\ Gets}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00160}00160\ \textcolor{comment}{\ \ \ \ \ *\ negative\ when\ the\ window\ is\ moved\ backwards.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00161}00161\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00163}\doxymbox{\hyperlink{structinternal__state_aa1506e6907be6f3d4273a1386206ae0c}{00163}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \doxymbox{\hyperlink{structinternal__state_aa1506e6907be6f3d4273a1386206ae0c}{match\_length}};\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ length\ of\ best\ match\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00164}\doxymbox{\hyperlink{structinternal__state_a0f5871de1be252ed0496a8b7a30464ef}{00164}}\ \ \ \ \ \doxymbox{\hyperlink{deflate_8h_ada696b787a46d01634b6365afcec1a9e}{IPos}}\ \doxymbox{\hyperlink{structinternal__state_a0f5871de1be252ed0496a8b7a30464ef}{prev\_match}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ previous\ match\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00165}\doxymbox{\hyperlink{structinternal__state_accddba15d8b54ca3f10163fa920599f4}{00165}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structinternal__state_accddba15d8b54ca3f10163fa920599f4}{match\_available}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ set\ if\ previous\ match\ exists\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00166}\doxymbox{\hyperlink{structinternal__state_a946579b9b86ee466424ffb0a67eb7060}{00166}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \doxymbox{\hyperlink{structinternal__state_a946579b9b86ee466424ffb0a67eb7060}{strstart}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ start\ of\ string\ to\ insert\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00167}\doxymbox{\hyperlink{structinternal__state_aced58a85c56daa1c5de41fa5ce75d2e8}{00167}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \doxymbox{\hyperlink{structinternal__state_aced58a85c56daa1c5de41fa5ce75d2e8}{match\_start}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ start\ of\ matching\ string\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00168}\doxymbox{\hyperlink{structinternal__state_a3a826064126ee19a77f78919e2f9bb1e}{00168}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \doxymbox{\hyperlink{structinternal__state_a3a826064126ee19a77f78919e2f9bb1e}{lookahead}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ valid\ bytes\ ahead\ in\ window\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00169}00169\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00170}\doxymbox{\hyperlink{structinternal__state_a7619fb70f9f66ff21b419b8ceac4904c}{00170}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \doxymbox{\hyperlink{structinternal__state_a7619fb70f9f66ff21b419b8ceac4904c}{prev\_length}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00171}00171\ \ \ \ \ \textcolor{comment}{/*\ Length\ of\ the\ best\ match\ at\ previous\ step.\ Matches\ not\ greater\ than\ this}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00172}00172\ \textcolor{comment}{\ \ \ \ \ *\ are\ discarded.\ This\ is\ used\ in\ the\ lazy\ match\ evaluation.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00173}00173\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00175}\doxymbox{\hyperlink{structinternal__state_ab1ffa7feb159edec170574813fae3279}{00175}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \doxymbox{\hyperlink{structinternal__state_ab1ffa7feb159edec170574813fae3279}{max\_chain\_length}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00176}00176\ \ \ \ \ \textcolor{comment}{/*\ To\ speed\ up\ deflation,\ hash\ chains\ are\ never\ searched\ beyond\ this}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00177}00177\ \textcolor{comment}{\ \ \ \ \ *\ length.\ \ A\ higher\ limit\ improves\ compression\ ratio\ but\ degrades\ the}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00178}00178\ \textcolor{comment}{\ \ \ \ \ *\ speed.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00179}00179\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00181}\doxymbox{\hyperlink{structinternal__state_ab74215ec1c106bf588a7642927d47b84}{00181}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \doxymbox{\hyperlink{structinternal__state_ab74215ec1c106bf588a7642927d47b84}{max\_lazy\_match}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00182}00182\ \ \ \ \ \textcolor{comment}{/*\ Attempt\ to\ find\ a\ better\ match\ only\ when\ the\ current\ match\ is\ strictly}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00183}00183\ \textcolor{comment}{\ \ \ \ \ *\ smaller\ than\ this\ value.\ This\ mechanism\ is\ used\ only\ for\ compression}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00184}00184\ \textcolor{comment}{\ \ \ \ \ *\ levels\ >=\ 4.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00185}00185\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00186}\doxymbox{\hyperlink{deflate_8h_a0aa718c141a5a98e84262fd9fc042dbe}{00186}}\ \textcolor{preprocessor}{\#\ \ \ define\ max\_insert\_length\ \ max\_lazy\_match}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00187}00187\ \ \ \ \ \textcolor{comment}{/*\ Insert\ new\ strings\ in\ the\ hash\ table\ only\ if\ the\ match\ length\ is\ not}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00188}00188\ \textcolor{comment}{\ \ \ \ \ *\ greater\ than\ this\ length.\ This\ saves\ time\ but\ degrades\ compression.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00189}00189\ \textcolor{comment}{\ \ \ \ \ *\ max\_insert\_length\ is\ used\ only\ for\ compression\ levels\ <=\ 3.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00190}00190\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00192}\doxymbox{\hyperlink{structinternal__state_a7ad2ab1df80c8cab4ffb97ff84e88c62}{00192}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structinternal__state_a7ad2ab1df80c8cab4ffb97ff84e88c62}{level}};\ \ \ \ \textcolor{comment}{/*\ compression\ level\ (1..9)\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00193}\doxymbox{\hyperlink{structinternal__state_a67219312df7fd2f86e06e6f14700eb28}{00193}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structinternal__state_a67219312df7fd2f86e06e6f14700eb28}{strategy}};\ \textcolor{comment}{/*\ favor\ or\ force\ Huffman\ coding*/}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00195}\doxymbox{\hyperlink{structinternal__state_a68ba00254242017f330dca5e0191bca4}{00195}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \doxymbox{\hyperlink{structinternal__state_a68ba00254242017f330dca5e0191bca4}{good\_match}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00196}00196\ \ \ \ \ \textcolor{comment}{/*\ Use\ a\ faster\ search\ when\ the\ previous\ match\ is\ longer\ than\ this\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00198}\doxymbox{\hyperlink{structinternal__state_a39ab99e52138c0628f645bc1e0c69a04}{00198}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structinternal__state_a39ab99e52138c0628f645bc1e0c69a04}{nice\_match}};\ \textcolor{comment}{/*\ Stop\ searching\ when\ current\ match\ exceeds\ this\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00199}00199\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ used\ by\ trees.c:\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00201}00201\ \ \ \ \ \textcolor{comment}{/*\ Didn't\ use\ ct\_data\ typedef\ below\ to\ suppress\ compiler\ warning\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00202}\doxymbox{\hyperlink{structinternal__state_ae11867c05d54c575dbc713bbea71266c}{00202}}\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structct__data__s}{ct\_data\_s}}\ \doxymbox{\hyperlink{structinternal__state_ae11867c05d54c575dbc713bbea71266c}{dyn\_ltree}}[\doxymbox{\hyperlink{deflate_8h_a1b45302695680930829cac31d65e41e1}{HEAP\_SIZE}}];\ \ \ \textcolor{comment}{/*\ literal\ and\ length\ tree\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00203}\doxymbox{\hyperlink{structinternal__state_a42a52476d3cde41e57a6ef2a6a78008f}{00203}}\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structct__data__s}{ct\_data\_s}}\ \doxymbox{\hyperlink{structinternal__state_a42a52476d3cde41e57a6ef2a6a78008f}{dyn\_dtree}}[2*\doxymbox{\hyperlink{deflate_8h_a8798a9a526623abbd88fedb0727e21aa}{D\_CODES}}+1];\ \textcolor{comment}{/*\ distance\ tree\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00204}\doxymbox{\hyperlink{structinternal__state_a98131fc5b64d0d7542bc3621aef19854}{00204}}\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structct__data__s}{ct\_data\_s}}\ \doxymbox{\hyperlink{structinternal__state_a98131fc5b64d0d7542bc3621aef19854}{bl\_tree}}[2*\doxymbox{\hyperlink{deflate_8h_a9e19158a493307d4f211cdf223da8319}{BL\_CODES}}+1];\ \ \textcolor{comment}{/*\ Huffman\ tree\ for\ bit\ lengths\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00206}\doxymbox{\hyperlink{structinternal__state_a0266c4e0250652904e6b4908d8da84a9}{00206}}\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtree__desc__s}{tree\_desc\_s}}\ \doxymbox{\hyperlink{structinternal__state_a0266c4e0250652904e6b4908d8da84a9}{l\_desc}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ desc.\ for\ literal\ tree\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00207}\doxymbox{\hyperlink{structinternal__state_ab2fddb383d3055b6ec81c7fef14e99d8}{00207}}\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtree__desc__s}{tree\_desc\_s}}\ \doxymbox{\hyperlink{structinternal__state_ab2fddb383d3055b6ec81c7fef14e99d8}{d\_desc}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ desc.\ for\ distance\ tree\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00208}\doxymbox{\hyperlink{structinternal__state_aa0e5da102c35a7e7d22dd1894039393b}{00208}}\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtree__desc__s}{tree\_desc\_s}}\ \doxymbox{\hyperlink{structinternal__state_aa0e5da102c35a7e7d22dd1894039393b}{bl\_desc}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ desc.\ for\ bit\ length\ tree\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00210}\doxymbox{\hyperlink{structinternal__state_abf9e786c8e5b4ab5d620ab123208034c}{00210}}\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_a3754180d606d4ed15468d15d9665aa2e}{ush}}\ \doxymbox{\hyperlink{structinternal__state_abf9e786c8e5b4ab5d620ab123208034c}{bl\_count}}[\doxymbox{\hyperlink{deflate_8h_a51c241e7ad52441b8d4c1fd5f498b3b9}{MAX\_BITS}}+1];}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00211}00211\ \ \ \ \ \textcolor{comment}{/*\ number\ of\ codes\ at\ each\ bit\ length\ for\ an\ optimal\ tree\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00213}\doxymbox{\hyperlink{structinternal__state_ad7edb9b1d387e631bc6fde1cad0af758}{00213}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structinternal__state_ad7edb9b1d387e631bc6fde1cad0af758}{heap}}[2*\doxymbox{\hyperlink{deflate_8h_a2b0cc00cc6a7d521fba8d208a1cae477}{L\_CODES}}+1];\ \ \ \ \ \ \textcolor{comment}{/*\ heap\ used\ to\ build\ the\ Huffman\ trees\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00214}\doxymbox{\hyperlink{structinternal__state_a0659e23b0188ac16db58f98ae2b67b6b}{00214}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structinternal__state_a0659e23b0188ac16db58f98ae2b67b6b}{heap\_len}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ elements\ in\ the\ heap\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00215}\doxymbox{\hyperlink{structinternal__state_aa8c78bbfa5d71f3ccc55445a62897f47}{00215}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structinternal__state_aa8c78bbfa5d71f3ccc55445a62897f47}{heap\_max}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ element\ of\ largest\ frequency\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00216}00216\ \ \ \ \ \textcolor{comment}{/*\ The\ sons\ of\ heap[n]\ are\ heap[2*n]\ and\ heap[2*n+1].\ heap[0]\ is\ not\ used.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00217}00217\ \textcolor{comment}{\ \ \ \ \ *\ The\ same\ heap\ array\ is\ used\ to\ build\ all\ trees.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00218}00218\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00220}\doxymbox{\hyperlink{structinternal__state_a8e525b4f3dfa38b3bbcb8b427e333570}{00220}}\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_af3307af5922c72924a837559c801a8a4}{uch}}\ \doxymbox{\hyperlink{structinternal__state_a8e525b4f3dfa38b3bbcb8b427e333570}{depth}}[2*\doxymbox{\hyperlink{deflate_8h_a2b0cc00cc6a7d521fba8d208a1cae477}{L\_CODES}}+1];}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00221}00221\ \ \ \ \ \textcolor{comment}{/*\ Depth\ of\ each\ subtree\ used\ as\ tie\ breaker\ for\ trees\ of\ equal\ frequency}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00222}00222\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00223}00223\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00224}00224\ \textcolor{preprocessor}{\#ifdef\ LIT\_MEM}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00225}00225\ \textcolor{preprocessor}{\#\ \ \ define\ LIT\_BUFS\ 5}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00226}00226\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_ab854e4722acf30ada8a7a71b58d1b238}{ushf}}\ *d\_buf;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ buffer\ for\ distances\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00227}00227\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_aaa6fdf02a2fdaf3731f17a19920ddb0b}{uchf}}\ *l\_buf;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ buffer\ for\ literals/lengths\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00228}00228\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00229}\doxymbox{\hyperlink{deflate_8h_a8ddac261edf6c7c59602447bd514b523}{00229}}\ \textcolor{preprocessor}{\#\ \ \ define\ LIT\_BUFS\ 4}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00230}\doxymbox{\hyperlink{structinternal__state_aee0522ee301bf87b975d64fabd516f51}{00230}}\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_aaa6fdf02a2fdaf3731f17a19920ddb0b}{uchf}}\ *\doxymbox{\hyperlink{structinternal__state_aee0522ee301bf87b975d64fabd516f51}{sym\_buf}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ buffer\ for\ distances\ and\ literals/lengths\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00231}00231\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00232}00232\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00233}\doxymbox{\hyperlink{structinternal__state_a25ad7fc0094e412144b4201df2126bbb}{00233}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \ \doxymbox{\hyperlink{structinternal__state_a25ad7fc0094e412144b4201df2126bbb}{lit\_bufsize}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00234}00234\ \ \ \ \ \textcolor{comment}{/*\ Size\ of\ match\ buffer\ for\ literals/lengths.\ \ There\ are\ 4\ reasons\ for}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00235}00235\ \textcolor{comment}{\ \ \ \ \ *\ limiting\ lit\_bufsize\ to\ 64K:}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00236}00236\ \textcolor{comment}{\ \ \ \ \ *\ \ \ -\/\ frequencies\ can\ be\ kept\ in\ 16\ bit\ counters}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00237}00237\ \textcolor{comment}{\ \ \ \ \ *\ \ \ -\/\ if\ compression\ is\ not\ successful\ for\ the\ first\ block,\ all\ input}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00238}00238\ \textcolor{comment}{\ \ \ \ \ *\ \ \ \ \ data\ is\ still\ in\ the\ window\ so\ we\ can\ still\ emit\ a\ stored\ block\ even}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00239}00239\ \textcolor{comment}{\ \ \ \ \ *\ \ \ \ \ when\ input\ comes\ from\ standard\ input.\ \ (This\ can\ also\ be\ done\ for}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00240}00240\ \textcolor{comment}{\ \ \ \ \ *\ \ \ \ \ all\ blocks\ if\ lit\_bufsize\ is\ not\ greater\ than\ 32K.)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00241}00241\ \textcolor{comment}{\ \ \ \ \ *\ \ \ -\/\ if\ compression\ is\ not\ successful\ for\ a\ file\ smaller\ than\ 64K,\ we\ can}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00242}00242\ \textcolor{comment}{\ \ \ \ \ *\ \ \ \ \ even\ emit\ a\ stored\ file\ instead\ of\ a\ stored\ block\ (saving\ 5\ bytes).}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00243}00243\ \textcolor{comment}{\ \ \ \ \ *\ \ \ \ \ This\ is\ applicable\ only\ for\ zip\ (not\ gzip\ or\ zlib).}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00244}00244\ \textcolor{comment}{\ \ \ \ \ *\ \ \ -\/\ creating\ new\ Huffman\ trees\ less\ frequently\ may\ not\ provide\ fast}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00245}00245\ \textcolor{comment}{\ \ \ \ \ *\ \ \ \ \ adaptation\ to\ changes\ in\ the\ input\ data\ statistics.\ (Take\ for}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00246}00246\ \textcolor{comment}{\ \ \ \ \ *\ \ \ \ \ example\ a\ binary\ file\ with\ poorly\ compressible\ code\ followed\ by}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00247}00247\ \textcolor{comment}{\ \ \ \ \ *\ \ \ \ \ a\ highly\ compressible\ string\ table.)\ Smaller\ buffer\ sizes\ give}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00248}00248\ \textcolor{comment}{\ \ \ \ \ *\ \ \ \ \ fast\ adaptation\ but\ have\ of\ course\ the\ overhead\ of\ transmitting}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00249}00249\ \textcolor{comment}{\ \ \ \ \ *\ \ \ \ \ trees\ more\ frequently.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00250}00250\ \textcolor{comment}{\ \ \ \ \ *\ \ \ -\/\ I\ can't\ count\ above\ 4}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00251}00251\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00252}00252\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00253}\doxymbox{\hyperlink{structinternal__state_a0fbeaaa536b1a3ba1469872893001a39}{00253}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \doxymbox{\hyperlink{structinternal__state_a0fbeaaa536b1a3ba1469872893001a39}{sym\_next}};\ \ \ \ \ \ \textcolor{comment}{/*\ running\ index\ in\ symbol\ buffer\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00254}\doxymbox{\hyperlink{structinternal__state_a56df097e981e0fb9af99d3cb416b12fb}{00254}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \doxymbox{\hyperlink{structinternal__state_a56df097e981e0fb9af99d3cb416b12fb}{sym\_end}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ symbol\ table\ full\ when\ sym\_next\ reaches\ this\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00256}\doxymbox{\hyperlink{structinternal__state_a2f6efee5d2057aba8bca2c1a58cf418a}{00256}}\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_abd6f60bf9450af2ecb94097a32c19a64}{ulg}}\ \doxymbox{\hyperlink{structinternal__state_a2f6efee5d2057aba8bca2c1a58cf418a}{opt\_len}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ bit\ length\ of\ current\ block\ with\ optimal\ trees\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00257}\doxymbox{\hyperlink{structinternal__state_a8a83e269866761afa3a7b4641ba5ff91}{00257}}\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_abd6f60bf9450af2ecb94097a32c19a64}{ulg}}\ \doxymbox{\hyperlink{structinternal__state_a8a83e269866761afa3a7b4641ba5ff91}{static\_len}};\ \ \ \ \ \textcolor{comment}{/*\ bit\ length\ of\ current\ block\ with\ static\ trees\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00258}\doxymbox{\hyperlink{structinternal__state_ac0f10ec7237615f6b632f2f4d14872ef}{00258}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \doxymbox{\hyperlink{structinternal__state_ac0f10ec7237615f6b632f2f4d14872ef}{matches}};\ \ \ \ \ \ \ \textcolor{comment}{/*\ number\ of\ string\ matches\ in\ current\ block\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00259}\doxymbox{\hyperlink{structinternal__state_a315b7281f725e5729fbbafada48fc70a}{00259}}\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a87d141052bcd5ec8a80812a565c70369}{uInt}}\ \doxymbox{\hyperlink{structinternal__state_a315b7281f725e5729fbbafada48fc70a}{insert}};\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ bytes\ at\ end\ of\ window\ left\ to\ insert\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00260}00260\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00261}00261\ \textcolor{preprocessor}{\#ifdef\ ZLIB\_DEBUG}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00262}00262\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_abd6f60bf9450af2ecb94097a32c19a64}{ulg}}\ compressed\_len;\ \textcolor{comment}{/*\ total\ bit\ length\ of\ compressed\ file\ mod\ 2\string^32\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00263}00263\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_abd6f60bf9450af2ecb94097a32c19a64}{ulg}}\ bits\_sent;\ \ \ \ \ \ \textcolor{comment}{/*\ bit\ length\ of\ compressed\ data\ sent\ mod\ 2\string^32\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00264}00264\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00265}00265\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00266}\doxymbox{\hyperlink{structinternal__state_a6880946d081053778f5f544b04603d13}{00266}}\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_a3754180d606d4ed15468d15d9665aa2e}{ush}}\ \doxymbox{\hyperlink{structinternal__state_a6880946d081053778f5f544b04603d13}{bi\_buf}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00267}00267\ \ \ \ \ \textcolor{comment}{/*\ Output\ buffer.\ bits\ are\ inserted\ starting\ at\ the\ bottom\ (least}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00268}00268\ \textcolor{comment}{\ \ \ \ \ *\ significant\ bits).}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00269}00269\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00270}\doxymbox{\hyperlink{structinternal__state_a241f3606e41a3aa0ef22868a41bd9a0f}{00270}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structinternal__state_a241f3606e41a3aa0ef22868a41bd9a0f}{bi\_valid}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00271}00271\ \ \ \ \ \textcolor{comment}{/*\ Number\ of\ valid\ bits\ in\ bi\_buf.\ \ All\ bits\ above\ the\ last\ valid\ bit}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00272}00272\ \textcolor{comment}{\ \ \ \ \ *\ are\ always\ zero.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00273}00273\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00274}\doxymbox{\hyperlink{structinternal__state_a8262170bb6376721b9971a1a8b54885a}{00274}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structinternal__state_a8262170bb6376721b9971a1a8b54885a}{bi\_used}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00275}00275\ \ \ \ \ \textcolor{comment}{/*\ Last\ number\ of\ used\ bits\ when\ going\ to\ a\ byte\ boundary.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00276}00276\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00278}\doxymbox{\hyperlink{structinternal__state_a85439cd585435b2590039339139d25cb}{00278}}\ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_abd6f60bf9450af2ecb94097a32c19a64}{ulg}}\ \doxymbox{\hyperlink{structinternal__state_a85439cd585435b2590039339139d25cb}{high\_water}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00279}00279\ \ \ \ \ \textcolor{comment}{/*\ High\ water\ mark\ offset\ in\ window\ for\ initialized\ bytes\ -\/-\/\ bytes\ above}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00280}00280\ \textcolor{comment}{\ \ \ \ \ *\ this\ are\ set\ to\ zero\ in\ order\ to\ avoid\ memory\ check\ warnings\ when}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00281}00281\ \textcolor{comment}{\ \ \ \ \ *\ longest\ match\ routines\ access\ bytes\ past\ the\ input.\ \ This\ is\ then}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00282}00282\ \textcolor{comment}{\ \ \ \ \ *\ updated\ to\ the\ new\ high\ water\ mark.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00283}00283\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00284}00284\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00285}\doxymbox{\hyperlink{structinternal__state_a65bddfd4f6fd5651748c3ba491d83255}{00285}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structinternal__state_a65bddfd4f6fd5651748c3ba491d83255}{slid}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00286}00286\ \ \ \ \ \textcolor{comment}{/*\ True\ if\ the\ hash\ table\ has\ been\ slid\ since\ it\ was\ cleared.\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00287}00287\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00288}\doxymbox{\hyperlink{deflate_8h_aeaabc84f4830ec10deb9b64bd719617a}{00288}}\ \}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aef060b3456fdcc093a7210a762d5f2ed}{FAR}}\ \doxymbox{\hyperlink{deflate_8h_aeaabc84f4830ec10deb9b64bd719617a}{deflate\_state}};}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00289}00289\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00290}00290\ \textcolor{comment}{/*\ Output\ a\ byte\ on\ the\ stream.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00291}00291\ \textcolor{comment}{\ *\ IN\ assertion:\ there\ is\ enough\ room\ in\ pending\_buf.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00292}00292\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00293}\doxymbox{\hyperlink{deflate_8h_a662a0774c0de95a9f1309019d52e914b}{00293}}\ \textcolor{preprocessor}{\#define\ put\_byte(s,\ c)\ \{s-\/>pending\_buf[s-\/>pending++]\ =\ (Bytef)(c);\}}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00294}00294\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00295}00295\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00296}\doxymbox{\hyperlink{deflate_8h_aab627bcc7d38e658a93d395c50180cb8}{00296}}\ \textcolor{preprocessor}{\#define\ MIN\_LOOKAHEAD\ (MAX\_MATCH+MIN\_MATCH+1)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00297}00297\ \textcolor{comment}{/*\ Minimum\ amount\ of\ lookahead,\ except\ at\ the\ end\ of\ the\ input\ file.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00298}00298\ \textcolor{comment}{\ *\ See\ deflate.c\ for\ comments\ about\ the\ MIN\_MATCH+1.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00299}00299\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00301}\doxymbox{\hyperlink{deflate_8h_a1bac515806be1e59d7306b4126b0cca4}{00301}}\ \textcolor{preprocessor}{\#define\ MAX\_DIST(s)\ \ ((s)-\/>w\_size-\/MIN\_LOOKAHEAD)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00302}00302\ \textcolor{comment}{/*\ In\ order\ to\ simplify\ the\ code,\ particularly\ on\ 16\ bit\ machines,\ match}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00303}00303\ \textcolor{comment}{\ *\ distances\ are\ limited\ to\ MAX\_DIST\ instead\ of\ WSIZE.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00304}00304\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00306}\doxymbox{\hyperlink{deflate_8h_ac2836f69eb1551bb9699e4dd87dfbdc0}{00306}}\ \textcolor{preprocessor}{\#define\ WIN\_INIT\ MAX\_MATCH}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00307}00307\ \textcolor{comment}{/*\ Number\ of\ bytes\ after\ end\ of\ data\ in\ window\ to\ initialize\ in\ order\ to\ avoid}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00308}00308\ \textcolor{comment}{\ \ \ memory\ checker\ errors\ from\ longest\ match\ routines\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00309}00309\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00310}00310\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ in\ trees.c\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00311}00311\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{compress_8c_a59d4d7ef4d73655c759211ec33a5d44f}{ZLIB\_INTERNAL}}\ \doxymbox{\hyperlink{deflate_8h_a330f47f21a267ad5616b9ba72bf7f90b}{\_tr\_init}}(\doxymbox{\hyperlink{deflate_8h_aeaabc84f4830ec10deb9b64bd719617a}{deflate\_state}}\ *s);}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00312}00312\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{compress_8c_a59d4d7ef4d73655c759211ec33a5d44f}{ZLIB\_INTERNAL}}\ \doxymbox{\hyperlink{deflate_8h_a20ccb9025055641f33252380c7700bcd}{\_tr\_tally}}(\doxymbox{\hyperlink{deflate_8h_aeaabc84f4830ec10deb9b64bd719617a}{deflate\_state}}\ *s,\ \textcolor{keywordtype}{unsigned}\ dist,\ \textcolor{keywordtype}{unsigned}\ lc);}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00313}00313\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{compress_8c_a59d4d7ef4d73655c759211ec33a5d44f}{ZLIB\_INTERNAL}}\ \doxymbox{\hyperlink{deflate_8h_aafe54369cbbb97972279a82a3b6c699e}{\_tr\_flush\_block}}(\doxymbox{\hyperlink{deflate_8h_aeaabc84f4830ec10deb9b64bd719617a}{deflate\_state}}\ *s,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a0f3f92a9c02f6f688bf081aabf230212}{charf}}\ *\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_abd6f60bf9450af2ecb94097a32c19a64}{ulg}}\ stored\_len,\ \textcolor{keywordtype}{int}\ last);}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00315}00315\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{compress_8c_a59d4d7ef4d73655c759211ec33a5d44f}{ZLIB\_INTERNAL}}\ \doxymbox{\hyperlink{deflate_8h_a7152f0344193f9c6f4ae640326a0641a}{\_tr\_flush\_bits}}(\doxymbox{\hyperlink{deflate_8h_aeaabc84f4830ec10deb9b64bd719617a}{deflate\_state}}\ *s);}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00316}00316\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{compress_8c_a59d4d7ef4d73655c759211ec33a5d44f}{ZLIB\_INTERNAL}}\ \doxymbox{\hyperlink{deflate_8h_abd2aff56f489aac6182c99eb739c41be}{\_tr\_align}}(\doxymbox{\hyperlink{deflate_8h_aeaabc84f4830ec10deb9b64bd719617a}{deflate\_state}}\ *s);}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00317}00317\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{compress_8c_a59d4d7ef4d73655c759211ec33a5d44f}{ZLIB\_INTERNAL}}\ \doxymbox{\hyperlink{deflate_8h_a65fd19df7fed60e83492819918defec2}{\_tr\_stored\_block}}(\doxymbox{\hyperlink{deflate_8h_aeaabc84f4830ec10deb9b64bd719617a}{deflate\_state}}\ *s,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a0f3f92a9c02f6f688bf081aabf230212}{charf}}\ *\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{zutil_8h_abd6f60bf9450af2ecb94097a32c19a64}{ulg}}\ stored\_len,\ \textcolor{keywordtype}{int}\ last);}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00319}00319\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00320}\doxymbox{\hyperlink{deflate_8h_a578b4336ef92d19278e0a0d95699def5}{00320}}\ \textcolor{preprocessor}{\#define\ d\_code(dist)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00321}00321\ \textcolor{preprocessor}{\ \ \ ((dist)\ <\ 256\ ?\ \_dist\_code[dist]\ :\ \_dist\_code[256+((dist)>>7)])}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00322}00322\ \textcolor{comment}{/*\ Mapping\ from\ a\ distance\ to\ a\ distance\ code.\ dist\ is\ the\ distance\ -\/\ 1\ and}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00323}00323\ \textcolor{comment}{\ *\ must\ not\ have\ side\ effects.\ \_dist\_code[256]\ and\ \_dist\_code[257]\ are\ never}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00324}00324\ \textcolor{comment}{\ *\ used.}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00325}00325\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00326}00326\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00327}00327\ \textcolor{preprocessor}{\#ifndef\ ZLIB\_DEBUG}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00328}00328\ \textcolor{comment}{/*\ Inline\ versions\ of\ \_tr\_tally\ for\ speed:\ */}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00329}00329\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00330}00330\ \textcolor{preprocessor}{\#if\ defined(GEN\_TREES\_H)\ ||\ !defined(STDC)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00331}00331\ \ \ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{zutil_8h_af3307af5922c72924a837559c801a8a4}{uch}}\ \doxymbox{\hyperlink{compress_8c_a59d4d7ef4d73655c759211ec33a5d44f}{ZLIB\_INTERNAL}}\ \doxymbox{\hyperlink{deflate_8h_ac88cdfc823257dd30e51939e7f2e18d5}{\_length\_code}}[];}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00332}00332\ \ \ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{zutil_8h_af3307af5922c72924a837559c801a8a4}{uch}}\ \doxymbox{\hyperlink{compress_8c_a59d4d7ef4d73655c759211ec33a5d44f}{ZLIB\_INTERNAL}}\ \doxymbox{\hyperlink{deflate_8h_af6c8544687b8a2a44e9638c796dce61e}{\_dist\_code}}[];}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00333}00333\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00334}00334\ \ \ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{zutil_8h_af3307af5922c72924a837559c801a8a4}{uch}}\ \doxymbox{\hyperlink{compress_8c_a59d4d7ef4d73655c759211ec33a5d44f}{ZLIB\_INTERNAL}}\ \doxymbox{\hyperlink{deflate_8h_ac88cdfc823257dd30e51939e7f2e18d5}{\_length\_code}}[];}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00335}00335\ \ \ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{zutil_8h_af3307af5922c72924a837559c801a8a4}{uch}}\ \doxymbox{\hyperlink{compress_8c_a59d4d7ef4d73655c759211ec33a5d44f}{ZLIB\_INTERNAL}}\ \doxymbox{\hyperlink{deflate_8h_af6c8544687b8a2a44e9638c796dce61e}{\_dist\_code}}[];}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00336}00336\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00337}00337\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00338}00338\ \textcolor{preprocessor}{\#ifdef\ LIT\_MEM}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00339}00339\ \textcolor{preprocessor}{\#\ define\ \_tr\_tally\_lit(s,\ c,\ flush)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00340}00340\ \textcolor{preprocessor}{\ \ \{\ uch\ cc\ =\ (c);\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00341}00341\ \textcolor{preprocessor}{\ \ \ \ s-\/>d\_buf[s-\/>sym\_next]\ =\ 0;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00342}00342\ \textcolor{preprocessor}{\ \ \ \ s-\/>l\_buf[s-\/>sym\_next++]\ =\ cc;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00343}00343\ \textcolor{preprocessor}{\ \ \ \ s-\/>dyn\_ltree[cc].Freq++;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00344}00344\ \textcolor{preprocessor}{\ \ \ \ flush\ =\ (s-\/>sym\_next\ ==\ s-\/>sym\_end);\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00345}00345\ \textcolor{preprocessor}{\ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00346}00346\ \textcolor{preprocessor}{\#\ define\ \_tr\_tally\_dist(s,\ distance,\ length,\ flush)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00347}00347\ \textcolor{preprocessor}{\ \ \{\ uch\ len\ =\ (uch)(length);\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00348}00348\ \textcolor{preprocessor}{\ \ \ \ ush\ dist\ =\ (ush)(distance);\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00349}00349\ \textcolor{preprocessor}{\ \ \ \ s-\/>d\_buf[s-\/>sym\_next]\ =\ dist;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00350}00350\ \textcolor{preprocessor}{\ \ \ \ s-\/>l\_buf[s-\/>sym\_next++]\ =\ len;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00351}00351\ \textcolor{preprocessor}{\ \ \ \ dist-\/-\/;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00352}00352\ \textcolor{preprocessor}{\ \ \ \ s-\/>dyn\_ltree[\_length\_code[len]+LITERALS+1].Freq++;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00353}00353\ \textcolor{preprocessor}{\ \ \ \ s-\/>dyn\_dtree[d\_code(dist)].Freq++;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00354}00354\ \textcolor{preprocessor}{\ \ \ \ flush\ =\ (s-\/>sym\_next\ ==\ s-\/>sym\_end);\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00355}00355\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00356}00356\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00357}\doxymbox{\hyperlink{deflate_8h_af3b11322da0fb4ec60a5ccc28e2554df}{00357}}\ \textcolor{preprocessor}{\#\ define\ \_tr\_tally\_lit(s,\ c,\ flush)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00358}00358\ \textcolor{preprocessor}{\ \ \{\ uch\ cc\ =\ (c);\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00359}00359\ \textcolor{preprocessor}{\ \ \ \ s-\/>sym\_buf[s-\/>sym\_next++]\ =\ 0;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00360}00360\ \textcolor{preprocessor}{\ \ \ \ s-\/>sym\_buf[s-\/>sym\_next++]\ =\ 0;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00361}00361\ \textcolor{preprocessor}{\ \ \ \ s-\/>sym\_buf[s-\/>sym\_next++]\ =\ cc;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00362}00362\ \textcolor{preprocessor}{\ \ \ \ s-\/>dyn\_ltree[cc].Freq++;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00363}00363\ \textcolor{preprocessor}{\ \ \ \ flush\ =\ (s-\/>sym\_next\ ==\ s-\/>sym\_end);\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00364}00364\ \textcolor{preprocessor}{\ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00365}\doxymbox{\hyperlink{deflate_8h_a68f55cdd396ad603d9f0b01afdbdf592}{00365}}\ \textcolor{preprocessor}{\#\ define\ \_tr\_tally\_dist(s,\ distance,\ length,\ flush)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00366}00366\ \textcolor{preprocessor}{\ \ \{\ uch\ len\ =\ (uch)(length);\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00367}00367\ \textcolor{preprocessor}{\ \ \ \ ush\ dist\ =\ (ush)(distance);\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00368}00368\ \textcolor{preprocessor}{\ \ \ \ s-\/>sym\_buf[s-\/>sym\_next++]\ =\ (uch)dist;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00369}00369\ \textcolor{preprocessor}{\ \ \ \ s-\/>sym\_buf[s-\/>sym\_next++]\ =\ (uch)(dist\ >>\ 8);\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00370}00370\ \textcolor{preprocessor}{\ \ \ \ s-\/>sym\_buf[s-\/>sym\_next++]\ =\ len;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00371}00371\ \textcolor{preprocessor}{\ \ \ \ dist-\/-\/;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00372}00372\ \textcolor{preprocessor}{\ \ \ \ s-\/>dyn\_ltree[\_length\_code[len]+LITERALS+1].Freq++;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00373}00373\ \textcolor{preprocessor}{\ \ \ \ s-\/>dyn\_dtree[d\_code(dist)].Freq++;\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00374}00374\ \textcolor{preprocessor}{\ \ \ \ flush\ =\ (s-\/>sym\_next\ ==\ s-\/>sym\_end);\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00375}00375\ \textcolor{preprocessor}{\ \ \}}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00376}00376\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00377}00377\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00378}00378\ \textcolor{preprocessor}{\#\ define\ \_tr\_tally\_lit(s,\ c,\ flush)\ flush\ =\ \_tr\_tally(s,\ 0,\ c)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00379}00379\ \textcolor{preprocessor}{\#\ define\ \_tr\_tally\_dist(s,\ distance,\ length,\ flush)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00380}00380\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ flush\ =\ \_tr\_tally(s,\ distance,\ length)}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00381}00381\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{deflate_8h_source_l00383}00383\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ DEFLATE\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

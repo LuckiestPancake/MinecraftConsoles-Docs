@@ -1,0 +1,926 @@
+\doxysection{Potion\+Brewing.\+cpp}
+\hypertarget{_potion_brewing_8cpp_source}{}\label{_potion_brewing_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/PotionBrewing.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/PotionBrewing.cpp}}
+\doxymbox{\hyperlink{_potion_brewing_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8h}{..\(\backslash\)Minecraft.Client\(\backslash\)Minecraft.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8effect_8h}{net.minecraft.world.effect.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_java_math_8h}{JavaMath.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_shared_constants_8h}{SharedConstants.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_potion_brewing_8h}{PotionBrewing.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00008}00008\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ PotionBrewing::DEFAULT\_APPEARANCES[]\ =}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00009}00009\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00010}00010\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_abc9e1a56a9c4c236f163c28ea4e33d85}{IDS\_POTION\_PREFIX\_MUNDANE}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00011}00011\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_af036577ee6732dcf32a3f513093286d9}{IDS\_POTION\_PREFIX\_UNINTERESTING}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00012}00012\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a79036494a1ab3065cb449e4bffc8ea83}{IDS\_POTION\_PREFIX\_BLAND}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00013}00013\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_ae4b5688fa9fe32d4995b5a35a8111395}{IDS\_POTION\_PREFIX\_CLEAR}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00014}00014\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a7624ecf1d582791afd23d475ed4b8cb9}{IDS\_POTION\_PREFIX\_MILKY}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00015}00015\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_ae10dd6f9e28108b03747c413a5f8bfa9}{IDS\_POTION\_PREFIX\_DIFFUSE}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00016}00016\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a36191bbfe3010ab3dcab3a0722f81dde}{IDS\_POTION\_PREFIX\_ARTLESS}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00017}00017\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_af1e3a38386111f9127e437f8d49ef07b}{IDS\_POTION\_PREFIX\_THIN}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00018}00018\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a0524bffd038e13360d436b1e8c1a6b3e}{IDS\_POTION\_PREFIX\_AWKWARD}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00019}00019\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a808da60762f18a1de8c6e4f158dcc09c}{IDS\_POTION\_PREFIX\_FLAT}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00020}00020\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a9265612edd5140dffe49b5205fb2beeb}{IDS\_POTION\_PREFIX\_BULKY}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00021}00021\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_af901572eddf9933b38287d20dbbf2d43}{IDS\_POTION\_PREFIX\_BUNGLING}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00022}00022\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_aeaf6d0823936cbda159dd50e43c20ec3}{IDS\_POTION\_PREFIX\_BUTTERED}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00023}00023\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a389ecfb52b9bd5a2165bc355ccd11c2b}{IDS\_POTION\_PREFIX\_SMOOTH}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00024}00024\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a7c3102642b5b66636154d8d4a63a8668}{IDS\_POTION\_PREFIX\_SUAVE}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00025}00025\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a5993f5299ff26698c02bf4c3f91de299}{IDS\_POTION\_PREFIX\_DEBONAIR}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00026}00026\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a70024157a51d9ddfcb2002e45d301a51}{IDS\_POTION\_PREFIX\_THICK}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00027}00027\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a23b18d56e2dff6d52636dee1cb7171ce}{IDS\_POTION\_PREFIX\_ELEGANT}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00028}00028\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a5c7459cbbd062f0f07b7086a5e1913ed}{IDS\_POTION\_PREFIX\_FANCY}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00029}00029\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a954b93b60a627a0bcc43d80deb4603b7}{IDS\_POTION\_PREFIX\_CHARMING}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00030}00030\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_accd2388f0218542bd88aac87c019fddd}{IDS\_POTION\_PREFIX\_DASHING}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00031}00031\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a79fc02af9011bca35162724757208123}{IDS\_POTION\_PREFIX\_REFINED}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00032}00032\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a9eb5d157818160d5151d3cc485ca8033}{IDS\_POTION\_PREFIX\_CORDIAL}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00033}00033\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_aba3416c1f52c06ab0355004e4d9761af}{IDS\_POTION\_PREFIX\_SPARKLING}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00034}00034\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_af3e237b16909c57525b0af71b62a40e5}{IDS\_POTION\_PREFIX\_POTENT}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00035}00035\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a7f8b0dddb18c9ba2a8fa96292126e937}{IDS\_POTION\_PREFIX\_FOUL}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00036}00036\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a8b79a06683477ff2818c7f5581aae087}{IDS\_POTION\_PREFIX\_ODORLESS}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00037}00037\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a07c7c0a43c0b8186dbec57f5912996be}{IDS\_POTION\_PREFIX\_RANK}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00038}00038\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a5916b6a8ad132d49256a1c31ebb8b418}{IDS\_POTION\_PREFIX\_HARSH}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00039}00039\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a16d40c0bf0463fa8c840ab559dbe8b14}{IDS\_POTION\_PREFIX\_ACRID}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00040}00040\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_af012a3848fd253228b42a909c470553e}{IDS\_POTION\_PREFIX\_GROSS}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00041}00041\ \ \ \ \ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a475eaa44e734318bda0c96ff6f6dbfed}{IDS\_POTION\_PREFIX\_STINKY}},}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00042}00042\ \};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00044}00044\ \textcolor{comment}{//\ bit\ 4\ is\ the\ "{}enabler,"{}\ lit\ by\ nether\ seeds}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00046}00046\ \ \ \ \ \textcolor{comment}{//\ bits\ 0-\/3\ are\ effect\ identifiers}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00047}00047\ \ \ \ \ \textcolor{comment}{//\ 0001\ -\/\ regeneration}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00048}00048\ \ \ \ \ \textcolor{comment}{//\ 0010\ -\/\ move\ speed}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00049}00049\ \ \ \ \ \textcolor{comment}{//\ 0011\ -\/\ fire\ resist}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00050}00050\ \ \ \ \ \textcolor{comment}{//\ 0100\ -\/\ poison}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00051}00051\ \ \ \ \ \textcolor{comment}{//\ 0101\ -\/\ heal}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{comment}{//\ 0110\ -\/\ night\ vision}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00053}00053\ \ \ \ \ \textcolor{comment}{//\ 0111\ -\/\ invisibility}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00054}00054\ \ \ \ \ \textcolor{comment}{//\ 1000\ -\/\ weakness}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00055}00055\ \ \ \ \ \textcolor{comment}{//\ 1001\ -\/\ damage\ boost}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00056}00056\ \ \ \ \ \textcolor{comment}{//\ 1010\ -\/\ move\ slow}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00057}00057\ \ \ \ \ \textcolor{comment}{//\ 1011\ -\/}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00058}00058\ \ \ \ \ \textcolor{comment}{//\ 1100\ -\/\ harm}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00059}00059\ \ \ \ \ \textcolor{comment}{//\ 1101\ -\/}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00060}00060\ \ \ \ \ \textcolor{comment}{//\ 1110\ -\/}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00061}00061\ \ \ \ \ \textcolor{comment}{//\ 1111\ -\/}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00063}00063\ \textcolor{comment}{/*\ 4J-\/JEV:\ Fix\ for\ \#81196,}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00064}00064\ \textcolor{comment}{\ *\ Bit\ 13\ is\ always\ set\ in\ functional\ potions.}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00065}00065\ \textcolor{comment}{\ *\ Therefore\ if\ bit\ 13\ is\ on,\ don't\ use\ netherwart!}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00066}00066\ \textcolor{comment}{\ *\ Added\ "{}\&!13"{}\ which\ requires\ that\ bit\ 13\ be\ turned\ off.}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00067}00067\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00068}00068\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_afd4c1b035b9948bf309b0f69efb997e9}{PotionBrewing::MOD\_NETHERWART}}\ =\ L\textcolor{stringliteral}{"{}+4\&!13"{}};\ \textcolor{comment}{//\ L"{}+4"{}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00070}00070\ \textcolor{preprocessor}{\#if\ \_SIMPLIFIED\_BREWING}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00071}00071\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a738cbf66d06e3f7ab0e6fa28109c5693}{PotionBrewing::MOD\_WATER}}\ =\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00072}00072\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a83841197ae8b8ec873451f5cc1097057}{PotionBrewing::MOD\_SUGAR}}\ =\ L\textcolor{stringliteral}{"{}-\/0+1-\/2-\/3\&4-\/4+13"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00073}00073\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a247f8bb38111ce2530755231f74fd93b}{PotionBrewing::MOD\_GHASTTEARS}}\ =\ L\textcolor{stringliteral}{"{}+0-\/1-\/2-\/3\&4-\/4+13"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00074}00074\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a2f9665d1a3c67d52dcf361be279c22fc}{PotionBrewing::MOD\_SPIDEREYE}}\ =\ L\textcolor{stringliteral}{"{}-\/0-\/1+2-\/3\&4-\/4+13"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00075}00075\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a5c0fd86cf9c1aee775650479117c8292}{PotionBrewing::MOD\_FERMENTEDEYE}}\ =\ L\textcolor{stringliteral}{"{}-\/0+3-\/4+13"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00076}00076\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a87e50aa8f87ddb3af7b03ca0bb9ff374}{PotionBrewing::MOD\_SPECKLEDMELON}}\ =\ L\textcolor{stringliteral}{"{}+0-\/1+2-\/3\&4-\/4+13"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00077}00077\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a0d9fd83d2566265ddc50649b8d22b18a}{PotionBrewing::MOD\_BLAZEPOWDER}}\ =\ L\textcolor{stringliteral}{"{}+0-\/1-\/2+3\&4-\/4+13"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00078}00078\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a6dba92b286cf78dcc9d90e0069af518e}{PotionBrewing::MOD\_GOLDENCARROT}}\ =\ L\textcolor{stringliteral}{"{}-\/0+1+2-\/3+13\&4-\/4"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00079}00079\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a5a874019268e05cca59afd04ac2a9800}{PotionBrewing::MOD\_MAGMACREAM}}\ =\ L\textcolor{stringliteral}{"{}+0+1-\/2-\/3\&4-\/4+13"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00080}00080\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a123d9c21a638528adc1ec821afb0aac4}{PotionBrewing::MOD\_REDSTONE}}\ =\ L\textcolor{stringliteral}{"{}-\/5+6-\/7"{}};\ \textcolor{comment}{//\ redstone\ increases\ duration}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00081}00081\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a172e5310b238fdb61a8a23163ff8f19c}{PotionBrewing::MOD\_GLOWSTONE}}\ =\ L\textcolor{stringliteral}{"{}+5-\/6-\/7"{}};\ \textcolor{comment}{//\ glowstone\ increases\ amplification}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00082}00082\ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Don't\ require\ bit\ 13\ to\ be\ set.\ We\ don't\ use\ it\ in\ the\ creative\ menu.\ Side\ effect\ is\ you\ can\ make\ a\ (virtually\ useless)\ Splash\ Mundane\ potion\ with\ water\ bottle\ and\ gunpowder}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00083}00083\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a5d5f00dc36f8bb3ce94151adcd5123e0}{PotionBrewing::MOD\_GUNPOWDER}}\ =\ L\textcolor{stringliteral}{"{}+14"{}};\textcolor{comment}{//\&13-\/13"{};\ //\ gunpowder\ makes\ them\ throwable!\ //\ gunpowder\ requires\ 13\ and\ sets\ 14}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00084}00084\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00085}00085\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a738cbf66d06e3f7ab0e6fa28109c5693}{PotionBrewing::MOD\_WATER}}\ =\ L\textcolor{stringliteral}{"{}-\/1-\/3-\/5-\/7-\/9-\/11-\/13"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00086}00086\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a83841197ae8b8ec873451f5cc1097057}{PotionBrewing::MOD\_SUGAR}}\ =\ L\textcolor{stringliteral}{"{}+0"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00087}00087\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a247f8bb38111ce2530755231f74fd93b}{PotionBrewing::MOD\_GHASTTEARS}}\ =\ L\textcolor{stringliteral}{"{}+11"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00088}00088\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a2f9665d1a3c67d52dcf361be279c22fc}{PotionBrewing::MOD\_SPIDEREYE}}\ =\ L\textcolor{stringliteral}{"{}+10+7+5"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00089}00089\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a5c0fd86cf9c1aee775650479117c8292}{PotionBrewing::MOD\_FERMENTEDEYE}}\ =\ L\textcolor{stringliteral}{"{}+14+9"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00090}00090\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a87e50aa8f87ddb3af7b03ca0bb9ff374}{PotionBrewing::MOD\_SPECKLEDMELON}}\ =\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00091}00091\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a0d9fd83d2566265ddc50649b8d22b18a}{PotionBrewing::MOD\_BLAZEPOWDER}}\ =\ L\textcolor{stringliteral}{"{}+14"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00092}00092\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a5a874019268e05cca59afd04ac2a9800}{PotionBrewing::MOD\_MAGMACREAM}}\ =\ L\textcolor{stringliteral}{"{}+14+6+1"{}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00093}00093\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a123d9c21a638528adc1ec821afb0aac4}{PotionBrewing::MOD\_REDSTONE}}\ =\ L\textcolor{stringliteral}{"{}"{}};\ \textcolor{comment}{//\ redstone\ increases\ duration}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00094}00094\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a172e5310b238fdb61a8a23163ff8f19c}{PotionBrewing::MOD\_GLOWSTONE}}\ =\ L\textcolor{stringliteral}{"{}"{}};\ \textcolor{comment}{//\ glowstone\ increases\ amplification}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00095}00095\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a5d5f00dc36f8bb3ce94151adcd5123e0}{PotionBrewing::MOD\_GUNPOWDER}}\ =\ L\textcolor{stringliteral}{"{}"{}};\ \textcolor{comment}{//\ gunpowder\ makes\ them\ throwable!\ //\ gunpowder\ requires\ 13\ and\ sets\ 14}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00096}00096\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00098}00098\ PotionBrewing::intStringMap\ PotionBrewing::potionEffectDuration;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00099}00099\ PotionBrewing::intStringMap\ PotionBrewing::potionEffectAmplifier;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00101}00101\ unordered\_map<int,\ int>\ PotionBrewing::cachedColors;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00103}\doxymbox{\hyperlink{class_potion_brewing_ad98fa8c636c7f1a7114b9c64b76cb288}{00103}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_potion_brewing_ad98fa8c636c7f1a7114b9c64b76cb288}{PotionBrewing::staticCtor}}()}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00104}00104\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00105}00105\ \textcolor{preprocessor}{\#if\ \_SIMPLIFIED\_BREWING}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ potionEffectDuration.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_a80e43d960525b248e66b14d25fb87496}{MobEffect::regeneration}}-\/>getId(),\ L\textcolor{stringliteral}{"{}0\ \&\ !1\ \&\ !2\ \&\ !3\ \&\ 0+6"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ potionEffectDuration.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_ab4da7966a46ee1342351ca64ab6a3393}{MobEffect::movementSpeed}}-\/>getId(),\ L\textcolor{stringliteral}{"{}!0\ \&\ 1\ \&\ !2\ \&\ !3\ \&\ 1+6"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ potionEffectDuration.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_aa214801cc47ff6bc01863bdb04994da6}{MobEffect::fireResistance}}-\/>getId(),\ L\textcolor{stringliteral}{"{}0\ \&\ 1\ \&\ !2\ \&\ !3\ \&\ 0+6"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ potionEffectDuration.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_aba6fd23598806f3ed1df6ea94e58fdc2}{MobEffect::heal}}-\/>getId(),\ L\textcolor{stringliteral}{"{}0\ \&\ !1\ \&\ 2\ \&\ !3"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ potionEffectDuration.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_ae96151449e9d9529a87c2d7d8d2f550e}{MobEffect::poison}}-\/>getId(),\ L\textcolor{stringliteral}{"{}!0\ \&\ !1\ \&\ 2\ \&\ !3\ \&\ 2+6"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ potionEffectDuration.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_a22d0dcad4249d5efc6279027ccc820b6}{MobEffect::weakness}}-\/>getId(),\ L\textcolor{stringliteral}{"{}!0\ \&\ !1\ \&\ !2\ \&\ 3\ \&\ 3+6"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ potionEffectDuration.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_a07314e9279dfd20f8ac6e74c101146ab}{MobEffect::harm}}-\/>getId(),\ L\textcolor{stringliteral}{"{}!0\ \&\ !1\ \&\ 2\ \&\ 3"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ potionEffectDuration.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_ac5ba4b6dcf87210d04060b4b0fcebc82}{MobEffect::movementSlowdown}}-\/>getId(),\ L\textcolor{stringliteral}{"{}!0\ \&\ 1\ \&\ !2\ \&\ 3\ \&\ 3+6"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ potionEffectDuration.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_ab0c80b9a9a13f88359f6b05b0713c3f2}{MobEffect::damageBoost}}-\/>getId(),\ L\textcolor{stringliteral}{"{}0\ \&\ !1\ \&\ !2\ \&\ 3\ \&\ 3+6"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ potionEffectDuration.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_ac941086e0bde2fbb3824c90821d71959}{MobEffect::nightVision}}-\/>getId(),\ L\textcolor{stringliteral}{"{}!0\ \&\ 1\ \&\ 2\ \&\ !3\ \&\ 2+6"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ potionEffectDuration.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_a2e73747558f15aa3017f10187968bab1}{MobEffect::invisibility}}-\/>getId(),\ L\textcolor{stringliteral}{"{}!0\ \&\ 1\ \&\ 2\ \&\ 3\ \&\ 2+6"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ glowstone\ increases\ amplification}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ potionEffectAmplifier.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_ab4da7966a46ee1342351ca64ab6a3393}{MobEffect::movementSpeed}}-\/>getId(),\ L\textcolor{stringliteral}{"{}5"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ potionEffectAmplifier.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_addfab45847c3b1df3545e6e5c993ecc9}{MobEffect::digSpeed}}-\/>getId(),\ L\textcolor{stringliteral}{"{}5"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ potionEffectAmplifier.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_ab0c80b9a9a13f88359f6b05b0713c3f2}{MobEffect::damageBoost}}-\/>getId(),\ L\textcolor{stringliteral}{"{}5"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ potionEffectAmplifier.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_a80e43d960525b248e66b14d25fb87496}{MobEffect::regeneration}}-\/>getId(),\ L\textcolor{stringliteral}{"{}5"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ potionEffectAmplifier.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_a07314e9279dfd20f8ac6e74c101146ab}{MobEffect::harm}}-\/>getId(),\ L\textcolor{stringliteral}{"{}5"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ potionEffectAmplifier.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_aba6fd23598806f3ed1df6ea94e58fdc2}{MobEffect::heal}}-\/>getId(),\ L\textcolor{stringliteral}{"{}5"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ potionEffectAmplifier.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_af682f176d753fdb5c75d8cdb57d09744}{MobEffect::damageResistance}}-\/>getId(),\ L\textcolor{stringliteral}{"{}5"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ potionEffectAmplifier.insert(intStringMap::value\_type(\ \doxymbox{\hyperlink{class_mob_effect_ae96151449e9d9529a87c2d7d8d2f550e}{MobEffect::poison}}-\/>getId(),\ L\textcolor{stringliteral}{"{}5"{}}\ ));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00127}00127\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ potionEffectDuration.put(movementSpeed.getId(),\ \textcolor{stringliteral}{"{}!10\ \&\ !4\ \&\ 5*2+0\ \&\ >1\ |\ !7\ \&\ !4\ \&\ 5*2+0\ \&\ >1"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ potionEffectDuration.put(movementSlowdown.getId(),\ \textcolor{stringliteral}{"{}10\ \&\ 7\ \&\ !4\ \&\ 7+5+1-\/0"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ potionEffectDuration.put(digSpeed.getId(),\ \textcolor{stringliteral}{"{}2\ \&\ 12+2+6-\/1-\/7\ \&\ <8"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ potionEffectDuration.put(digSlowdown.getId(),\ \textcolor{stringliteral}{"{}!2\ \&\ !1*2-\/9\ \&\ 14-\/5"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ potionEffectDuration.put(damageBoost.getId(),\ \textcolor{stringliteral}{"{}9\ \&\ 3\ \&\ 9+4+5\ \&\ <11"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ potionEffectDuration.put(weakness.getId(),\ \textcolor{stringliteral}{"{}=1>5>7>9+3-\/7-\/2-\/11\ \&\ !9\ \&\ !0"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ potionEffectDuration.put(heal.getId(),\ \textcolor{stringliteral}{"{}11\ \&\ <6"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ potionEffectDuration.put(harm.getId(),\ \textcolor{stringliteral}{"{}!11\ \&\ 1\ \&\ 10\ \&\ !7"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ potionEffectDuration.put(jump.getId(),\ \textcolor{stringliteral}{"{}8\ \&\ 2+0\ \&\ <5"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ potionEffectDuration.put(confusion.getId(),\ \textcolor{stringliteral}{"{}8*2-\/!7+4-\/11\ \&\ !2\ |\ 13\ \&\ 11\ \&\ 2*3-\/1-\/5"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ potionEffectDuration.put(regeneration.getId(),\ \textcolor{stringliteral}{"{}!14\ \&\ 13*3-\/!0-\/!5-\/8"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ potionEffectDuration.put(damageResistance.getId(),\ \textcolor{stringliteral}{"{}10\ \&\ 4\ \&\ 10+5+6\ \&\ <9"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ potionEffectDuration.put(fireResistance.getId(),\ \textcolor{stringliteral}{"{}14\ \&\ !5\ \&\ 6-\/!1\ \&\ 14+13+12"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ potionEffectDuration.put(waterBreathing.getId(),\ \textcolor{stringliteral}{"{}0+1+12\ \&\ !6\ \&\ 10\ \&\ !11\ \&\ !13"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ potionEffectDuration.put(invisibility.getId(),\ \textcolor{stringliteral}{"{}2+5+13-\/0-\/4\ \&\ !7\ \&\ !1\ \&\ >5"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ potionEffectDuration.put(blindness.getId(),\ \textcolor{stringliteral}{"{}9\ \&\ !1\ \&\ !5\ \&\ !3\ \&\ =3"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ potionEffectDuration.put(nightVision.getId(),\ \textcolor{stringliteral}{"{}8*2-\/!7\ \&\ 5\ \&\ !0\ \&\ >3"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ potionEffectDuration.put(hunger.getId(),\ \textcolor{stringliteral}{"{}>4>6>8-\/3-\/8+2"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ potionEffectDuration.put(poison.getId(),\ \textcolor{stringliteral}{"{}12+9\ \&\ !13\ \&\ !0"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ potionEffectAmplifier.put(movementSpeed.getId(),\ \textcolor{stringliteral}{"{}7+!3-\/!1"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ potionEffectAmplifier.put(digSpeed.getId(),\ \textcolor{stringliteral}{"{}1+0-\/!11"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ potionEffectAmplifier.put(damageBoost.getId(),\ \textcolor{stringliteral}{"{}2+7-\/!12"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ potionEffectAmplifier.put(heal.getId(),\ \textcolor{stringliteral}{"{}11+!0-\/!1-\/!14"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ potionEffectAmplifier.put(harm.getId(),\ \textcolor{stringliteral}{"{}!11-\/!14+!0-\/!1"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ potionEffectAmplifier.put(damageResistance.getId(),\ \textcolor{stringliteral}{"{}12-\/!2"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ potionEffectAmplifier.put(poison.getId(),\ \textcolor{stringliteral}{"{}14>5"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00155}00155\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00156}00156\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00158}00158\ \textcolor{keywordtype}{bool}\ PotionBrewing::isWrappedLit(\textcolor{keywordtype}{int}\ brew,\ \textcolor{keywordtype}{int}\ position)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00159}00159\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00160}00160\ \ \ \ \ \textcolor{keywordflow}{return}\ (brew\ \&\ (1\ <<\ (position\ \%\ \doxymbox{\hyperlink{class_potion_brewing_a372d7f9f42b0eb97bc50a4fe38b83289}{NUM\_BITS}})))\ !=\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00161}00161\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00163}\doxymbox{\hyperlink{class_potion_brewing_ade023d6d8fa68e6e46d60a5a8e236bfb}{00163}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_potion_brewing_ade023d6d8fa68e6e46d60a5a8e236bfb}{PotionBrewing::isLit}}(\textcolor{keywordtype}{int}\ brew,\ \textcolor{keywordtype}{int}\ position)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00164}00164\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00165}00165\ \ \ \ \ \textcolor{keywordflow}{return}\ (brew\ \&\ (1\ <<\ position))\ !=\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00166}00166\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00168}00168\ \textcolor{keywordtype}{int}\ PotionBrewing::isBit(\textcolor{keywordtype}{int}\ brew,\ \textcolor{keywordtype}{int}\ position)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00169}00169\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00170}00170\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_potion_brewing_ade023d6d8fa68e6e46d60a5a8e236bfb}{isLit}}(brew,\ position)\ ?\ 1\ :\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00171}00171\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00173}00173\ \textcolor{keywordtype}{int}\ PotionBrewing::isNotBit(\textcolor{keywordtype}{int}\ brew,\ \textcolor{keywordtype}{int}\ position)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00174}00174\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00175}00175\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_potion_brewing_ade023d6d8fa68e6e46d60a5a8e236bfb}{isLit}}(brew,\ position)\ ?\ 0\ :\ 1;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00176}00176\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00178}\doxymbox{\hyperlink{class_potion_brewing_a500f494b75276738e90cd42c4047193f}{00178}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_potion_brewing_a500f494b75276738e90cd42c4047193f}{PotionBrewing::getAppearanceValue}}(\textcolor{keywordtype}{int}\ brew)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00179}00179\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00180}00180\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_potion_brewing_a42d4ac600b38cb892c25800eb91029d5}{valueOf}}(brew,\ 5,\ 4,\ 3,\ 2,\ 1);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00181}00181\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00183}\doxymbox{\hyperlink{class_potion_brewing_ae750584f4a1b4c0f734a34c7c8511077}{00183}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_potion_brewing_ae750584f4a1b4c0f734a34c7c8511077}{PotionBrewing::getColorValue}}(vector<MobEffectInstance\ *>\ *effects)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00184}00184\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00185}00185\ \ \ \ \ \doxymbox{\hyperlink{class_colour_table}{ColourTable}}\ *colourTable\ =\ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_a3f19a2d5cb1b3b4d216b4107df887a6b}{getColourTable}}();}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00187}00187\ \ \ \ \ \textcolor{keywordtype}{int}\ baseColor\ =\ colourTable-\/>\doxymbox{\hyperlink{class_colour_table_a0e221d372a697f1f24864cfbbc542cc5}{getColor}}(\ \doxymbox{\hyperlink{_app__enums_8h_a2002da069475994a59bdad11e6aa4142a4245416ad27dd88cc1bd221822ae9e06}{eMinecraftColour\_Potion\_BaseColour}}\ );}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00188}00188\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00189}00189\ \ \ \ \ \textcolor{keywordflow}{if}\ (effects\ ==\ \textcolor{keyword}{nullptr}\ ||\ effects-\/>empty())}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00190}00190\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ baseColor;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00192}00192\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00193}00193\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00194}00194\ \ \ \ \ \textcolor{keywordtype}{float}\ red\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00195}00195\ \ \ \ \ \textcolor{keywordtype}{float}\ green\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00196}00196\ \ \ \ \ \textcolor{keywordtype}{float}\ blue\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00197}00197\ \ \ \ \ \textcolor{keywordtype}{float}\ count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00199}00199\ \ \ \ \ \textcolor{comment}{//for\ (MobEffectInstance\ effect\ :\ effects)\{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00200}00200\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ effect\ :\ *effects)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00201}00201\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ potionColor\ =\ colourTable-\/>\doxymbox{\hyperlink{class_colour_table_a0e221d372a697f1f24864cfbbc542cc5}{getColor}}(\ \doxymbox{\hyperlink{class_mob_effect_ae2091169b7c72d4c61e85cc7a78eb85b}{MobEffect::effects}}[effect-\/>getId()]-\/>getColor()\ );}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00203}00203\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ potency\ =\ 0;\ potency\ <=\ effect-\/>getAmplifier();\ potency++)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ red\ +=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}((potionColor\ >>\ 16)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ green\ +=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}((potionColor\ >>\ 8)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ blue\ +=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}((potionColor\ >>\ 0)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ count++;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00211}00211\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00213}00213\ \ \ \ \ red\ =\ (red\ /\ count)\ *\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00214}00214\ \ \ \ \ green\ =\ (green\ /\ count)\ *\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00215}00215\ \ \ \ \ blue\ =\ (blue\ /\ count)\ *\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00217}00217\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(red)\ <<\ 16\ |\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(green)\ <<\ 8\ |\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(blue);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00218}00218\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00220}\doxymbox{\hyperlink{class_potion_brewing_a919cc435d73755547399a6ae8bd198ec}{00220}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_potion_brewing_a919cc435d73755547399a6ae8bd198ec}{PotionBrewing::areAllEffectsAmbient}}(vector<MobEffectInstance\ *>\ *effects)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00221}00221\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00222}00222\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ effect\ :\ *effects)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00223}00223\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!effect-\/>isAmbient())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00225}00225\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00227}00227\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00228}00228\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00229}00229\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00230}\doxymbox{\hyperlink{class_potion_brewing_acea83502758fb106e57d285450af39b6}{00230}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_potion_brewing_ae750584f4a1b4c0f734a34c7c8511077}{PotionBrewing::getColorValue}}(\textcolor{keywordtype}{int}\ brew,\ \textcolor{keywordtype}{bool}\ includeDisabledEffects)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00231}00231\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00232}00232\ \ \ \ \ \textcolor{keywordflow}{if}\ (!includeDisabledEffects)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00233}00233\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ colIt\ =\ cachedColors.find(brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (colIt\ !=\ cachedColors.end())}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ colIt-\/>second;\textcolor{comment}{//cachedColors.get(brew);}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00239}00239\ \ \ \ \ \ \ \ \ vector<MobEffectInstance\ *>\ *effects\ =\ \doxymbox{\hyperlink{class_potion_brewing_a918c2958d285cfae967f30cb27fc6b7a}{getEffects}}(brew,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00240}00240\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ color\ =\ \doxymbox{\hyperlink{class_potion_brewing_ae750584f4a1b4c0f734a34c7c8511077}{getColorValue}}(effects);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00241}00241\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(effects\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00242}00242\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ effect\ :\ *effects)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ effect;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ effects;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ cachedColors.insert(\ std::pair<int,int>(brew,\ color)\ );}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00250}00250\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ color;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00251}00251\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00252}00252\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00253}00253\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_potion_brewing_ae750584f4a1b4c0f734a34c7c8511077}{getColorValue}}(\doxymbox{\hyperlink{class_potion_brewing_a918c2958d285cfae967f30cb27fc6b7a}{getEffects}}(brew,\ includeDisabledEffects));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00254}00254\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00256}\doxymbox{\hyperlink{class_potion_brewing_af48f2e6dba15451ca42974efd872c67a}{00256}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_potion_brewing_af48f2e6dba15451ca42974efd872c67a}{PotionBrewing::getSmellValue}}(\textcolor{keywordtype}{int}\ brew)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00257}00257\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00258}00258\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_potion_brewing_a42d4ac600b38cb892c25800eb91029d5}{valueOf}}(brew,\ 12,\ 11,\ 6,\ 4,\ 0);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00259}00259\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00260}00260\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00261}\doxymbox{\hyperlink{class_potion_brewing_af2674095d9f5ef1360f477feea98d2c8}{00261}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_potion_brewing_af2674095d9f5ef1360f477feea98d2c8}{PotionBrewing::getAppearanceName}}(\textcolor{keywordtype}{int}\ brew)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00262}00262\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00263}00263\ \ \ \ \ \textcolor{keywordtype}{int}\ value\ =\ \doxymbox{\hyperlink{class_potion_brewing_a500f494b75276738e90cd42c4047193f}{getAppearanceValue}}(brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00264}00264\ \ \ \ \ \textcolor{keywordflow}{return}\ DEFAULT\_APPEARANCES[value];}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00265}00265\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00267}00267\ \textcolor{keywordtype}{int}\ PotionBrewing::constructParsedValue(\textcolor{keywordtype}{bool}\ isNot,\ \textcolor{keywordtype}{bool}\ hasMultiplier,\ \textcolor{keywordtype}{bool}\ isNeg,\ \textcolor{keywordtype}{int}\ countCompare,\ \textcolor{keywordtype}{int}\ valuePart,\ \textcolor{keywordtype}{int}\ multiplierPart,\ \textcolor{keywordtype}{int}\ brew)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00268}00268\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00269}00269\ \ \ \ \ \textcolor{keywordtype}{int}\ value\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00270}00270\ \ \ \ \ \textcolor{keywordflow}{if}\ (isNot)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00271}00271\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ value\ =\ isNotBit(brew,\ valuePart);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00273}00273\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00274}00274\ \textcolor{preprocessor}{\#if\ !(\_SIMPLIFIED\_BREWING)}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00275}00275\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (countCompare\ !=\ NO\_COUNT)\ \textcolor{comment}{//\ Never\ true\ for\ simplified\ brewing}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00276}00276\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (countCompare\ ==\ EQUAL\_COUNT\ \&\&\ countOnes(brew)\ ==\ valuePart)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_sentient_a6e9353b7ebb5caa365b8a1452b5ab231}{value}}\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00280}00280\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00281}00281\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (countCompare\ ==\ GREATER\_COUNT\ \&\&\ countOnes(brew)\ >\ valuePart)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_sentient_a6e9353b7ebb5caa365b8a1452b5ab231}{value}}\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00284}00284\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00285}00285\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (countCompare\ ==\ LESS\_COUNT\ \&\&\ countOnes(brew)\ <\ valuePart)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00286}00286\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_sentient_a6e9353b7ebb5caa365b8a1452b5ab231}{value}}\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00288}00288\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00289}00289\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00290}00290\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00291}00291\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00292}00292\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00293}00293\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_sentient_a6e9353b7ebb5caa365b8a1452b5ab231}{value}}\ =\ isBit(brew,\ valuePart);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00294}00294\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00295}00295\ \textcolor{preprocessor}{\#if\ !(\_SIMPLIFIED\_BREWING)}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00296}00296\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasMultiplier)\ \textcolor{comment}{//\ Always\ false\ for\ simplified\ brewing}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00297}00297\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_sentient_a6e9353b7ebb5caa365b8a1452b5ab231}{value}}\ *=\ multiplierPart;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00299}00299\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00300}00300\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00301}00301\ \ \ \ \ \textcolor{keywordflow}{if}\ (isNeg)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00302}00302\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_sentient_a6e9353b7ebb5caa365b8a1452b5ab231}{value}}\ *=\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00304}00304\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00305}00305\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{namespace_sentient_a6e9353b7ebb5caa365b8a1452b5ab231}{value}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00306}00306\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00307}00307\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00308}00308\ \textcolor{keywordtype}{int}\ PotionBrewing::countOnes(\textcolor{keywordtype}{int}\ brew)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00309}00309\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00310}00310\ \ \ \ \ \textcolor{keywordtype}{int}\ c\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00311}00311\ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ brew\ >\ 0;\ c++)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00312}00312\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ brew\ \&=\ brew\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00314}00314\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00315}00315\ \ \ \ \ \textcolor{keywordflow}{return}\ c;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00316}00316\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00318}00318\ \textcolor{preprocessor}{\#if\ \_SIMPLIFIED\_BREWING}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00319}00319\ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Trimmed\ this\ function\ to\ remove\ all\ the\ unused\ features\ for\ simplified\ brewing}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00320}00320\ \textcolor{keywordtype}{int}\ PotionBrewing::parseEffectFormulaValue(\textcolor{keyword}{const}\ wstring\ \&definition,\ \textcolor{keywordtype}{int}\ start,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}},\ \textcolor{keywordtype}{int}\ brew)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00321}00321\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00322}00322\ \ \ \ \ \textcolor{keywordflow}{if}\ (start\ >=\ definition.length()\ ||\ \doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end\ <\ 0\ ||\ start\ >}}=\ \doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00323}00323\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00325}00325\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00326}00326\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00327}00327\ \ \ \ \ \textcolor{comment}{//\ split\ by\ and}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00328}00328\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ andIndex\ =\ definition.find\_first\_of(L\textcolor{charliteral}{'\&'},\ start);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00329}00329\ \ \ \ \ \textcolor{keywordflow}{if}\ (andIndex\ !=\ wstring::npos\ \&\&\ andIndex\ <\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(\doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}}))}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00330}00330\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ leftSide\ =\ parseEffectFormulaValue(definition,\ start,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(andIndex)\ -\/\ 1,\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (leftSide\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00336}00336\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rightSide\ =\ parseEffectFormulaValue(definition,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(andIndex)\ +\ 1,\ \doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}},\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00338}00338\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rightSide\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00342}00342\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (leftSide\ >\ rightSide)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00344}00344\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ leftSide;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ rightSide;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00348}00348\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00349}00349\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00350}00350\ \ \ \ \ \textcolor{keywordtype}{bool}\ hasMultiplier\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00351}00351\ \ \ \ \ \textcolor{keywordtype}{bool}\ hasValue\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00352}00352\ \ \ \ \ \textcolor{keywordtype}{bool}\ isNot\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00353}00353\ \ \ \ \ \textcolor{keywordtype}{bool}\ isNeg\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00354}00354\ \ \ \ \ \textcolor{keywordtype}{int}\ bitCount\ =\ NO\_COUNT;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00355}00355\ \ \ \ \ \textcolor{keywordtype}{int}\ valuePart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00356}00356\ \ \ \ \ \textcolor{keywordtype}{int}\ multiplierPart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00357}00357\ \ \ \ \ \textcolor{keywordtype}{int}\ result\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00358}00358\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ start;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}};\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00359}00359\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00360}00360\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00361}00361\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ current\ =\ definition.at(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\ >=\ L\textcolor{charliteral}{'0'}\ \&\&\ current\ <=\ L\textcolor{charliteral}{'9'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ *=\ 10;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ +=\ (int)\ (current\ -\/\ L\textcolor{charliteral}{'0'});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ hasValue\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'!'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasValue)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ +=\ constructParsedValue(isNot,\ hasMultiplier,\ isNeg,\ bitCount,\ valuePart,\ multiplierPart,\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasValue\ =\ isNeg\ =\ isNot\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00376}00376\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ \ \ isNot\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00378}00378\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00379}00379\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'-\/'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasValue)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ +=\ constructParsedValue(isNot,\ hasMultiplier,\ isNeg,\ bitCount,\ valuePart,\ multiplierPart,\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasValue\ =\ isNeg\ =\ isNot\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00387}00387\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ isNeg\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'+'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00391}00391\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasValue)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00393}00393\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ +=\ constructParsedValue(isNot,\ hasMultiplier,\ isNeg,\ bitCount,\ valuePart,\ multiplierPart,\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasValue\ =\ isNeg\ =\ isNot\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00397}00397\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00398}00398\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00399}00399\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00400}00400\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasValue)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00401}00401\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ result\ +=\ constructParsedValue(isNot,\ hasMultiplier,\ isNeg,\ bitCount,\ valuePart,\ multiplierPart,\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00403}00403\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00405}00405\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00406}00406\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00407}00407\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00408}00408\ \textcolor{keywordtype}{int}\ PotionBrewing::parseEffectFormulaValue(\textcolor{keyword}{const}\ wstring\ \&definition,\ \textcolor{keywordtype}{int}\ start,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}},\ \textcolor{keywordtype}{int}\ brew)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00409}00409\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00410}00410\ \ \ \ \ \textcolor{keywordflow}{if}\ (start\ >=\ definition.length()\ ||\ \doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end\ <\ 0\ ||\ start\ >}}=\ \doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00411}00411\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00412}00412\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00413}00413\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00414}00414\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00415}00415\ \ \ \ \ \textcolor{comment}{//\ split\ by\ or}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00416}00416\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ orIndex\ =\ definition.find\_first\_of(L\textcolor{charliteral}{'|'},\ start);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00417}00417\ \ \ \ \ \textcolor{keywordflow}{if}\ (orIndex\ !=\ wstring::npos\ \&\&\ orIndex\ <\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(\doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}}))}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00418}00418\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00419}00419\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ leftSide\ =\ parseEffectFormulaValue(definition,\ start,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(orIndex)\ -\/\ 1,\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00420}00420\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (leftSide\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00421}00421\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00422}00422\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ leftSide;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00423}00423\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00424}00424\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00425}00425\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rightSide\ =\ parseEffectFormulaValue(definition,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(orIndex)\ +\ 1,\ \doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}},\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00426}00426\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rightSide\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00427}00427\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ rightSide;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00429}00429\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00430}00430\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00431}00431\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00432}00432\ \ \ \ \ \textcolor{comment}{//\ split\ by\ and}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00433}00433\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ andIndex\ =\ definition.find\_first\_of(L\textcolor{charliteral}{'\&'},\ start);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00434}00434\ \ \ \ \ \textcolor{keywordflow}{if}\ (andIndex\ !=\ wstring::npos\ \&\&\ andIndex\ <\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(\doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}}))}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00435}00435\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00436}00436\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ leftSide\ =\ parseEffectFormulaValue(definition,\ start,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(andIndex)\ -\/\ 1,\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00437}00437\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (leftSide\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00438}00438\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00440}00440\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00441}00441\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00442}00442\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rightSide\ =\ parseEffectFormulaValue(definition,\ andIndex\ +\ 1,\ \doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}},\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00443}00443\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rightSide\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00444}00444\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00445}00445\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00446}00446\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00447}00447\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00448}00448\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (leftSide\ >\ rightSide)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00449}00449\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00450}00450\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ leftSide;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00451}00451\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00452}00452\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ rightSide;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00453}00453\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00454}00454\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00455}00455\ \ \ \ \ \textcolor{keywordtype}{bool}\ isMultiplier\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00456}00456\ \ \ \ \ \textcolor{keywordtype}{bool}\ hasMultiplier\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00457}00457\ \ \ \ \ \textcolor{keywordtype}{bool}\ hasValue\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00458}00458\ \ \ \ \ \textcolor{keywordtype}{bool}\ isNot\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00459}00459\ \ \ \ \ \textcolor{keywordtype}{bool}\ isNeg\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00460}00460\ \ \ \ \ \textcolor{keywordtype}{int}\ bitCount\ =\ NO\_COUNT;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00461}00461\ \ \ \ \ \textcolor{keywordtype}{int}\ valuePart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00462}00462\ \ \ \ \ \textcolor{keywordtype}{int}\ multiplierPart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00463}00463\ \ \ \ \ \textcolor{keywordtype}{int}\ result\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00464}00464\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ start;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}};\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00465}00465\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00466}00466\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00467}00467\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ current\ =\ definition.at(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00468}00468\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\ >=\ L\textcolor{charliteral}{'0'}\ \&\&\ current\ <=\ L\textcolor{charliteral}{'9'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00469}00469\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00470}00470\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isMultiplier)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00471}00471\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ multiplierPart\ =\ (int)\ (current\ -\/\ L\textcolor{charliteral}{'0'});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasMultiplier\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00474}00474\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00475}00475\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ *=\ 10;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ +=\ (int)\ (current\ -\/\ L\textcolor{charliteral}{'0'});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasValue\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00481}00481\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00482}00482\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'*'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00483}00483\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00484}00484\ \ \ \ \ \ \ \ \ \ \ \ \ isMultiplier\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00485}00485\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00486}00486\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'!'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00487}00487\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasValue)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00490}00490\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ +=\ constructParsedValue(isNot,\ hasMultiplier,\ isNeg,\ bitCount,\ valuePart,\ multiplierPart,\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00491}00491\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasValue\ =\ hasMultiplier\ =\ isMultiplier\ =\ isNeg\ =\ isNot\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ =\ multiplierPart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bitCount\ =\ NO\_COUNT;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00495}00495\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00496}00496\ \ \ \ \ \ \ \ \ \ \ \ \ isNot\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00497}00497\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00498}00498\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'-\/'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00499}00499\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00500}00500\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasValue)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00501}00501\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00502}00502\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ +=\ constructParsedValue(isNot,\ hasMultiplier,\ isNeg,\ bitCount,\ valuePart,\ multiplierPart,\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00503}00503\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasValue\ =\ hasMultiplier\ =\ isMultiplier\ =\ isNeg\ =\ isNot\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00504}00504\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ =\ multiplierPart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00505}00505\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bitCount\ =\ NO\_COUNT;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00506}00506\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00507}00507\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00508}00508\ \ \ \ \ \ \ \ \ \ \ \ \ isNeg\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00509}00509\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00510}00510\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'='}\ ||\ current\ ==\ L\textcolor{charliteral}{'<'}\ ||\ current\ ==\ L\textcolor{charliteral}{'>'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00511}00511\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00512}00512\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasValue)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00513}00513\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00514}00514\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ +=\ constructParsedValue(isNot,\ hasMultiplier,\ isNeg,\ bitCount,\ valuePart,\ multiplierPart,\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00515}00515\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasValue\ =\ hasMultiplier\ =\ isMultiplier\ =\ isNeg\ =\ isNot\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00516}00516\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ =\ multiplierPart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00517}00517\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bitCount\ =\ NO\_COUNT;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00518}00518\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00519}00519\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00520}00520\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'='})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00521}00521\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00522}00522\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bitCount\ =\ EQUAL\_COUNT;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00523}00523\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00524}00524\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'<'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00525}00525\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00526}00526\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bitCount\ =\ LESS\_COUNT;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00528}00528\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'>'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00529}00529\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00530}00530\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bitCount\ =\ GREATER\_COUNT;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00531}00531\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00532}00532\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00533}00533\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'+'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00534}00534\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00535}00535\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasValue)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00536}00536\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00537}00537\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ result\ +=\ constructParsedValue(isNot,\ hasMultiplier,\ isNeg,\ bitCount,\ valuePart,\ multiplierPart,\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00538}00538\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasValue\ =\ hasMultiplier\ =\ isMultiplier\ =\ isNeg\ =\ isNot\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00539}00539\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ =\ multiplierPart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00540}00540\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bitCount\ =\ NO\_COUNT;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00541}00541\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00542}00542\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00543}00543\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00544}00544\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasValue)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00545}00545\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00546}00546\ \ \ \ \ \ \ \ \ result\ +=\ constructParsedValue(isNot,\ hasMultiplier,\ isNeg,\ bitCount,\ valuePart,\ multiplierPart,\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00547}00547\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00548}00548\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00549}00549\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00550}00550\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00551}00551\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00552}00552\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00553}\doxymbox{\hyperlink{class_potion_brewing_a918c2958d285cfae967f30cb27fc6b7a}{00553}}\ vector<MobEffectInstance\ *>\ *\doxymbox{\hyperlink{class_potion_brewing_a918c2958d285cfae967f30cb27fc6b7a}{PotionBrewing::getEffects}}(\textcolor{keywordtype}{int}\ brew,\ \textcolor{keywordtype}{bool}\ includeDisabledEffects)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00554}00554\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00555}00555\ \ \ \ \ vector<MobEffectInstance\ *>\ *list\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00556}00556\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00557}00557\ \ \ \ \ \textcolor{comment}{//for\ (MobEffect\ effect\ :\ MobEffect.effects)}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00558}00558\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_mob_effect_a8b5065cf499e7e08e71aea36dae1b874}{MobEffect::NUM\_EFFECTS}};\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00559}00559\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00560}00560\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_mob_effect}{MobEffect}}\ *effect\ =\ \doxymbox{\hyperlink{class_mob_effect_ae2091169b7c72d4c61e85cc7a78eb85b}{MobEffect::effects}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00561}00561\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (effect\ ==\ \textcolor{keyword}{nullptr}\ ||\ (effect-\/>\doxymbox{\hyperlink{class_mob_effect_afef5d654526a1a12072601b52d484326}{isDisabled}}()\ \&\&\ !includeDisabledEffects))}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00562}00562\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00563}00563\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00564}00564\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00565}00565\ \ \ \ \ \ \ \ \ \textcolor{comment}{//wstring\ durationString\ =\ potionEffectDuration.get(effect-\/>getId());}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00566}00566\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ effIt\ =\ potionEffectDuration.find(effect-\/>\doxymbox{\hyperlink{class_mob_effect_a236cdbe8144905f950d265adc6296228}{getId}}());}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00567}00567\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ effIt\ ==\ potionEffectDuration.end()\ )}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00568}00568\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00569}00569\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00570}00570\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00571}00571\ \ \ \ \ \ \ \ \ wstring\ durationString\ =\ effIt-\/>second;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00572}00572\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00573}00573\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ duration\ =\ parseEffectFormulaValue(durationString,\ 0,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(durationString.length()),\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00574}00574\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (duration\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00575}00575\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00576}00576\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ amplifier\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00577}00577\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ampIt\ =\ potionEffectAmplifier.find(effect-\/>\doxymbox{\hyperlink{class_mob_effect_a236cdbe8144905f950d265adc6296228}{getId}}());}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ampIt\ !=\ potionEffectAmplifier.end())}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00579}00579\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00580}00580\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wstring\ amplifierString\ =\ ampIt-\/>second;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00581}00581\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amplifier\ =\ parseEffectFormulaValue(amplifierString,\ 0,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(amplifierString.length()),\ brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00582}00582\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (amplifier\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00583}00583\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00584}00584\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amplifier\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00585}00585\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00586}00586\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00587}00587\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00588}00588\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (effect-\/>\doxymbox{\hyperlink{class_mob_effect_a05d73f06b501b5b20b814bda13fd0bb0}{isInstantenous}}())}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00589}00589\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00590}00590\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ duration\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00591}00591\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00593}00593\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00594}00594\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 3,\ 8,\ 13,\ 18..\ minutes}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00595}00595\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ duration\ =\ (\doxymbox{\hyperlink{class_shared_constants_a170b00572bc783af06c9f0cda11f24c2}{SharedConstants::TICKS\_PER\_SECOND}}\ *\ 60)\ *\ (duration\ *\ 3\ +\ (duration\ -\/\ 1)\ *\ 2);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00596}00596\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ duration\ >>=\ amplifier;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00597}00597\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ duration\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_math_a32a2f80111211a00b2e80c847b484054}{Math::round}}((\textcolor{keywordtype}{double})duration\ *\ effect-\/>\doxymbox{\hyperlink{class_mob_effect_ac753f71350bc59de6af9341ccef0637c}{getDurationModifier}}()));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00598}00598\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00599}00599\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((brew\ \&\ \doxymbox{\hyperlink{class_potion_brewing_af9093a3ec178c114b04eebc957ac1f3f}{THROWABLE\_MASK}})\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00600}00600\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00601}00601\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ duration\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_math_a32a2f80111211a00b2e80c847b484054}{Math::round}}((\textcolor{keywordtype}{double})duration\ *\ .75\ +\ .5));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00602}00602\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00603}00603\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00604}00604\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00605}00605\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (list\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ list\ =\ \textcolor{keyword}{new}\ vector<MobEffectInstance\ *>();}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00608}00608\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00609}00609\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_mob_effect_instance}{MobEffectInstance}}\ *instance\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_mob_effect_instance}{MobEffectInstance}}(effect-\/>\doxymbox{\hyperlink{class_mob_effect_a236cdbe8144905f950d265adc6296228}{getId}}(),\ duration,\ amplifier);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00610}00610\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((brew\ \&\ \doxymbox{\hyperlink{class_potion_brewing_af9093a3ec178c114b04eebc957ac1f3f}{THROWABLE\_MASK}})\ !=\ 0)\ instance-\/>\doxymbox{\hyperlink{class_mob_effect_instance_aad1dd7f640cc3a13f142581efbc4595f}{setSplash}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00611}00611\ \ \ \ \ \ \ \ \ \ \ \ \ list-\/>push\_back(instance);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00612}00612\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00613}00613\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00614}00614\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00615}00615\ \ \ \ \ \textcolor{keywordflow}{return}\ list;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00616}00616\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00617}00617\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00618}00618\ \textcolor{preprocessor}{\#if\ !(\_SIMPLIFIED\_BREWING)}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00619}00619\ \textcolor{keywordtype}{int}\ PotionBrewing::boil(\textcolor{keywordtype}{int}\ brew)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00620}00620\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00621}00621\ \ \ \ \ \textcolor{keywordflow}{if}\ ((brew\ \&\ 1)\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00622}00622\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00623}00623\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ brew;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00624}00624\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00625}00625\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00626}00626\ \ \ \ \ \textcolor{comment}{//\ save\ highest\ bit}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00627}00627\ \ \ \ \ \textcolor{keywordtype}{int}\ savedBit\ =\ \doxymbox{\hyperlink{class_potion_brewing_a372d7f9f42b0eb97bc50a4fe38b83289}{NUM\_BITS}}\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00628}00628\ \ \ \ \ \textcolor{keywordflow}{while}\ ((brew\ \&\ (1\ <<\ savedBit))\ ==\ 0\ \&\&\ savedBit\ >=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00629}00629\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00630}00630\ \ \ \ \ \ \ \ \ savedBit-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00631}00631\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00632}00632\ \ \ \ \ \textcolor{comment}{//\ it's\ not\ possible\ to\ boil\ if\ there\ are\ no\ "{}empty\ slots"{}\ in\ front\ of}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00633}00633\ \ \ \ \ \textcolor{comment}{//\ the\ last\ bit}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00634}00634\ \ \ \ \ \textcolor{keywordflow}{if}\ (savedBit\ <\ 2\ ||\ (brew\ \&\ (1\ <<\ (savedBit\ -\/\ 1)))\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00635}00635\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00636}00636\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ brew;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00637}00637\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00638}00638\ \ \ \ \ \textcolor{keywordflow}{if}\ (savedBit\ >=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00639}00639\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00640}00640\ \ \ \ \ \ \ \ \ brew\ \&=\ \string~(1\ <<\ savedBit);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00641}00641\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00642}00642\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00643}00643\ \ \ \ \ brew\ <<=\ 1;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00644}00644\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00645}00645\ \ \ \ \ \textcolor{keywordflow}{if}\ (savedBit\ >=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00646}00646\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00647}00647\ \ \ \ \ \ \ \ \ brew\ |=\ (1\ <<\ savedBit);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00648}00648\ \ \ \ \ \ \ \ \ brew\ |=\ (1\ <<\ (savedBit\ -\/\ 1));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00649}00649\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00650}00650\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00651}00651\ \ \ \ \ \textcolor{keywordflow}{return}\ brew\ \&\ \doxymbox{\hyperlink{class_potion_brewing_a2cfe8c62f94591af1ac2f3821b1ff4f7}{BREW\_MASK}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00652}00652\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00653}00653\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00654}00654\ \textcolor{keywordtype}{int}\ PotionBrewing::shake(\textcolor{keywordtype}{int}\ brew)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00655}00655\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00656}00656\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00657}00657\ \ \ \ \ \textcolor{comment}{//\ save\ highest\ bit}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00658}00658\ \ \ \ \ \textcolor{keywordtype}{int}\ savedBit\ =\ \doxymbox{\hyperlink{class_potion_brewing_a372d7f9f42b0eb97bc50a4fe38b83289}{NUM\_BITS}}\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00659}00659\ \ \ \ \ \textcolor{keywordflow}{while}\ ((brew\ \&\ (1\ <<\ savedBit))\ ==\ 0\ \&\&\ savedBit\ >=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00660}00660\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00661}00661\ \ \ \ \ \ \ \ \ savedBit-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00662}00662\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00663}00663\ \ \ \ \ \textcolor{keywordflow}{if}\ (savedBit\ >=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00664}00664\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00665}00665\ \ \ \ \ \ \ \ \ brew\ \&=\ \string~(1\ <<\ savedBit);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00666}00666\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00667}00667\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00668}00668\ \ \ \ \ \textcolor{keywordtype}{int}\ currentResult\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00669}00669\ \ \ \ \ \textcolor{keywordtype}{int}\ nextResult\ =\ brew;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00670}00670\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00671}00671\ \ \ \ \ \textcolor{keywordflow}{while}\ (nextResult\ !=\ currentResult)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00672}00672\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00673}00673\ \ \ \ \ \ \ \ \ nextResult\ =\ brew;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00674}00674\ \ \ \ \ \ \ \ \ currentResult\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00675}00675\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ evaluate\ each\ bit}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00676}00676\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ bit\ =\ 0;\ bit\ <\ \doxymbox{\hyperlink{class_potion_brewing_a372d7f9f42b0eb97bc50a4fe38b83289}{NUM\_BITS}};\ bit++)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00677}00677\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00678}00678\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00679}00679\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ on\ =\ isWrappedLit(brew,\ bit);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00680}00680\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (on)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00681}00681\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00682}00682\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isWrappedLit(brew,\ bit\ +\ 1)\ \&\&\ isWrappedLit(brew,\ bit\ +\ 2))}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00683}00683\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00684}00684\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ on\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00685}00685\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00686}00686\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (!isWrappedLit(brew,\ bit\ -\/\ 1)\ \&\&\ isWrappedLit(brew,\ bit\ -\/\ 2))}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00687}00687\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00688}00688\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ on\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00689}00689\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00690}00690\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00691}00691\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00692}00692\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00693}00693\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ turn\ on\ if\ both\ neighbors\ are\ on}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00694}00694\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ on\ =\ isWrappedLit(brew,\ bit\ -\/\ 1)\ \&\&\ isWrappedLit(brew,\ bit\ +\ 1);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00695}00695\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00696}00696\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (on)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00697}00697\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00698}00698\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ currentResult\ |=\ (1\ <<\ bit);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00699}00699\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00700}00700\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00701}00701\ \ \ \ \ \ \ \ \ brew\ =\ currentResult;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00702}00702\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00703}00703\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00704}00704\ \ \ \ \ \textcolor{keywordflow}{if}\ (savedBit\ >=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00705}00705\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00706}00706\ \ \ \ \ \ \ \ \ currentResult\ |=\ (1\ <<\ savedBit);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00707}00707\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00708}00708\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00709}00709\ \ \ \ \ \textcolor{keywordflow}{return}\ currentResult\ \&\ \doxymbox{\hyperlink{class_potion_brewing_a2cfe8c62f94591af1ac2f3821b1ff4f7}{BREW\_MASK}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00710}00710\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00711}00711\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00712}00712\ \textcolor{keywordtype}{int}\ PotionBrewing::stirr(\textcolor{keywordtype}{int}\ brew)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00713}00713\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00714}00714\ \ \ \ \ \textcolor{keywordflow}{if}\ ((brew\ \&\ 1)\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00715}00715\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00716}00716\ \ \ \ \ \ \ \ \ brew\ =\ boil(brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00717}00717\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00718}00718\ \ \ \ \ \textcolor{keywordflow}{return}\ shake(brew);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00719}00719\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00720}00720\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00721}00721\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00722}00722\ \textcolor{keywordtype}{int}\ PotionBrewing::applyBrewBit(\textcolor{keywordtype}{int}\ currentBrew,\ \textcolor{keywordtype}{int}\ bit,\ \textcolor{keywordtype}{bool}\ isNeg,\ \textcolor{keywordtype}{bool}\ isNot,\ \textcolor{keywordtype}{bool}\ isRequired)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00723}00723\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00724}00724\ \ \ \ \ \textcolor{keywordflow}{if}\ (isRequired)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00725}00725\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00726}00726\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J-\/JEV:\ I\ wanted\ to\ be\ able\ to\ specify\ that\ a}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00727}00727\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ bit\ is\ required\ to\ be\ false.}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00728}00728\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_potion_brewing_ade023d6d8fa68e6e46d60a5a8e236bfb}{isLit}}(currentBrew,\ bit)\ ==\ isNot)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00729}00729\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00730}00730\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00731}00731\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00732}00732\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00733}00733\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (isNeg)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00734}00734\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00735}00735\ \ \ \ \ \ \ \ \ currentBrew\ \&=\ \string~(1\ <<\ bit);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00736}00736\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00737}00737\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (isNot)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00738}00738\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00739}00739\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((currentBrew\ \&\ (1\ <<\ bit))\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00740}00740\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00741}00741\ \ \ \ \ \ \ \ \ \ \ \ \ currentBrew\ |=\ (1\ <<\ bit);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00742}00742\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00743}00743\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00744}00744\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00745}00745\ \ \ \ \ \ \ \ \ \ \ \ \ currentBrew\ \&=\ \string~(1\ <<\ bit);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00746}00746\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00747}00747\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00748}00748\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00749}00749\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00750}00750\ \ \ \ \ \ \ \ \ currentBrew\ |=\ (1\ <<\ bit);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00751}00751\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00752}00752\ \ \ \ \ \textcolor{keywordflow}{return}\ currentBrew;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00753}00753\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00754}00754\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00755}\doxymbox{\hyperlink{class_potion_brewing_afc0354fbde6c83c696541e91fc761dc2}{00755}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_potion_brewing_afc0354fbde6c83c696541e91fc761dc2}{PotionBrewing::applyBrew}}(\textcolor{keywordtype}{int}\ currentBrew,\ \textcolor{keyword}{const}\ wstring\ \&formula)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00756}00756\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00757}00757\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00758}00758\ \ \ \ \ \textcolor{keywordtype}{int}\ start\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00759}00759\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}}\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(formula.length());}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00760}00760\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00761}00761\ \ \ \ \ \textcolor{keywordtype}{bool}\ hasValue\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00762}00762\ \ \ \ \ \textcolor{keywordtype}{bool}\ isNot\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00763}00763\ \ \ \ \ \textcolor{keywordtype}{bool}\ isNeg\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00764}00764\ \ \ \ \ \textcolor{keywordtype}{bool}\ isRequired\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00765}00765\ \ \ \ \ \textcolor{keywordtype}{int}\ valuePart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00766}00766\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ start;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}};\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00767}00767\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00768}00768\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ current\ =\ formula.at(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00769}00769\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\ >=\ L\textcolor{charliteral}{'0'}\ \&\&\ current\ <=\ L\textcolor{charliteral}{'9'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00770}00770\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00771}00771\ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ *=\ 10;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00772}00772\ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ +=\ (int)\ (current\ -\/\ L\textcolor{charliteral}{'0'});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00773}00773\ \ \ \ \ \ \ \ \ \ \ \ \ hasValue\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00774}00774\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00775}00775\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'!'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00776}00776\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00777}00777\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasValue)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00778}00778\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00779}00779\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ currentBrew\ =\ applyBrewBit(currentBrew,\ valuePart,\ isNeg,\ isNot,\ isRequired);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00780}00780\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasValue\ =\ isNeg\ =\ isNot\ =\ isRequired\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00781}00781\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00782}00782\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00783}00783\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00784}00784\ \ \ \ \ \ \ \ \ \ \ \ \ isNot\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00785}00785\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00786}00786\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'-\/'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00787}00787\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00788}00788\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasValue)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00789}00789\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00790}00790\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ currentBrew\ =\ applyBrewBit(currentBrew,\ valuePart,\ isNeg,\ isNot,\ isRequired);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00791}00791\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasValue\ =\ isNeg\ =\ isNot\ =\ isRequired\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00792}00792\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00793}00793\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00794}00794\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00795}00795\ \ \ \ \ \ \ \ \ \ \ \ \ isNeg\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00796}00796\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00797}00797\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'+'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00798}00798\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00799}00799\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasValue)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00800}00800\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00801}00801\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ currentBrew\ =\ applyBrewBit(currentBrew,\ valuePart,\ isNeg,\ isNot,\ isRequired);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00802}00802\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasValue\ =\ isNeg\ =\ isNot\ =\ isRequired\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00803}00803\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00804}00804\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00805}00805\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00806}00806\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (current\ ==\ L\textcolor{charliteral}{'\&'})}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00807}00807\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00808}00808\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasValue)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00809}00809\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00810}00810\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ currentBrew\ =\ applyBrewBit(currentBrew,\ valuePart,\ isNeg,\ isNot,\ isRequired);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00811}00811\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasValue\ =\ isNeg\ =\ isNot\ =\ isRequired\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00812}00812\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ valuePart\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00813}00813\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00814}00814\ \ \ \ \ \ \ \ \ \ \ \ \ isRequired\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00815}00815\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00816}00816\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00817}00817\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasValue)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00818}00818\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00819}00819\ \ \ \ \ \ \ \ \ currentBrew\ =\ applyBrewBit(currentBrew,\ valuePart,\ isNeg,\ isNot,\ isRequired);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00820}00820\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00821}00821\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00822}00822\ \ \ \ \ \textcolor{keywordflow}{return}\ currentBrew\ \&\ \doxymbox{\hyperlink{class_potion_brewing_a2cfe8c62f94591af1ac2f3821b1ff4f7}{BREW\_MASK}};}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00823}00823\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00824}00824\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00825}\doxymbox{\hyperlink{class_potion_brewing_a7d24d7cf3b137fa40940258bd213e119}{00825}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_potion_brewing_a7d24d7cf3b137fa40940258bd213e119}{PotionBrewing::setBit}}(\textcolor{keywordtype}{int}\ brew,\ \textcolor{keywordtype}{int}\ position,\ \textcolor{keywordtype}{bool}\ onOff)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00826}00826\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00827}00827\ \ \ \ \ \textcolor{keywordflow}{if}\ (onOff)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00828}00828\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00829}00829\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ brew\ |\ (1\ <<\ position);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00830}00830\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00831}00831\ \ \ \ \ \textcolor{keywordflow}{return}\ brew\ \&\ \string~(1\ <<\ position);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00832}00832\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00833}00833\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00834}\doxymbox{\hyperlink{class_potion_brewing_a42d4ac600b38cb892c25800eb91029d5}{00834}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_potion_brewing_a42d4ac600b38cb892c25800eb91029d5}{PotionBrewing::valueOf}}(\textcolor{keywordtype}{int}\ brew,\ \textcolor{keywordtype}{int}\ p1,\ \textcolor{keywordtype}{int}\ p2,\ \textcolor{keywordtype}{int}\ p3,\ \textcolor{keywordtype}{int}\ p4)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00835}00835\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00836}00836\ \ \ \ \ \textcolor{keywordflow}{return}\ ((\doxymbox{\hyperlink{class_potion_brewing_ade023d6d8fa68e6e46d60a5a8e236bfb}{isLit}}(brew,\ p1)\ ?\ 0x08\ :\ 0)\ |\ (\doxymbox{\hyperlink{class_potion_brewing_ade023d6d8fa68e6e46d60a5a8e236bfb}{isLit}}(brew,\ p2)\ ?\ 0x04\ :\ 0)\ |\ (\doxymbox{\hyperlink{class_potion_brewing_ade023d6d8fa68e6e46d60a5a8e236bfb}{isLit}}(brew,\ p3)\ ?\ 0x02\ :\ 0)\ |\ (\doxymbox{\hyperlink{class_potion_brewing_ade023d6d8fa68e6e46d60a5a8e236bfb}{isLit}}(brew,\ p4)\ ?\ 0x01\ :\ 0));}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00837}00837\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00838}00838\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00839}\doxymbox{\hyperlink{class_potion_brewing_af08d4e2bb51a9d2d88a43d1166f355aa}{00839}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_potion_brewing_a42d4ac600b38cb892c25800eb91029d5}{PotionBrewing::valueOf}}(\textcolor{keywordtype}{int}\ brew,\ \textcolor{keywordtype}{int}\ p1,\ \textcolor{keywordtype}{int}\ p2,\ \textcolor{keywordtype}{int}\ p3,\ \textcolor{keywordtype}{int}\ p4,\ \textcolor{keywordtype}{int}\ p5)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00840}00840\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00841}00841\ \ \ \ \ \textcolor{keywordflow}{return}\ (\doxymbox{\hyperlink{class_potion_brewing_ade023d6d8fa68e6e46d60a5a8e236bfb}{isLit}}(brew,\ p1)\ ?\ 0x10\ :\ 0)\ |\ (\doxymbox{\hyperlink{class_potion_brewing_ade023d6d8fa68e6e46d60a5a8e236bfb}{isLit}}(brew,\ p2)\ ?\ 0x08\ :\ 0)\ |\ (\doxymbox{\hyperlink{class_potion_brewing_ade023d6d8fa68e6e46d60a5a8e236bfb}{isLit}}(brew,\ p3)\ ?\ 0x04\ :\ 0)\ |\ (\doxymbox{\hyperlink{class_potion_brewing_ade023d6d8fa68e6e46d60a5a8e236bfb}{isLit}}(brew,\ p4)\ ?\ 0x02\ :\ 0)\ |\ (\doxymbox{\hyperlink{class_potion_brewing_ade023d6d8fa68e6e46d60a5a8e236bfb}{isLit}}(brew,\ p5)\ ?\ 0x01\ :\ 0);}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00842}00842\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00843}00843\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00844}\doxymbox{\hyperlink{class_potion_brewing_a3f088691f40858556f554f1c095fe640}{00844}}\ wstring\ \doxymbox{\hyperlink{class_potion_brewing_a3f088691f40858556f554f1c095fe640}{PotionBrewing::toString}}(\textcolor{keywordtype}{int}\ brew)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00845}00845\ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00846}00846\ \ \ \ \ wstring\ string;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00847}00847\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00848}00848\ \ \ \ \ \textcolor{keywordtype}{int}\ bit\ =\ \doxymbox{\hyperlink{class_potion_brewing_a372d7f9f42b0eb97bc50a4fe38b83289}{NUM\_BITS}}\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00849}00849\ \ \ \ \ \textcolor{keywordflow}{while}\ (bit\ >=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00850}00850\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00851}00851\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((brew\ \&\ (1\ <<\ bit))\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00852}00852\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00853}00853\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}.append(L\textcolor{stringliteral}{"{}O"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00854}00854\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00855}00855\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00856}00856\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00857}00857\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}.append(L\textcolor{stringliteral}{"{}x"{}});}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00858}00858\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00859}00859\ \ \ \ \ \ \ \ \ bit-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00860}00860\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00861}00861\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00862}00862\ \ \ \ \ \textcolor{keywordflow}{return}\ string;}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00863}00863\ \}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00864}00864\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00865}00865\ \textcolor{comment}{//void\ main(String[]\ args)}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00866}00866\ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00867}00867\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00868}00868\ \textcolor{comment}{//\ \ HashMap<String,\ Integer>\ existingCombinations\ =\ new\ HashMap<String,\ Integer>();}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00869}00869\ \textcolor{comment}{//\ \ HashMap<String,\ Integer>\ distinctCombinations\ =\ new\ HashMap<String,\ Integer>();}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00870}00870\ \textcolor{comment}{//\ \ int\ noEffects\ =\ 0;}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00871}00871\ \textcolor{comment}{//\ \ for\ (int\ brew\ =\ 0;\ brew\ <=\ BREW\_MASK;\ brew++)\ \{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00872}00872\ \textcolor{comment}{//\ \ \ \ \ \ List<MobEffectInstance>\ effects\ =\ PotionBrewing.getEffects(brew,\ true);}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00873}00873\ \textcolor{comment}{//\ \ \ \ \ \ if\ (effects\ !=\ null)\ \{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00874}00874\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00875}00875\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00876}00876\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ StringBuilder\ builder\ =\ new\ StringBuilder();}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00877}00877\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ for\ (MobEffectInstance\ effect\ :\ effects)\ \{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00878}00878\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ builder.append(effect.toString());}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00879}00879\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ builder.append("{}\ "{});}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00880}00880\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00881}00881\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ String\ string\ =\ builder.toString();}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00882}00882\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ Integer\ count\ =\ existingCombinations.get(string);}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00883}00883\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (count\ !=\ null)\ \{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00884}00884\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ count++;}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00885}00885\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ else\ \{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00886}00886\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ count\ =\ 1;}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00887}00887\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00888}00888\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ existingCombinations.put(string,\ count);}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00889}00889\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00890}00890\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00891}00891\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ StringBuilder\ builder\ =\ new\ StringBuilder();}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00892}00892\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ for\ (MobEffectInstance\ effect\ :\ effects)\ \{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00893}00893\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ builder.append(effect.getDescriptionId());}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00894}00894\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ builder.append("{}\ "{});}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00895}00895\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00896}00896\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ String\ string\ =\ builder.toString();}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00897}00897\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ Integer\ count\ =\ distinctCombinations.get(string);}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00898}00898\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (count\ !=\ null)\ \{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00899}00899\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ count++;}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00900}00900\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ else\ \{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00901}00901\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ count\ =\ 1;}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00902}00902\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00903}00903\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ distinctCombinations.put(string,\ count);}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00904}00904\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00905}00905\ \textcolor{comment}{//\ \ \ \ \ \ \}\ else\ \{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00906}00906\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ noEffects++;}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00907}00907\ \textcolor{comment}{//\ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00908}00908\ \textcolor{comment}{//\ \ \}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00909}00909\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00910}00910\ \textcolor{comment}{//\ \ for\ (String\ combination\ :\ existingCombinations.keySet())\ \{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00911}00911\ \textcolor{comment}{//\ \ \ \ \ \ Integer\ count\ =\ existingCombinations.get(combination);}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00912}00912\ \textcolor{comment}{//\ \ \ \ \ \ if\ (count\ >\ 20)\ \{}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00913}00913\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ System.out.println(combination\ +\ "{}:\ "{}\ +\ count);}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00914}00914\ \textcolor{comment}{//\ \ \ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00915}00915\ \textcolor{comment}{//\ \ \}}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00916}00916\ }
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00917}00917\ \textcolor{comment}{//\ \ System.out.println("{}Combination\ with\ no\ effects:\ "{}\ +\ noEffects\ +\ "{}\ ("{}\ +\ ((double)\ noEffects\ /\ BREW\_MASK\ *\ 100.0)\ +\ "{}\ \%)"{});}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00918}00918\ \textcolor{comment}{//\ \ System.out.println("{}Unique\ combinations:\ "{}\ +\ existingCombinations.size());}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00919}00919\ \textcolor{comment}{//\ \ System.out.println("{}Distinct\ combinations:\ "{}\ +\ distinctCombinations.size());}}
+\DoxyCodeLine{\Hypertarget{_potion_brewing_8cpp_source_l00920}00920\ \textcolor{comment}{//\}}}
+
+\end{DoxyCode}

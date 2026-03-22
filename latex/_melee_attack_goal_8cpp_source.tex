@@ -1,0 +1,102 @@
+\doxysection{Melee\+Attack\+Goal.\+cpp}
+\hypertarget{_melee_attack_goal_8cpp_source}{}\label{_melee_attack_goal_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/MeleeAttackGoal.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/MeleeAttackGoal.cpp}}
+\doxymbox{\hyperlink{_melee_attack_goal_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8h}{net.minecraft.world.entity.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8monster_8h}{net.minecraft.world.entity.monster.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8h}{net.minecraft.world.level.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8control_8h}{net.minecraft.world.entity.ai.control.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8navigation_8h}{net.minecraft.world.entity.ai.navigation.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8sensing_8h}{net.minecraft.world.entity.ai.sensing.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8phys_8h}{net.minecraft.world.phys.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_melee_attack_goal_8h}{MeleeAttackGoal.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00011}00011\ \textcolor{keywordtype}{void}\ MeleeAttackGoal::\_init(\doxymbox{\hyperlink{class_pathfinder_mob}{PathfinderMob}}\ *mob,\ \textcolor{keywordtype}{double}\ speedModifier,\ \textcolor{keywordtype}{bool}\ trackTarget)}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00012}00012\ \{}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00013}00013\ \ \ \ \ this-\/>attackType\ =\ \doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aa8a61ae51ac9ac66e5f2548efd2b8f66}{eTYPE\_NOTSET}};}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00014}00014\ \ \ \ \ this-\/>mob\ =\ mob;}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00015}00015\ \ \ \ \ level\ =\ mob-\/>level;}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00016}00016\ \ \ \ \ this-\/>speedModifier\ =\ speedModifier;}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00017}00017\ \ \ \ \ this-\/>trackTarget\ =\ trackTarget;}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00018}00018\ \ \ \ \ \doxymbox{\hyperlink{class_goal_ac86e5c90f8633e03d16e0e28ee777a4e}{setRequiredControlFlags}}(\doxymbox{\hyperlink{class_control_a67e96d8ae6d9d29642571fbb19da0802}{Control::MoveControlFlag}}\ |\ \doxymbox{\hyperlink{class_control_ac190334f9c5211976762ec323f68330f}{Control::LookControlFlag}});}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00021}00021\ \ \ \ \ attackTime\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00022}00022\ \ \ \ \ path\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00023}00023\ \ \ \ \ timeToRecalcPath\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00024}00024\ \}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00026}\doxymbox{\hyperlink{class_melee_attack_goal_adf78f6d026e381574309fe05fc37872e}{00026}}\ \doxymbox{\hyperlink{class_melee_attack_goal_adf78f6d026e381574309fe05fc37872e}{MeleeAttackGoal::MeleeAttackGoal}}(\doxymbox{\hyperlink{class_pathfinder_mob}{PathfinderMob}}\ *mob,\ \doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6}{eINSTANCEOF}}\ attackType,\ \textcolor{keywordtype}{double}\ speedModifier,\ \textcolor{keywordtype}{bool}\ trackTarget)}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00027}00027\ \{}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00028}00028\ \ \ \ \ \_init(mob,\ speedModifier,\ trackTarget);}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00029}00029\ \ \ \ \ this-\/>attackType\ =\ attackType;}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00030}00030\ \}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00032}\doxymbox{\hyperlink{class_melee_attack_goal_a6ded368d601ddb069ada2f066ba1bb0c}{00032}}\ \doxymbox{\hyperlink{class_melee_attack_goal_adf78f6d026e381574309fe05fc37872e}{MeleeAttackGoal::MeleeAttackGoal}}(\doxymbox{\hyperlink{class_pathfinder_mob}{PathfinderMob}}\ *mob,\ \textcolor{keywordtype}{double}\ speedModifier,\ \textcolor{keywordtype}{bool}\ trackTarget)}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00033}00033\ \{}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00034}00034\ \ \ \ \ \_init(mob,speedModifier,trackTarget);}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00035}00035\ \}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00037}\doxymbox{\hyperlink{class_melee_attack_goal_a074443cdecd29f675a7bcdb8391bbb28}{00037}}\ \doxymbox{\hyperlink{class_melee_attack_goal_a074443cdecd29f675a7bcdb8391bbb28}{MeleeAttackGoal::\string~MeleeAttackGoal}}()}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00038}00038\ \{}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00039}00039\ \ \ \ \ \textcolor{keywordflow}{if}(path\ !=\ \textcolor{keyword}{nullptr})\ \textcolor{keyword}{delete}\ path;}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00040}00040\ \}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00042}\doxymbox{\hyperlink{class_melee_attack_goal_ae5fd15c6fa6f7efaddcb64534dc99171}{00042}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_melee_attack_goal_ae5fd15c6fa6f7efaddcb64534dc99171}{MeleeAttackGoal::canUse}}()}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00043}00043\ \{}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00044}00044\ \ \ \ \ shared\_ptr<LivingEntity>\ target\ =\ mob-\/>getTarget();}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00045}00045\ \ \ \ \ \textcolor{keywordflow}{if}\ (target\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00046}00046\ \ \ \ \ \textcolor{keywordflow}{if}\ (!target-\/>isAlive())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00047}00047\ \ \ \ \ \textcolor{keywordflow}{if}\ (attackType\ !=\ \doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aa8a61ae51ac9ac66e5f2548efd2b8f66}{eTYPE\_NOTSET}}\ \&\&\ !target-\/>instanceof(attackType))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00048}00048\ \ \ \ \ \textcolor{keyword}{delete}\ path;}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00049}00049\ \ \ \ \ path\ =\ mob-\/>getNavigation()-\/>createPath(target);}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00050}00050\ \ \ \ \ \textcolor{keywordflow}{return}\ path\ !=\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00051}00051\ \}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00053}\doxymbox{\hyperlink{class_melee_attack_goal_a377727281db11e6c989fdaef8d00d047}{00053}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_melee_attack_goal_a377727281db11e6c989fdaef8d00d047}{MeleeAttackGoal::canContinueToUse}}()}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00054}00054\ \{}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00055}00055\ \ \ \ \ shared\_ptr<LivingEntity>\ target\ =\ mob-\/>getTarget();}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00056}00056\ \ \ \ \ \textcolor{keywordflow}{if}\ (target\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00057}00057\ \ \ \ \ \textcolor{keywordflow}{if}\ (!target-\/>isAlive())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00058}00058\ \ \ \ \ \textcolor{keywordflow}{if}\ (!trackTarget)\ \textcolor{keywordflow}{return}\ !mob-\/>getNavigation()-\/>isDone();}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00059}00059\ \ \ \ \ \textcolor{keywordflow}{if}\ (!mob-\/>isWithinRestriction(\doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(target-\/>x),\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(target-\/>y),\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(target-\/>z)))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00060}00060\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00061}00061\ \}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00063}\doxymbox{\hyperlink{class_melee_attack_goal_a75bf74d95e937e0d1a1b06242d72af08}{00063}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_melee_attack_goal_a75bf74d95e937e0d1a1b06242d72af08}{MeleeAttackGoal::start}}()}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00064}00064\ \{}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00065}00065\ \ \ \ \ mob-\/>getNavigation()-\/>moveTo(path,\ speedModifier);}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00066}00066\ \ \ \ \ path\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00067}00067\ \ \ \ \ timeToRecalcPath\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00068}00068\ \}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00070}\doxymbox{\hyperlink{class_melee_attack_goal_abb1fe8fe0b186b42ec9849d3ff9a3de5}{00070}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_melee_attack_goal_abb1fe8fe0b186b42ec9849d3ff9a3de5}{MeleeAttackGoal::stop}}()}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00071}00071\ \{}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00072}00072\ \ \ \ \ mob-\/>getNavigation()-\/>stop();}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00073}00073\ \}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00075}\doxymbox{\hyperlink{class_melee_attack_goal_ab65a71fc1067e078d0324999da1f03e6}{00075}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_melee_attack_goal_ab65a71fc1067e078d0324999da1f03e6}{MeleeAttackGoal::tick}}()}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00076}00076\ \{}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00077}00077\ \ \ \ \ shared\_ptr<LivingEntity>\ target\ =\ mob-\/>getTarget();}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00078}00078\ \ \ \ \ mob-\/>getLookControl()-\/>setLookAt(target,\ 30,\ 30);}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00079}00079\ \ \ \ \ \textcolor{keywordflow}{if}\ (trackTarget\ ||\ mob-\/>getSensing()-\/>canSee(target))}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00080}00080\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (-\/-\/timeToRecalcPath\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ timeToRecalcPath\ =\ 4\ +\ mob-\/>getRandom()-\/>nextInt(7);}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ mob-\/>getNavigation()-\/>moveTo(target,\ speedModifier);}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00086}00086\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00088}00088\ \ \ \ \ attackTime\ =\ max(attackTime\ -\/\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00090}00090\ \ \ \ \ \textcolor{keywordtype}{double}\ meleeRadiusSqr\ =\ (mob-\/>bbWidth\ *\ 2)\ *\ (mob-\/>bbWidth\ *\ 2)\ +\ target-\/>bbWidth;}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00091}00091\ \ \ \ \ \textcolor{keywordflow}{if}\ (mob-\/>distanceToSqr(target-\/>x,\ target-\/>bb-\/>y0,\ target-\/>z)\ >\ meleeRadiusSqr)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00092}00092\ \ \ \ \ \textcolor{keywordflow}{if}\ (attackTime\ >\ 0)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00093}00093\ \ \ \ \ attackTime\ =\ 20;}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00094}00094\ \ \ \ \ \textcolor{keywordflow}{if}\ (mob-\/>getCarriedItem()\ !=\ \textcolor{keyword}{nullptr})\ mob-\/>swing();}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00095}00095\ \ \ \ \ mob-\/>doHurtTarget(target);}
+\DoxyCodeLine{\Hypertarget{_melee_attack_goal_8cpp_source_l00096}00096\ \}}
+
+\end{DoxyCode}

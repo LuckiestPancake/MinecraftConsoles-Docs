@@ -1,0 +1,111 @@
+\doxysection{Ranged\+Attack\+Goal.\+cpp}
+\hypertarget{_ranged_attack_goal_8cpp_source}{}\label{_ranged_attack_goal_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/RangedAttackGoal.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/RangedAttackGoal.cpp}}
+\doxymbox{\hyperlink{_ranged_attack_goal_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8control_8h}{net.minecraft.world.entity.ai.control.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8navigation_8h}{net.minecraft.world.entity.ai.navigation.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8sensing_8h}{net.minecraft.world.entity.ai.sensing.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8h}{net.minecraft.world.entity.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8monster_8h}{net.minecraft.world.entity.monster.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8phys_8h}{net.minecraft.world.phys.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_ranged_attack_goal_8h}{RangedAttackGoal.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00010}00010\ \textcolor{keywordtype}{void}\ RangedAttackGoal::\_init(\doxymbox{\hyperlink{class_ranged_attack_mob}{RangedAttackMob}}\ *rangedMob,\ \doxymbox{\hyperlink{class_mob}{Mob}}\ *mob,\ \textcolor{keywordtype}{double}\ speedModifier,\ \textcolor{keywordtype}{int}\ attackIntervalMin,\ \textcolor{keywordtype}{int}\ attackIntervalMax,\ \textcolor{keywordtype}{float}\ attackRadius)}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00011}00011\ \{}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00012}00012\ \ \ \ \ \textcolor{comment}{//if\ (!(mob\ instanceof\ LivingEntity))}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00013}00013\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00014}00014\ \ \ \ \ \textcolor{comment}{//throw\ new\ IllegalArgumentException("{}ArrowAttackGoal\ requires\ Mob\ implements\ RangedAttackMob"{});}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00015}00015\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00016}00016\ \ \ \ \ rangedAttackMob\ =\ rangedMob;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00017}00017\ \ \ \ \ this-\/>mob\ =\ mob;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00018}00018\ \ \ \ \ this-\/>speedModifier\ =\ speedModifier;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00019}00019\ \ \ \ \ this-\/>attackIntervalMin\ =\ attackIntervalMin;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00020}00020\ \ \ \ \ this-\/>attackIntervalMax\ =\ attackIntervalMax;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00021}00021\ \ \ \ \ this-\/>attackRadius\ =\ attackRadius;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00022}00022\ \ \ \ \ attackRadiusSqr\ =\ attackRadius\ *\ attackRadius;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00023}00023\ \ \ \ \ \doxymbox{\hyperlink{class_goal_ac86e5c90f8633e03d16e0e28ee777a4e}{setRequiredControlFlags}}(\doxymbox{\hyperlink{class_control_a67e96d8ae6d9d29642571fbb19da0802}{Control::MoveControlFlag}}\ |\ \doxymbox{\hyperlink{class_control_ac190334f9c5211976762ec323f68330f}{Control::LookControlFlag}});}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00025}00025\ \ \ \ \ target\ =\ weak\_ptr<LivingEntity>();}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00026}00026\ \ \ \ \ attackTime\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00027}00027\ \ \ \ \ seeTime\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00028}00028\ \}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00030}\doxymbox{\hyperlink{class_ranged_attack_goal_ae4346b904177022339129d0ac0dd3c1f}{00030}}\ \doxymbox{\hyperlink{class_ranged_attack_goal_ae4346b904177022339129d0ac0dd3c1f}{RangedAttackGoal::RangedAttackGoal}}(\doxymbox{\hyperlink{class_ranged_attack_mob}{RangedAttackMob}}\ *rangedMob,\ \doxymbox{\hyperlink{class_mob}{Mob}}\ *mob,\ \textcolor{keywordtype}{double}\ speedModifier,\ \textcolor{keywordtype}{int}\ attackInterval,\ \textcolor{keywordtype}{float}\ attackRadius)}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00031}00031\ \{}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00032}00032\ \ \ \ \ \_init(rangedMob,\ mob,\ speedModifier,\ attackInterval,\ attackInterval,\ attackRadius);}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00033}00033\ \}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00035}\doxymbox{\hyperlink{class_ranged_attack_goal_abbfe2b4c0065d14f8d740adaaf72638b}{00035}}\ \doxymbox{\hyperlink{class_ranged_attack_goal_ae4346b904177022339129d0ac0dd3c1f}{RangedAttackGoal::RangedAttackGoal}}(\doxymbox{\hyperlink{class_ranged_attack_mob}{RangedAttackMob}}\ *rangedMob,\ \doxymbox{\hyperlink{class_mob}{Mob}}\ *mob,\ \textcolor{keywordtype}{double}\ speedModifier,\ \textcolor{keywordtype}{int}\ attackIntervalMin,\ \textcolor{keywordtype}{int}\ attackIntervalMax,\ \textcolor{keywordtype}{float}\ attackRadius)}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00036}00036\ \{}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00037}00037\ \ \ \ \ \_init(rangedMob,\ mob,\ speedModifier,\ attackIntervalMin,\ attackIntervalMax,\ attackRadius);}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00038}00038\ \}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00040}\doxymbox{\hyperlink{class_ranged_attack_goal_ad2ef9c56b8abfb63c53cdb1438040190}{00040}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_ranged_attack_goal_ad2ef9c56b8abfb63c53cdb1438040190}{RangedAttackGoal::canUse}}()}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00041}00041\ \{}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00042}00042\ \ \ \ \ shared\_ptr<LivingEntity>\ bestTarget\ =\ mob-\/>getTarget();}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00043}00043\ \ \ \ \ \textcolor{keywordflow}{if}\ (bestTarget\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00044}00044\ \ \ \ \ target\ =\ weak\_ptr<LivingEntity>(bestTarget);}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00045}00045\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00046}00046\ \}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00048}\doxymbox{\hyperlink{class_ranged_attack_goal_aa2c9fa004f01a64520e44073346c9aef}{00048}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_ranged_attack_goal_aa2c9fa004f01a64520e44073346c9aef}{RangedAttackGoal::canContinueToUse}}()}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00049}00049\ \{}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00050}00050\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_ranged_attack_goal_ad2ef9c56b8abfb63c53cdb1438040190}{canUse}}()\ ||\ !mob-\/>getNavigation()-\/>isDone();}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00051}00051\ \}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00053}\doxymbox{\hyperlink{class_ranged_attack_goal_afda521d9aa53543cf04058dfca72bfa0}{00053}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_ranged_attack_goal_afda521d9aa53543cf04058dfca72bfa0}{RangedAttackGoal::stop}}()}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00054}00054\ \{}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00055}00055\ \ \ \ \ target\ =\ weak\_ptr<LivingEntity>();}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00056}00056\ \ \ \ \ seeTime\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00057}00057\ \ \ \ \ attackTime\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00058}00058\ \}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00060}\doxymbox{\hyperlink{class_ranged_attack_goal_a5543f79790fcabb1bdfc6bad66741d5e}{00060}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_ranged_attack_goal_a5543f79790fcabb1bdfc6bad66741d5e}{RangedAttackGoal::tick}}()}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00061}00061\ \{}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00062}00062\ \ \ \ \ \textcolor{comment}{//\ 4J:\ It's\ possible\ the\ target\ has\ gone\ since\ canUse\ selected\ it,\ don't\ do\ tick\ if\ target\ is\ null}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00063}00063\ \ \ \ \ \textcolor{keywordflow}{if}\ (target.lock()\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00065}00065\ \ \ \ \ \textcolor{keywordtype}{double}\ targetDistSqr\ =\ mob-\/>distanceToSqr(target.lock()-\/>x,\ target.lock()-\/>bb-\/>y0,\ target.lock()-\/>z);}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00066}00066\ \ \ \ \ \textcolor{keywordtype}{bool}\ canSee\ =\ mob-\/>getSensing()-\/>canSee(target.lock());}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00068}00068\ \ \ \ \ \textcolor{keywordflow}{if}\ (canSee)}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00069}00069\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ seeTime++;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00071}00071\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00072}00072\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00073}00073\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ seeTime\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00075}00075\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{if}\ (targetDistSqr\ >\ attackRadiusSqr\ ||\ seeTime\ <\ 20)}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00078}00078\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ mob-\/>getNavigation()-\/>moveTo(target.lock(),\ speedModifier);}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00080}00080\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00082}00082\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ mob-\/>getNavigation()-\/>stop();}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00084}00084\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00086}00086\ \ \ \ \ mob-\/>getLookControl()-\/>setLookAt(target.lock(),\ 30,\ 30);}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00088}00088\ \ \ \ \ \textcolor{keywordflow}{if}\ (-\/-\/attackTime\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00089}00089\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (targetDistSqr\ >\ attackRadiusSqr\ ||\ !canSee)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ dist\ =\ \doxymbox{\hyperlink{class_mth_a8656588063c00dd21ed86016d5a1570e}{Mth::sqrt}}(targetDistSqr)\ /\ attackRadius;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ power\ =\ dist;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (power\ <\ 0.1f)\ power\ =\ 0.1f;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (power\ >\ 1)\ power\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ rangedAttackMob-\/>performRangedAttack(target.lock(),\ power);}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ attackTime\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(dist\ *\ (attackIntervalMax\ -\/\ attackIntervalMin)\ +\ attackIntervalMin);}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00099}00099\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00100}00100\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (attackTime\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00101}00101\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ dist\ =\ \doxymbox{\hyperlink{class_mth_a8656588063c00dd21ed86016d5a1570e}{Mth::sqrt}}(targetDistSqr)\ /\ attackRadius;}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ attackTime\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(dist\ *\ (attackIntervalMax\ -\/\ attackIntervalMin)\ +\ attackIntervalMin);}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00104}00104\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ranged_attack_goal_8cpp_source_l00105}00105\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,26 @@
+var class_i_q_net_player =
+[
+    [ "GetCurrentRtt", "class_i_q_net_player.html#a2ee9d3eacaff82b48560bff56763609f", null ],
+    [ "GetCustomDataValue", "class_i_q_net_player.html#a1d8f2e5e8d4fb57a6fef5653f5766e32", null ],
+    [ "GetGamertag", "class_i_q_net_player.html#aabd84786501302340236b1b924897d5d", null ],
+    [ "GetSendQueueSize", "class_i_q_net_player.html#aacb93ef59ba7087d11c4cf007f0a0e1b", null ],
+    [ "GetSessionIndex", "class_i_q_net_player.html#a6d4a5c5bea3d87ac1e570305e9edb950", null ],
+    [ "GetSmallId", "class_i_q_net_player.html#a61a48e24b9f145b878b184aa83ac9e91", null ],
+    [ "GetUserIndex", "class_i_q_net_player.html#a035fa84f3ac77bff901cf8593da22d51", null ],
+    [ "GetXuid", "class_i_q_net_player.html#a25701b68a9a4d9b6e716a06603778470", null ],
+    [ "HasCamera", "class_i_q_net_player.html#a52eef8039a70d5a2f1f8c5f6a058deca", null ],
+    [ "HasVoice", "class_i_q_net_player.html#a1e980b32f138468029828e081924bd42", null ],
+    [ "IsGuest", "class_i_q_net_player.html#a79141c1bd3e94ff6047bf74275864bec", null ],
+    [ "IsHost", "class_i_q_net_player.html#a07e75298fcf2194f4ef4c57a7ade5f39", null ],
+    [ "IsLocal", "class_i_q_net_player.html#ae87c14942dc0b0e9e2cf4e08d7971512", null ],
+    [ "IsMutedByLocalUser", "class_i_q_net_player.html#a8db2decb784006c0276974478f3f03fa", null ],
+    [ "IsSameSystem", "class_i_q_net_player.html#aff32c648c925c88e41f226b7cd234630", null ],
+    [ "IsTalking", "class_i_q_net_player.html#a32de35e41d71b093a037f0bf1eb4ffa0", null ],
+    [ "SendData", "class_i_q_net_player.html#a4a7d3eb426a7ec32ba3619f8b41f5d81", null ],
+    [ "SetCustomDataValue", "class_i_q_net_player.html#a5f931e72c90898584e3b0b2c14923ccd", null ],
+    [ "m_gamertag", "class_i_q_net_player.html#a4bc1c9db5e5cc25d066d42beb21430dd", null ],
+    [ "m_isHostPlayer", "class_i_q_net_player.html#aee533d1c08f76483e6a6a756e4731fd1", null ],
+    [ "m_isRemote", "class_i_q_net_player.html#acc6fa0939f0e13c9eedca32489f21e1b", null ],
+    [ "m_resolvedXuid", "class_i_q_net_player.html#aa8b647bf867494873e424a37f536a45b", null ],
+    [ "m_smallId", "class_i_q_net_player.html#af4db131d3c148d5e07c4b22dd9c4c522", null ]
+];

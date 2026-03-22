@@ -1,0 +1,190 @@
+\doxysection{Cli\+Command\+Experience.\+cpp}
+\hypertarget{_cli_command_experience_8cpp_source}{}\label{_cli_command_experience_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/Console/commands/experience/CliCommandExperience.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/Console/commands/experience/CliCommandExperience.cpp}}
+\doxymbox{\hyperlink{_cli_command_experience_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_cli_command_experience_8h}{CliCommandExperience.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_cli_engine_8h}{..\(\backslash\)..\(\backslash\)ServerCliEngine.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_cli_parser_8h}{..\(\backslash\)..\(\backslash\)ServerCliParser.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_command_parsing_8h}{..\(\backslash\)CommandParsing.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_utils_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Common\(\backslash\)StringUtils.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_server_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.Client\(\backslash\)MinecraftServer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_player_list_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.Client\(\backslash\)PlayerList.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_player_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.Client\(\backslash\)ServerPlayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00015}00015\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_server_runtime}{ServerRuntime}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00016}00016\ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00017}00017\ \ \ \ \ \textcolor{keyword}{namespace}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00018}00018\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *kExperienceUsage\ =\ \textcolor{stringliteral}{"{}xp\ <amount>[L]\ [player]"{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00020}00020\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *kExperienceUsageWithPlayer\ =\ \textcolor{stringliteral}{"{}xp\ <amount>[L]\ <player>"{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00022}00022\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }ExperienceAmount}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00023}00023\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00024}00024\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ amount\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00025}00025\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ levels\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ take\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00027}00027\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00029}00029\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ TryParseExperienceAmount(\textcolor{keyword}{const}\ std::string\ \&\doxymbox{\hyperlink{json_8hpp_a4483d97e7b733df2f28bbe0d495b7ce9}{token}},\ ExperienceAmount\ *outValue)}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00030}00030\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (outValue\ ==\ \textcolor{keyword}{nullptr}\ ||\ \doxymbox{\hyperlink{json_8hpp_a4483d97e7b733df2f28bbe0d495b7ce9}{token}}.empty())}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ ExperienceAmount\ parsed;}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ numericToken\ =\ \doxymbox{\hyperlink{json_8hpp_a4483d97e7b733df2f28bbe0d495b7ce9}{token}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ suffix\ =\ \doxymbox{\hyperlink{json_8hpp_a4483d97e7b733df2f28bbe0d495b7ce9}{token}}[\doxymbox{\hyperlink{json_8hpp_a4483d97e7b733df2f28bbe0d495b7ce9}{token}}.size()\ -\/\ 1];}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (suffix\ ==\ \textcolor{charliteral}{'l'}\ ||\ suffix\ ==\ \textcolor{charliteral}{'L'})}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ parsed.levels\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ numericToken\ =\ \doxymbox{\hyperlink{json_8hpp_a4483d97e7b733df2f28bbe0d495b7ce9}{token}}.substr(0,\ \doxymbox{\hyperlink{json_8hpp_a4483d97e7b733df2f28bbe0d495b7ce9}{token}}.size()\ -\/\ 1);}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (numericToken.empty())}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ signedAmount\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{namespace_server_runtime_1_1_command_parsing_af98cc78c83dfb7d564700a9570c7bc61}{CommandParsing::TryParseInt}}(numericToken,\ \&signedAmount))}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (signedAmount\ ==\ (std::numeric\_limits<int>::min)())}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ parsed.take\ =\ signedAmount\ <\ 0;}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ parsed.amount\ =\ parsed.take\ ?\ -\/signedAmount\ :\ signedAmount;}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ *outValue\ =\ parsed;}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00065}00065\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ std::shared\_ptr<ServerPlayer>\ ResolveTargetPlayer(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_parsed_line}{ServerCliParsedLine}}\ \&\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}},\ \doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine}{ServerCliEngine}}\ *engine)}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens.size()\ >=\ 3)}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ engine-\/>FindPlayerByNameUtf8(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens[2]);}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ MinecraftServer\ *server\ =\ \doxymbox{\hyperlink{class_minecraft_server_ae8aa61b7338ea3b5616d347b47e29d53}{MinecraftServer::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (server\ ==\ \textcolor{keyword}{nullptr}\ ||\ server-\/>\doxymbox{\hyperlink{class_minecraft_server_aebe4fa9eb4b2748df34200d4a66b6640}{getPlayers}}()\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ PlayerList\ *players\ =\ server-\/>\doxymbox{\hyperlink{class_minecraft_server_aebe4fa9eb4b2748df34200d4a66b6640}{getPlayers}}();}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (players-\/>\doxymbox{\hyperlink{class_player_list_ae3cf1077f1288431caaa6255d43cbc19}{players}}.size()\ ==\ 1\ \&\&\ players-\/>\doxymbox{\hyperlink{class_player_list_ae3cf1077f1288431caaa6255d43cbc19}{players}}[0]\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ players-\/>\doxymbox{\hyperlink{class_player_list_ae3cf1077f1288431caaa6255d43cbc19}{players}}[0];}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00086}00086\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00088}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_experience_a9911a1e0b044e6fc24e33b1c3d48c68b}{00088}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_experience_a9911a1e0b044e6fc24e33b1c3d48c68b}{CliCommandExperience::Name}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00089}00089\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}xp"{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00091}00091\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00093}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_experience_a674d9de3f8d4d027a22a42f7cf3e6d61}{00093}}\ \ \ \ \ std::vector<std::string>\ \doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_experience_a674d9de3f8d4d027a22a42f7cf3e6d61}{CliCommandExperience::Aliases}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00094}00094\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ \textcolor{stringliteral}{"{}experience"{}}\ \};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00096}00096\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00098}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_experience_a5ccff4aa2520b58a37ea8785734c4cb1}{00098}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_experience_a5ccff4aa2520b58a37ea8785734c4cb1}{CliCommandExperience::Usage}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00099}00099\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ kExperienceUsage;}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00101}00101\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00103}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_experience_abf146e4278ab83e8eba11d3e7b95a972}{00103}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_experience_abf146e4278ab83e8eba11d3e7b95a972}{CliCommandExperience::Description}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00104}00104\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Grant\ or\ remove\ experience\ (server-\/side\ implementation)."{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00106}00106\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00108}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_experience_a054eb32029ed962ec5d84841b19c98eb}{00108}}\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_experience_a054eb32029ed962ec5d84841b19c98eb}{CliCommandExperience::Execute}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_parsed_line}{ServerCliParsedLine}}\ \&\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}},\ \doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine}{ServerCliEngine}}\ *engine)}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00109}00109\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens.size()\ <\ 2\ ||\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens.size()\ >\ 3)}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(std::string(\textcolor{stringliteral}{"{}Usage:\ "{}})\ +\ kExperienceUsage);}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ ExperienceAmount\ amount;}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!TryParseExperienceAmount(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens[1],\ \&amount))}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(std::string(\textcolor{stringliteral}{"{}Usage:\ "{}})\ +\ kExperienceUsage);}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ std::shared\_ptr<ServerPlayer>\ target\ =\ ResolveTargetPlayer(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}},\ engine);}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (target\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens.size()\ >=\ 3)}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(\textcolor{stringliteral}{"{}Unknown\ player:\ "{}}\ +\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens[2]);}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(std::string(\textcolor{stringliteral}{"{}Usage:\ "{}})\ +\ kExperienceUsageWithPlayer);}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (amount.levels)}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ target-\/>giveExperienceLevels(amount.take\ ?\ -\/amount.amount\ :\ amount.amount);}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (amount.take)}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a16825c0113b4f1d8b1d9a5c0db5e773b}{LogInfo}}(\textcolor{stringliteral}{"{}Removed\ "{}}\ +\ std::to\_string(amount.amount)\ +\ \textcolor{stringliteral}{"{}\ level(s)\ from\ "{}}\ +\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a2d940afc106d1a397e2077009458d3b9}{StringUtils::WideToUtf8}}(target-\/>getName())\ +\ \textcolor{stringliteral}{"{}."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a16825c0113b4f1d8b1d9a5c0db5e773b}{LogInfo}}(\textcolor{stringliteral}{"{}Added\ "{}}\ +\ std::to\_string(amount.amount)\ +\ \textcolor{stringliteral}{"{}\ level(s)\ to\ "{}}\ +\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a2d940afc106d1a397e2077009458d3b9}{StringUtils::WideToUtf8}}(target-\/>getName())\ +\ \textcolor{stringliteral}{"{}."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (amount.take)}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(\textcolor{stringliteral}{"{}Removing\ raw\ experience\ points\ is\ not\ supported.\ Use\ negative\ levels\ (example:\ xp\ -\/5L\ <player>)."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ target-\/>increaseXp(amount.amount);}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a16825c0113b4f1d8b1d9a5c0db5e773b}{LogInfo}}(\textcolor{stringliteral}{"{}Added\ "{}}\ +\ std::to\_string(amount.amount)\ +\ \textcolor{stringliteral}{"{}\ experience\ points\ to\ "{}}\ +\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a2d940afc106d1a397e2077009458d3b9}{StringUtils::WideToUtf8}}(target-\/>getName())\ +\ \textcolor{stringliteral}{"{}."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00160}00160\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00162}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_experience_a7410373c4ff1fc19b4215de1fb7e0747}{00162}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_experience_a7410373c4ff1fc19b4215de1fb7e0747}{CliCommandExperience::Complete}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context}{ServerCliCompletionContext}}\ \&context,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine}{ServerCliEngine}}\ *engine,\ std::vector<std::string>\ *out)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00163}00163\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a4ed728c8b79bb6c56d93d9a341c9177f}{currentTokenIndex}}\ ==\ 1)}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a84f912b74a6297e89374bb71b850f5ae}{StringUtils::StartsWithIgnoreCase}}(\textcolor{stringliteral}{"{}10"{}},\ context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a5ecd8db2a67c61ded39bda263e91c25b}{prefix}}))}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out-\/>push\_back(context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a9c2ac089ded13868cc9401f654bfa816}{linePrefix}}\ +\ \textcolor{stringliteral}{"{}10"{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a84f912b74a6297e89374bb71b850f5ae}{StringUtils::StartsWithIgnoreCase}}(\textcolor{stringliteral}{"{}10L"{}},\ context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a5ecd8db2a67c61ded39bda263e91c25b}{prefix}}))}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out-\/>push\_back(context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a9c2ac089ded13868cc9401f654bfa816}{linePrefix}}\ +\ \textcolor{stringliteral}{"{}10L"{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a84f912b74a6297e89374bb71b850f5ae}{StringUtils::StartsWithIgnoreCase}}(\textcolor{stringliteral}{"{}-\/5L"{}},\ context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a5ecd8db2a67c61ded39bda263e91c25b}{prefix}}))}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out-\/>push\_back(context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a9c2ac089ded13868cc9401f654bfa816}{linePrefix}}\ +\ \textcolor{stringliteral}{"{}-\/5L"{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a4ed728c8b79bb6c56d93d9a341c9177f}{currentTokenIndex}}\ ==\ 2)}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a572fa8d24b07a3ed717c2e0aca3ed7f3}{SuggestPlayers}}(context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a5ecd8db2a67c61ded39bda263e91c25b}{prefix}},\ context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a9c2ac089ded13868cc9401f654bfa816}{linePrefix}},\ out);}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00183}00183\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_experience_8cpp_source_l00184}00184\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,120 @@
+\doxysection{user\+\_\+malloc\+\_\+for\+\_\+tls.\+cpp}
+\hypertarget{user__malloc__for__tls_8cpp_source}{}\label{user__malloc__for__tls_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Orbis/user\_malloc\_for\_tls.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Orbis/user\_malloc\_for\_tls.cpp}}
+\doxymbox{\hyperlink{user__malloc__for__tls_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00001}00001\ \textcolor{comment}{/*\ SCE\ CONFIDENTIAL}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00002}00002\ \textcolor{comment}{\ PlayStation(R)4\ Programmer\ Tool\ Runtime\ Library\ Release\ 01.600.051}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00003}00003\ \textcolor{comment}{\ *\ Copyright\ (C)\ 2013\ Sony\ Computer\ Entertainment\ Inc.}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00004}00004\ \textcolor{comment}{\ *\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00005}00005\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00006}00006\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00007}00007\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ <mspace.h>}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <kernel.h>}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00013}\doxymbox{\hyperlink{user__malloc__for__tls_8cpp_a1b45302695680930829cac31d65e41e1}{00013}}\ \textcolor{preprocessor}{\#define\ HEAP\_SIZE\ (4\ *\ 1024\ *\ 1024)}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00015}00015\ \textcolor{keyword}{static}\ SceLibcMspace\ s\_mspace;}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00016}00016\ \textcolor{keyword}{static}\ off\_t\ s\_memStart;}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00017}00017\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{size\_t}\ s\_memLength\ =\ 4\ *\ 1024\ *\ 1024;}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00018}00018\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{size\_t}\ s\_memAlign\ =\ 2\ *\ 1024\ *\ 1024;}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00020}00020\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{user__malloc__for__tls_8cpp_a58fa2d7e1b63735974520b32ba00a7a7}{user\_malloc\_init\_for\_tls}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00021}00021\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{user__malloc__for__tls_8cpp_a15793198f420445a205671f761614c22}{user\_malloc\_fini\_for\_tls}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00022}00022\ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{user__malloc__for__tls_8cpp_ab3ca1a8a9aed8c57ffed1acdda1fcd09}{user\_malloc\_for\_tls}}(\textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00023}00023\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{user__malloc__for__tls_8cpp_a63fbb3d6824188767ca4d9aa7b9a48bf}{user\_free\_for\_tls}}(\textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}});}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00024}00024\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{user__malloc__for__tls_8cpp_ae689c70813abdfdd579dcf4fe61ff446}{user\_posix\_memalign\_for\_tls}}(\textcolor{keywordtype}{void}\ **\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}},\ \textcolor{keywordtype}{size\_t}\ boundary,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00026}00026\ \textcolor{comment}{//E\ Replace\ \_malloc\_init\_for\_tls\ function.}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00027}00027\ \textcolor{comment}{//J\ \_malloc\_init\_for\_tls\ 関数と置き換わる}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00028}\doxymbox{\hyperlink{user__malloc__for__tls_8cpp_a58fa2d7e1b63735974520b32ba00a7a7}{00028}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{user__malloc__for__tls_8cpp_a58fa2d7e1b63735974520b32ba00a7a7}{user\_malloc\_init\_for\_tls}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00029}00029\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00030}00030\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}};}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00031}00031\ \ \ \ \ \textcolor{keywordtype}{void}\ *addr;}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00032}00032\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00033}00033\ \ \ \ \ \textcolor{comment}{//E\ Allocate\ direct\ memory}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00034}00034\ \ \ \ \ \textcolor{comment}{//J\ ダイレクトメモリを割り当てる}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00035}00035\ \ \ \ \ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ =\ sceKernelAllocateDirectMemory(0,\ SCE\_KERNEL\_MAIN\_DMEM\_SIZE,\ s\_memLength,\ s\_memAlign,\ SCE\_KERNEL\_WB\_ONION,\ \&s\_memStart);}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00036}00036\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ <\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ \textcolor{comment}{//E\ Error\ handling}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{comment}{//J\ エラー処理}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00040}00040\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00042}00042\ \ \ \ \ addr\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00043}00043\ \ \ \ \ \textcolor{comment}{//E\ Map\ direct\ memory\ to\ the\ process\ address\ space}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00044}00044\ \ \ \ \ \textcolor{comment}{//J\ ダイレクトメモリをプロセスアドレス空間にマップする}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00045}00045\ \ \ \ \ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ =\ sceKernelMapDirectMemory(\&addr,\ \doxymbox{\hyperlink{deflate_8h_a1b45302695680930829cac31d65e41e1}{HEAP\_SIZE}},\ SCE\_KERNEL\_PROT\_CPU\_READ\ |\ SCE\_KERNEL\_PROT\_CPU\_WRITE,\ 0,\ s\_memStart,\ s\_memAlign);}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00046}00046\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ <\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00047}00047\ \ \ \ \ \ \ \ \ \textcolor{comment}{//E\ Error\ handling}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00048}00048\ \ \ \ \ \ \ \ \ \textcolor{comment}{//J\ エラー処理}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00049}00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00050}00050\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{comment}{//E\ Generate\ mspace}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00053}00053\ \ \ \ \ \textcolor{comment}{//J\ mspace\ を生成する}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00054}00054\ \ \ \ \ s\_mspace\ =\ sceLibcMspaceCreate(\textcolor{stringliteral}{"{}User\ Malloc\ For\ TLS"{}},\ addr,\ \doxymbox{\hyperlink{deflate_8h_a1b45302695680930829cac31d65e41e1}{HEAP\_SIZE}},\ 0);}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{if}\ (s\_mspace\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \textcolor{comment}{//E\ Error\ handling}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{comment}{//J\ エラー処理}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00058}00058\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00059}00059\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00061}00061\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00062}00062\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00064}00064\ \textcolor{comment}{//E\ Replace\ \_malloc\_fini\_for\_tls\ function.}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00065}00065\ \textcolor{comment}{//J\ \_malloc\_fini\_for\_tls\ 関数と置き換わる}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00066}\doxymbox{\hyperlink{user__malloc__for__tls_8cpp_a15793198f420445a205671f761614c22}{00066}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{user__malloc__for__tls_8cpp_a15793198f420445a205671f761614c22}{user\_malloc\_fini\_for\_tls}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00067}00067\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00068}00068\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}};}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{if}\ (s\_mspace\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{comment}{//E\ Free\ mspace}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{comment}{//J\ mspace\ を解放する}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ =\ sceLibcMspaceDestroy(s\_mspace);}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ !=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//E\ Error\ handling}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//J\ エラー処理}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00079}00079\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00081}00081\ \ \ \ \ \textcolor{comment}{//E\ Release\ direct\ memory}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00082}00082\ \ \ \ \ \textcolor{comment}{//J\ ダイレクトメモリを解放する}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00083}00083\ \ \ \ \ \doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ =\ sceKernelReleaseDirectMemory(s\_memStart,\ s\_memLength);}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00084}00084\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a5e111f6687f261e4e28bd6528e7f5b48}{res}}\ <\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{comment}{//E\ Error\ handling}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{comment}{//J\ エラー処理}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00088}00088\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00090}00090\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00091}00091\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00093}00093\ \textcolor{comment}{//E\ Replace\ \_malloc\_for\_tls\ function.}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00094}00094\ \textcolor{comment}{//J\ \_malloc\_for\_tls\ 関数と置き換わる}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00095}\doxymbox{\hyperlink{user__malloc__for__tls_8cpp_ab3ca1a8a9aed8c57ffed1acdda1fcd09}{00095}}\ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{user__malloc__for__tls_8cpp_ab3ca1a8a9aed8c57ffed1acdda1fcd09}{user\_malloc\_for\_tls}}(\textcolor{keywordtype}{size\_t}\ size)}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00096}00096\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00097}00097\ \ \ \ \ \textcolor{keywordflow}{return}\ sceLibcMspaceMalloc(s\_mspace,\ size);}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00098}00098\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00100}00100\ \textcolor{comment}{//E\ Replace\ \_free\_for\_tls\ function.}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00101}00101\ \textcolor{comment}{//J\ \_free\_for\_tls\ 関数と置き換わる}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00102}\doxymbox{\hyperlink{user__malloc__for__tls_8cpp_a63fbb3d6824188767ca4d9aa7b9a48bf}{00102}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{user__malloc__for__tls_8cpp_a63fbb3d6824188767ca4d9aa7b9a48bf}{user\_free\_for\_tls}}(\textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}})}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00103}00103\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00104}00104\ \ \ \ \ sceLibcMspaceFree(s\_mspace,\ \doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}});}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00105}00105\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00107}00107\ \textcolor{comment}{//E\ Replace\ \_posix\_memalign\_for\_tls\ function.}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00108}00108\ \textcolor{comment}{//J\ \_posix\_memalign\_for\_tls\ 関数と置き換わる}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00109}\doxymbox{\hyperlink{user__malloc__for__tls_8cpp_ae689c70813abdfdd579dcf4fe61ff446}{00109}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{user__malloc__for__tls_8cpp_ae689c70813abdfdd579dcf4fe61ff446}{user\_posix\_memalign\_for\_tls}}(\textcolor{keywordtype}{void}\ **\doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}},\ \textcolor{keywordtype}{size\_t}\ boundary,\ \textcolor{keywordtype}{size\_t}\ size)}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00110}00110\ \{}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00111}00111\ \ \ \ \ \textcolor{keywordflow}{return}\ sceLibcMspacePosixMemalign(s\_mspace,\ \doxymbox{\hyperlink{json_8hpp_aaec38016d91be59a6d724cb457747b73}{ptr}},\ boundary,\ size);}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00112}00112\ \}}
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{user__malloc__for__tls_8cpp_source_l00114}00114\ \}\ \textcolor{comment}{//\ extern\ "{}c"{}}}
+
+\end{DoxyCode}

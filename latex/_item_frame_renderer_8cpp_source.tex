@@ -1,0 +1,193 @@
+\doxysection{Item\+Frame\+Renderer.\+cpp}
+\hypertarget{_item_frame_renderer_8cpp_source}{}\label{_item_frame_renderer_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/ItemFrameRenderer.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/ItemFrameRenderer.cpp}}
+\doxymbox{\hyperlink{_item_frame_renderer_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_client_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_item_renderer_8h}{ItemRenderer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_tile_renderer_8h}{tileRenderer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_entity_render_dispatcher_8h}{entityRenderDispatcher.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00005}00005\ \textcolor{comment}{//\#include\ "{}ItemFrame"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_item_frame_renderer_8h}{ItemFrameRenderer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_texture_atlas_8h}{TextureAtlas.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_java_math_8h}{..\(\backslash\)Minecraft.World\(\backslash\)JavaMath.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8item_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.Item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.Item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8alchemy_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.Item.alchemy.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8tile_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.tile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_helpers_8h}{..\(\backslash\)Minecraft.World\(\backslash\)StringHelpers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8h}{Minecraft.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_item_8h}{..\(\backslash\)Minecraft.World\(\backslash\)Item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00017}00017\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00018}00018\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00019}00019\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_compass_texture_8h}{CompassTexture.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00020}00020\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minimap_8h}{Minimap.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00022}00022\ \doxymbox{\hyperlink{class_resource_location}{ResourceLocation}}\ ItemFrameRenderer::MAP\_BACKGROUND\_LOCATION\ =\ \doxymbox{\hyperlink{class_resource_location}{ResourceLocation}}(\doxymbox{\hyperlink{_textures_8h_a3bc692de7f45db575aad1a0adbeb12f3a5b766fd6b12b8e163e6310e2fa74cc06}{TN\_MISC\_MAPBG}});}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00024}\doxymbox{\hyperlink{class_item_frame_renderer_a81e3fcb5dce56fabe707dbc6e2fc97f6}{00024}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_item_frame_renderer_a81e3fcb5dce56fabe707dbc6e2fc97f6}{ItemFrameRenderer::registerTerrainTextures}}(\doxymbox{\hyperlink{class_icon_register}{IconRegister}}\ *iconRegister)}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00025}00025\ \{}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00026}00026\ \ \ \ \ backTexture\ =\ iconRegister-\/>\doxymbox{\hyperlink{class_icon_register_acc284ad54135d1fee0a8a8548fbfc0c8}{registerIcon}}(L\textcolor{stringliteral}{"{}itemframe\_back"{}});}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00027}00027\ \}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00029}\doxymbox{\hyperlink{class_item_frame_renderer_a5968fd89deafe5fd40d4ee8ad0403d64}{00029}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_item_frame_renderer_a5968fd89deafe5fd40d4ee8ad0403d64}{ItemFrameRenderer::render}}(shared\_ptr<Entity>\ \ \_itemframe,\ \textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y,\ \textcolor{keywordtype}{double}\ z,\ \textcolor{keywordtype}{float}\ rot,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00030}00030\ \{}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00031}00031\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ original\ version\ used\ generics\ and\ thus\ had\ an\ input\ parameter\ of\ type\ EnderCrystal\ rather\ than\ shared\_ptr<Entity>\ \ we\ have\ here\ -\/\ }}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00032}00032\ \ \ \ \ \textcolor{comment}{//\ do\ some\ casting\ around\ instead}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00033}00033\ \ \ \ \ shared\_ptr<ItemFrame>\ itemFrame\ =\ dynamic\_pointer\_cast<ItemFrame>(\_itemframe);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00035}00035\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00036}00036\ \ \ \ \ \textcolor{keywordtype}{float}\ xOffs\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(itemFrame-\/>x\ -\/\ x)\ -\/\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00037}00037\ \ \ \ \ \textcolor{keywordtype}{float}\ yOffs\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(itemFrame-\/>y\ -\/\ y)\ -\/\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00038}00038\ \ \ \ \ \textcolor{keywordtype}{float}\ zOffs\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(itemFrame-\/>z\ -\/\ z)\ -\/\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00040}00040\ \ \ \ \ \textcolor{keywordtype}{int}\ xt\ =\ itemFrame-\/>xTile\ +\ \doxymbox{\hyperlink{class_direction_a81633e939d6b66c63022a222803c09bc}{Direction::STEP\_X}}[itemFrame-\/>dir];}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00041}00041\ \ \ \ \ \textcolor{keywordtype}{int}\ yt\ =\ itemFrame-\/>yTile;}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00042}00042\ \ \ \ \ \textcolor{keywordtype}{int}\ zt\ =\ itemFrame-\/>zTile\ +\ \doxymbox{\hyperlink{class_direction_a16d1021e1b686968dae7f96d1fffaee4}{Direction::STEP\_Z}}[itemFrame-\/>dir];}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00044}00044\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(xt)\ -\/\ xOffs,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(yt)\ -\/\ yOffs,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(zt)\ -\/\ zOffs);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00046}00046\ \ \ \ \ drawFrame(itemFrame);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00047}00047\ \ \ \ \ drawItem(itemFrame);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00049}00049\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00050}00050\ \}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00053}00053\ \textcolor{keywordtype}{void}\ ItemFrameRenderer::drawFrame(shared\_ptr<ItemFrame>\ itemFrame)\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00054}00054\ \{}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00055}00055\ \ \ \ \ \doxymbox{\hyperlink{class_minecraft}{Minecraft}}\ *pMinecraft=\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00057}00057\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00058}00058\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_ae8cfa0d99ad1efd53d0de0100e256606}{entityRenderDispatcher}}-\/>\doxymbox{\hyperlink{class_entity_render_dispatcher_afcbb9a28fe06016cf2369d832ec7ecf3}{textures}}-\/>\doxymbox{\hyperlink{class_textures_afa6c13e1853cf96eb38fc9a3d7712515}{bindTexture}}(\&\doxymbox{\hyperlink{class_texture_atlas_a91499250ed84551a2b98e418ed917e80}{TextureAtlas::LOCATION\_BLOCKS}});}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00059}00059\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(itemFrame-\/>yRot,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00061}00061\ \ \ \ \ \doxymbox{\hyperlink{class_tile}{Tile}}\ *wood\ =\ \doxymbox{\hyperlink{class_tile_af4e5f14f0779eccc11b98aa20e2d9315}{Tile::wood}};}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00062}00062\ \ \ \ \ \textcolor{keywordtype}{float}\ depth\ =\ 1.0f\ /\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00063}00063\ \ \ \ \ \textcolor{keywordtype}{float}\ width\ =\ 12.0f\ /\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00064}00064\ \ \ \ \ \textcolor{keywordtype}{float}\ widthHalf\ =\ width\ /\ 2.0f;}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00066}00066\ \ \ \ \ \textcolor{comment}{//\ Back}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00067}00067\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00069}00069\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_aec43ae552b683e2639a63add522bf9eb}{setFixedShape}}(0,\ 0.5f\ -\/\ widthHalf\ +\ 1.0f\ /\ 16.0f,\ 0.5f\ -\/\ widthHalf\ +\ 1.0f\ /\ 16.0f,\ depth\ *\ .5f,\ 0.5f\ +\ widthHalf\ -\/\ 1.0f\ /\ 16.0f,\ 0.5f\ +\ widthHalf\ -\/\ 1.0f\ /\ 16.0f);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00070}00070\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_ac7a13de21d711feecb706fddf8ad1851}{setFixedTexture}}(backTexture);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00071}00071\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_a10c1423dc582868a2e72e106e3edc83b}{renderTile}}(wood,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00072}00072\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_ab0fe7ff04a0dbe8e2b17cce3971a8237}{clearFixedTexture}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00073}00073\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_a98a7e589fb3e79da79b2a1a4de10b158}{clearFixedShape}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00074}00074\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00076}00076\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_ac7a13de21d711feecb706fddf8ad1851}{setFixedTexture}}(\doxymbox{\hyperlink{class_tile_af4e5f14f0779eccc11b98aa20e2d9315}{Tile::wood}}-\/>getTexture(\doxymbox{\hyperlink{class_facing_aef75781108db81797622b4af17a52f8b}{Facing::UP}},\ \doxymbox{\hyperlink{class_tree_tile_a5210449e8bdf067f247bf24c95bf7a25}{TreeTile::BIRCH\_TRUNK}}));}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00078}00078\ \ \ \ \ \textcolor{comment}{//\ Bottom}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00079}00079\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00080}00080\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_aec43ae552b683e2639a63add522bf9eb}{setFixedShape}}(0,\ 0.5f\ -\/\ widthHalf,\ 0.5f\ -\/\ widthHalf,\ depth\ +\ 0.0001f,\ depth\ +\ 0.5f\ -\/\ widthHalf,\ 0.5f\ +\ widthHalf);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00081}00081\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_a10c1423dc582868a2e72e106e3edc83b}{renderTile}}(wood,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00082}00082\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00084}00084\ \ \ \ \ \textcolor{comment}{//\ Top}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00085}00085\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00086}00086\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_aec43ae552b683e2639a63add522bf9eb}{setFixedShape}}(0,\ 0.5f\ +\ widthHalf\ -\/\ depth,\ 0.5f\ -\/\ widthHalf,\ depth\ +\ 0.0001f,\ 0.5f\ +\ widthHalf,\ 0.5f\ +\ widthHalf);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00087}00087\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_a10c1423dc582868a2e72e106e3edc83b}{renderTile}}(wood,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00088}00088\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00090}00090\ \ \ \ \ \textcolor{comment}{//\ Right}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00091}00091\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00092}00092\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_aec43ae552b683e2639a63add522bf9eb}{setFixedShape}}(0,\ 0.5f\ -\/\ widthHalf,\ 0.5f\ -\/\ widthHalf,\ depth,\ 0.5f\ +\ widthHalf,\ depth\ +\ 0.5f\ -\/\ widthHalf);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00093}00093\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_a10c1423dc582868a2e72e106e3edc83b}{renderTile}}(wood,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00094}00094\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00096}00096\ \ \ \ \ \textcolor{comment}{//\ Left}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00097}00097\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00098}00098\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_aec43ae552b683e2639a63add522bf9eb}{setFixedShape}}(0,\ 0.5f\ -\/\ widthHalf,\ 0.5f\ +\ widthHalf\ -\/\ depth,\ depth,\ 0.5f\ +\ widthHalf,\ 0.5f\ +\ widthHalf);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00099}00099\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_a10c1423dc582868a2e72e106e3edc83b}{renderTile}}(wood,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00100}00100\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00102}00102\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_a98a7e589fb3e79da79b2a1a4de10b158}{clearFixedShape}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00103}00103\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>\doxymbox{\hyperlink{class_tile_renderer_ab0fe7ff04a0dbe8e2b17cce3971a8237}{clearFixedTexture}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00105}00105\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00106}00106\ \}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00108}00108\ \textcolor{keywordtype}{void}\ ItemFrameRenderer::drawItem(shared\_ptr<ItemFrame>\ entity)\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00109}00109\ \{}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00110}00110\ \ \ \ \ Minecraft\ *pMinecraft=\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00112}00112\ \ \ \ \ shared\_ptr<ItemInstance>\ instance\ =\ entity-\/>getItem();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00113}00113\ \ \ \ \ \textcolor{keywordflow}{if}\ (instance\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00115}00115\ \ \ \ \ shared\_ptr<ItemEntity>\ itemEntity\ =\ std::make\_shared<ItemEntity>(entity-\/>level,\ 0,\ 0,\ 0,\ instance);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00116}00116\ \ \ \ \ itemEntity-\/>getItem()-\/>count\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00117}00117\ \ \ \ \ itemEntity-\/>bobOffs\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00119}00119\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00121}00121\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}((-\/7.25f\ /\ 16.0f)\ *\ \doxymbox{\hyperlink{class_direction_a81633e939d6b66c63022a222803c09bc}{Direction::STEP\_X}}[entity-\/>dir],\ -\/0.18f,\ (-\/7.25f\ /\ 16.0f)\ *\ \doxymbox{\hyperlink{class_direction_a16d1021e1b686968dae7f96d1fffaee4}{Direction::STEP\_Z}}[entity-\/>dir]);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00122}00122\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(180\ +\ entity-\/>yRot,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00123}00123\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(-\/90\ *\ entity-\/>getRotation(),\ 0,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00125}00125\ \ \ \ \ \textcolor{keywordflow}{switch}\ (entity-\/>getRotation())\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00126}00126\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00127}00127\ \ \ \ \ \textcolor{keywordflow}{case}\ 1:}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(-\/0.16f,\ -\/0.16f,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00130}00130\ \ \ \ \ \textcolor{keywordflow}{case}\ 2:}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(0,\ -\/0.32f,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00133}00133\ \ \ \ \ \textcolor{keywordflow}{case}\ 3:}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(0.16f,\ -\/0.16f,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00136}00136\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00138}00138\ \ \ \ \ \textcolor{keywordflow}{if}\ (itemEntity-\/>getItem()-\/>getItem()\ ==\ \doxymbox{\hyperlink{class_item_aeee00cd0673e952822347e34d6bb41e5}{Item::map}})\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00139}00139\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_ae8cfa0d99ad1efd53d0de0100e256606}{entityRenderDispatcher}}-\/>textures-\/>bindTexture(\&MAP\_BACKGROUND\_LOCATION);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ Tesselator\ *t\ =\ \doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{Tesselator::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(180,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(180,\ 0,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(1.0f\ /\ 256.0f,\ 1.0f\ /\ 256.0f,\ 1.0f\ /\ 256.0f);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(-\/65,\ -\/107,\ -\/3);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_a7a5185677bbbe2bcf5c569a76c2b2e9a}{glNormal3f}}(0,\ 0,\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ vo\ =\ 7;}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(0\ -\/\ vo,\ 128\ +\ vo,\ 0,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(128\ +\ vo,\ 128\ +\ vo,\ 0,\ 1,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(128\ +\ vo,\ 0\ -\/\ vo,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(0\ -\/\ vo,\ 0\ -\/\ vo,\ 0,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ shared\_ptr<MapItemSavedData>\ data\ =\ \doxymbox{\hyperlink{class_item_aeee00cd0673e952822347e34d6bb41e5}{Item::map}}-\/>\doxymbox{\hyperlink{class_map_item_a7d2d18258dbdef644705506f355c10af}{getSavedData}}(itemEntity-\/>getItem(),\ entity-\/>level);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (data\ !=\ \textcolor{keyword}{nullptr})\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_ae8cfa0d99ad1efd53d0de0100e256606}{entityRenderDispatcher}}-\/>itemInHandRenderer-\/>minimap-\/>render(\textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{class_entity_renderer_ae8cfa0d99ad1efd53d0de0100e256606}{entityRenderDispatcher}}-\/>textures,\ data,\ entity-\/>entityId);}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00161}00161\ \ \ \ \ \}\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00162}00162\ \ \ \ \ \textcolor{keywordflow}{else}\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00163}00163\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (itemEntity-\/>getItem()-\/>getItem()\ ==\ \doxymbox{\hyperlink{class_item_a3da31b3b1b02b477bb52354814629b16}{Item::compass}})}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ CompassTexture\ *ct\ =\ \doxymbox{\hyperlink{class_compass_texture_afbf8d000106dc5e41019156cb6d84fa8}{CompassTexture::instance}};}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ compassRot\ =\ ct-\/>\doxymbox{\hyperlink{class_compass_texture_ae4928706632267b843596794c211ac99}{rot}};}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ compassRotA\ =\ ct-\/>\doxymbox{\hyperlink{class_compass_texture_aefdfcef02190072f0368f185de88bb56}{rota}};}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ ct-\/>\doxymbox{\hyperlink{class_compass_texture_ae4928706632267b843596794c211ac99}{rot}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ ct-\/>\doxymbox{\hyperlink{class_compass_texture_aefdfcef02190072f0368f185de88bb56}{rota}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ ct-\/>\doxymbox{\hyperlink{class_compass_texture_a484a92f47c003f95d77240d5bb60d319}{updateFromPosition}}(entity-\/>level,\ entity-\/>x,\ entity-\/>z,\ \doxymbox{\hyperlink{class_mth_a0f480bf28fa5b25abdf268df18dd5917}{Mth::wrapDegrees}}(\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(180\ +\ entity-\/>dir\ *\ 90)\ ),\ \textcolor{keyword}{false},\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ ct-\/>\doxymbox{\hyperlink{class_compass_texture_ae4928706632267b843596794c211ac99}{rot}}\ =\ compassRot;}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ ct-\/>\doxymbox{\hyperlink{class_compass_texture_aefdfcef02190072f0368f185de88bb56}{rota}}\ =\ compassRotA;}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_render_dispatcher_a7a98f644116f113d4e184f83640fe0ba}{EntityRenderDispatcher::instance}}-\/>\doxymbox{\hyperlink{class_entity_render_dispatcher_a729ed2c23b4b54feddd219540b97696f}{render}}(itemEntity,\ 0,\ 0,\ 0,\ 0,\ 0,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (itemEntity-\/>getItem()-\/>getItem()\ ==\ \doxymbox{\hyperlink{class_item_a3da31b3b1b02b477bb52354814629b16}{Item::compass}})}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ CompassTexture\ *ct\ =\ \doxymbox{\hyperlink{class_compass_texture_afbf8d000106dc5e41019156cb6d84fa8}{CompassTexture::instance}};}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ ct-\/>\doxymbox{\hyperlink{class_compass_texture_a0754a3657688488aac3761227e2298c4}{cycleFrames}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00183}00183\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00184}00184\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00185}00185\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00186}00186\ \}}
+\DoxyCodeLine{\Hypertarget{_item_frame_renderer_8cpp_source_l00187}00187\ }
+
+\end{DoxyCode}

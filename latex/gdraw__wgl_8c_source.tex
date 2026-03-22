@@ -1,0 +1,205 @@
+\doxysection{gdraw\+\_\+wgl.\+c}
+\hypertarget{gdraw__wgl_8c_source}{}\label{gdraw__wgl_8c_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Windows64/Iggy/gdraw/gdraw\_wgl.c@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Windows64/Iggy/gdraw/gdraw\_wgl.c}}
+\doxymbox{\hyperlink{gdraw__wgl_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00001}00001\ \textcolor{comment}{//\ gdraw\_wgl.c\ -\/\ copyright\ 2011-\/2012\ RAD\ Game\ Tools}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00002}00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00003}00003\ \textcolor{comment}{//\ This\ implements\ the\ Iggy\ graphics\ driver\ layer\ for\ GL\ on\ Windows.}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00005}\doxymbox{\hyperlink{gdraw__wgl_8c_a167222b805aa833163c2708285e59091}{00005}}\ \textcolor{preprocessor}{\#define\ GDRAW\_ASSERTS}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}iggy.h"{}}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}gdraw.h"{}}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{gdraw__wgl_8h}{gdraw\_wgl.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00010}00010\ \textcolor{preprocessor}{\#include\ <windows.h>}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <gl/gl.h>}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}glext.h"{}}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00016}\doxymbox{\hyperlink{gdraw__wgl_8c_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{00016}}\ \textcolor{preprocessor}{\#define\ true\ 1}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00017}\doxymbox{\hyperlink{gdraw__wgl_8c_a65e9886d74aaee76545e83dd09011727}{00017}}\ \textcolor{preprocessor}{\#define\ false\ 0}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00020}00020\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00021}00021\ \textcolor{comment}{//\ \ Extensions\ (we\ map\ to\ GL\ 2.0\ function\ names\ for\ a\ uniform\ interface}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00022}00022\ \textcolor{comment}{//\ \ across\ platforms)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00023}00023\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00025}\doxymbox{\hyperlink{gdraw__wgl_8c_a6543486a75f60e961e81c5a0b78d815c}{00025}}\ \textcolor{preprocessor}{\#define\ GDRAW\_GL\_EXTENSION\_LIST\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00026}00026\ \textcolor{preprocessor}{\ \ \ }\textcolor{comment}{/*\ \ identifier\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ import\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ procname\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00027}00027\ \textcolor{preprocessor}{\ \ \ }\textcolor{comment}{/*\ GL\_ARB\_multitexture\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00028}00028\ \textcolor{preprocessor}{\ \ \ GLE(ActiveTexture,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}ActiveTextureARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ACTIVETEXTUREARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00029}00029\ \textcolor{preprocessor}{\ \ \ }\textcolor{comment}{/*\ GL\_ARB\_texture\_compression\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00030}00030\ \textcolor{preprocessor}{\ \ \ GLE(CompressedTexImage2D,\ \ \ \ \ \ \ \ \ \ \ "{}CompressedTexImage2DARB"{},\ \ \ \ \ \ \ \ \ \ COMPRESSEDTEXIMAGE2DARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00031}00031\ \textcolor{preprocessor}{\ \ \ }\textcolor{comment}{/*\ GL\_ARB\_vertex\_buffer\_object\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00032}00032\ \textcolor{preprocessor}{\ \ \ GLE(GenBuffers,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}GenBuffersARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GENBUFFERSARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00033}00033\ \textcolor{preprocessor}{\ \ \ GLE(DeleteBuffers,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}DeleteBuffersARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DELETEBUFFERSARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00034}00034\ \textcolor{preprocessor}{\ \ \ GLE(BindBuffer,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}BindBufferARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ BINDBUFFERARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00035}00035\ \textcolor{preprocessor}{\ \ \ GLE(BufferData,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}BufferDataARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ BUFFERDATAARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00036}00036\ \textcolor{preprocessor}{\ \ \ GLE(MapBuffer,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}MapBufferARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MAPBUFFERARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00037}00037\ \textcolor{preprocessor}{\ \ \ GLE(UnmapBuffer,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}UnmapBufferARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ UNMAPBUFFERARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00038}00038\ \textcolor{preprocessor}{\ \ \ GLE(VertexAttribPointer,\ \ \ \ \ \ \ \ \ \ \ \ "{}VertexAttribPointerARB"{},\ \ \ \ \ \ \ \ \ \ \ VERTEXATTRIBPOINTERARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00039}00039\ \textcolor{preprocessor}{\ \ \ GLE(EnableVertexAttribArray,\ \ \ \ \ \ \ \ "{}EnableVertexAttribArrayARB"{},\ \ \ \ \ \ \ ENABLEVERTEXATTRIBARRAYARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00040}00040\ \textcolor{preprocessor}{\ \ \ GLE(DisableVertexAttribArray,\ \ \ \ \ \ \ "{}DisableVertexAttribArrayARB"{},\ \ \ \ \ \ DISABLEVERTEXATTRIBARRAYARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00041}00041\ \textcolor{preprocessor}{\ \ \ }\textcolor{comment}{/*\ GL\_ARB\_shader\_objects\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00042}00042\ \textcolor{preprocessor}{\ \ \ GLE(CreateShader,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}CreateShaderObjectARB"{},\ \ \ \ \ \ \ \ \ \ \ \ CREATESHADEROBJECTARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00043}00043\ \textcolor{preprocessor}{\ \ \ GLE(DeleteShader,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}DeleteObjectARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DELETEOBJECTARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00044}00044\ \textcolor{preprocessor}{\ \ \ GLE(ShaderSource,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}ShaderSourceARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SHADERSOURCEARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00045}00045\ \textcolor{preprocessor}{\ \ \ GLE(CompileShader,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}CompileShaderARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ COMPILESHADERARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00046}00046\ \textcolor{preprocessor}{\ \ \ GLE(GetShaderiv,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}GetObjectParameterivARB"{},\ \ \ \ \ \ \ \ \ \ GETOBJECTPARAMETERIVARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00047}00047\ \textcolor{preprocessor}{\ \ \ GLE(GetShaderInfoLog,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}GetInfoLogARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GETINFOLOGARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00048}00048\ \textcolor{preprocessor}{\ \ \ GLE(CreateProgram,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}CreateProgramObjectARB"{},\ \ \ \ \ \ \ \ \ \ \ CREATEPROGRAMOBJECTARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00049}00049\ \textcolor{preprocessor}{\ \ \ GLE(DeleteProgram,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}DeleteObjectARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DELETEOBJECTARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00050}00050\ \textcolor{preprocessor}{\ \ \ GLE(AttachShader,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}AttachObjectARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ATTACHOBJECTARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00051}00051\ \textcolor{preprocessor}{\ \ \ GLE(LinkProgram,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}LinkProgramARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LINKPROGRAMARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00052}00052\ \textcolor{preprocessor}{\ \ \ GLE(GetUniformLocation,\ \ \ \ \ \ \ \ \ \ \ \ \ "{}GetUniformLocationARB"{},\ \ \ \ \ \ \ \ \ \ \ \ GETUNIFORMLOCATIONARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00053}00053\ \textcolor{preprocessor}{\ \ \ GLE(UseProgram,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}UseProgramObjectARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ USEPROGRAMOBJECTARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00054}00054\ \textcolor{preprocessor}{\ \ \ GLE(GetProgramiv,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}GetObjectParameterivARB"{},\ \ \ \ \ \ \ \ \ \ GETOBJECTPARAMETERIVARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00055}00055\ \textcolor{preprocessor}{\ \ \ GLE(GetProgramInfoLog,\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}GetInfoLogARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GETINFOLOGARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00056}00056\ \textcolor{preprocessor}{\ \ \ GLE(Uniform1i,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Uniform1iARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ UNIFORM1IARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00057}00057\ \textcolor{preprocessor}{\ \ \ GLE(Uniform4f,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Uniform4fARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ UNIFORM4FARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00058}00058\ \textcolor{preprocessor}{\ \ \ GLE(Uniform4fv,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Uniform4fvARB"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ UNIFORM4FVARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00059}00059\ \textcolor{preprocessor}{\ \ \ }\textcolor{comment}{/*\ GL\_ARB\_vertex\_shader\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00060}00060\ \textcolor{preprocessor}{\ \ \ GLE(BindAttribLocation,\ \ \ \ \ \ \ \ \ \ \ \ \ "{}BindAttribLocationARB"{},\ \ \ \ \ \ \ \ \ \ \ \ BINDATTRIBLOCATIONARB)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00061}00061\ \textcolor{preprocessor}{\ \ \ }\textcolor{comment}{/*\ GL\_EXT\_framebuffer\_object\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00062}00062\ \textcolor{preprocessor}{\ \ \ GLE(GenRenderbuffers,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}GenRenderbuffersEXT"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ GENRENDERBUFFERSEXT)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00063}00063\ \textcolor{preprocessor}{\ \ \ GLE(DeleteRenderbuffers,\ \ \ \ \ \ \ \ \ \ \ \ "{}DeleteRenderbuffersEXT"{},\ \ \ \ \ \ \ \ \ \ \ DELETERENDERBUFFERSEXT)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00064}00064\ \textcolor{preprocessor}{\ \ \ GLE(BindRenderbuffer,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}BindRenderbufferEXT"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ BINDRENDERBUFFEREXT)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00065}00065\ \textcolor{preprocessor}{\ \ \ GLE(RenderbufferStorage,\ \ \ \ \ \ \ \ \ \ \ \ "{}RenderbufferStorageEXT"{},\ \ \ \ \ \ \ \ \ \ \ RENDERBUFFERSTORAGEEXT)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00066}00066\ \textcolor{preprocessor}{\ \ \ GLE(GenFramebuffers,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}GenFramebuffersEXT"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GENFRAMEBUFFERSEXT)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00067}00067\ \textcolor{preprocessor}{\ \ \ GLE(DeleteFramebuffers,\ \ \ \ \ \ \ \ \ \ \ \ \ "{}DeleteFramebuffersEXT"{},\ \ \ \ \ \ \ \ \ \ \ \ DELETEFRAMEBUFFERSEXT)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00068}00068\ \textcolor{preprocessor}{\ \ \ GLE(BindFramebuffer,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}BindFramebufferEXT"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ BINDFRAMEBUFFEREXT)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00069}00069\ \textcolor{preprocessor}{\ \ \ GLE(CheckFramebufferStatus,\ \ \ \ \ \ \ \ \ "{}CheckFramebufferStatusEXT"{},\ \ \ \ \ \ \ \ CHECKFRAMEBUFFERSTATUSEXT)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00070}00070\ \textcolor{preprocessor}{\ \ \ GLE(FramebufferRenderbuffer,\ \ \ \ \ \ \ \ "{}FramebufferRenderbufferEXT"{},\ \ \ \ \ \ \ FRAMEBUFFERRENDERBUFFEREXT)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00071}00071\ \textcolor{preprocessor}{\ \ \ GLE(FramebufferTexture2D,\ \ \ \ \ \ \ \ \ \ \ "{}FramebufferTexture2DEXT"{},\ \ \ \ \ \ \ \ \ \ FRAMEBUFFERTEXTURE2DEXT)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00072}00072\ \textcolor{preprocessor}{\ \ \ GLE(GenerateMipmap,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}GenerateMipmapEXT"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GENERATEMIPMAPEXT)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00073}00073\ \textcolor{preprocessor}{\ \ \ }\textcolor{comment}{/*\ GL\_EXT\_framebuffer\_blit\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00074}00074\ \textcolor{preprocessor}{\ \ \ GLE(BlitFramebuffer,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}BlitFramebufferEXT"{},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ BLITFRAMEBUFFEREXT)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00075}00075\ \textcolor{preprocessor}{\ \ \ }\textcolor{comment}{/*\ GL\_EXT\_framebuffer\_multisample\ */}\textcolor{preprocessor}{\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00076}00076\ \textcolor{preprocessor}{\ \ \ GLE(RenderbufferStorageMultisample,\ "{}RenderbufferStorageMultisampleEXT"{},RENDERBUFFERSTORAGEMULTISAMPLEEXT)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00077}00077\ \textcolor{preprocessor}{\ \ \ }\textcolor{comment}{/*\ <end>\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00079}\doxymbox{\hyperlink{gdraw__wgl_8c_af6d16bb2d3e68b55ba0e40edab16126d}{00079}}\ \textcolor{preprocessor}{\#define\ gdraw\_GLx\_(id)\ \ \ \ \ gdraw\_GL\_\#\#id}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00080}\doxymbox{\hyperlink{gdraw__wgl_8c_abcc9c263694d9a4a52a9bd0d627e360a}{00080}}\ \textcolor{preprocessor}{\#define\ GDRAW\_GLx\_(id)\ \ \ \ \ GDRAW\_GL\_\#\#id}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00081}\doxymbox{\hyperlink{gdraw__wgl_8c_ac7c9a3d4ef25a26cdca4619b5abaa4bb}{00081}}\ \textcolor{preprocessor}{\#define\ GDRAW\_SHADERS\ \ \ \ \ \ "{}gdraw\_gl\_shaders.inl"{}}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00083}\doxymbox{\hyperlink{gdraw__wgl_8c_a0b4f16c76d8f2c2cb6d4fa52e8f36dbb}{00083}}\ \textcolor{keyword}{typedef}\ GLhandleARB\ \doxymbox{\hyperlink{gdraw__wgl_8c_a0b4f16c76d8f2c2cb6d4fa52e8f36dbb}{GLhandle}};}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00084}\doxymbox{\hyperlink{gdraw__wgl_8c_a122c28ec9411fe2ac713ba2a571350b6}{00084}}\ \textcolor{keyword}{typedef}\ \doxymbox{\hyperlink{gdraw__wgl_8h_a95cdaeb1fc7cb22db8025eea749687c4}{gdraw\_gl\_resourcetype}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d11_8cpp_a4f1e6ed3cffa550a1a4e9edee2c97fbd}{gdraw\_resourcetype}};}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00086}00086\ \textcolor{comment}{//\ Extensions}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00087}\doxymbox{\hyperlink{gdraw__wgl_8c_a5ec57cafae489321d5500ac390552fc1}{00087}}\ \textcolor{preprocessor}{\#define\ GLE(id,\ import,\ procname)\ static\ PFNGL\#\#procname\#\#PROC\ gl\#\#id;}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00088}00088\ \doxymbox{\hyperlink{gdraw__wgl_8c_a6543486a75f60e961e81c5a0b78d815c}{GDRAW\_GL\_EXTENSION\_LIST}}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00089}00089\ \textcolor{preprocessor}{\#undef\ GLE}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00091}00091\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ load\_extensions(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00092}00092\ \{}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00093}00093\ \textcolor{preprocessor}{\#define\ GLE(id,\ import,\ procname)\ gl\#\#id\ =\ (PFNGL\#\#procname\#\#PROC)\ wglGetProcAddress("{}gl"{}\ import);}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00094}00094\ \ \ \ \doxymbox{\hyperlink{gdraw__wgl_8c_a6543486a75f60e961e81c5a0b78d815c}{GDRAW\_GL\_EXTENSION\_LIST}}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00095}00095\ \textcolor{preprocessor}{\#undef\ GLE}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00096}00096\ \}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00098}00098\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ clear\_renderstate\_platform\_specific(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00099}00099\ \{}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00100}00100\ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a4b124156e80d1ef02fba1176aab54063}{GL\_ALPHA\_TEST}});}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00101}00101\ \}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00103}00103\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ error\_msg\_platform\_specific(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *msg)}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00104}00104\ \{}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00105}00105\ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a6473fa6f7eb16d7c68193767f2eed266}{OutputDebugStringA}}(msg);}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00106}00106\ \}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00109}00109\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00110}00110\ \textcolor{comment}{//\ \ Shared\ code}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00111}00111\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00113}\doxymbox{\hyperlink{gdraw__wgl_8c_a613a2d432edfbf8aa95db72fd3259fad}{00113}}\ \textcolor{preprocessor}{\#define\ GDRAW\_MULTISAMPLING}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00114}00114\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{gdraw__gl__shared_8inl}{gdraw\_gl\_shared.inl}}"{}}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00117}00117\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00118}00118\ \textcolor{comment}{//\ \ Initialization\ and\ platform-\/specific\ functionality}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00119}00119\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00121}\doxymbox{\hyperlink{gdraw__wgl_8c_a72e13d61ce2808f29e0d99aa36f06c8b}{00121}}\ \doxymbox{\hyperlink{struct_g_draw_functions}{GDrawFunctions}}\ *\doxymbox{\hyperlink{gdraw__wgl_8c_a72e13d61ce2808f29e0d99aa36f06c8b}{gdraw\_GL\_CreateContext}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}\ w,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}\ h,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_addabe99542b741b3d577bf48f3d8a44e}{S32}}\ msaa\_samples)}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00122}00122\ \{}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00123}00123\ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_texture_format_desc}{TextureFormatDesc}}\ \doxymbox{\hyperlink{gdraw__gl__shared_8inl_af858429c0098a30e87f82dcc5c38b9e3}{tex\_formats}}[]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00124}00124\ \ \ \ \ \ \ \{\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af04f2ccd496d2c8b215ed1f3dfa57950adbe32a11cd127618bd518fc680275464}{IFT\_FORMAT\_rgba\_8888}},\ \ \ \ 1,\ 1,\ \ 4,\ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_a877cf1ad1715779c0b5be47a536c624e}{GL\_RGBA}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_a877cf1ad1715779c0b5be47a536c624e}{GL\_RGBA}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_ae6d68c66c529083f1d4117b909ed401a}{GL\_UNSIGNED\_BYTE}}\ \},}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00125}00125\ \ \ \ \ \ \ \{\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af04f2ccd496d2c8b215ed1f3dfa57950a09eac3d4fc609d07d3dba959b697cee0}{IFT\_FORMAT\_rgba\_4444\_LE}},\ 1,\ 1,\ \ 2,\ \ \ GL\_RGBA4,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_a877cf1ad1715779c0b5be47a536c624e}{GL\_RGBA}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GL\_UNSIGNED\_SHORT\_4\_4\_4\_4\ \},}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00126}00126\ \ \ \ \ \ \ \{\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af04f2ccd496d2c8b215ed1f3dfa57950abf2febe0d3ee540d0e64a274e101a901}{IFT\_FORMAT\_rgba\_5551\_LE}},\ 1,\ 1,\ \ 2,\ \ \ GL\_RGB5\_A1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_a877cf1ad1715779c0b5be47a536c624e}{GL\_RGBA}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GL\_UNSIGNED\_SHORT\_5\_5\_5\_1\ \},}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00127}00127\ \ \ \ \ \ \ \{\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af04f2ccd496d2c8b215ed1f3dfa57950af9736569b860c2e822eea711ecd27efc}{IFT\_FORMAT\_la\_88}},\ \ \ \ \ \ \ \ 1,\ 1,\ \ 2,\ \ \ GL\_LUMINANCE8\_ALPHA8,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GL\_LUMINANCE\_ALPHA,\ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_ae6d68c66c529083f1d4117b909ed401a}{GL\_UNSIGNED\_BYTE}}\ \},}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00128}00128\ \ \ \ \ \ \ \{\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af04f2ccd496d2c8b215ed1f3dfa57950acfa811edcbadeba141f567a73631d51c}{IFT\_FORMAT\_la\_44}},\ \ \ \ \ \ \ \ 1,\ 1,\ \ 1,\ \ \ GL\_LUMINANCE4\_ALPHA4,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GL\_LUMINANCE\_ALPHA,\ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_ae6d68c66c529083f1d4117b909ed401a}{GL\_UNSIGNED\_BYTE}}\ \},}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00129}00129\ \ \ \ \ \ \ \{\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af04f2ccd496d2c8b215ed1f3dfa57950ac78c370c4ee68c3a982b4b15372d7089}{IFT\_FORMAT\_i\_8}},\ \ \ \ \ \ \ \ \ \ 1,\ 1,\ \ 1,\ \ \ GL\_INTENSITY8,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GL\_ALPHA,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_ae6d68c66c529083f1d4117b909ed401a}{GL\_UNSIGNED\_BYTE}}\ \},}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00130}00130\ \ \ \ \ \ \ \{\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af04f2ccd496d2c8b215ed1f3dfa57950a51f12ac1f4bfe995307175218dd15938}{IFT\_FORMAT\_i\_4}},\ \ \ \ \ \ \ \ \ \ 1,\ 1,\ \ 1,\ \ \ GL\_INTENSITY4,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GL\_ALPHA,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_ae6d68c66c529083f1d4117b909ed401a}{GL\_UNSIGNED\_BYTE}}\ \},}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00131}00131\ \ \ \ \ \ \ \{\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af04f2ccd496d2c8b215ed1f3dfa57950a38072be62adb5167ea03a7ae9cfc86b7}{IFT\_FORMAT\_l\_8}},\ \ \ \ \ \ \ \ \ \ 1,\ 1,\ \ 1,\ \ \ GL\_LUMINANCE8,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GL\_LUMINANCE,\ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_ae6d68c66c529083f1d4117b909ed401a}{GL\_UNSIGNED\_BYTE}}\ \},}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00132}00132\ \ \ \ \ \ \ \{\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af04f2ccd496d2c8b215ed1f3dfa57950a4d7e5e2ada1cb6d568b820527079e588}{IFT\_FORMAT\_l\_4}},\ \ \ \ \ \ \ \ \ \ 1,\ 1,\ \ 1,\ \ \ GL\_LUMINANCE4,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GL\_LUMINANCE,\ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_ae6d68c66c529083f1d4117b909ed401a}{GL\_UNSIGNED\_BYTE}}\ \},}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00133}00133\ \ \ \ \ \ \ \{\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af04f2ccd496d2c8b215ed1f3dfa57950af410549765e797d8c4c56852df35fdc1}{IFT\_FORMAT\_DXT1}},\ \ \ \ \ \ \ \ \ 4,\ 4,\ \ 8,\ \ \ GL\_COMPRESSED\_RGBA\_S3TC\_DXT1\_EXT,\ \ \ 0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_ae6d68c66c529083f1d4117b909ed401a}{GL\_UNSIGNED\_BYTE}}\ \},}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00134}00134\ \ \ \ \ \ \ \{\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af04f2ccd496d2c8b215ed1f3dfa57950a55a3382c66d96e19b569daef345183ac}{IFT\_FORMAT\_DXT3}},\ \ \ \ \ \ \ \ \ 4,\ 4,\ 16,\ \ \ GL\_COMPRESSED\_RGBA\_S3TC\_DXT3\_EXT,\ \ \ 0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_ae6d68c66c529083f1d4117b909ed401a}{GL\_UNSIGNED\_BYTE}}\ \},}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00135}00135\ \ \ \ \ \ \ \{\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2iggy_8h_af04f2ccd496d2c8b215ed1f3dfa57950a02c62dedaa5efadb7c930f4f6778a7cb}{IFT\_FORMAT\_DXT5}},\ \ \ \ \ \ \ \ \ 4,\ 4,\ 16,\ \ \ GL\_COMPRESSED\_RGBA\_S3TC\_DXT5\_EXT,\ \ \ 0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_ae6d68c66c529083f1d4117b909ed401a}{GL\_UNSIGNED\_BYTE}}\ \},}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00136}00136\ \ \ \ \ \ \ \{\ 0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0,\ 0,\ \ 0,\ \ \ 0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0\ \},}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00137}00137\ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00139}00139\ \ \ \ \doxymbox{\hyperlink{struct_g_draw_functions}{GDrawFunctions}}\ *funcs;}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00140}00140\ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *s;}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00141}00141\ \ \ \ GLint\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00143}00143\ \ \ \ \textcolor{comment}{//\ check\ for\ the\ extensions\ we\ need}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00144}00144\ \ \ \ s\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *)\ glGetString(GL\_EXTENSIONS);}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00145}00145\ \ \ \ \textcolor{keywordflow}{if}\ (s\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})\ \{}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00146}00146\ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(s\ !=\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}});\ \textcolor{comment}{//\ if\ this\ is\ NULL,\ you're\ probably\ trying\ to\ create\ the\ device\ too\ early}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00147}00147\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00148}00148\ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00150}00150\ \ \ \ \textcolor{comment}{//\ check\ for\ the\ extensions\ we\ won't\ work\ without}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00151}00151\ \ \ \ \textcolor{keywordflow}{if}\ (!hasext(s,\ \textcolor{stringliteral}{"{}GL\_ARB\_multitexture"{}})\ ||}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00152}00152\ \ \ \ \ \ \ \ !hasext(s,\ \textcolor{stringliteral}{"{}GL\_ARB\_texture\_compression"{}})\ ||}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00153}00153\ \ \ \ \ \ \ \ !hasext(s,\ \textcolor{stringliteral}{"{}GL\_ARB\_texture\_mirrored\_repeat"{}})\ ||}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00154}00154\ \ \ \ \ \ \ \ !hasext(s,\ \textcolor{stringliteral}{"{}GL\_ARB\_texture\_non\_power\_of\_two"{}})\ ||\ \textcolor{comment}{//\ with\ caveats\ -\/\ see\ below!}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00155}00155\ \ \ \ \ \ \ \ !hasext(s,\ \textcolor{stringliteral}{"{}GL\_ARB\_vertex\_buffer\_object"{}})\ ||}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00156}00156\ \ \ \ \ \ \ \ !hasext(s,\ \textcolor{stringliteral}{"{}GL\_EXT\_framebuffer\_object"{}})\ ||}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00157}00157\ \ \ \ \ \ \ \ !hasext(s,\ \textcolor{stringliteral}{"{}GL\_ARB\_shader\_objects"{}})\ ||}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00158}00158\ \ \ \ \ \ \ \ !hasext(s,\ \textcolor{stringliteral}{"{}GL\_ARB\_vertex\_shader"{}})\ ||}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00159}00159\ \ \ \ \ \ \ \ !hasext(s,\ \textcolor{stringliteral}{"{}GL\_ARB\_fragment\_shader"{}}))}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00160}00160\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00161}00161\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00162}00162\ \ \ \ \textcolor{comment}{//\ if\ user\ requests\ multisampling\ and\ HW\ doesn't\ support\ it,\ bail}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00163}00163\ \ \ \ \textcolor{keywordflow}{if}\ (!hasext(s,\ \textcolor{stringliteral}{"{}GL\_EXT\_framebuffer\_multisample"{}})\ \&\&\ msaa\_samples\ >\ 1)}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00164}00164\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00166}00166\ \ \ \ load\_extensions();}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00167}00167\ \ \ \ funcs\ =\ create\_context(w,\ h);}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00168}00168\ \ \ \ \textcolor{keywordflow}{if}\ (!funcs)}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00169}00169\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00171}00171\ \ \ \ gdraw-\/>tex\_formats\ =\ \doxymbox{\hyperlink{gdraw__gl__shared_8inl_af858429c0098a30e87f82dcc5c38b9e3}{tex\_formats}};}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00173}00173\ \ \ \ \textcolor{comment}{//\ check\ for\ optional\ extensions}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00174}00174\ \ \ \ gdraw-\/>has\_mapbuffer\ =\ \textcolor{keyword}{true};\ \textcolor{comment}{//\ part\ of\ core\ VBO\ extension\ on\ regular\ GL}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00175}00175\ \ \ \ gdraw-\/>has\_depth24\ =\ \textcolor{keyword}{true};\ \ \ \textcolor{comment}{//\ we\ just\ assume.}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00176}00176\ \ \ \ gdraw-\/>has\_texture\_max\_level\ =\ \textcolor{keyword}{true};\ \textcolor{comment}{//\ core\ on\ regular\ GL}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00178}00178\ \ \ \ \textcolor{keywordflow}{if}\ (hasext(s,\ \textcolor{stringliteral}{"{}GL\_EXT\_packed\_depth\_stencil"{}}))\ \ \ \ \ \ gdraw-\/>has\_packed\_depth\_stencil\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00179}00179\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00180}00180\ \ \ \ \textcolor{comment}{//\ we\ require\ ARB\_texture\_non\_power\_of\_two\ -\/\ on\ actual\ HW,\ this\ may\ either\ give\ us}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00181}00181\ \ \ \ \textcolor{comment}{//\ "{}full"{}\ non-\/power-\/of-\/two\ support,\ or\ "{}conditional"{}\ non-\/power-\/of-\/two\ (wrap\ mode\ must}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00182}00182\ \ \ \ \textcolor{comment}{//\ be\ CLAMP\_TO\_EDGE,\ no\ mipmaps).\ figure\ out\ which\ it\ is\ using\ this\ heuristic\ by}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00183}00183\ \ \ \ \textcolor{comment}{//\ Unity's\ Aras\ Pranckevicius\ (thanks!):}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00184}00184\ \ \ \ \textcolor{comment}{//\ \ \ http://www.aras-\/p.info/blog/2012/10/17/non-\/power-\/of-\/two-\/textures/}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00185}00185\ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00186}00186\ \ \ \ \textcolor{comment}{//\ we\ use\ the\ second\ heuristic\ (texture\ size\ <8192\ for\ cards\ without\ full\ NPOT\ support)}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00187}00187\ \ \ \ \textcolor{comment}{//\ since\ we\ don't\ otherwise\ use\ ARB\_fragment\_program\ and\ don't\ want\ to\ create\ a\ program}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00188}00188\ \ \ \ \textcolor{comment}{//\ just\ to\ be\ able\ to\ query\ MAX\_PROGRAM\_NATIVE\_INSTRUCTIONS\_ARB!}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00189}00189\ \ \ \ glGetIntegerv(GL\_MAX\_TEXTURE\_SIZE,\ \&\doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}});}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00190}00190\ \ \ \ gdraw-\/>has\_conditional\_non\_power\_of\_two\ =\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ <\ 8192;}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00192}00192\ \ \ \ \textcolor{comment}{//\ clamp\ number\ of\ multisampling\ levels\ to\ max\ supported}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00193}00193\ \ \ \ \textcolor{keywordflow}{if}\ (msaa\_samples\ >\ 1)\ \{}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00194}00194\ \ \ \ \ \ \ glGetIntegerv(GL\_MAX\_SAMPLES,\ \&\doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}});}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00195}00195\ \ \ \ \ \ \ gdraw-\/>multisampling\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_ab08a54285f5103c876ef4f08f24d5e36}{RR\_MIN}}(msaa\_samples,\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}});}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00196}00196\ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00198}00198\ \ \ \ opengl\_check();}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00199}00199\ }
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00200}00200\ \ \ \ \textcolor{keywordflow}{return}\ funcs;}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00201}00201\ \}}
+\DoxyCodeLine{\Hypertarget{gdraw__wgl_8c_source_l00202}00202\ }
+
+\end{DoxyCode}

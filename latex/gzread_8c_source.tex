@@ -1,0 +1,674 @@
+\doxysection{gzread.\+c}
+\hypertarget{gzread_8c_source}{}\label{gzread_8c_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/zlib/gzread.c@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/zlib/gzread.c}}
+\doxymbox{\hyperlink{gzread_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00001}00001\ \textcolor{comment}{/*\ gzread.c\ -\/-\/\ zlib\ functions\ for\ reading\ gzip\ files}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00002}00002\ \textcolor{comment}{\ *\ Copyright\ (C)\ 2004-\/2026\ Mark\ Adler}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00003}00003\ \textcolor{comment}{\ *\ For\ conditions\ of\ distribution\ and\ use,\ see\ copyright\ notice\ in\ zlib.h}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00004}00004\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{gzguts_8h}{gzguts.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00008}00008\ \textcolor{comment}{/*\ Use\ read()\ to\ load\ a\ buffer\ -\/-\/\ return\ -\/1\ on\ error,\ otherwise\ 0.\ \ Read\ from}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00009}00009\ \textcolor{comment}{\ \ \ state-\/>fd,\ and\ update\ state-\/>eof,\ state-\/>err,\ and\ state-\/>msg\ as\ appropriate.}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00010}00010\ \textcolor{comment}{\ \ \ This\ function\ needs\ to\ loop\ on\ read(),\ since\ read()\ is\ not\ guaranteed\ to}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00011}00011\ \textcolor{comment}{\ \ \ read\ the\ number\ of\ bytes\ requested,\ depending\ on\ the\ type\ of\ descriptor.\ It}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00012}00012\ \textcolor{comment}{\ \ \ also\ needs\ to\ loop\ to\ manage\ the\ fact\ that\ read()\ returns\ an\ int.\ If\ the}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00013}00013\ \textcolor{comment}{\ \ \ descriptor\ is\ non-\/blocking\ and\ read()\ returns\ with\ no\ data\ in\ order\ to\ avoid}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00014}00014\ \textcolor{comment}{\ \ \ blocking,\ then\ gz\_load()\ will\ return\ 0\ if\ some\ data\ has\ been\ read,\ or\ -\/1\ if}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00015}00015\ \textcolor{comment}{\ \ \ no\ data\ has\ been\ read.\ Either\ way,\ state-\/>again\ is\ set\ true\ to\ indicate\ a}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00016}00016\ \textcolor{comment}{\ \ \ non-\/blocking\ event.\ If\ errno\ is\ non-\/zero\ on\ return,\ then\ there\ was\ an\ error}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00017}00017\ \textcolor{comment}{\ \ \ signaled\ from\ read().\ \ *have\ is\ set\ to\ the\ number\ of\ bytes\ read.\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00018}\doxymbox{\hyperlink{gzread_8c_af7f3ad614b7059314f1673da8950df3f}{00018}}\ \doxymbox{\hyperlink{gzguts_8h_a08023ea6765c99d60a6a3840cd07156e}{local}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{gzread_8c_af7f3ad614b7059314f1673da8950df3f}{gz\_load}}(\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ \textcolor{keywordtype}{unsigned}\ len,}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00019}00019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ *have)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00020}00020\ \ \ \ \ \textcolor{keywordtype}{int}\ ret;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00021}00021\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ get,\ max\ =\ ((unsigned)-\/1\ >>\ 2)\ +\ 1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00023}00023\ \ \ \ \ state-\/>again\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00024}00024\ \ \ \ \ errno\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00025}00025\ \ \ \ \ *have\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00026}00026\ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00027}00027\ \ \ \ \ \ \ \ \ get\ =\ len\ -\/\ *have;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00028}00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (get\ >\ max)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ get\ =\ max;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00030}00030\ \ \ \ \ \ \ \ \ ret\ =\ (int)read(state-\/>fd,\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}\ +\ *have,\ get);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00031}00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00033}00033\ \ \ \ \ \ \ \ \ *have\ +=\ (unsigned)ret;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00034}00034\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (*have\ <\ len);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00035}00035\ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ <\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (errno\ ==\ EAGAIN\ ||\ errno\ ==\ EWOULDBLOCK)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>again\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (*have\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00040}00040\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00041}00041\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a3c66d64c427c0337c64e578537478737}{Z\_ERRNO}},\ \doxymbox{\hyperlink{gzguts_8h_af252c05931f39dd0b297fe9b8e174b8b}{zstrerror}}());}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00042}00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00043}00043\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00044}00044\ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00045}00045\ \ \ \ \ \ \ \ \ state-\/>eof\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00046}00046\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00047}00047\ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00049}00049\ \textcolor{comment}{/*\ Load\ up\ input\ buffer\ and\ set\ eof\ flag\ if\ last\ data\ loaded\ -\/-\/\ return\ -\/1\ on}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00050}00050\ \textcolor{comment}{\ \ \ error,\ 0\ otherwise.\ \ Note\ that\ the\ eof\ flag\ is\ set\ when\ the\ end\ of\ the\ input}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00051}00051\ \textcolor{comment}{\ \ \ file\ is\ reached,\ even\ though\ there\ may\ be\ unused\ data\ in\ the\ buffer.\ \ Once}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00052}00052\ \textcolor{comment}{\ \ \ that\ data\ has\ been\ used,\ no\ more\ attempts\ will\ be\ made\ to\ read\ the\ file.}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00053}00053\ \textcolor{comment}{\ \ \ If\ strm-\/>avail\_in\ !=\ 0,\ then\ the\ current\ data\ is\ moved\ to\ the\ beginning\ of}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00054}00054\ \textcolor{comment}{\ \ \ the\ input\ buffer,\ and\ then\ the\ remainder\ of\ the\ buffer\ is\ loaded\ with\ the}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00055}00055\ \textcolor{comment}{\ \ \ available\ data\ from\ the\ input\ file.\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00056}\doxymbox{\hyperlink{gzread_8c_a880d9d0c2827714cd40d8ba7f3637294}{00056}}\ \doxymbox{\hyperlink{gzguts_8h_a08023ea6765c99d60a6a3840cd07156e}{local}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{gzread_8c_a880d9d0c2827714cd40d8ba7f3637294}{gz\_avail}}(\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00057}00057\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ got;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00058}00058\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a6ede25c84d3c9f8632305866acffb1d6}{z\_streamp}}\ strm\ =\ \&(state-\/>strm);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00060}00060\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}}\ \&\&\ state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a425e2f0664e1b1f75bf2bffab88d353d}{Z\_BUF\_ERROR}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00061}00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00062}00062\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>eof\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (strm-\/>avail\_in)\ \{\ \ \ \ \ \ \ \textcolor{comment}{/*\ copy\ what's\ there\ to\ the\ start\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *p\ =\ state-\/>in;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *q\ =\ strm-\/>next\_in;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (q\ !=\ p)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ =\ strm-\/>avail\_in;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *p++\ =\ *q++;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (-\/-\/\doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00074}00074\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{gzread_8c_af7f3ad614b7059314f1673da8950df3f}{gz\_load}}(state,\ state-\/>in\ +\ strm-\/>avail\_in,}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>size\ -\/\ strm-\/>avail\_in,\ \&got)\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00078}00078\ \ \ \ \ \ \ \ \ strm-\/>avail\_in\ +=\ got;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00079}00079\ \ \ \ \ \ \ \ \ strm-\/>next\_in\ =\ state-\/>in;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00080}00080\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00082}00082\ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00084}00084\ \textcolor{comment}{/*\ Look\ for\ gzip\ header,\ set\ up\ for\ inflate\ or\ copy.\ \ state-\/>x.have\ must\ be\ 0.}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00085}00085\ \textcolor{comment}{\ \ \ If\ this\ is\ the\ first\ time\ in,\ allocate\ required\ memory.\ \ state-\/>how\ will\ be}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00086}00086\ \textcolor{comment}{\ \ \ left\ unchanged\ if\ there\ is\ no\ more\ input\ data\ available,\ will\ be\ set\ to\ COPY}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00087}00087\ \textcolor{comment}{\ \ \ if\ there\ is\ no\ gzip\ header\ and\ direct\ copying\ will\ be\ performed,\ or\ it\ will}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00088}00088\ \textcolor{comment}{\ \ \ be\ set\ to\ GZIP\ for\ decompression.\ \ If\ direct\ copying,\ then\ leftover\ input}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00089}00089\ \textcolor{comment}{\ \ \ data\ from\ the\ input\ buffer\ will\ be\ copied\ to\ the\ output\ buffer.\ \ In\ that}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00090}00090\ \textcolor{comment}{\ \ \ case,\ all\ further\ file\ reads\ will\ be\ directly\ to\ either\ the\ output\ buffer\ or}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00091}00091\ \textcolor{comment}{\ \ \ a\ user\ buffer.\ \ If\ decompressing,\ the\ inflate\ state\ will\ be\ initialized.}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00092}00092\ \textcolor{comment}{\ \ \ gz\_look()\ will\ return\ 0\ on\ success\ or\ -\/1\ on\ failure.\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00093}\doxymbox{\hyperlink{gzread_8c_a2335993758928a1328423a4c3cd8f5a5}{00093}}\ \doxymbox{\hyperlink{gzguts_8h_a08023ea6765c99d60a6a3840cd07156e}{local}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{gzread_8c_a2335993758928a1328423a4c3cd8f5a5}{gz\_look}}(\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00094}00094\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a6ede25c84d3c9f8632305866acffb1d6}{z\_streamp}}\ strm\ =\ \&(state-\/>strm);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00096}00096\ \ \ \ \ \textcolor{comment}{/*\ allocate\ read\ buffers\ and\ inflate\ memory\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00097}00097\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>size\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00098}00098\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ allocate\ buffers\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00099}00099\ \ \ \ \ \ \ \ \ state-\/>in\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)\doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(state-\/>want);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00100}00100\ \ \ \ \ \ \ \ \ state-\/>out\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)\doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(state-\/>want\ <<\ 1);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>in\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ ||\ state-\/>out\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state-\/>out);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state-\/>in);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ae2be6be871e377c6e2c25a7296ce320c}{Z\_MEM\_ERROR}},\ \textcolor{stringliteral}{"{}out\ of\ memory"{}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00106}00106\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00107}00107\ \ \ \ \ \ \ \ \ state-\/>size\ =\ state-\/>want;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ allocate\ inflate\ memory\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00110}00110\ \ \ \ \ \ \ \ \ state-\/>strm.zalloc\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ad15afa2776b41b2f4d8582dd152bd736}{Z\_NULL}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00111}00111\ \ \ \ \ \ \ \ \ state-\/>strm.zfree\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ad15afa2776b41b2f4d8582dd152bd736}{Z\_NULL}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00112}00112\ \ \ \ \ \ \ \ \ state-\/>strm.opaque\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ad15afa2776b41b2f4d8582dd152bd736}{Z\_NULL}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00113}00113\ \ \ \ \ \ \ \ \ state-\/>strm.avail\_in\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00114}00114\ \ \ \ \ \ \ \ \ state-\/>strm.next\_in\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ad15afa2776b41b2f4d8582dd152bd736}{Z\_NULL}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00115}00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a611fc206e69f34e812ca8b590982fdd5}{inflateInit2}}(\&(state-\/>strm),\ 15\ +\ 16)\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}})\ \{\ \ \ \ \textcolor{comment}{/*\ gunzip\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state-\/>out);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state-\/>in);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>size\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ae2be6be871e377c6e2c25a7296ce320c}{Z\_MEM\_ERROR}},\ \textcolor{stringliteral}{"{}out\ of\ memory"{}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00121}00121\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00122}00122\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00124}00124\ \ \ \ \ \textcolor{comment}{/*\ if\ transparent\ reading\ is\ disabled,\ which\ would\ only\ be\ at\ the\ start,\ or}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00125}00125\ \textcolor{comment}{\ \ \ \ \ \ \ if\ we're\ looking\ for\ a\ gzip\ member\ after\ the\ first\ one,\ which\ is\ not\ at}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00126}00126\ \textcolor{comment}{\ \ \ \ \ \ \ the\ start,\ then\ proceed\ directly\ to\ look\ for\ a\ gzip\ member\ next\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00127}00127\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>direct\ ==\ -\/1\ ||\ state-\/>junk\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00128}00128\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{inflate_8c_adb02c2100f9179f4075b220395b1553c}{inflateReset}}(strm);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00129}00129\ \ \ \ \ \ \ \ \ state-\/>how\ =\ \doxymbox{\hyperlink{deflate_8h_a9564352992f7a4001386d1c8e2977571}{GZIP}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00130}00130\ \ \ \ \ \ \ \ \ state-\/>junk\ =\ state-\/>junk\ !=\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00131}00131\ \ \ \ \ \ \ \ \ state-\/>direct\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00133}00133\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00135}00135\ \ \ \ \ \textcolor{comment}{/*\ otherwise\ we're\ at\ the\ start\ with\ auto-\/detect\ -\/-\/\ we\ check\ to\ see\ if\ the}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00136}00136\ \textcolor{comment}{\ \ \ \ \ \ \ first\ four\ bytes\ could\ be\ gzip\ header\ in\ order\ to\ decide\ whether\ or\ not}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00137}00137\ \textcolor{comment}{\ \ \ \ \ \ \ this\ will\ be\ a\ transparent\ read\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00139}00139\ \ \ \ \ \textcolor{comment}{/*\ load\ any\ header\ bytes\ into\ the\ input\ buffer\ -\/-\/\ if\ the\ input\ is\ empty,}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00140}00140\ \textcolor{comment}{\ \ \ \ \ \ \ then\ it's\ not\ an\ error\ as\ this\ is\ a\ transparent\ read\ of\ zero\ bytes\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00141}00141\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{gzread_8c_a880d9d0c2827714cd40d8ba7f3637294}{gz\_avail}}(state)\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00142}00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00143}00143\ \ \ \ \ \textcolor{keywordflow}{if}\ (strm-\/>avail\_in\ ==\ 0\ ||\ (state-\/>again\ \&\&\ strm-\/>avail\_in\ <\ 4))}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00144}00144\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ if\ non-\/blocking\ input\ stalled\ before\ getting\ four\ bytes,\ then}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00145}00145\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ return\ and\ wait\ until\ a\ later\ call\ has\ accumulated\ enough\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00146}00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00148}00148\ \ \ \ \ \textcolor{comment}{/*\ see\ if\ this\ is\ (likely)\ gzip\ input\ -\/-\/\ if\ the\ first\ four\ bytes\ are}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00149}00149\ \textcolor{comment}{\ \ \ \ \ \ \ consistent\ with\ a\ gzip\ header,\ then\ go\ look\ for\ the\ first\ gzip\ member,}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00150}00150\ \textcolor{comment}{\ \ \ \ \ \ \ otherwise\ proceed\ to\ copy\ the\ input\ transparently\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00151}00151\ \ \ \ \ \textcolor{keywordflow}{if}\ (strm-\/>avail\_in\ >\ 3\ \&\&}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ strm-\/>next\_in[0]\ ==\ 31\ \&\&\ strm-\/>next\_in[1]\ ==\ 139\ \&\&}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ strm-\/>next\_in[2]\ ==\ 8\ \&\&\ strm-\/>next\_in[3]\ <\ 32)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00154}00154\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{inflate_8c_adb02c2100f9179f4075b220395b1553c}{inflateReset}}(strm);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00155}00155\ \ \ \ \ \ \ \ \ state-\/>how\ =\ \doxymbox{\hyperlink{deflate_8h_a9564352992f7a4001386d1c8e2977571}{GZIP}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00156}00156\ \ \ \ \ \ \ \ \ state-\/>junk\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00157}00157\ \ \ \ \ \ \ \ \ state-\/>direct\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00158}00158\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00159}00159\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00161}00161\ \ \ \ \ \textcolor{comment}{/*\ doing\ raw\ i/o:\ copy\ any\ leftover\ input\ to\ output\ -\/-\/\ this\ assumes\ that}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00162}00162\ \textcolor{comment}{\ \ \ \ \ \ \ the\ output\ buffer\ is\ larger\ than\ the\ input\ buffer,\ which\ also\ assures}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00163}00163\ \textcolor{comment}{\ \ \ \ \ \ \ space\ for\ gzungetc()\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00164}00164\ \ \ \ \ state-\/>x.next\ =\ state-\/>out;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00165}00165\ \ \ \ \ memcpy(state-\/>x.next,\ strm-\/>next\_in,\ strm-\/>avail\_in);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00166}00166\ \ \ \ \ state-\/>x.have\ =\ strm-\/>avail\_in;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00167}00167\ \ \ \ \ strm-\/>avail\_in\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00168}00168\ \ \ \ \ state-\/>how\ =\ \doxymbox{\hyperlink{gzguts_8h_a9e77d621548de2a80bc9c5909bfa2b8a}{COPY}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00169}00169\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00170}00170\ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00171}00171\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00172}00172\ \textcolor{comment}{/*\ Decompress\ from\ input\ to\ the\ provided\ next\_out\ and\ avail\_out\ in\ the\ state.}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00173}00173\ \textcolor{comment}{\ \ \ On\ return,\ state-\/>x.have\ and\ state-\/>x.next\ point\ to\ the\ just\ decompressed}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00174}00174\ \textcolor{comment}{\ \ \ data.\ If\ the\ gzip\ stream\ completes,\ state-\/>how\ is\ reset\ to\ LOOK\ to\ look\ for}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00175}00175\ \textcolor{comment}{\ \ \ the\ next\ gzip\ stream\ or\ raw\ data,\ once\ state-\/>x.have\ is\ depleted.\ Returns\ 0}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00176}00176\ \textcolor{comment}{\ \ \ on\ success,\ -\/1\ on\ failure.\ If\ EOF\ is\ reached\ when\ looking\ for\ more\ input\ to}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00177}00177\ \textcolor{comment}{\ \ \ complete\ the\ gzip\ member,\ then\ an\ unexpected\ end\ of\ file\ error\ is\ raised.}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00178}00178\ \textcolor{comment}{\ \ \ If\ there\ is\ no\ more\ input,\ but\ state-\/>again\ is\ true,\ then\ EOF\ has\ not\ been}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00179}00179\ \textcolor{comment}{\ \ \ reached,\ and\ no\ error\ is\ raised.\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00180}\doxymbox{\hyperlink{gzread_8c_a4b2cb72f18826fd5410e1cbdd9cf3941}{00180}}\ \doxymbox{\hyperlink{gzguts_8h_a08023ea6765c99d60a6a3840cd07156e}{local}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{gzread_8c_a4b2cb72f18826fd5410e1cbdd9cf3941}{gz\_decomp}}(\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00181}00181\ \ \ \ \ \textcolor{keywordtype}{int}\ ret\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00182}00182\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ had;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00183}00183\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a6ede25c84d3c9f8632305866acffb1d6}{z\_streamp}}\ strm\ =\ \&(state-\/>strm);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00184}00184\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00185}00185\ \ \ \ \ \textcolor{comment}{/*\ fill\ output\ buffer\ up\ to\ end\ of\ deflate\ stream\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00186}00186\ \ \ \ \ had\ =\ strm-\/>avail\_out;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00187}00187\ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00188}00188\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ get\ more\ input\ for\ inflate()\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00189}00189\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (strm-\/>avail\_in\ ==\ 0\ \&\&\ \doxymbox{\hyperlink{gzread_8c_a880d9d0c2827714cd40d8ba7f3637294}{gz\_avail}}(state)\ ==\ -\/1)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ ret\ =\ state-\/>err;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00192}00192\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00193}00193\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (strm-\/>avail\_in\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!state-\/>again)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a425e2f0664e1b1f75bf2bffab88d353d}{Z\_BUF\_ERROR}},\ \textcolor{stringliteral}{"{}unexpected\ end\ of\ file"{}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00197}00197\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00199}00199\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ decompress\ and\ handle\ errors\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00200}00200\ \ \ \ \ \ \ \ \ ret\ =\ \doxymbox{\hyperlink{inflate_8c_a9a49cf8b6ce882dea33505b0ac84ecef}{inflate}}(strm,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ac3b62e37b9922d9496014515acd6083a}{Z\_NO\_FLUSH}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00201}00201\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (strm-\/>avail\_out\ <\ had)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ any\ decompressed\ data\ marks\ this\ as\ a\ real\ gzip\ stream\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>junk\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ ==\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_aad97cde83a9a4bb77f5c3b03bb68e483}{Z\_STREAM\_ERROR}}\ ||\ ret\ ==\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a32916ba675b2d06463da2576b6a49d64}{Z\_NEED\_DICT}})\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_aad97cde83a9a4bb77f5c3b03bb68e483}{Z\_STREAM\_ERROR}},}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}internal\ error:\ inflate\ stream\ corrupt"{}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00208}00208\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00209}00209\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ ==\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ae2be6be871e377c6e2c25a7296ce320c}{Z\_MEM\_ERROR}})\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ae2be6be871e377c6e2c25a7296ce320c}{Z\_MEM\_ERROR}},\ \textcolor{stringliteral}{"{}out\ of\ memory"{}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00212}00212\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00213}00213\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ ==\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a9eda83d428a71752d148f38b5dbe04f2}{Z\_DATA\_ERROR}})\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ deflate\ stream\ invalid\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>junk\ ==\ 1)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ trailing\ garbage\ is\ ok\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ strm-\/>avail\_in\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>eof\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>how\ =\ \doxymbox{\hyperlink{gzguts_8h_a6d13af6430ff1d6f44ece076ff35b04f}{LOOK}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ret\ =\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a9eda83d428a71752d148f38b5dbe04f2}{Z\_DATA\_ERROR}},}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ strm-\/>msg\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ ?\ \textcolor{stringliteral}{"{}compressed\ data\ error"{}}\ :\ strm-\/>msg);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00224}00224\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00225}00225\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (strm-\/>avail\_out\ \&\&\ ret\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a7d94a4a852228a899864a0053162e7a8}{Z\_STREAM\_END}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00227}00227\ \ \ \ \ \textcolor{comment}{/*\ update\ available\ output\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00228}00228\ \ \ \ \ state-\/>x.have\ =\ had\ -\/\ strm-\/>avail\_out;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00229}00229\ \ \ \ \ state-\/>x.next\ =\ strm-\/>next\_out\ -\/\ state-\/>x.have;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00231}00231\ \ \ \ \ \textcolor{comment}{/*\ if\ the\ gzip\ stream\ completed\ successfully,\ look\ for\ another\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00232}00232\ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ ==\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a7d94a4a852228a899864a0053162e7a8}{Z\_STREAM\_END}})\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00233}00233\ \ \ \ \ \ \ \ \ state-\/>junk\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00234}00234\ \ \ \ \ \ \ \ \ state-\/>how\ =\ \doxymbox{\hyperlink{gzguts_8h_a6d13af6430ff1d6f44ece076ff35b04f}{LOOK}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00235}00235\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00236}00236\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00238}00238\ \ \ \ \ \textcolor{comment}{/*\ return\ decompression\ status\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00239}00239\ \ \ \ \ \textcolor{keywordflow}{return}\ ret\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}}\ ?\ -\/1\ :\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00240}00240\ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00242}00242\ \textcolor{comment}{/*\ Fetch\ data\ and\ put\ it\ in\ the\ output\ buffer.\ \ Assumes\ state-\/>x.have\ is\ 0.}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00243}00243\ \textcolor{comment}{\ \ \ Data\ is\ either\ copied\ from\ the\ input\ file\ or\ decompressed\ from\ the\ input}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00244}00244\ \textcolor{comment}{\ \ \ file\ depending\ on\ state-\/>how.\ \ If\ state-\/>how\ is\ LOOK,\ then\ a\ gzip\ header\ is}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00245}00245\ \textcolor{comment}{\ \ \ looked\ for\ to\ determine\ whether\ to\ copy\ or\ decompress.\ \ Returns\ -\/1\ on\ error,}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00246}00246\ \textcolor{comment}{\ \ \ otherwise\ 0.\ \ gz\_fetch()\ will\ leave\ state-\/>how\ as\ COPY\ or\ GZIP\ unless\ the}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00247}00247\ \textcolor{comment}{\ \ \ end\ of\ the\ input\ file\ has\ been\ reached\ and\ all\ data\ has\ been\ processed.\ \ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00248}\doxymbox{\hyperlink{gzread_8c_a221059506dd52a3dc6fa990f0e191ba8}{00248}}\ \doxymbox{\hyperlink{gzguts_8h_a08023ea6765c99d60a6a3840cd07156e}{local}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{gzread_8c_a221059506dd52a3dc6fa990f0e191ba8}{gz\_fetch}}(\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00249}00249\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a6ede25c84d3c9f8632305866acffb1d6}{z\_streamp}}\ strm\ =\ \&(state-\/>strm);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00251}00251\ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00252}00252\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}(state-\/>how)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00253}00253\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{gzguts_8h_a6d13af6430ff1d6f44ece076ff35b04f}{LOOK}}:\ \ \ \ \ \ \textcolor{comment}{/*\ -\/>\ LOOK,\ COPY\ (only\ if\ never\ GZIP),\ or\ GZIP\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{gzread_8c_a2335993758928a1328423a4c3cd8f5a5}{gz\_look}}(state)\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>how\ ==\ \doxymbox{\hyperlink{gzguts_8h_a6d13af6430ff1d6f44ece076ff35b04f}{LOOK}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00259}00259\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{gzguts_8h_a9e77d621548de2a80bc9c5909bfa2b8a}{COPY}}:\ \ \ \ \ \ \textcolor{comment}{/*\ -\/>\ COPY\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{gzread_8c_af7f3ad614b7059314f1673da8950df3f}{gz\_load}}(state,\ state-\/>out,\ state-\/>size\ <<\ 1,\ \&(state-\/>x.have))}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>x.next\ =\ state-\/>out;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00265}00265\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{deflate_8h_a9564352992f7a4001386d1c8e2977571}{GZIP}}:\ \ \ \ \ \ \textcolor{comment}{/*\ -\/>\ GZIP\ or\ LOOK\ (if\ end\ of\ gzip\ stream)\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ strm-\/>avail\_out\ =\ state-\/>size\ <<\ 1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ strm-\/>next\_out\ =\ state-\/>out;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{gzread_8c_a4b2cb72f18826fd5410e1cbdd9cf3941}{gz\_decomp}}(state)\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00271}00271\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_aad97cde83a9a4bb77f5c3b03bb68e483}{Z\_STREAM\_ERROR}},\ \textcolor{stringliteral}{"{}state\ corrupt"{}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00274}00274\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00275}00275\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (state-\/>x.have\ ==\ 0\ \&\&\ (!state-\/>eof\ ||\ strm-\/>avail\_in));}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00276}00276\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00277}00277\ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00279}00279\ \textcolor{comment}{/*\ Skip\ state-\/>skip\ (>\ 0)\ uncompressed\ bytes\ of\ output.\ \ Return\ -\/1\ on\ error,\ 0}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00280}00280\ \textcolor{comment}{\ \ \ on\ success.\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00281}\doxymbox{\hyperlink{gzread_8c_aeb4519b91a9e5fd3460c6ac55f7747dc}{00281}}\ \doxymbox{\hyperlink{gzguts_8h_a08023ea6765c99d60a6a3840cd07156e}{local}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{gzread_8c_aeb4519b91a9e5fd3460c6ac55f7747dc}{gz\_skip}}(\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00282}00282\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00284}00284\ \ \ \ \ \textcolor{comment}{/*\ skip\ over\ len\ bytes\ or\ reach\ end-\/of-\/file,\ whichever\ comes\ first\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00285}00285\ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00286}00286\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ skip\ over\ whatever\ is\ in\ output\ buffer\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00287}00287\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>x.have)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00288}00288\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ =\ \doxymbox{\hyperlink{gzguts_8h_a87ad28552e786eaa1c31fed1950fdff4}{GT\_OFF}}(state-\/>x.have)\ ||}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ab9923767082c7a76924b31493e60d42c}{z\_off64\_t}})state-\/>x.have\ >\ state-\/>skip\ ?}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned})state-\/>skip\ :\ state-\/>x.have;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>x.have\ -\/=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>x.next\ +=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>x.pos\ +=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>skip\ -\/=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00295}00295\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00297}00297\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ output\ buffer\ empty\ -\/-\/\ return\ if\ we're\ at\ the\ end\ of\ the\ input\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00298}00298\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (state-\/>eof\ \&\&\ state-\/>strm.avail\_in\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00301}00301\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ need\ more\ data\ to\ skip\ -\/-\/\ load\ up\ output\ buffer\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00302}00302\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ get\ more\ output,\ looking\ for\ header\ if\ required\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{gzread_8c_a221059506dd52a3dc6fa990f0e191ba8}{gz\_fetch}}(state)\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00306}00306\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00307}00307\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (state-\/>skip);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00308}00308\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00309}00309\ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00310}00310\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00311}00311\ \textcolor{comment}{/*\ Read\ len\ bytes\ into\ buf\ from\ file,\ or\ less\ than\ len\ up\ to\ the\ end\ of\ the}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00312}00312\ \textcolor{comment}{\ \ \ input.\ Return\ the\ number\ of\ bytes\ read.\ If\ zero\ is\ returned,\ either\ the\ end}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00313}00313\ \textcolor{comment}{\ \ \ of\ file\ was\ reached,\ or\ there\ was\ an\ error.\ state-\/>err\ must\ be\ consulted\ in}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00314}00314\ \textcolor{comment}{\ \ \ that\ case\ to\ determine\ which.\ If\ there\ was\ an\ error,\ but\ some\ uncompressed}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00315}00315\ \textcolor{comment}{\ \ \ bytes\ were\ read\ before\ the\ error,\ then\ that\ count\ is\ returned.\ The\ error\ is}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00316}00316\ \textcolor{comment}{\ \ \ still\ recorded,\ and\ so\ is\ deferred\ until\ the\ next\ call.\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00317}\doxymbox{\hyperlink{gzread_8c_a2e7c20ac97b2f2d7cd21c3e0399999b5}{00317}}\ \doxymbox{\hyperlink{gzguts_8h_a08023ea6765c99d60a6a3840cd07156e}{local}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ \doxymbox{\hyperlink{gzread_8c_a2e7c20ac97b2f2d7cd21c3e0399999b5}{gz\_read}}(\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aa3397ff439b5e076528b04bc9b8b086a}{voidp}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ len)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00318}00318\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ got;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00319}00319\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00320}00320\ \ \ \ \ \textcolor{keywordtype}{int}\ err;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00322}00322\ \ \ \ \ \textcolor{comment}{/*\ if\ len\ is\ zero,\ avoid\ unnecessary\ operations\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00323}00323\ \ \ \ \ \textcolor{keywordflow}{if}\ (len\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00324}00324\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00325}00325\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00326}00326\ \ \ \ \ \textcolor{comment}{/*\ process\ a\ skip\ request\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00327}00327\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>skip\ \&\&\ \doxymbox{\hyperlink{gzread_8c_aeb4519b91a9e5fd3460c6ac55f7747dc}{gz\_skip}}(state)\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00328}00328\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00329}00329\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00330}00330\ \ \ \ \ \textcolor{comment}{/*\ get\ len\ bytes\ to\ buf,\ or\ less\ than\ len\ if\ at\ the\ end\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00331}00331\ \ \ \ \ got\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00332}00332\ \ \ \ \ err\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00333}00333\ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00334}00334\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ set\ n\ to\ the\ maximum\ amount\ of\ len\ that\ fits\ in\ an\ unsigned\ int\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00335}00335\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ =\ (unsigned)-\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00336}00336\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ >\ len)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ =\ (unsigned)len;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00338}00338\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00339}00339\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ first\ just\ try\ copying\ data\ from\ the\ output\ buffer\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00340}00340\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>x.have)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>x.have\ <\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ =\ state-\/>x.have;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ state-\/>x.next,\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>x.next\ +=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>x.have\ -\/=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00346}00346\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ caught\ deferred\ error\ from\ gz\_fetch()\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ err\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00349}00349\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00350}00350\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00351}00351\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ output\ buffer\ empty\ -\/-\/\ return\ if\ we're\ at\ the\ end\ of\ the\ input\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00352}00352\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (state-\/>eof\ \&\&\ state-\/>strm.avail\_in\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00354}00354\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00355}00355\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ need\ output\ data\ -\/-\/\ for\ small\ len\ or\ new\ stream\ load\ up\ our\ output}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00356}00356\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ buffer,\ so\ that\ gzgetc()\ can\ be\ fast\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00357}00357\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (state-\/>how\ ==\ \doxymbox{\hyperlink{gzguts_8h_a6d13af6430ff1d6f44ece076ff35b04f}{LOOK}}\ ||\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ <\ (state-\/>size\ <<\ 1))\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ get\ more\ output,\ looking\ for\ header\ if\ required\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{gzread_8c_a221059506dd52a3dc6fa990f0e191ba8}{gz\_fetch}}(state)\ ==\ -\/1\ \&\&\ state-\/>x.have\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ if\ state-\/>x.have\ !=\ 0,\ error\ will\ be\ caught\ after\ copy\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ err\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};\ \ \ \ \ \ \ \textcolor{comment}{/*\ no\ progress\ yet\ -\/-\/\ go\ back\ to\ copy\ above\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ the\ copy\ above\ assures\ that\ we\ will\ leave\ with\ space\ in\ the}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00364}00364\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ output\ buffer,\ allowing\ at\ least\ one\ gzungetc()\ to\ succeed\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00365}00365\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00366}00366\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00367}00367\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ large\ len\ -\/-\/\ read\ directly\ into\ user\ buffer\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00368}00368\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (state-\/>how\ ==\ \doxymbox{\hyperlink{gzguts_8h_a9e77d621548de2a80bc9c5909bfa2b8a}{COPY}})\ \ \ \ \ \ \ \ \textcolor{comment}{/*\ read\ directly\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ err\ =\ \doxymbox{\hyperlink{gzread_8c_af7f3ad614b7059314f1673da8950df3f}{gz\_load}}(state,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}},\ \&\doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00371}00371\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ large\ len\ -\/-\/\ decompress\ directly\ into\ user\ buffer\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00372}00372\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{\ \ \textcolor{comment}{/*\ state-\/>how\ ==\ GZIP\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>strm.avail\_out\ =\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>strm.next\_out\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ err\ =\ \doxymbox{\hyperlink{gzread_8c_a4b2cb72f18826fd5410e1cbdd9cf3941}{gz\_decomp}}(state);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ =\ state-\/>x.have;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>x.have\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00378}00378\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00379}00379\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00380}00380\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ update\ progress\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00381}00381\ \ \ \ \ \ \ \ \ len\ -\/=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00382}00382\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}\ =\ (\textcolor{keywordtype}{char}\ *)\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}\ +\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00383}00383\ \ \ \ \ \ \ \ \ got\ +=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00384}00384\ \ \ \ \ \ \ \ \ state-\/>x.pos\ +=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00385}00385\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (len\ \&\&\ !err);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00386}00386\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00387}00387\ \ \ \ \ \textcolor{comment}{/*\ note\ read\ past\ eof\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00388}00388\ \ \ \ \ \textcolor{keywordflow}{if}\ (len\ \&\&\ state-\/>eof)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00389}00389\ \ \ \ \ \ \ \ \ state-\/>past\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00390}00390\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00391}00391\ \ \ \ \ \textcolor{comment}{/*\ return\ number\ of\ bytes\ read\ into\ user\ buffer\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00392}00392\ \ \ \ \ \textcolor{keywordflow}{return}\ got;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00393}00393\ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00394}00394\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00395}00395\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00396}\doxymbox{\hyperlink{gzread_8c_a2d0d971b446b67bbc4261fa5fef622bd}{00396}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzread_8c_a2d0d971b446b67bbc4261fa5fef622bd}{gzread}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aa3397ff439b5e076528b04bc9b8b086a}{voidp}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ \textcolor{keywordtype}{unsigned}\ len)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00397}00397\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00398}00398\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00399}00399\ \ \ \ \ \textcolor{comment}{/*\ get\ internal\ structure\ and\ check\ that\ it's\ for\ reading\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00400}00400\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00401}00401\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00402}00402\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00403}00403\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00404}00404\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00405}00405\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00406}00406\ \ \ \ \ \textcolor{comment}{/*\ check\ that\ there\ was\ no\ (serious)\ error\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00407}00407\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}}\ \&\&\ state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a425e2f0664e1b1f75bf2bffab88d353d}{Z\_BUF\_ERROR}}\ \&\&\ !state-\/>again)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00408}00408\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00409}00409\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}},\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00410}00410\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00411}00411\ \ \ \ \ \textcolor{comment}{/*\ since\ an\ int\ is\ returned,\ make\ sure\ len\ fits\ in\ one,\ otherwise\ return}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00412}00412\ \textcolor{comment}{\ \ \ \ \ \ \ with\ an\ error\ (this\ avoids\ a\ flaw\ in\ the\ interface)\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00413}00413\ \ \ \ \ \textcolor{keywordflow}{if}\ ((\textcolor{keywordtype}{int})len\ <\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00414}00414\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_aad97cde83a9a4bb77f5c3b03bb68e483}{Z\_STREAM\_ERROR}},\ \textcolor{stringliteral}{"{}request\ does\ not\ fit\ in\ an\ int"{}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00415}00415\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00416}00416\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00417}00417\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00418}00418\ \ \ \ \ \textcolor{comment}{/*\ read\ len\ or\ fewer\ bytes\ to\ buf\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00419}00419\ \ \ \ \ len\ =\ (unsigned)\doxymbox{\hyperlink{gzread_8c_a2e7c20ac97b2f2d7cd21c3e0399999b5}{gz\_read}}(state,\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ len);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00420}00420\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00421}00421\ \ \ \ \ \textcolor{comment}{/*\ check\ for\ an\ error\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00422}00422\ \ \ \ \ \textcolor{keywordflow}{if}\ (len\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00423}00423\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}}\ \&\&\ state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a425e2f0664e1b1f75bf2bffab88d353d}{Z\_BUF\_ERROR}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00424}00424\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00425}00425\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>again)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00426}00426\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ non-\/blocking\ input\ stalled\ after\ some\ input\ was\ read,\ but\ no}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00427}00427\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uncompressed\ bytes\ were\ produced\ -\/-\/\ let\ the\ application\ know}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00428}00428\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\ isn't\ EOF\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a3c66d64c427c0337c64e578537478737}{Z\_ERRNO}},\ \doxymbox{\hyperlink{gzguts_8h_af252c05931f39dd0b297fe9b8e174b8b}{zstrerror}}());}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00431}00431\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00432}00432\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00433}00433\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00434}00434\ \ \ \ \ \textcolor{comment}{/*\ return\ the\ number\ of\ bytes\ read\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00435}00435\ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{int})len;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00436}00436\ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00437}00437\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00438}00438\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00439}\doxymbox{\hyperlink{gzread_8c_acebeb254a3cecff218bdd52bcd90d7cf}{00439}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzread_8c_acebeb254a3cecff218bdd52bcd90d7cf}{gzfread}}(\doxymbox{\hyperlink{_common_2zlib_2zconf_8h_aa3397ff439b5e076528b04bc9b8b086a}{voidp}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ size,\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ nitems,}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00441}00441\ \ \ \ \ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_ac049a4b91bbe1112841d2890b206b890}{z\_size\_t}}\ len;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00442}00442\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00443}00443\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00444}00444\ \ \ \ \ \textcolor{comment}{/*\ get\ internal\ structure\ and\ check\ that\ it's\ for\ reading\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00445}00445\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00446}00446\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00447}00447\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00448}00448\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00449}00449\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00450}00450\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00451}00451\ \ \ \ \ \textcolor{comment}{/*\ check\ that\ there\ was\ no\ (serious)\ error\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00452}00452\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}}\ \&\&\ state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a425e2f0664e1b1f75bf2bffab88d353d}{Z\_BUF\_ERROR}}\ \&\&\ !state-\/>again)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00453}00453\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00454}00454\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}},\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00455}00455\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00456}00456\ \ \ \ \ \textcolor{comment}{/*\ compute\ bytes\ to\ read\ -\/-\/\ error\ on\ overflow\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00457}00457\ \ \ \ \ len\ =\ nitems\ *\ size;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00458}00458\ \ \ \ \ \textcolor{keywordflow}{if}\ (size\ \&\&\ len\ /\ size\ !=\ nitems)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00459}00459\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_aad97cde83a9a4bb77f5c3b03bb68e483}{Z\_STREAM\_ERROR}},\ \textcolor{stringliteral}{"{}request\ does\ not\ fit\ in\ a\ size\_t"{}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00460}00460\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00461}00461\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00462}00462\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00463}00463\ \ \ \ \ \textcolor{comment}{/*\ read\ len\ or\ fewer\ bytes\ to\ buf,\ return\ the\ number\ of\ full\ items\ read\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00464}00464\ \ \ \ \ \textcolor{keywordflow}{return}\ len\ ?\ \doxymbox{\hyperlink{gzread_8c_a2e7c20ac97b2f2d7cd21c3e0399999b5}{gz\_read}}(state,\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ len)\ /\ size\ :\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00465}00465\ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00466}00466\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00467}00467\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00468}00468\ \textcolor{preprocessor}{\#ifdef\ Z\_PREFIX\_SET}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00469}00469\ \textcolor{preprocessor}{\#\ \ undef\ z\_gzgetc}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00470}00470\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00471}00471\ \textcolor{preprocessor}{\#\ \ undef\ gzgetc}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00472}00472\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00473}\doxymbox{\hyperlink{gzread_8c_a1e9f6a517ed1e04c3765fe24153fb639}{00473}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ac66eb8047c407f8613bc35e440b7b337}{gzgetc}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00474}00474\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}[1];}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00475}00475\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00476}00476\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00477}00477\ \ \ \ \ \textcolor{comment}{/*\ get\ internal\ structure\ and\ check\ that\ it's\ for\ reading\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00478}00478\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00479}00479\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00480}00480\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00481}00481\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00482}00482\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00483}00483\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00484}00484\ \ \ \ \ \textcolor{comment}{/*\ check\ that\ there\ was\ no\ (serious)\ error\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00485}00485\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}}\ \&\&\ state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a425e2f0664e1b1f75bf2bffab88d353d}{Z\_BUF\_ERROR}}\ \&\&\ !state-\/>again)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00486}00486\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00487}00487\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}},\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00488}00488\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00489}00489\ \ \ \ \ \textcolor{comment}{/*\ try\ output\ buffer\ (no\ need\ to\ check\ for\ skip\ request)\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00490}00490\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>x.have)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00491}00491\ \ \ \ \ \ \ \ \ state-\/>x.have-\/-\/;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00492}00492\ \ \ \ \ \ \ \ \ state-\/>x.pos++;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00493}00493\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *(state-\/>x.next)++;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00494}00494\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00495}00495\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00496}00496\ \ \ \ \ \textcolor{comment}{/*\ nothing\ there\ -\/-\/\ try\ gz\_read()\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00497}00497\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{gzread_8c_a2e7c20ac97b2f2d7cd21c3e0399999b5}{gz\_read}}(state,\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ 1)\ <\ 1\ ?\ -\/1\ :\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}[0];}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00498}00498\ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00499}00499\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00500}\doxymbox{\hyperlink{gzread_8c_a3bcd38c3aaf6694dadfc7c29d1ae7ddb}{00500}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzread_8c_a3bcd38c3aaf6694dadfc7c29d1ae7ddb}{gzgetc\_}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00501}00501\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_ac66eb8047c407f8613bc35e440b7b337}{gzgetc}}(file);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00502}00502\ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00503}00503\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00504}00504\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00505}\doxymbox{\hyperlink{gzread_8c_a0b81c1a6e144a3cc5cd97a26688fed69}{00505}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzread_8c_a0b81c1a6e144a3cc5cd97a26688fed69}{gzungetc}}(\textcolor{keywordtype}{int}\ c,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00506}00506\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00507}00507\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00508}00508\ \ \ \ \ \textcolor{comment}{/*\ get\ internal\ structure\ and\ check\ that\ it's\ for\ reading\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00509}00509\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00510}00510\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00511}00511\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00512}00512\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00513}00513\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00514}00514\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00515}00515\ \ \ \ \ \textcolor{comment}{/*\ in\ case\ this\ was\ just\ opened,\ set\ up\ the\ input\ buffer\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00516}00516\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>how\ ==\ \doxymbox{\hyperlink{gzguts_8h_a6d13af6430ff1d6f44ece076ff35b04f}{LOOK}}\ \&\&\ state-\/>x.have\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00517}00517\ \ \ \ \ \ \ \ \ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}})\doxymbox{\hyperlink{gzread_8c_a2335993758928a1328423a4c3cd8f5a5}{gz\_look}}(state);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00518}00518\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00519}00519\ \ \ \ \ \textcolor{comment}{/*\ check\ that\ there\ was\ no\ (serious)\ error\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00520}00520\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}}\ \&\&\ state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a425e2f0664e1b1f75bf2bffab88d353d}{Z\_BUF\_ERROR}}\ \&\&\ !state-\/>again)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00521}00521\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00522}00522\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}},\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00523}00523\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00524}00524\ \ \ \ \ \textcolor{comment}{/*\ process\ a\ skip\ request\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00525}00525\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>skip\ \&\&\ \doxymbox{\hyperlink{gzread_8c_aeb4519b91a9e5fd3460c6ac55f7747dc}{gz\_skip}}(state)\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00526}00526\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00527}00527\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00528}00528\ \ \ \ \ \textcolor{comment}{/*\ can't\ push\ EOF\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00529}00529\ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00530}00530\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00531}00531\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00532}00532\ \ \ \ \ \textcolor{comment}{/*\ if\ output\ buffer\ empty,\ put\ byte\ at\ end\ (allows\ more\ pushing)\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00533}00533\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>x.have\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00534}00534\ \ \ \ \ \ \ \ \ state-\/>x.have\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00535}00535\ \ \ \ \ \ \ \ \ state-\/>x.next\ =\ state-\/>out\ +\ (state-\/>size\ <<\ 1)\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00536}00536\ \ \ \ \ \ \ \ \ state-\/>x.next[0]\ =\ (\textcolor{keywordtype}{unsigned}\ char)c;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00537}00537\ \ \ \ \ \ \ \ \ state-\/>x.pos-\/-\/;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00538}00538\ \ \ \ \ \ \ \ \ state-\/>past\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00539}00539\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ c;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00540}00540\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00541}00541\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00542}00542\ \ \ \ \ \textcolor{comment}{/*\ if\ no\ room,\ give\ up\ (must\ have\ already\ done\ a\ gzungetc())\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00543}00543\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>x.have\ ==\ (state-\/>size\ <<\ 1))\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00544}00544\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a9eda83d428a71752d148f38b5dbe04f2}{Z\_DATA\_ERROR}},\ \textcolor{stringliteral}{"{}out\ of\ room\ to\ push\ characters"{}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00545}00545\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00546}00546\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00547}00547\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00548}00548\ \ \ \ \ \textcolor{comment}{/*\ slide\ output\ data\ if\ needed\ and\ insert\ byte\ before\ existing\ data\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00549}00549\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>x.next\ ==\ state-\/>out)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00550}00550\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *src\ =\ state-\/>out\ +\ state-\/>x.have;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00551}00551\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *dest\ =\ state-\/>out\ +\ (state-\/>size\ <<\ 1);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00552}00552\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00553}00553\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (src\ >\ state-\/>out)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00554}00554\ \ \ \ \ \ \ \ \ \ \ \ \ *-\/-\/dest\ =\ *-\/-\/src;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00555}00555\ \ \ \ \ \ \ \ \ state-\/>x.next\ =\ dest;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00556}00556\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00557}00557\ \ \ \ \ state-\/>x.have++;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00558}00558\ \ \ \ \ state-\/>x.next-\/-\/;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00559}00559\ \ \ \ \ state-\/>x.next[0]\ =\ (\textcolor{keywordtype}{unsigned}\ char)c;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00560}00560\ \ \ \ \ state-\/>x.pos-\/-\/;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00561}00561\ \ \ \ \ state-\/>past\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00562}00562\ \ \ \ \ \textcolor{keywordflow}{return}\ c;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00563}00563\ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00564}00564\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00565}00565\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00566}\doxymbox{\hyperlink{gzread_8c_a89fdd562347c7b7739830b99b988db20}{00566}}\ \textcolor{keywordtype}{char}\ *\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzread_8c_a89fdd562347c7b7739830b99b988db20}{gzgets}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file,\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ \textcolor{keywordtype}{int}\ len)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00567}00567\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ left,\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00568}00568\ \ \ \ \ \textcolor{keywordtype}{char}\ *str;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00569}00569\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *eol;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00570}00570\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00571}00571\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00572}00572\ \ \ \ \ \textcolor{comment}{/*\ check\ parameters,\ get\ internal\ structure,\ and\ check\ that\ it's\ for}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00573}00573\ \textcolor{comment}{\ \ \ \ \ \ \ reading\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00574}00574\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ ||\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ ||\ len\ <\ 1)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00575}00575\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00576}00576\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00577}00577\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00578}00578\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00579}00579\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00580}00580\ \ \ \ \ \textcolor{comment}{/*\ check\ that\ there\ was\ no\ (serious)\ error\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00581}00581\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}}\ \&\&\ state-\/>err\ !=\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a425e2f0664e1b1f75bf2bffab88d353d}{Z\_BUF\_ERROR}}\ \&\&\ !state-\/>again)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00582}00582\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00583}00583\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}},\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00584}00584\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00585}00585\ \ \ \ \ \textcolor{comment}{/*\ process\ a\ skip\ request\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00586}00586\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>skip\ \&\&\ \doxymbox{\hyperlink{gzread_8c_aeb4519b91a9e5fd3460c6ac55f7747dc}{gz\_skip}}(state)\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00587}00587\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00588}00588\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00589}00589\ \ \ \ \ \textcolor{comment}{/*\ copy\ output\ up\ to\ a\ new\ line,\ len-\/1\ bytes,\ or\ there\ is\ no\ more\ output,}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00590}00590\ \textcolor{comment}{\ \ \ \ \ \ \ whichever\ comes\ first\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00591}00591\ \ \ \ \ str\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00592}00592\ \ \ \ \ left\ =\ (unsigned)len\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00593}00593\ \ \ \ \ \textcolor{keywordflow}{if}\ (left)\ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00594}00594\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ assure\ that\ something\ is\ in\ the\ output\ buffer\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00595}00595\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>x.have\ ==\ 0\ \&\&\ \doxymbox{\hyperlink{gzread_8c_a221059506dd52a3dc6fa990f0e191ba8}{gz\_fetch}}(state)\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00596}00596\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ error\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00597}00597\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>x.have\ ==\ 0)\ \{\ \ \ \ \ \ \ \textcolor{comment}{/*\ end\ of\ file\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00598}00598\ \ \ \ \ \ \ \ \ \ \ \ \ state-\/>past\ =\ 1;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ read\ past\ end\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00599}00599\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ return\ what\ we\ have\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00600}00600\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00601}00601\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00602}00602\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ look\ for\ end-\/of-\/line\ in\ current\ output\ buffer\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00603}00603\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ =\ state-\/>x.have\ >\ left\ ?\ left\ :\ state-\/>x.have;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00604}00604\ \ \ \ \ \ \ \ \ eol\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)memchr(state-\/>x.next,\ \textcolor{charliteral}{'\(\backslash\)n'},\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00605}00605\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eol\ !=\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ =\ (unsigned)(eol\ -\/\ state-\/>x.next)\ +\ 1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00607}00607\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00608}00608\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ copy\ through\ end-\/of-\/line,\ or\ remainder\ if\ not\ found\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00609}00609\ \ \ \ \ \ \ \ \ memcpy(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ state-\/>x.next,\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00610}00610\ \ \ \ \ \ \ \ \ state-\/>x.have\ -\/=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00611}00611\ \ \ \ \ \ \ \ \ state-\/>x.next\ +=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00612}00612\ \ \ \ \ \ \ \ \ state-\/>x.pos\ +=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00613}00613\ \ \ \ \ \ \ \ \ left\ -\/=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00614}00614\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}\ +=\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00615}00615\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (left\ \&\&\ eol\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00616}00616\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00617}00617\ \ \ \ \ \textcolor{comment}{/*\ append\ a\ terminating\ zero\ to\ the\ string\ (we\ don't\ check\ for\ a\ zero\ in}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00618}00618\ \textcolor{comment}{\ \ \ \ \ \ \ the\ contents,\ let\ the\ user\ worry\ about\ that)\ -\/-\/\ return\ the\ terminated}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00619}00619\ \textcolor{comment}{\ \ \ \ \ \ \ string,\ or\ if\ nothing\ was\ read,\ NULL\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00620}00620\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}\ ==\ str)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00621}00621\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00622}00622\ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}[0]\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00623}00623\ \ \ \ \ \textcolor{keywordflow}{return}\ str;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00624}00624\ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00625}00625\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00626}00626\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00627}\doxymbox{\hyperlink{gzread_8c_a1f049b9405deb0e7dad1fe97ed4dd8c2}{00627}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzread_8c_a1f049b9405deb0e7dad1fe97ed4dd8c2}{gzdirect}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00628}00628\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00629}00629\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00630}00630\ \ \ \ \ \textcolor{comment}{/*\ get\ internal\ structure\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00631}00631\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00632}00632\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00633}00633\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00634}00634\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00635}00635\ \ \ \ \ \textcolor{comment}{/*\ if\ the\ state\ is\ not\ known,\ but\ we\ can\ find\ out,\ then\ do\ so\ (this\ is}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00636}00636\ \textcolor{comment}{\ \ \ \ \ \ \ mainly\ for\ right\ after\ a\ gzopen()\ or\ gzdopen())\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00637}00637\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ ==\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}}\ \&\&\ state-\/>how\ ==\ \doxymbox{\hyperlink{gzguts_8h_a6d13af6430ff1d6f44ece076ff35b04f}{LOOK}}\ \&\&\ state-\/>x.have\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00638}00638\ \ \ \ \ \ \ \ \ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}})\doxymbox{\hyperlink{gzread_8c_a2335993758928a1328423a4c3cd8f5a5}{gz\_look}}(state);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00639}00639\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00640}00640\ \ \ \ \ \textcolor{comment}{/*\ return\ 1\ if\ transparent,\ 0\ if\ processing\ a\ gzip\ stream\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00641}00641\ \ \ \ \ \textcolor{keywordflow}{return}\ state-\/>direct\ ==\ 1;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00642}00642\ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00643}00643\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00644}00644\ \textcolor{comment}{/*\ -\/-\/\ see\ zlib.h\ -\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00645}\doxymbox{\hyperlink{gzread_8c_a74218c3c6e5eddf23a9f3cb2e08f9637}{00645}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_common_2zlib_2zconf_8h_a181415878f03b95a7094309d824a14b6}{ZEXPORT}}\ \doxymbox{\hyperlink{gzread_8c_a74218c3c6e5eddf23a9f3cb2e08f9637}{gzclose\_r}}(\doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8e80bd9e2c359bc5bdabb2e97b4e62bf}{gzFile}}\ file)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00646}00646\ \ \ \ \ \textcolor{keywordtype}{int}\ ret,\ err;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00647}00647\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}}\ state;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00648}00648\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00649}00649\ \ \ \ \ \textcolor{comment}{/*\ get\ internal\ structure\ and\ check\ that\ it's\ for\ reading\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00650}00650\ \ \ \ \ \textcolor{keywordflow}{if}\ (file\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00651}00651\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_aad97cde83a9a4bb77f5c3b03bb68e483}{Z\_STREAM\_ERROR}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00652}00652\ \ \ \ \ state\ =\ (\doxymbox{\hyperlink{gzguts_8h_a15adc208a26903dbfe8c57720cf401c8}{gz\_statep}})file;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00653}00653\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>mode\ !=\ \doxymbox{\hyperlink{gzguts_8h_a97ca7a8b458e75a004e828cb28ac264c}{GZ\_READ}})}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00654}00654\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_aad97cde83a9a4bb77f5c3b03bb68e483}{Z\_STREAM\_ERROR}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00655}00655\ }
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00656}00656\ \ \ \ \ \textcolor{comment}{/*\ free\ memory\ and\ close\ file\ */}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00657}00657\ \ \ \ \ \textcolor{keywordflow}{if}\ (state-\/>size)\ \{}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00658}00658\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{inflate_8c_aed3136bc8afc3ef309b731b4ad724534}{inflateEnd}}(\&(state-\/>strm));}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00659}00659\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state-\/>out);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00660}00660\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state-\/>in);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00661}00661\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00662}00662\ \ \ \ \ err\ =\ state-\/>err\ ==\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a425e2f0664e1b1f75bf2bffab88d353d}{Z\_BUF\_ERROR}}\ ?\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a425e2f0664e1b1f75bf2bffab88d353d}{Z\_BUF\_ERROR}}\ :\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}};}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00663}00663\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a873d627259b4df4438401c293801c7eb}{gz\_error}}(state,\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a8cb802b6a11e926478dc6547c514c65c}{Z\_OK}},\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}});}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00664}00664\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state-\/>path);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00665}00665\ \ \ \ \ ret\ =\ close(state-\/>fd);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00666}00666\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(state);}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00667}00667\ \ \ \ \ \textcolor{keywordflow}{return}\ ret\ ?\ \doxymbox{\hyperlink{_common_2zlib_2zlib_8h_a3c66d64c427c0337c64e578537478737}{Z\_ERRNO}}\ :\ err;}
+\DoxyCodeLine{\Hypertarget{gzread_8c_source_l00668}00668\ \}}
+
+\end{DoxyCode}

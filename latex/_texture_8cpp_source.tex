@@ -1,0 +1,906 @@
+\doxysection{Texture.\+cpp}
+\hypertarget{_texture_8cpp_source}{}\label{_texture_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Texture.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Texture.cpp}}
+\doxymbox{\hyperlink{_texture_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_client_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_byte_buffer_8h}{..\(\backslash\)Minecraft.World\(\backslash\)ByteBuffer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_rect2i_8h}{Rect2i.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_texture_manager_8h}{TextureManager.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_texture_8h}{Texture.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_texture__blit_8h}{PS3\(\backslash\)SPU\_Tasks\(\backslash\)Texture\_blit\(\backslash\)Texture\_blit.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_c4_j_spurs_job_8h}{C4JSpursJob.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00010}00010\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ sc\_maxTextureBlits\ =\ 256;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00011}00011\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{class_texture__blit___data_in}{Texture\_blit\_DataIn}}\ g\_textureBlitDataIn[sc\_maxTextureBlits]\ \_\_attribute\_\_((\_\_aligned\_\_(16)));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00012}00012\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ g\_currentTexBlit\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00013}00013\ \doxymbox{\hyperlink{class_c4_j_spurs_job_queue_1_1_port}{C4JSpursJobQueue::Port}}*\ g\_texBlitJobQueuePort;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00014}00014\ \textcolor{comment}{//\ \#define\ DISABLE\_SPU\_CODE}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00017}\doxymbox{\hyperlink{_texture_8cpp_abb465a36f167f1f543b5af4769605e9c}{00017}}\ \textcolor{preprocessor}{\#define\ MAX\_MIP\_LEVELS\ 5}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00019}00019\ Texture::Texture(\textcolor{keyword}{const}\ wstring\ \&name,\ \textcolor{keywordtype}{int}\ mode,\ \textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height,\ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{int}\ wrapMode,\ \textcolor{keywordtype}{int}\ format,\ \textcolor{keywordtype}{int}\ minFilter,\ \textcolor{keywordtype}{int}\ magFilter,\ \textcolor{keywordtype}{bool}\ mipMap)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00020}00020\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00021}00021\ \ \ \ \ \_init(name,\ mode,\ width,\ height,\ depth,\ wrapMode,\ format,\ minFilter,\ magFilter,\ mipMap);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00022}00022\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00024}00024\ \textcolor{keywordtype}{void}\ Texture::\_init(\textcolor{keyword}{const}\ wstring\ \&name,\ \textcolor{keywordtype}{int}\ mode,\ \textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height,\ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{int}\ wrapMode,\ \textcolor{keywordtype}{int}\ format,\ \textcolor{keywordtype}{int}\ minFilter,\ \textcolor{keywordtype}{int}\ magFilter,\ \textcolor{keywordtype}{bool}\ mipMap)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00025}00025\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00026}00026\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00027}00027\ \ \ \ \ \textcolor{keywordflow}{if}(g\_texBlitJobQueuePort\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00028}00028\ \ \ \ \ \ \ \ \ g\_texBlitJobQueuePort\ =\ \textcolor{keyword}{new}\ C4JSpursJobQueue::Port(\textcolor{stringliteral}{"{}C4JSpursJob\_Texture\_blit"{}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00029}00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00030}00030\ \ \ \ \ this-\/>name\ =\ name;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00031}00031\ \ \ \ \ this-\/>mode\ =\ mode;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00032}00032\ \ \ \ \ this-\/>width\ =\ width;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00033}00033\ \ \ \ \ this-\/>height\ =\ height;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00034}00034\ \ \ \ \ this-\/>depth\ =\ depth;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00035}00035\ \ \ \ \ this-\/>format\ =\ format;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00036}00036\ \ \ \ \ this-\/>minFilter\ =\ minFilter;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00037}00037\ \ \ \ \ this-\/>magFilter\ =\ magFilter;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00038}00038\ \ \ \ \ this-\/>wrapMode\ =\ wrapMode;\ \ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00039}00039\ \ \ \ \ immediateUpdate\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00040}00040\ \ \ \ \ \doxymbox{\hyperlink{class_texture_aa14ddccbbd7d146d4f3dc64cec8c1a60}{m\_bInitialised}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00041}00041\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0\ ;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 10;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00042}00042\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ data[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00044}00044\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00046}00046\ \ \ \ \ rect\ =\ \textcolor{keyword}{new}\ Rect2i(0,\ 0,\ width,\ height);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00047}00047\ \ \ \ \ \textcolor{comment}{//\ 4J\ Removed\ 1D\ and\ 3D}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00048}00048\ \ \ \ \ \textcolor{comment}{//if\ (height\ ==\ 1\ \&\&\ depth\ ==\ 1)}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00049}00049\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00050}00050\ \ \ \ \ \textcolor{comment}{//\ \ type\ =\ GL\_TEXTURE\_1D;}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00051}00051\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{comment}{//else\ if(depth\ ==\ 1)}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00053}00053\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ type\ =\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_afbebef4b261b4a80484b5ac02a402aa2}{GL\_TEXTURE\_2D}};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00055}00055\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00056}00056\ \ \ \ \ \textcolor{comment}{//else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00057}00057\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00058}00058\ \ \ \ \ \textcolor{comment}{//\ \ type\ =\ GL\_TEXTURE\_3D;}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00059}00059\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00061}00061\ \ \ \ \ mipmapped\ =\ mipMap\ ||\ (minFilter\ !=\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_ae92b413f5e99c5f38e38f48007849b2d}{GL\_NEAREST}}\ \&\&\ minFilter\ !=\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_aae1753f3e00bdfd49561f9883493ba53}{GL\_LINEAR}})\ ||}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ (magFilter\ !=\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_ae92b413f5e99c5f38e38f48007849b2d}{GL\_NEAREST}}\ \&\&\ magFilter\ !=\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_aae1753f3e00bdfd49561f9883493ba53}{GL\_LINEAR}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00063}00063\ \ \ \ \ m\_iMipLevels=1;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00064}00064\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00065}00065\ \ \ \ \ \textcolor{keywordflow}{if}(mipmapped)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00066}00066\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ In\ the\ new\ XDK,\ the\ CreateTexture\ will\ fail\ if\ the\ number\ of\ mipmaps\ is\ higher\ than\ the\ width\ \&\ height\ passed\ in\ will\ allow!}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ iWidthMips=1;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ iHeightMips=1;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}((8<<iWidthMips)<width)\ iWidthMips++;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}((8<<iHeightMips)<height)\ iHeightMips++;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ m\_iMipLevels=(iWidthMips<iHeightMips)?iWidthMips:iHeightMips;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00074}00074\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ -\/\ The\ render\ libs\ currently\ limit\ max\ mip\ map\ levels\ to\ 5}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_iMipLevels\ >\ \doxymbox{\hyperlink{_texture_8cpp_abb465a36f167f1f543b5af4769605e9c}{MAX\_MIP\_LEVELS}})\ m\_iMipLevels\ =\ \doxymbox{\hyperlink{_texture_8cpp_abb465a36f167f1f543b5af4769605e9c}{MAX\_MIP\_LEVELS}};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00077}00077\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00079}00079\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00080}00080\ \ \ \ \ \textcolor{comment}{//\ vita\ doesn't\ have\ a\ mipmap\ conditional\ shader\ because\ it's\ too\ slow\ so\ make\ sure\ this\ texture\ don't\ look\ awful\ at\ the\ lower\ mips}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{if}(\ name\ ==\ L\textcolor{stringliteral}{"{}terrain"{}}\ )}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00082}00082\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ m\_iMipLevels\ =\ 3;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00084}00084\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00085}00085\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00087}00087\ \ \ \ \ \textcolor{keywordflow}{if}\ (mode\ !=\ \doxymbox{\hyperlink{class_texture_a3dc557905b8e01dd511ca3d2a9adbb97}{TM\_CONTAINER}})}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00088}00088\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ glId\ =\ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7e1d4f0e914b60ec152b8aab5fe6a56d}{glGenTextures}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9f7394ec92b287ce8e47c0ba999e67c9}{glBindTexture}}(type,\ glId);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ae18112198b8ef90e8a25f5a7284f85bf}{glTexParameteri}}(type,\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a6945a8b607f8ffd7703b8aa18c925f30}{GL\_TEXTURE\_MIN\_FILTER}},\ minFilter);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ae18112198b8ef90e8a25f5a7284f85bf}{glTexParameteri}}(type,\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a29b212347917ed293e449c83028b87bb}{GL\_TEXTURE\_MAG\_FILTER}},\ magFilter);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ae18112198b8ef90e8a25f5a7284f85bf}{glTexParameteri}}(type,\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fffcf432aab6a219bfc1b53e9ba83c4}{GL\_TEXTURE\_WRAP\_S}},\ wrapMode);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ae18112198b8ef90e8a25f5a7284f85bf}{glTexParameteri}}(type,\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a4100441a3907a4674807245a90a75260}{GL\_TEXTURE\_WRAP\_T}},\ wrapMode);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00096}00096\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00097}00097\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00098}00098\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ glId\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00100}00100\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00102}00102\ \ \ \ \ managerId\ =\ \doxymbox{\hyperlink{class_texture_manager_ad54c51d3aa7c0d1f978cdc58cc014f09}{TextureManager::getInstance}}()-\/>\doxymbox{\hyperlink{class_texture_manager_ae791fb1ac277caf72037cc9f6bacd705}{createTextureID}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00103}00103\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00105}00105\ \textcolor{keywordtype}{void}\ Texture::\_init(\textcolor{keyword}{const}\ wstring\ \&name,\ \textcolor{keywordtype}{int}\ mode,\ \textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height,\ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{int}\ wrapMode,\ \textcolor{keywordtype}{int}\ format,\ \textcolor{keywordtype}{int}\ minFilter,\ \textcolor{keywordtype}{int}\ magFilter,\ \doxymbox{\hyperlink{class_buffered_image}{BufferedImage}}\ *image,\ \textcolor{keywordtype}{bool}\ mipMap)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00106}00106\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00107}00107\ \ \ \ \ \_init(name,\ mode,\ width,\ height,\ depth,\ wrapMode,\ format,\ minFilter,\ magFilter,\ mipMap);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00108}00108\ \ \ \ \ \textcolor{keywordflow}{if}\ (image\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00109}00109\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (width\ ==\ -\/1\ ||\ height\ ==\ -\/1)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ valid\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ tempBytes\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}(width\ *\ height\ *\ depth\ *\ 4);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ index\ =\ 0;\ index\ <\ tempBytes.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}};\ index++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempBytes[index]\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00121}00121\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ data[0]\ =\ \textcolor{keyword}{new}\ ByteBuffer\_IO(tempBytes.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00123}00123\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ data[0]\ =\ \doxymbox{\hyperlink{class_byte_buffer_a901e7c1ea50c16d4dfb57261727ae397}{ByteBuffer::allocateDirect}}(tempBytes.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00125}00125\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_\{S3\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ data[0]-\/>clear();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ data[0]-\/>put(tempBytes);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ data[0]-\/>position(0)-\/>limit(tempBytes.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00129}00129\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ []\ tempBytes.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(mipmapped)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ level\ =\ 1;\ level\ <\ m\_iMipLevels;\ ++level)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ww\ =\ width\ >>\ level;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ hh\ =\ height\ >>\ height;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ tempBytes\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}(ww\ *\ hh\ *\ depth\ *\ 4);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ index\ =\ 0;\ index\ <\ tempBytes.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}};\ index++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempBytes[index]\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00145}00145\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[level]\ =\ \textcolor{keyword}{new}\ ByteBuffer\_IO(tempBytes.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00147}00147\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[level]\ =\ \doxymbox{\hyperlink{class_byte_buffer_a901e7c1ea50c16d4dfb57261727ae397}{ByteBuffer::allocateDirect}}(tempBytes.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00149}00149\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[level]-\/>clear();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[level]-\/>put(tempBytes);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[level]-\/>position(0)-\/>limit(tempBytes.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00153}00153\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ []\ tempBytes.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (immediateUpdate)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_texture_ad149bde164b681ec0138b99bb339e02e}{updateOnGPU}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ updated\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00166}00166\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00167}00167\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00168}00168\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00169}00169\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ valid\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00171}00171\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_texture_aca5049530dfb40751858d6f1dab10fa5}{transferFromImage}}(image);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00173}00173\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mode\ !=\ \doxymbox{\hyperlink{class_texture_a3dc557905b8e01dd511ca3d2a9adbb97}{TM\_CONTAINER}})}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_texture_ad149bde164b681ec0138b99bb339e02e}{updateOnGPU}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ immediateUpdate\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00179}00179\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00180}00180\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00182}\doxymbox{\hyperlink{class_texture_a43a9925972a60c54b784e6c18089a57a}{00182}}\ Texture::Texture(\textcolor{keyword}{const}\ wstring\ \&name,\ \textcolor{keywordtype}{int}\ mode,\ \textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height,\ \textcolor{keywordtype}{int}\ wrapMode,\ \textcolor{keywordtype}{int}\ format,\ \textcolor{keywordtype}{int}\ minFilter,\ \textcolor{keywordtype}{int}\ magFilter,\ \doxymbox{\hyperlink{class_buffered_image}{BufferedImage}}\ *image,\ \textcolor{keywordtype}{bool}\ mipMap)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00183}00183\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00184}00184\ \ \ \ \ \_init(name,\ mode,\ width,\ height,\ 1,\ wrapMode,\ format,\ minFilter,\ magFilter,\ image,\ mipMap);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00185}00185\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00187}\doxymbox{\hyperlink{class_texture_a2a642fc13f2122bb53def7694cbf707f}{00187}}\ Texture::Texture(\textcolor{keyword}{const}\ wstring\ \&name,\ \textcolor{keywordtype}{int}\ mode,\ \textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height,\ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{int}\ wrapMode,\ \textcolor{keywordtype}{int}\ format,\ \textcolor{keywordtype}{int}\ minFilter,\ \textcolor{keywordtype}{int}\ magFilter,\ \doxymbox{\hyperlink{class_buffered_image}{BufferedImage}}\ *image,\ \textcolor{keywordtype}{bool}\ mipMap)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00188}00188\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00189}00189\ \ \ \ \ \_init(name,\ mode,\ width,\ height,\ depth,\ wrapMode,\ format,\ minFilter,\ magFilter,\ image,\ mipMap);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00190}00190\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00192}\doxymbox{\hyperlink{class_texture_a09c4bcb7462f64c1d20fa69dba3cee8a}{00192}}\ \doxymbox{\hyperlink{class_texture_a09c4bcb7462f64c1d20fa69dba3cee8a}{Texture::\string~Texture}}()}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00193}00193\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00194}00194\ \ \ \ \ \textcolor{keyword}{delete}\ rect;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00195}00195\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00196}00196\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ \ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 10;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00197}00197\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(data[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr})\ \textcolor{keyword}{delete}\ data[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00199}00199\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00201}00201\ \ \ \ \ \textcolor{keywordflow}{if}(glId\ >=\ 0)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00202}00202\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a935fcea5046895b5286e0e2d137635e2}{glDeleteTextures}}(glId);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00204}00204\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00205}00205\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00206}00206\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00207}\doxymbox{\hyperlink{class_texture_ac63d3b85ebb82af3a01108a88a9c2cdb}{00207}}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_rect2i}{Rect2i}}\ *\doxymbox{\hyperlink{class_texture_ac63d3b85ebb82af3a01108a88a9c2cdb}{Texture::getRect}}()}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00208}00208\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00209}00209\ \ \ \ \ \textcolor{keywordflow}{return}\ rect;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00210}00210\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00212}\doxymbox{\hyperlink{class_texture_afd92343de53bba902c57d7ca4eb6980c}{00212}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_texture_afd92343de53bba902c57d7ca4eb6980c}{Texture::fill}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_rect2i}{Rect2i}}\ *rect,\ \textcolor{keywordtype}{int}\ color)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00213}00213\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00214}00214\ \ \ \ \ \textcolor{comment}{//\ 4J\ Remove\ 3D}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00215}00215\ \ \ \ \ \textcolor{comment}{//if\ (type\ ==\ GL\_TEXTURE\_3D)}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00216}00216\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00217}00217\ \ \ \ \ \textcolor{comment}{//\ \ return;}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00218}00218\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00220}00220\ \ \ \ \ \doxymbox{\hyperlink{class_rect2i}{Rect2i}}\ *myRect\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_rect2i}{Rect2i}}(0,\ 0,\ width,\ height);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00221}00221\ \ \ \ \ myRect-\/>\doxymbox{\hyperlink{class_rect2i_a20a8172e9adaeb33c5eb363858ed6f56}{intersect}}(rect);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00222}00222\ \ \ \ \ data[0]-\/>position(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00223}00223\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ y\ =\ myRect-\/>\doxymbox{\hyperlink{class_rect2i_a0baf103a9240ece0ffd5e1be9fb9db55}{getY}}();\ y\ <\ (myRect-\/>\doxymbox{\hyperlink{class_rect2i_a0baf103a9240ece0ffd5e1be9fb9db55}{getY}}()\ +\ myRect-\/>\doxymbox{\hyperlink{class_rect2i_a3efcde081488e1da6bcc97665bc96cf3}{getHeight}}());\ y++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00224}00224\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ =\ y\ *\ width\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ myRect-\/>\doxymbox{\hyperlink{class_rect2i_a654eaf8fded5022fb75feae21b95a428}{getX}}();\ x\ <\ (myRect-\/>\doxymbox{\hyperlink{class_rect2i_a654eaf8fded5022fb75feae21b95a428}{getX}}()\ +\ myRect-\/>\doxymbox{\hyperlink{class_rect2i_aebe693e891cc4297587bd5d7c3a387e3}{getWidth}}());\ x++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ data[0]-\/>put(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ +\ x\ *\ 4\ +\ 0,\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{_orbis_types_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}\textcolor{keyword}{>}((color\ >>\ 24)\ \&\ 0x000000ff));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ data[0]-\/>put(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ +\ x\ *\ 4\ +\ 1,\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{_orbis_types_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}\textcolor{keyword}{>}((color\ >>\ 16)\ \&\ 0x000000ff));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ data[0]-\/>put(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ +\ x\ *\ 4\ +\ 2,\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{_orbis_types_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}\textcolor{keyword}{>}((color\ >>\ 8)\ \&\ 0x000000ff));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ data[0]-\/>put(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ +\ x\ *\ 4\ +\ 3,\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{_orbis_types_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}\textcolor{keyword}{>}((color\ >>\ 0)\ \&\ 0x000000ff));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00233}00233\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00234}00234\ \ \ \ \ \textcolor{keyword}{delete}\ myRect;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00236}00236\ \ \ \ \ \textcolor{keywordflow}{if}\ (immediateUpdate)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00237}00237\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_texture_ad149bde164b681ec0138b99bb339e02e}{updateOnGPU}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00239}00239\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00240}00240\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00241}00241\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00242}00242\ \ \ \ \ \ \ \ \ updated\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00243}00243\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00244}00244\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00245}00245\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00246}\doxymbox{\hyperlink{class_texture_a685c56309b9ab7938f7391f1c5140441}{00246}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_texture_a685c56309b9ab7938f7391f1c5140441}{Texture::writeAsBMP}}(\textcolor{keyword}{const}\ wstring\ \&name)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00247}00247\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00248}00248\ \ \ \ \ \textcolor{comment}{//\ 4J\ Don't\ need}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00249}00249\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00250}00250\ \ \ \ \ \textcolor{keywordflow}{if}\ (type\ ==\ GL\_TEXTURE\_3D)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00251}00251\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00252}00252\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00253}00253\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00255}00255\ \ \ \ \ \doxymbox{\hyperlink{class_file}{File}}\ *outFile\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_file}{File}}(name);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00256}00256\ \ \ \ \ \textcolor{keywordflow}{if}\ (outFile.\doxymbox{\hyperlink{class_file_a53118ce36851cb1c6845a82f915fd8ba}{exists}}())}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00257}00257\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ outFile.delete();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00259}00259\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00260}00260\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00261}00261\ \ \ \ \ \doxymbox{\hyperlink{class_data_output_stream}{DataOutputStream}}\ *outStream\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00262}00262\ \ \ \ \ \textcolor{comment}{//try\ \{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00263}00263\ \ \ \ \ outStream\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_data_output_stream}{DataOutputStream}}(\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_file_output_stream}{FileOutputStream}}(outFile));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00264}00264\ \ \ \ \ \textcolor{comment}{//\}\ catch\ (IOException\ e)\ \{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00265}00265\ \ \ \ \ \textcolor{comment}{//\ Unable\ to\ open\ file\ for\ writing\ for\ some\ reason}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00266}00266\ \ \ \ \ \textcolor{comment}{//\ \ return;}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00267}00267\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00268}00268\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00269}00269\ \ \ \ \ \textcolor{comment}{//try\ \{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00270}00270\ \ \ \ \ \textcolor{comment}{//\ Write\ the\ header}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00271}00271\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_ac9979d0b470b6a50a9d6bf1a1f03b92c}{writeShort}}((\textcolor{keywordtype}{short})0x424d);\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0x0000:\ ID\ -\/\ 'BM'}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00272}00272\ \ \ \ \ \textcolor{keywordtype}{int}\ byteSize\ =\ width\ *\ height\ *\ 4\ +\ 54;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00273}00273\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}((\textcolor{keywordtype}{byte})(byteSize\ >>\ \ 0));\ \ \ \ \textcolor{comment}{//\ 0x0002:\ Raw\ file\ size}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00274}00274\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}((\textcolor{keywordtype}{byte})(byteSize\ >>\ \ 8));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00275}00275\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}((\textcolor{keywordtype}{byte})(byteSize\ >>\ 16));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00276}00276\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}((\textcolor{keywordtype}{byte})(byteSize\ >>\ 24));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00277}00277\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_a04b9bfc9e072cd176baaab3f8221c613}{writeInt}}(0);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0x0006:\ Reserved}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00278}00278\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(54);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0x000A:\ Start\ of\ pixel\ data}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00279}00279\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00280}00280\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00281}00281\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00282}00282\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(40);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0x000E:\ Size\ of\ secondary\ header}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00283}00283\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00284}00284\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00285}00285\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00286}00286\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}((\textcolor{keywordtype}{byte})(width\ >>\ \ 0));\ \ \ \ \ \ \ \textcolor{comment}{//\ 0x0012:\ Image\ width,\ in\ pixels}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00287}00287\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}((\textcolor{keywordtype}{byte})(width\ >>\ \ 8));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00288}00288\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}((\textcolor{keywordtype}{byte})(width\ >>\ 16));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00289}00289\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}((\textcolor{keywordtype}{byte})(width\ >>\ 24));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00290}00290\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}((\textcolor{keywordtype}{byte})(height\ >>\ \ 0));\ \ \ \ \ \ \textcolor{comment}{//\ 0x0016:\ Image\ height,\ in\ pixels}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00291}00291\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}((\textcolor{keywordtype}{byte})(height\ >>\ \ 8));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00292}00292\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}((\textcolor{keywordtype}{byte})(height\ >>\ 16));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00293}00293\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}((\textcolor{keywordtype}{byte})(height\ >>\ 24));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00294}00294\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(1);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0x001A:\ Number\ of\ color\ planes,\ must\ be\ 1}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00295}00295\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00296}00296\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(32);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0x001C:\ Bit\ depth\ (32bpp)}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00297}00297\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00298}00298\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_a04b9bfc9e072cd176baaab3f8221c613}{writeInt}}(0);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0x001E:\ Compression\ mode\ (BI\_RGB,\ uncompressed)}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00299}00299\ \ \ \ \ \textcolor{keywordtype}{int}\ bufSize\ =\ width\ *\ height\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00300}00300\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_a04b9bfc9e072cd176baaab3f8221c613}{writeInt}}((\textcolor{keywordtype}{byte})(bufSize\ >>\ \ 0));\ \ \ \ \ \ \textcolor{comment}{//\ 0x0022:\ Raw\ size\ of\ bitmap\ data}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00301}00301\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_a04b9bfc9e072cd176baaab3f8221c613}{writeInt}}((\textcolor{keywordtype}{byte})(bufSize\ >>\ \ 8));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00302}00302\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_a04b9bfc9e072cd176baaab3f8221c613}{writeInt}}((\textcolor{keywordtype}{byte})(bufSize\ >>\ 16));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00303}00303\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_a04b9bfc9e072cd176baaab3f8221c613}{writeInt}}((\textcolor{keywordtype}{byte})(bufSize\ >>\ 24));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00304}00304\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_a04b9bfc9e072cd176baaab3f8221c613}{writeInt}}(0);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0x0026:\ Horizontal\ resolution\ in\ ppm}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00305}00305\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_a04b9bfc9e072cd176baaab3f8221c613}{writeInt}}(0);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0x002A:\ Vertical\ resolution\ in\ ppm}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00306}00306\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_a04b9bfc9e072cd176baaab3f8221c613}{writeInt}}(0);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0x002E:\ Palette\ size\ (0\ to\ match\ bit\ depth)}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00307}00307\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_a04b9bfc9e072cd176baaab3f8221c613}{writeInt}}(0);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0x0032:\ Number\ of\ important\ colors,\ 0\ for\ all}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00308}00308\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00309}00309\ \ \ \ \ \textcolor{comment}{//\ Pixels\ follow\ in\ inverted\ Y\ order}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00310}00310\ \ \ \ \ \textcolor{keywordtype}{byte}[]\ bytes\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{byte}[width\ *\ height\ *\ 4];}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00311}00311\ \ \ \ \ data.position(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00312}00312\ \ \ \ \ data.get(bytes);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00313}00313\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ y\ =\ height\ -\/\ 1;\ y\ >=\ 0;\ y-\/-\/)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00314}00314\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ =\ y\ *\ width\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ 0;\ x\ <\ width;\ x++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(bytes[\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ +\ x\ *\ 4\ +\ 2]);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(bytes[\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ +\ x\ *\ 4\ +\ 1]);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(bytes[\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ +\ x\ *\ 4\ +\ 0]);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_af3417060bd611d9f2d912853d52c69fc}{writeByte}}(bytes[\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}\ +\ x\ *\ 4\ +\ 3]);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00323}00323\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00324}00324\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00325}00325\ \ \ \ \ outStream-\/>\doxymbox{\hyperlink{class_data_output_stream_ac06f06649cc15dfd935b830f4a1fa23f}{close}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00326}00326\ \ \ \ \ \textcolor{comment}{//\}\ catch\ (IOException\ e)\ \{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00327}00327\ \ \ \ \ \textcolor{comment}{//\ Unable\ to\ write\ to\ the\ file\ for\ some\ reason}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00328}00328\ \ \ \ \ \textcolor{comment}{//\ \ return;}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00329}00329\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00330}00330\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00331}00331\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00332}00332\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00333}\doxymbox{\hyperlink{class_texture_a6fc85b003e2f325d1de2cb71d45ded58}{00333}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_texture_a6fc85b003e2f325d1de2cb71d45ded58}{Texture::writeAsPNG}}(\textcolor{keyword}{const}\ wstring\ \&\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_ab3dcfdc100476f46b5ef0dd1dbb3337b}{filename}})}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00334}00334\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00335}00335\ \ \ \ \ \textcolor{comment}{//\ 4J\ Don't\ need}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00336}00336\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00337}00337\ \ \ \ \ \doxymbox{\hyperlink{class_buffered_image}{BufferedImage}}\ *image\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_buffered_image}{BufferedImage}}(width,\ height,\ \doxymbox{\hyperlink{class_buffered_image}{BufferedImage}}.\doxymbox{\hyperlink{class_buffered_image_a51853bd5aaa11c5064bc745c7c2d9745}{TYPE\_INT\_ARGB}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00338}00338\ \ \ \ \ \doxymbox{\hyperlink{class_byte_buffer}{ByteBuffer}}\ *buffer\ =\ this-\/>\doxymbox{\hyperlink{class_texture_a8fc2d657dcfda52e26e7cb3ad5b8ebce}{getData}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00339}00339\ \ \ \ \ \textcolor{keywordtype}{byte}[]\ bytes\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{byte}[width\ *\ height\ *\ 4];}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00340}00340\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00341}00341\ \ \ \ \ buffer.\doxymbox{\hyperlink{class_buffer_a72a3c75c97de67e9290c6fa0bcd7ffc2}{position}}(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00342}00342\ \ \ \ \ buffer.\doxymbox{\hyperlink{class_byte_buffer_a0b790039aa15e379033e19e7cdead3d1}{get}}(bytes);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00343}00343\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00344}00344\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ 0;\ x\ <\ width;\ x++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00345}00345\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ y\ =\ 0;\ y\ <\ height;\ y++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ pos\ =\ (y\ *\ width\ *\ 4)\ +\ x\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ col\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00350}00350\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ col\ |=\ (bytes[pos\ +\ 2]\ \&\ 0xFF)\ <<\ 0;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ col\ |=\ (bytes[pos\ +\ 1]\ \&\ 0xFF)\ <<\ 8;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ col\ |=\ (bytes[pos\ +\ 0]\ \&\ 0xFF)\ <<\ 16;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ col\ |=\ (bytes[pos\ +\ 3]\ \&\ 0xFF)\ <<\ 24;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00355}00355\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ image.setRGB(x,\ y,\ col);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00358}00358\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00359}00359\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00360}00360\ \ \ \ \ data.position(width\ *\ height\ *\ 4);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00361}00361\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00362}00362\ \ \ \ \ \textcolor{comment}{//try\ \{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00363}00363\ \ \ \ \ ImageIO::write(image,\ L\textcolor{stringliteral}{"{}png"{}},\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_file}{File}}(\doxymbox{\hyperlink{class_minecraft}{Minecraft}}.getWorkingDirectory(),\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_ab3dcfdc100476f46b5ef0dd1dbb3337b}{filename}}));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00364}00364\ \ \ \ \ \textcolor{comment}{//\}\ catch\ (IOException\ e)\ \{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00365}00365\ \ \ \ \ \textcolor{comment}{//\ \ e.printStackTrace();}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00366}00366\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00367}00367\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00368}00368\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00369}00369\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00370}\doxymbox{\hyperlink{class_texture_a8be814f41798bdabfd4c99378f08029a}{00370}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_texture_a8be814f41798bdabfd4c99378f08029a}{Texture::blit}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ Texture\ *source)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00371}00371\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00372}00372\ \ \ \ \ \doxymbox{\hyperlink{class_texture_a8be814f41798bdabfd4c99378f08029a}{blit}}(x,\ y,\ source,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00373}00373\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00374}00374\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00375}\doxymbox{\hyperlink{class_texture_a0f4599942214537f53c8a40d94a9bb7e}{00375}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_texture_a8be814f41798bdabfd4c99378f08029a}{Texture::blit}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ Texture\ *source,\ \textcolor{keywordtype}{bool}\ rotated)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00376}00376\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00377}00377\ \ \ \ \ \textcolor{comment}{//\ 4J\ Remove\ 3D}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00378}00378\ \ \ \ \ \textcolor{comment}{//if\ (type\ ==\ GL\_TEXTURE\_3D)}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00379}00379\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00380}00380\ \ \ \ \ \textcolor{comment}{//\ \ return;}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00381}00381\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00383}00383\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ level\ =\ 0;\ level\ <\ m\_iMipLevels;\ ++level)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00384}00384\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_byte_buffer}{ByteBuffer}}\ *srcBuffer\ =\ source-\/>\doxymbox{\hyperlink{class_texture_a8fc2d657dcfda52e26e7cb3ad5b8ebce}{getData}}(level);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00386}00386\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(srcBuffer\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00388}00388\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ yy\ =\ y\ >>\ level;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xx\ =\ x\ >>\ level;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00391}00391\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ hh\ =\ height\ >>\ level;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00392}00392\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ww\ =\ width\ >>\ level;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00393}00393\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ shh\ =\ source-\/>\doxymbox{\hyperlink{class_texture_a80e143905655b173df5994300088ce35}{getHeight}}()\ >>\ level;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00394}00394\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ sww\ =\ source-\/>\doxymbox{\hyperlink{class_texture_a91a6fd3355bc870194851514194daaab}{getWidth}}()\ >>\ level;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00395}00395\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00396}00396\ \ \ \ \ \ \ \ \ data[level]-\/>position(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00397}00397\ \ \ \ \ \ \ \ \ srcBuffer-\/>\doxymbox{\hyperlink{class_buffer_a72a3c75c97de67e9290c6fa0bcd7ffc2}{position}}(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00398}00398\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00399}00399\ \textcolor{preprocessor}{\#if\ defined\ \_\_PS3\_\_\ \&\&\ !defined\ DISABLE\_SPU\_CODE}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00400}00400\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(g\_texBlitJobQueuePort-\/>\doxymbox{\hyperlink{class_c4_j_spurs_job_queue_1_1_port_aaf8bda11c3b898378bab2b4e017761af}{hasCompleted}}())}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00401}00401\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ all\ outstanding\ blits\ have\ completed,\ so\ reset\ to\ the\ start\ of\ the\ blit\ list}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00403}00403\ \ \ \ \ \ \ \ \ \ \ \ \ g\_currentTexBlit\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00404}00404\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00405}00405\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_texture__blit___data_in}{Texture\_blit\_DataIn}}\&\ dataIn\ =\ g\_textureBlitDataIn[g\_currentTexBlit];}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00406}00406\ \ \ \ \ \ \ \ \ g\_currentTexBlit++;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00407}00407\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(g\_currentTexBlit\ >=\ sc\_maxTextureBlits)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00408}00408\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00409}00409\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}ran\ out\ of\ tex\ blit\ slots,\ stalling\ for\ completion\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00410}00410\ \ \ \ \ \ \ \ \ \ \ \ \ g\_texBlitJobQueuePort-\/>\doxymbox{\hyperlink{class_c4_j_spurs_job_queue_1_1_port_ab951991ee20b4f814aff4ae4ba67219d}{waitForCompletion}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00411}00411\ \ \ \ \ \ \ \ \ \ \ \ \ g\_currentTexBlit\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00412}00412\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00413}00413\ \ \ \ \ \ \ \ \ dataIn.\doxymbox{\hyperlink{class_texture__blit___data_in_a266e8fbd26d14dde5da6e5682d98d514}{pSrcData}}\ =\ srcBuffer-\/>\doxymbox{\hyperlink{class_byte_buffer_a749529e71f5af5d9d06ce32a57887ebb}{getBuffer}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00414}00414\ \ \ \ \ \ \ \ \ dataIn.\doxymbox{\hyperlink{class_texture__blit___data_in_ab4c0facca964af4e8ed2bd54e3509dcc}{pDstData}}\ =\ data[level]-\/>getBuffer();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00415}00415\ \ \ \ \ \ \ \ \ dataIn.\doxymbox{\hyperlink{class_texture__blit___data_in_a01ac87e17fa32b73b18b8886687018fe}{yy}}\ =\ yy;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00416}00416\ \ \ \ \ \ \ \ \ dataIn.\doxymbox{\hyperlink{class_texture__blit___data_in_a6281b6b6d08044b40ba5568947e02af1}{xx}}\ =\ xx;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00417}00417\ \ \ \ \ \ \ \ \ dataIn.\doxymbox{\hyperlink{class_texture__blit___data_in_a7b66f2b58c51c45717150a6272ad97a0}{hh}}\ =\ hh;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00418}00418\ \ \ \ \ \ \ \ \ dataIn.\doxymbox{\hyperlink{class_texture__blit___data_in_a0d15d40be80c6fc3a2480a3c6aaca69e}{ww}}\ =\ ww;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00419}00419\ \ \ \ \ \ \ \ \ dataIn.\doxymbox{\hyperlink{class_texture__blit___data_in_a8128e980faba5b3b018cf67516045063}{shh}}\ =\ shh;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00420}00420\ \ \ \ \ \ \ \ \ dataIn.\doxymbox{\hyperlink{class_texture__blit___data_in_a36bcadebafbbecb30ebad0aa2110e4bc}{sww}}\ =\ sww;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00421}00421\ \ \ \ \ \ \ \ \ dataIn.\doxymbox{\hyperlink{class_texture__blit___data_in_aab64e5fc39f348e7739ef1599057a68a}{rotated}}\ =\ rotated;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00422}00422\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00423}00423\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_c4_j_spurs_job___texture__blit}{C4JSpursJob\_Texture\_blit}}\ blitJob(\&dataIn);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00424}00424\ \ \ \ \ \ \ \ \ g\_texBlitJobQueuePort-\/>\doxymbox{\hyperlink{class_c4_j_spurs_job_queue_1_1_port_a7dabf5013fed786466a756d79885f5d2}{submitJob}}(\&blitJob);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00425}00425\ \textcolor{comment}{//\ \ \ \ \ \ p.waitForCompletion();}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00426}00426\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00427}00427\ \textcolor{preprocessor}{\#elif\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00428}00428\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *src\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)\ srcBuffer-\/>\doxymbox{\hyperlink{class_byte_buffer_a749529e71f5af5d9d06ce32a57887ebb}{getBuffer}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00429}00429\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *dst\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)\ data[level]-\/>getBuffer();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00430}00430\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00431}00431\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ srcY\ =\ 0;\ srcY\ <\ shh;\ srcY++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00432}00432\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00433}00433\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dstY\ =\ yy\ +\ srcY;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00434}00434\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ srcLine\ =\ srcY\ *\ sww;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00435}00435\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dstLine\ =\ dstY\ *\ ww;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00436}00436\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00437}00437\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rotated)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dstY\ =\ yy\ +\ (shh\ -\/\ srcY);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00441}00441\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00442}00442\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!rotated)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00443}00443\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00444}00444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(dst\ +\ dstLine\ +\ xx,\ src\ +\ srcLine,\ sww\ *\ 4);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00445}00445\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00446}00446\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00447}00447\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00448}00448\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ srcX\ =\ 0;\ srcX\ <\ sww;\ srcX++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00449}00449\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00450}00450\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dstPos\ =\ dstLine\ +\ (srcX\ +\ xx);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00451}00451\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ srcPos\ =\ srcLine\ +\ srcX;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00452}00452\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00453}00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rotated)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00454}00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00455}00455\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dstPos\ =\ (xx\ +\ srcX\ *\ ww)\ +\ dstY;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00456}00456\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00457}00457\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00458}00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dst[dstPos]\ =\ src[srcPos];}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00459}00459\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00460}00460\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00462}00462\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00463}00463\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00464}00464\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ srcY\ =\ 0;\ srcY\ <\ shh;\ srcY++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00465}00465\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00466}00466\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dstY\ =\ yy\ +\ srcY;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00467}00467\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ srcLine\ =\ srcY\ *\ sww\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00468}00468\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dstLine\ =\ dstY\ *\ ww\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00469}00469\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00470}00470\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rotated)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00471}00471\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dstY\ =\ yy\ +\ (shh\ -\/\ srcY);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00474}00474\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00475}00475\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ srcX\ =\ 0;\ srcX\ <\ sww;\ srcX++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dstPos\ =\ dstLine\ +\ (srcX\ +\ xx)\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ srcPos\ =\ srcLine\ +\ srcX\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00479}00479\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rotated)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00481}00481\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00482}00482\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dstPos\ =\ (xx\ +\ srcX\ *\ ww\ *\ 4)\ +\ dstY\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00484}00484\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[level]-\/>put(dstPos\ +\ 0,\ srcBuffer-\/>\doxymbox{\hyperlink{class_byte_buffer_a0b790039aa15e379033e19e7cdead3d1}{get}}(srcPos\ +\ 0));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[level]-\/>put(dstPos\ +\ 1,\ srcBuffer-\/>\doxymbox{\hyperlink{class_byte_buffer_a0b790039aa15e379033e19e7cdead3d1}{get}}(srcPos\ +\ 1));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[level]-\/>put(dstPos\ +\ 2,\ srcBuffer-\/>\doxymbox{\hyperlink{class_byte_buffer_a0b790039aa15e379033e19e7cdead3d1}{get}}(srcPos\ +\ 2));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[level]-\/>put(dstPos\ +\ 3,\ srcBuffer-\/>\doxymbox{\hyperlink{class_byte_buffer_a0b790039aa15e379033e19e7cdead3d1}{get}}(srcPos\ +\ 3));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00490}00490\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00491}00491\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Don't\ delete\ this,\ as\ it\ belongs\ to\ the\ source\ texture}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00492}00492\ \ \ \ \ \ \ \ \ \textcolor{comment}{//delete\ srcBuffer;}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00493}00493\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00494}00494\ \ \ \ \ \ \ \ \ data[level]-\/>position(ww\ *\ hh\ *\ 4);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00495}00495\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00496}00496\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00497}00497\ \ \ \ \ \textcolor{keywordflow}{if}\ (immediateUpdate)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00498}00498\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00499}00499\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_texture_ad149bde164b681ec0138b99bb339e02e}{updateOnGPU}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00500}00500\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00501}00501\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00502}00502\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00503}00503\ \ \ \ \ \ \ \ \ updated\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00504}00504\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00505}00505\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00506}00506\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00507}\doxymbox{\hyperlink{class_texture_a411367b74eb10e8e5e20f29c72f55fe5}{00507}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_texture_a411367b74eb10e8e5e20f29c72f55fe5}{Texture::transferFromBuffer}}(\doxymbox{\hyperlink{_array_with_length_8h_a5f64a90f12b834c164105b12c7396999}{intArray}}\ buffer)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00508}00508\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00509}00509\ \ \ \ \ \textcolor{keywordflow}{if}\ (depth\ ==\ 1)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00510}00510\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00511}00511\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00512}00512\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00513}00513\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00514}00514\ \textcolor{comment}{//\ \#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00515}00515\ \textcolor{comment}{//\ \ int\ byteRemapRGBA[]\ =\ \{\ 3,\ 0,\ 1,\ 2\ \};}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00516}00516\ \textcolor{comment}{//\ \ int\ byteRemapBGRA[]\ =\ \{\ 3,\ 2,\ 1,\ 0\ \};}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00517}00517\ \textcolor{comment}{//\ \#else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00518}00518\ \ \ \ \ \textcolor{keywordtype}{int}\ byteRemapRGBA[]\ =\ \{\ 0,\ 1,\ 2,\ 3\ \};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00519}00519\ \ \ \ \ \textcolor{keywordtype}{int}\ byteRemapBGRA[]\ =\ \{\ 2,\ 1,\ 0,\ 3\ \};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00520}00520\ \textcolor{comment}{//\ \#endif}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00521}00521\ \ \ \ \ \textcolor{keywordtype}{int}\ *byteRemap\ =\ ((format\ ==\ \doxymbox{\hyperlink{class_texture_ab3403d7ead55359bd53e67be3ed3be71}{TFMT\_BGRA}})\ ?\ byteRemapBGRA\ :\ byteRemapRGBA);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00522}00522\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00523}00523\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ z\ =\ 0;\ z\ <\ depth;\ z++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00524}00524\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00525}00525\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ plane\ =\ z\ *\ height\ *\ width\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00526}00526\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ y\ =\ 0;\ y\ <\ height;\ y++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00527}00527\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00528}00528\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ column\ =\ plane\ +\ y\ *\ width\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00529}00529\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ 0;\ x\ <\ width;\ x++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00530}00530\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00531}00531\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ texel\ =\ column\ +\ x\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00532}00532\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[0]-\/>position(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00533}00533\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[0]-\/>put(texel\ +\ byteRemap[0],\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((buffer[texel\ >>\ 2]\ >>\ 24)\ \&\ 0xff));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00534}00534\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[0]-\/>put(texel\ +\ byteRemap[1],\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((buffer[texel\ >>\ 2]\ >>\ 16)\ \&\ 0xff));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00535}00535\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[0]-\/>put(texel\ +\ byteRemap[2],\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((buffer[texel\ >>\ 2]\ >>\ 8)\ \&\ 0xff));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00536}00536\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[0]-\/>put(texel\ +\ byteRemap[3],\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((buffer[texel\ >>\ 2]\ >>\ 0)\ \&\ 0xff));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00537}00537\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00538}00538\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00539}00539\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00540}00540\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00541}00541\ \ \ \ \ data[0]-\/>position(width\ *\ height\ *\ depth\ *\ 4);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00542}00542\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00543}00543\ \ \ \ \ \doxymbox{\hyperlink{class_texture_ad149bde164b681ec0138b99bb339e02e}{updateOnGPU}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00544}00544\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00545}00545\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00546}\doxymbox{\hyperlink{class_texture_aca5049530dfb40751858d6f1dab10fa5}{00546}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_texture_aca5049530dfb40751858d6f1dab10fa5}{Texture::transferFromImage}}(\doxymbox{\hyperlink{class_buffered_image}{BufferedImage}}\ *image)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00547}00547\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00548}00548\ \ \ \ \ \textcolor{comment}{//\ 4J\ Remove\ 3D}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00549}00549\ \ \ \ \ \textcolor{comment}{//if\ (type\ ==\ GL\_TEXTURE\_3D)}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00550}00550\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00551}00551\ \ \ \ \ \textcolor{comment}{//\ \ return;}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00552}00552\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00553}00553\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00554}00554\ \ \ \ \ \textcolor{keywordtype}{int}\ imgWidth\ =\ image-\/>\doxymbox{\hyperlink{class_buffered_image_a124ce0ed58ac716e178079ac4e670fed}{getWidth}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00555}00555\ \ \ \ \ \textcolor{keywordtype}{int}\ imgHeight\ =\ image-\/>\doxymbox{\hyperlink{class_buffered_image_a1c284ccadea74ad1459efcb300f28062}{getHeight}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00556}00556\ \ \ \ \ \textcolor{keywordflow}{if}\ (imgWidth\ >\ width\ ||\ imgHeight\ >\ height)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00557}00557\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00558}00558\ \ \ \ \ \ \ \ \ \textcolor{comment}{//Minecraft::GetInstance().getLogger().warning("{}transferFromImage\ called\ with\ a\ BufferedImage\ with\ dimensions\ ("{}\ +}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00559}00559\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ imgWidth\ +\ "{},\ "{}\ +\ imgHeight\ +\ "{})\ larger\ than\ the\ Texture\ dimensions\ ("{}\ +\ width\ +}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00560}00560\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ "{},\ "{}\ +\ height\ +\ "{}).\ Ignoring."{});}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00561}00561\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}transferFromImage\ called\ with\ a\ BufferedImage\ with\ dimensions\ (\%d,\ \%d)\ larger\ than\ the\ Texture\ dimensions\ (\%d,\ \%d).\ Ignoring.\(\backslash\)n"{}},\ imgWidth,\ imgHeight,\ width,\ height);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00562}00562\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00563}00563\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00564}00564\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00565}00565\ \textcolor{comment}{//\ \#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00566}00566\ \textcolor{comment}{//\ \ int\ byteRemapRGBA[]\ =\ \{\ 0,\ 1,\ 2,\ 3\ \};}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00567}00567\ \textcolor{comment}{//\ \ int\ byteRemapBGRA[]\ =\ \{\ 2,\ 1,\ 0,\ 3\ \};}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00568}00568\ \textcolor{comment}{//\ \#else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00569}00569\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00570}00570\ \ \ \ \ \textcolor{keywordtype}{int}\ byteRemapRGBA[]\ =\ \{\ 0,\ 1,\ 2,\ 3\ \};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00571}00571\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00572}00572\ \ \ \ \ \textcolor{keywordtype}{int}\ byteRemapRGBA[]\ =\ \{\ 3,\ 0,\ 1,\ 2\ \};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00573}00573\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00574}00574\ \ \ \ \ \textcolor{keywordtype}{int}\ byteRemapBGRA[]\ =\ \{\ 3,\ 2,\ 1,\ 0\ \};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00575}00575\ \textcolor{comment}{//\ \#endif}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00576}00576\ \ \ \ \ \textcolor{keywordtype}{int}\ *byteRemap\ =\ ((format\ ==\ \doxymbox{\hyperlink{class_texture_ab3403d7ead55359bd53e67be3ed3be71}{TFMT\_BGRA}})\ ?\ byteRemapBGRA\ :\ byteRemapRGBA);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00577}00577\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00578}00578\ \ \ \ \ \doxymbox{\hyperlink{_array_with_length_8h_a5f64a90f12b834c164105b12c7396999}{intArray}}\ tempPixels\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a5f64a90f12b834c164105b12c7396999}{intArray}}(width\ *\ height);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00579}00579\ \ \ \ \ \textcolor{keywordtype}{int}\ transparency\ =\ image-\/>\doxymbox{\hyperlink{class_buffered_image_aa8b8ca4bde4a56caf2dc32b17abb77d1}{getTransparency}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00580}00580\ \ \ \ \ image-\/>\doxymbox{\hyperlink{class_buffered_image_adfa5fb3d7f8d7c171e73c7270eca1d44}{getRGB}}(0,\ 0,\ width,\ height,\ tempPixels,\ 0,\ imgWidth);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00581}00581\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00582}00582\ \ \ \ \ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ tempBytes\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}(width\ *\ height\ *\ 4);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00583}00583\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ y\ =\ 0;\ y\ <\ height;\ y++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00584}00584\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00585}00585\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ 0;\ x\ <\ width;\ x++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00586}00586\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00587}00587\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ intIndex\ =\ y\ *\ width\ +\ x;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00588}00588\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ byteIndex\ =\ intIndex\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00589}00589\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00590}00590\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Pull\ ARGB\ bytes\ into\ either\ RGBA\ or\ BGRA\ depending\ on\ format}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00591}00591\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ tempBytes[byteIndex\ +\ byteRemap[0]]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((tempPixels[intIndex]\ >>\ 24)\ \&\ 0xff);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00593}00593\ \ \ \ \ \ \ \ \ \ \ \ \ tempBytes[byteIndex\ +\ byteRemap[1]]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((tempPixels[intIndex]\ >>\ 16)\ \&\ 0xff);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00594}00594\ \ \ \ \ \ \ \ \ \ \ \ \ tempBytes[byteIndex\ +\ byteRemap[2]]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((tempPixels[intIndex]\ >>\ 8)\ \&\ 0xff);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00595}00595\ \ \ \ \ \ \ \ \ \ \ \ \ tempBytes[byteIndex\ +\ byteRemap[3]]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((tempPixels[intIndex]\ >>\ 0)\ \&\ 0xff);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00596}00596\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00597}00597\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00598}00598\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00599}00599\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ \ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 10;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00600}00600\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00601}00601\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(data[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00602}00602\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00603}00603\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ data[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00604}00604\ \ \ \ \ \ \ \ \ \ \ \ \ data[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00605}00605\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00606}00606\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00607}00607\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00608}00608\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(51);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00609}00609\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00610}00610\ \ \ \ \ data[0]\ =\ \textcolor{keyword}{new}\ ByteBuffer\_IO(tempBytes.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00611}00611\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00612}00612\ \ \ \ \ data[0]\ =\ \doxymbox{\hyperlink{class_byte_buffer_a901e7c1ea50c16d4dfb57261727ae397}{ByteBuffer::allocateDirect}}(tempBytes.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00613}00613\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_\{S3\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00614}00614\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00615}00615\ \ \ \ \ data[0]-\/>clear();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00616}00616\ \ \ \ \ data[0]-\/>put(tempBytes);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00617}00617\ \ \ \ \ data[0]-\/>limit(tempBytes.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00618}00618\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00619}00619\ \ \ \ \ \textcolor{keyword}{delete}\ []\ tempBytes.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00620}00620\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00621}00621\ \ \ \ \ \textcolor{keywordflow}{if}(mipmapped\ ||\ image-\/>\doxymbox{\hyperlink{class_buffered_image_a0beee7e7de0ab276cf6492642ef9c3e6}{getData}}(1)\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00622}00622\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00623}00623\ \ \ \ \ \ \ \ \ mipmapped\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00624}00624\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ level\ =\ 1;\ level\ <\ \doxymbox{\hyperlink{_texture_8cpp_abb465a36f167f1f543b5af4769605e9c}{MAX\_MIP\_LEVELS}};\ ++level)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00625}00625\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00626}00626\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ww\ =\ width\ >>\ level;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00627}00627\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ hh\ =\ height\ >>\ level;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00628}00628\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00629}00629\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ tempBytes\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}(ww\ *\ hh\ *\ 4);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00630}00630\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *tempData\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}[ww\ *\ hh];}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00631}00631\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00632}00632\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ image-\/>\doxymbox{\hyperlink{class_buffered_image_a0beee7e7de0ab276cf6492642ef9c3e6}{getData}}(\ level\ )\ )}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00633}00633\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00634}00634\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(\ tempData,\ image-\/>\doxymbox{\hyperlink{class_buffered_image_a0beee7e7de0ab276cf6492642ef9c3e6}{getData}}(\ level\ ),\ ww\ *\ hh\ *\ 4);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00635}00635\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ y\ =\ 0;\ y\ <\ hh;\ y++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00636}00636\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00637}00637\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ 0;\ x\ <\ ww;\ x++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00638}00638\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00639}00639\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ intIndex\ =\ y\ *\ ww\ +\ x;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00640}00640\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ byteIndex\ =\ intIndex\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00641}00641\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00642}00642\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Pull\ ARGB\ bytes\ into\ either\ RGBA\ or\ BGRA\ depending\ on\ format}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00643}00643\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00644}00644\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempBytes[byteIndex\ +\ byteRemap[0]]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((tempData[intIndex]\ >>\ 24)\ \&\ 0xff);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00645}00645\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempBytes[byteIndex\ +\ byteRemap[1]]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((tempData[intIndex]\ >>\ 16)\ \&\ 0xff);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00646}00646\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempBytes[byteIndex\ +\ byteRemap[2]]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((tempData[intIndex]\ >>\ 8)\ \&\ 0xff);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00647}00647\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempBytes[byteIndex\ +\ byteRemap[3]]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((tempData[intIndex]\ >>\ 0)\ \&\ 0xff);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00648}00648\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00649}00649\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00650}00650\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00651}00651\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00652}00652\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00653}00653\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ow\ =\ width\ >>\ (level\ -\/\ 1);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00654}00654\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00655}00655\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ 0;\ x\ <\ ww;\ x++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00656}00656\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ y\ =\ 0;\ y\ <\ hh;\ y++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00657}00657\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00658}00658\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ c0\ =\ data[level\ -\/\ 1]-\/>getInt(((x\ *\ 2\ +\ 0)\ +\ (y\ *\ 2\ +\ 0)\ *\ ow)\ *\ 4);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00659}00659\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ c1\ =\ data[level\ -\/\ 1]-\/>getInt(((x\ *\ 2\ +\ 1)\ +\ (y\ *\ 2\ +\ 0)\ *\ ow)\ *\ 4);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00660}00660\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ c2\ =\ data[level\ -\/\ 1]-\/>getInt(((x\ *\ 2\ +\ 1)\ +\ (y\ *\ 2\ +\ 1)\ *\ ow)\ *\ 4);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00661}00661\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ c3\ =\ data[level\ -\/\ 1]-\/>getInt(((x\ *\ 2\ +\ 0)\ +\ (y\ *\ 2\ +\ 1)\ *\ ow)\ *\ 4);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00662}00662\ \textcolor{preprocessor}{\#ifndef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00663}00663\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ convert\ our\ RGBA\ texels\ to\ ARGB\ that\ crispBlend\ is\ expecting}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00664}00664\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c0\ =\ (\ (\ c0\ >>\ 8\ )\ \&\ 0x00ffffff\ )\ |\ (\ c0\ <<\ 24\ );}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00665}00665\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c1\ =\ (\ (\ c1\ >>\ 8\ )\ \&\ 0x00ffffff\ )\ |\ (\ c1\ <<\ 24\ );}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00666}00666\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c2\ =\ (\ (\ c2\ >>\ 8\ )\ \&\ 0x00ffffff\ )\ |\ (\ c2\ <<\ 24\ );}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00667}00667\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c3\ =\ (\ (\ c3\ >>\ 8\ )\ \&\ 0x00ffffff\ )\ |\ (\ c3\ <<\ 24\ );}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00668}00668\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00669}00669\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ col\ =\ \doxymbox{\hyperlink{class_texture_ad3476c3257919571265b65a4c19bd285}{crispBlend}}(\doxymbox{\hyperlink{class_texture_ad3476c3257919571265b65a4c19bd285}{crispBlend}}(c0,\ c1),\ \doxymbox{\hyperlink{class_texture_ad3476c3257919571265b65a4c19bd285}{crispBlend}}(c2,\ c3));}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00670}00670\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ and\ back\ from\ ARGB\ -\/>\ RGBA}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00671}00671\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//col\ =\ (\ col\ <<\ 8\ )\ |\ ((\ col\ >>\ 24\ )\ \&\ 0xff);}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00672}00672\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//tempData[x\ +\ y\ *\ ww]\ =\ col;}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00673}00673\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00674}00674\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ intIndex\ =\ y\ *\ ww\ +\ x;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00675}00675\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ byteIndex\ =\ intIndex\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00676}00676\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00677}00677\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Pull\ ARGB\ bytes\ into\ either\ RGBA\ or\ BGRA\ depending\ on\ format}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00678}00678\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00679}00679\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempBytes[byteIndex\ +\ byteRemap[0]]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((col\ >>\ 24)\ \&\ 0xff);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00680}00680\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempBytes[byteIndex\ +\ byteRemap[1]]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((col\ >>\ 16)\ \&\ 0xff);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00681}00681\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempBytes[byteIndex\ +\ byteRemap[2]]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((col\ >>\ 8)\ \&\ 0xff);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00682}00682\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tempBytes[byteIndex\ +\ byteRemap[3]]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}((col\ >>\ 0)\ \&\ 0xff);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00683}00683\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00684}00684\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00685}00685\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00686}00686\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(51);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00687}00687\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00688}00688\ \ \ \ \ \ \ \ \ \ \ \ \ data[level]\ =\ \textcolor{keyword}{new}\ ByteBuffer\_IO(tempBytes.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00689}00689\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00690}00690\ \ \ \ \ \ \ \ \ \ \ \ \ data[level]\ =\ \doxymbox{\hyperlink{class_byte_buffer_a901e7c1ea50c16d4dfb57261727ae397}{ByteBuffer::allocateDirect}}(tempBytes.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00691}00691\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_\{S3\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00692}00692\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00693}00693\ \ \ \ \ \ \ \ \ \ \ \ \ data[level]-\/>clear();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00694}00694\ \ \ \ \ \ \ \ \ \ \ \ \ data[level]-\/>put(tempBytes);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00695}00695\ \ \ \ \ \ \ \ \ \ \ \ \ data[level]-\/>limit(tempBytes.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00696}00696\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ []\ tempBytes.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00697}00697\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ []\ tempData;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00698}00698\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00699}00699\ \ \ \ \ \}\ \ \ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00700}00700\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00701}00701\ \ \ \ \ \textcolor{keyword}{delete}\ []\ tempPixels.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00702}00702\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00703}00703\ \ \ \ \ \textcolor{keywordflow}{if}\ (immediateUpdate)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00704}00704\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00705}00705\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_texture_ad149bde164b681ec0138b99bb339e02e}{updateOnGPU}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00706}00706\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00707}00707\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00708}00708\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00709}00709\ \ \ \ \ \ \ \ \ updated\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00710}00710\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00711}00711\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00712}00712\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00713}00713\ \textcolor{comment}{//\ 4J\ Kept\ from\ older\ versions\ for\ where\ we\ create\ mip-\/maps\ for\ levels\ that\ do\ not\ have\ pre-\/made\ graphics}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00714}\doxymbox{\hyperlink{class_texture_ad3476c3257919571265b65a4c19bd285}{00714}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_texture_ad3476c3257919571265b65a4c19bd285}{Texture::crispBlend}}(\textcolor{keywordtype}{int}\ c0,\ \textcolor{keywordtype}{int}\ c1)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00715}00715\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00716}00716\ \ \ \ \ \textcolor{keywordtype}{int}\ a0\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(((c0\ \&\ 0xff000000)\ >>\ 24))\ \&\ 0xff;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00717}00717\ \ \ \ \ \textcolor{keywordtype}{int}\ a1\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(((c1\ \&\ 0xff000000)\ >>\ 24))\ \&\ 0xff;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00718}00718\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00719}00719\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}\ =\ 255;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00720}00720\ \ \ \ \ \textcolor{keywordflow}{if}\ (a0\ +\ a1\ <\ 255)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00721}00721\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00722}00722\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00723}00723\ \ \ \ \ \ \ \ \ a0\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00724}00724\ \ \ \ \ \ \ \ \ a1\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00725}00725\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00726}00726\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (a0\ >\ a1)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00727}00727\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00728}00728\ \ \ \ \ \ \ \ \ a0\ =\ 255;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00729}00729\ \ \ \ \ \ \ \ \ a1\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00730}00730\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00731}00731\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00732}00732\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00733}00733\ \ \ \ \ \ \ \ \ a0\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00734}00734\ \ \ \ \ \ \ \ \ a1\ =\ 255;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00735}00735\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00736}00736\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00737}00737\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00738}00738\ \ \ \ \ \textcolor{keywordtype}{int}\ r0\ =\ ((c0\ >>\ 16)\ \&\ 0xff)\ *\ a0;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00739}00739\ \ \ \ \ \textcolor{keywordtype}{int}\ g0\ =\ ((c0\ >>\ 8)\ \&\ 0xff)\ *\ a0;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00740}00740\ \ \ \ \ \textcolor{keywordtype}{int}\ b0\ =\ ((c0)\ \&\ 0xff)\ *\ a0;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00741}00741\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00742}00742\ \ \ \ \ \textcolor{keywordtype}{int}\ r1\ =\ ((c1\ >>\ 16)\ \&\ 0xff)\ *\ a1;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00743}00743\ \ \ \ \ \textcolor{keywordtype}{int}\ g1\ =\ ((c1\ >>\ 8)\ \&\ 0xff)\ *\ a1;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00744}00744\ \ \ \ \ \textcolor{keywordtype}{int}\ b1\ =\ ((c1)\ \&\ 0xff)\ *\ a1;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00745}00745\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00746}00746\ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ (r0\ +\ r1)\ /\ (a0\ +\ a1);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00747}00747\ \ \ \ \ \textcolor{keywordtype}{int}\ g\ =\ (g0\ +\ g1)\ /\ (a0\ +\ a1);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00748}00748\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ (b0\ +\ b1)\ /\ (a0\ +\ a1);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00749}00749\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00750}00750\ \ \ \ \ \textcolor{keywordflow}{return}\ (\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}\ <<\ 24)\ |\ (r\ <<\ 16)\ |\ (g\ <<\ 8)\ |\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00751}00751\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00752}00752\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00753}\doxymbox{\hyperlink{class_texture_aeea95a56d9a17323c6e3c20e4adb47df}{00753}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_texture_aeea95a56d9a17323c6e3c20e4adb47df}{Texture::getManagerId}}()}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00754}00754\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00755}00755\ \ \ \ \ \textcolor{keywordflow}{return}\ managerId;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00756}00756\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00757}00757\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00758}\doxymbox{\hyperlink{class_texture_a9b2337e2aaf866fa22b6f8c5aa77fd68}{00758}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_texture_a9b2337e2aaf866fa22b6f8c5aa77fd68}{Texture::getGlId}}()}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00759}00759\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00760}00760\ \ \ \ \ \textcolor{keywordflow}{return}\ glId;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00761}00761\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00762}00762\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00763}\doxymbox{\hyperlink{class_texture_a91a6fd3355bc870194851514194daaab}{00763}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_texture_a91a6fd3355bc870194851514194daaab}{Texture::getWidth}}()}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00764}00764\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00765}00765\ \ \ \ \ \textcolor{keywordflow}{return}\ width;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00766}00766\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00767}00767\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00768}\doxymbox{\hyperlink{class_texture_a80e143905655b173df5994300088ce35}{00768}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_texture_a80e143905655b173df5994300088ce35}{Texture::getHeight}}()}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00769}00769\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00770}00770\ \ \ \ \ \textcolor{keywordflow}{return}\ height;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00771}00771\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00772}00772\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00773}\doxymbox{\hyperlink{class_texture_a89b6e2df5119992b6963fedcdc78201c}{00773}}\ wstring\ \doxymbox{\hyperlink{class_texture_a89b6e2df5119992b6963fedcdc78201c}{Texture::getName}}()}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00774}00774\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00775}00775\ \ \ \ \ \textcolor{keywordflow}{return}\ name;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00776}00776\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00777}00777\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00778}\doxymbox{\hyperlink{class_texture_aa69ad749084599fb582da72d5703fb57}{00778}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_texture_aa69ad749084599fb582da72d5703fb57}{Texture::setImmediateUpdate}}(\textcolor{keywordtype}{bool}\ immediateUpdate)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00779}00779\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00780}00780\ \ \ \ \ this-\/>immediateUpdate\ =\ immediateUpdate;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00781}00781\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00782}00782\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00783}\doxymbox{\hyperlink{class_texture_a4a0ad64cbbf5b207d65f53ac2cafc6a3}{00783}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_texture_a4a0ad64cbbf5b207d65f53ac2cafc6a3}{Texture::bind}}(\textcolor{keywordtype}{int}\ mipMapIndex)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00784}00784\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00785}00785\ \ \ \ \ \textcolor{comment}{//\ 4J\ Removed\ 3D}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00786}00786\ \ \ \ \ \textcolor{comment}{//if\ (depth\ ==\ 1)}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00787}00787\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00788}00788\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_afbebef4b261b4a80484b5ac02a402aa2}{GL\_TEXTURE\_2D}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00789}00789\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00790}00790\ \ \ \ \ \textcolor{comment}{//else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00791}00791\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00792}00792\ \ \ \ \ \textcolor{comment}{//\ \ glEnable(GL\_TEXTURE\_3D);}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00793}00793\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00794}00794\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00795}00795\ \ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_a8a82eb45f1f39f83662a34c1171c05ed}{glActiveTexture}}(\doxymbox{\hyperlink{stubs___s_p_u_8h_a709aa475d4470db5b8bad75406082e31}{GL\_TEXTURE0}}\ +\ mipMapIndex);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00796}00796\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9f7394ec92b287ce8e47c0ba999e67c9}{glBindTexture}}(type,\ glId);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00797}00797\ \ \ \ \ \textcolor{keywordflow}{if}\ (!updated)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00798}00798\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00799}00799\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_texture_ad149bde164b681ec0138b99bb339e02e}{updateOnGPU}}();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00800}00800\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00801}00801\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00802}00802\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00803}\doxymbox{\hyperlink{class_texture_ad149bde164b681ec0138b99bb339e02e}{00803}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_texture_ad149bde164b681ec0138b99bb339e02e}{Texture::updateOnGPU}}()}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00804}00804\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00805}00805\ \ \ \ \ data[0]-\/>flip();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00806}00806\ \ \ \ \ \textcolor{keywordflow}{if}(mipmapped)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00807}00807\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00808}00808\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ level\ =\ 1;\ level\ <\ m\_iMipLevels;\ level++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00809}00809\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00810}00810\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(data[level]\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00811}00811\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00812}00812\ \ \ \ \ \ \ \ \ \ \ \ \ data[level]-\/>flip();}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00813}00813\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00814}00814\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00815}00815\ \ \ \ \ \textcolor{comment}{//\ 4J\ remove\ 3D\ and\ 1D}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00816}00816\ \ \ \ \ \textcolor{comment}{//if\ (height\ !=\ 1\ \&\&\ depth\ !=\ 1)}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00817}00817\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00818}00818\ \ \ \ \ \textcolor{comment}{//\ \ glTexImage3D(type,\ 0,\ format,\ width,\ height,\ depth,\ 0,\ format,\ GL\_UNSIGNED\_BYTE,\ data);}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00819}00819\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00820}00820\ \ \ \ \ \textcolor{comment}{//else\ if(height\ !=\ 1)}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00821}00821\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00822}00822\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Added\ check\ so\ we\ can\ differentiate\ between\ which\ RenderManager\ function\ to\ call}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00823}00823\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!\doxymbox{\hyperlink{class_texture_aa14ddccbbd7d146d4f3dc64cec8c1a60}{m\_bInitialised}})}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00824}00824\ \ \ \ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00825}00825\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.TextureSetTextureLevels(m\_iMipLevels);\ \ \ \ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00826}00826\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00827}00827\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00828}00828\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ replace\ the\ dynamic\ ram\ buffer\ to\ one\ that\ points\ to\ a\ newly\ allocated\ video\ ram\ texture\ buffer.\ This\ means\ we\ don't\ have\ to\ memcpy}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00829}00829\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ ram\ based\ buffer\ to\ it\ any\ more\ inside\ RenderManager.TextureDataUpdate}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00830}00830\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *newData\ =\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.TextureData(width,height,data[0]-\/>getBuffer(),0,\doxymbox{\hyperlink{class_c4_j_render_ac2b8e7e081f596e410e3b5e3ab3a105aae93a04a5d8262a19a7867bc14ee77ead}{C4JRender::TEXTURE\_FORMAT\_RxGyBzAw}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00831}00831\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_byte_buffer}{ByteBuffer}}\ *oldBuffer\ =\ data[0];}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00832}00832\ \ \ \ \ \ \ \ \ \ \ \ \ data[0]\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_byte_buffer}{ByteBuffer}}(data[0]-\/>getSize(),\ (\textcolor{keywordtype}{byte}*)\ newData);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00833}00833\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ oldBuffer;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00834}00834\ \ \ \ \ \ \ \ \ \ \ \ \ newData\ +=\ width\ *\ height\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00835}00835\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00836}00836\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.TextureData(width,height,data[0]-\/>getBuffer(),0,\doxymbox{\hyperlink{class_c4_j_render_ac2b8e7e081f596e410e3b5e3ab3a105aae93a04a5d8262a19a7867bc14ee77ead}{C4JRender::TEXTURE\_FORMAT\_RxGyBzAw}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00837}00837\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00838}00838\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00839}00839\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(mipmapped)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00840}00840\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00841}00841\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ level\ =\ 1;\ level\ <\ m\_iMipLevels;\ level++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00842}00842\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00843}00843\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ levelWidth\ =\ width\ >>\ level;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00844}00844\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ levelHeight\ =\ height\ >>\ level;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00845}00845\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00846}00846\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00847}00847\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ replace\ the\ dynamic\ ram\ buffer\ to\ one\ that\ points\ to\ a\ newly\ allocated\ video\ ram\ texture\ buffer.\ This\ means\ we\ don't\ have\ to\ memcpy}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00848}00848\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ ram\ based\ buffer\ to\ it\ any\ more\ inside\ RenderManager.TextureDataUpdate}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00849}00849\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.TextureDataUpdate(0,\ 0,levelWidth,levelHeight,data[level]-\/>getBuffer(),level);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00850}00850\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_byte_buffer}{ByteBuffer}}\ *oldBuffer\ =\ data[level];}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00851}00851\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data[level]\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_byte_buffer}{ByteBuffer}}(data[level]-\/>getSize(),\ (\textcolor{keywordtype}{byte}*)\ newData);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00852}00852\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ oldBuffer;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00853}00853\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newData\ +=\ levelWidth\ *\ levelHeight\ *\ 4;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00854}00854\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00855}00855\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.TextureData(levelWidth,levelHeight,data[level]-\/>getBuffer(),level,\doxymbox{\hyperlink{class_c4_j_render_ac2b8e7e081f596e410e3b5e3ab3a105aae93a04a5d8262a19a7867bc14ee77ead}{C4JRender::TEXTURE\_FORMAT\_RxGyBzAw}});}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00856}00856\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00857}00857\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00858}00858\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00859}00859\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00860}00860\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_texture_aa14ddccbbd7d146d4f3dc64cec8c1a60}{m\_bInitialised}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00861}00861\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00862}00862\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00863}00863\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00864}00864\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00865}00865\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.TextureDataUpdate(data[0]-\/>getBuffer(),0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00866}00866\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00867}00867\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.TextureDataUpdate(0,\ 0,width,height,data[0]-\/>getBuffer(),0);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00868}00868\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00869}00869\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00870}00870\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(mipmapped)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00871}00871\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00872}00872\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.TextureGetTextureLevels()\ >\ 1)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00873}00873\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00874}00874\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ level\ =\ 1;\ level\ <\ m\_iMipLevels;\ level++)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00875}00875\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00876}00876\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ levelWidth\ =\ width\ >>\ level;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00877}00877\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ levelHeight\ =\ height\ >>\ level;}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00878}00878\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00879}00879\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00880}00880\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.TextureDataUpdate(data[level]-\/>getBuffer(),level);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00881}00881\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00882}00882\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.TextureDataUpdate(0,\ 0,levelWidth,levelHeight,data[level]-\/>getBuffer(),level);}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00883}00883\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00884}00884\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00885}00885\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00886}00886\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00887}00887\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00888}00888\ \ \ \ \ \ \ \ \ \textcolor{comment}{//glTexImage2D(type,\ 0,\ format,\ width,\ height,\ 0,\ format,\ GL\_UNSIGNED\_BYTE,\ data);}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00889}00889\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00890}00890\ \ \ \ \ \textcolor{comment}{//else}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00891}00891\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00892}00892\ \ \ \ \ \textcolor{comment}{//\ \ glTexImage1D(type,\ 0,\ format,\ width,\ 0,\ format,\ GL\_UNSIGNED\_BYTE,\ data);}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00893}00893\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00894}00894\ \ \ \ \ updated\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00895}00895\ \}}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00896}00896\ }
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00897}\doxymbox{\hyperlink{class_texture_a8fc2d657dcfda52e26e7cb3ad5b8ebce}{00897}}\ \doxymbox{\hyperlink{class_byte_buffer}{ByteBuffer}}\ *\doxymbox{\hyperlink{class_texture_a8fc2d657dcfda52e26e7cb3ad5b8ebce}{Texture::getData}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ level)}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00898}00898\ \{}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00899}00899\ \ \ \ \ \textcolor{keywordflow}{return}\ data[level];}
+\DoxyCodeLine{\Hypertarget{_texture_8cpp_source_l00900}00900\ \}}
+
+\end{DoxyCode}

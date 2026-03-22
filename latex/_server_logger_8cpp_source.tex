@@ -1,0 +1,264 @@
+\doxysection{Server\+Logger.\+cpp}
+\hypertarget{_server_logger_8cpp_source}{}\label{_server_logger_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/ServerLogger.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/ServerLogger.cpp}}
+\doxymbox{\hyperlink{_server_logger_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_logger_8h}{ServerLogger.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_utils_8h}{Common\(\backslash\)\(\backslash\)StringUtils.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{linenoise_8h}{vendor\(\backslash\)\(\backslash\)linenoise\(\backslash\)\(\backslash\)linenoise.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ <stdarg.h>}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00011}00011\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_server_runtime}{ServerRuntime}}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00012}00012\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00013}00013\ \textcolor{keyword}{static}\ \textcolor{keyword}{volatile}\ \doxymbox{\hyperlink{_orbis_types_8h_a9154c0d0c21af4686624543215b4e5f2}{LONG}}\ g\_minLogLevel\ =\ (\doxymbox{\hyperlink{_orbis_types_8h_a9154c0d0c21af4686624543215b4e5f2}{LONG}})\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a00515b521a7bd2b7f527f09030636cef}{eServerLogLevel\_Info}};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00015}00015\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *NormalizeCategory(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *category)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00016}00016\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00017}00017\ \ \ \ \ \textcolor{keywordflow}{if}\ (category\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ ||\ category[0]\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00018}00018\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}server"{}};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00020}00020\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00021}00021\ \ \ \ \ \textcolor{keywordflow}{return}\ category;}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00022}00022\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00024}00024\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *LogLevelToString(\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4}{EServerLogLevel}}\ level)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00025}00025\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00026}00026\ \ \ \ \ \textcolor{keywordflow}{switch}\ (level)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00027}00027\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00028}00028\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a688e1bf7bb60e4e8b130cd2cb40b8f8f}{eServerLogLevel\_Debug}}:}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00029}00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}DEBUG"{}};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00030}00030\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a00515b521a7bd2b7f527f09030636cef}{eServerLogLevel\_Info}}:}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}INFO"{}};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00032}00032\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a9dc417484e537ec6149b3a04d0fca6fa}{eServerLogLevel\_Warn}}:}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}WARN"{}};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00034}00034\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4ab6ddca4b8bef582cf87ceae8a6b33a9b}{eServerLogLevel\_Error}}:}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}ERROR"{}};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00036}00036\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}INFO"{}};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00038}00038\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00039}00039\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00041}00041\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{_orbis_types_8h_a197942eefa7db30960ae396d68339b97}{WORD}}\ LogLevelToColor(\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4}{EServerLogLevel}}\ level)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00042}00042\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00043}00043\ \ \ \ \ \textcolor{keywordflow}{switch}\ (level)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00044}00044\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00045}00045\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a688e1bf7bb60e4e8b130cd2cb40b8f8f}{eServerLogLevel\_Debug}}:}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00046}00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ FOREGROUND\_GREEN\ |\ FOREGROUND\_BLUE\ |\ FOREGROUND\_INTENSITY;}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00047}00047\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a9dc417484e537ec6149b3a04d0fca6fa}{eServerLogLevel\_Warn}}:}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00048}00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ FOREGROUND\_RED\ |\ FOREGROUND\_GREEN\ |\ FOREGROUND\_INTENSITY;}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00049}00049\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4ab6ddca4b8bef582cf87ceae8a6b33a9b}{eServerLogLevel\_Error}}:}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ FOREGROUND\_RED\ |\ FOREGROUND\_INTENSITY;}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00051}00051\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a00515b521a7bd2b7f527f09030636cef}{eServerLogLevel\_Info}}:}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ FOREGROUND\_RED\ |\ FOREGROUND\_GREEN\ |\ FOREGROUND\_BLUE\ |\ FOREGROUND\_INTENSITY;}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00054}00054\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00055}00055\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00057}00057\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ BuildTimestamp(\textcolor{keywordtype}{char}\ *buffer,\ \textcolor{keywordtype}{size\_t}\ bufferSize)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00058}00058\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00059}00059\ \ \ \ \ \textcolor{keywordflow}{if}\ (buffer\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ ||\ bufferSize\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00060}00060\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00061}00061\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00062}00062\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00064}00064\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a82a530fa04b141779c2d9d2d7dc2292e}{SYSTEMTIME}}\ localTime;}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00065}00065\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a5953560b073d29dbe75bfd6893505d2d}{GetLocalTime}}(\&localTime);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00066}00066\ \ \ \ \ sprintf\_s(}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ buffer,}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ bufferSize,}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\%04u-\/\%02u-\/\%02u\ \%02u:\%02u:\%02u.\%03u"{}},}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned})localTime.\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a06ed33a1656389cceffcfb2f05d250ae}{wYear}},}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned})localTime.\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a773fd89ec4a08997a0944cee8a3e41bf}{wMonth}},}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned})localTime.\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_aee7ad267ed9d9ed1581ddd4ad37b6055}{wDay}},}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned})localTime.\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a8661dc983347452db670a2a92ffebb67}{wHour}},}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned})localTime.\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_ab5eefa38099851abfd25436491d2b639}{wMinute}},}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned})localTime.\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a8c9567e77fcdc10d9a1f7d687c8c5f7d}{wSecond}},}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned})localTime.\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a3204cab99283c838ccd126efeef30976}{wMilliseconds}});}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00077}00077\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00079}00079\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ ShouldLog(\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4}{EServerLogLevel}}\ level)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00080}00080\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{return}\ ((\doxymbox{\hyperlink{_orbis_types_8h_a9154c0d0c21af4686624543215b4e5f2}{LONG}})level\ >=\ g\_minLogLevel);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00082}00082\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00084}00084\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ WriteLogLine(\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4}{EServerLogLevel}}\ level,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *category,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}})}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00085}00085\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00086}00086\ \ \ \ \ \textcolor{keywordflow}{if}\ (!ShouldLog(level))}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00087}00087\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00089}00089\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00091}00091\ \ \ \ \ \doxymbox{\hyperlink{linenoise_8c_afde4981fbd308170001617233cd8ee48}{linenoiseExternalWriteBegin}}();}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00093}00093\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *safeCategory\ =\ NormalizeCategory(category);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00094}00094\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *safeMessage\ =\ (\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}}\ !=\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})\ ?\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}}\ :\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00096}00096\ \ \ \ \ \textcolor{keywordtype}{char}\ timestamp[32]\ =\ \{\};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00097}00097\ \ \ \ \ BuildTimestamp(timestamp,\ \textcolor{keyword}{sizeof}(timestamp));}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00099}00099\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ stdoutHandle\ =\ GetStdHandle(STD\_OUTPUT\_HANDLE);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00100}00100\ \ \ \ \ CONSOLE\_SCREEN\_BUFFER\_INFO\ originalInfo;}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00101}00101\ \ \ \ \ \textcolor{keywordtype}{bool}\ hasColorConsole\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00102}00102\ \ \ \ \ \textcolor{keywordflow}{if}\ (stdoutHandle\ !=\ \doxymbox{\hyperlink{_orbis_stubs_8h_a5fdc7facea201bfce4ad308105f88d0c}{INVALID\_HANDLE\_VALUE}}\ \&\&\ stdoutHandle\ !=\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00103}00103\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (GetConsoleScreenBufferInfo(stdoutHandle,\ \&originalInfo))}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ hasColorConsole\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ SetConsoleTextAttribute(stdoutHandle,\ LogLevelToColor(level));}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00109}00109\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00111}00111\ \ \ \ \ printf(}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}[\%s][\%s][\%s]\ \%s\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ timestamp,}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ LogLevelToString(level),}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ safeCategory,}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ safeMessage);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00117}00117\ \ \ \ \ fflush(stdout);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00119}00119\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasColorConsole)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00120}00120\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ SetConsoleTextAttribute(stdoutHandle,\ originalInfo.wAttributes);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00122}00122\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00124}00124\ \ \ \ \ \doxymbox{\hyperlink{linenoise_8c_a8edfd3efae1980de0b5b93d1f65d5e46}{linenoiseExternalWriteEnd}}();}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00125}00125\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00127}00127\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ WriteLogLineV(\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4}{EServerLogLevel}}\ level,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *category,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ va\_list\ args)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00128}00128\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00129}00129\ \ \ \ \ \textcolor{keywordtype}{char}\ messageBuffer[2048]\ =\ \{\};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00130}00130\ \ \ \ \ \textcolor{keywordflow}{if}\ (format\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00131}00131\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ WriteLogLine(level,\ category,\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00134}00134\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00136}00136\ \ \ \ \ vsnprintf\_s(messageBuffer,\ \textcolor{keyword}{sizeof}(messageBuffer),\ \_TRUNCATE,\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00137}00137\ \ \ \ \ WriteLogLine(level,\ category,\ messageBuffer);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00138}00138\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00140}\doxymbox{\hyperlink{namespace_server_runtime_a357666329832dcb87a61a8d01db2ffb7}{00140}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_a357666329832dcb87a61a8d01db2ffb7}{TryParseServerLogLevel}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *value,\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4}{EServerLogLevel}}\ *outLevel)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00141}00141\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00142}00142\ \ \ \ \ \textcolor{keywordflow}{if}\ (value\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ ||\ outLevel\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00143}00143\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00145}00145\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00147}00147\ \ \ \ \ \textcolor{keywordflow}{if}\ (\_stricmp(value,\ \textcolor{stringliteral}{"{}debug"{}})\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00148}00148\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ *outLevel\ =\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a688e1bf7bb60e4e8b130cd2cb40b8f8f}{eServerLogLevel\_Debug}};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00151}00151\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00152}00152\ \ \ \ \ \textcolor{keywordflow}{if}\ (\_stricmp(value,\ \textcolor{stringliteral}{"{}info"{}})\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00153}00153\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ *outLevel\ =\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a00515b521a7bd2b7f527f09030636cef}{eServerLogLevel\_Info}};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00156}00156\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00157}00157\ \ \ \ \ \textcolor{keywordflow}{if}\ (\_stricmp(value,\ \textcolor{stringliteral}{"{}warn"{}})\ ==\ 0\ ||\ \_stricmp(value,\ \textcolor{stringliteral}{"{}warning"{}})\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00158}00158\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ *outLevel\ =\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a9dc417484e537ec6149b3a04d0fca6fa}{eServerLogLevel\_Warn}};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00161}00161\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00162}00162\ \ \ \ \ \textcolor{keywordflow}{if}\ (\_stricmp(value,\ \textcolor{stringliteral}{"{}error"{}})\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00163}00163\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ *outLevel\ =\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4ab6ddca4b8bef582cf87ceae8a6b33a9b}{eServerLogLevel\_Error}};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00166}00166\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00168}00168\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00169}00169\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00171}\doxymbox{\hyperlink{namespace_server_runtime_a35619f65be2e711bb7c690925acf6653}{00171}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_a35619f65be2e711bb7c690925acf6653}{SetServerLogLevel}}(\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4}{EServerLogLevel}}\ level)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00172}00172\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00173}00173\ \ \ \ \ \textcolor{keywordflow}{if}\ (level\ <\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a688e1bf7bb60e4e8b130cd2cb40b8f8f}{eServerLogLevel\_Debug}})}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00174}00174\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ level\ =\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a688e1bf7bb60e4e8b130cd2cb40b8f8f}{eServerLogLevel\_Debug}};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00176}00176\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00177}00177\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (level\ >\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4ab6ddca4b8bef582cf87ceae8a6b33a9b}{eServerLogLevel\_Error}})}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00178}00178\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ level\ =\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4ab6ddca4b8bef582cf87ceae8a6b33a9b}{eServerLogLevel\_Error}};}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00180}00180\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00182}00182\ \ \ \ \ g\_minLogLevel\ =\ (\doxymbox{\hyperlink{_orbis_types_8h_a9154c0d0c21af4686624543215b4e5f2}{LONG}})level;}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00183}00183\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00184}00184\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00185}\doxymbox{\hyperlink{namespace_server_runtime_a49110b0338c4bc1ed92ca13d3dc545af}{00185}}\ \doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4}{EServerLogLevel}}\ \doxymbox{\hyperlink{namespace_server_runtime_a49110b0338c4bc1ed92ca13d3dc545af}{GetServerLogLevel}}()}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00186}00186\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00187}00187\ \ \ \ \ \textcolor{keywordflow}{return}\ (\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4}{EServerLogLevel}})g\_minLogLevel;}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00188}00188\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00190}\doxymbox{\hyperlink{namespace_server_runtime_aa41088bdf5bbb4fb52728413c86c926a}{00190}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_aa41088bdf5bbb4fb52728413c86c926a}{LogDebug}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *category,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}})}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00191}00191\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00192}00192\ \ \ \ \ WriteLogLine(\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a688e1bf7bb60e4e8b130cd2cb40b8f8f}{eServerLogLevel\_Debug}},\ category,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}});}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00193}00193\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00195}\doxymbox{\hyperlink{namespace_server_runtime_ac3802dee40d331a02f5d8fbc38bee04c}{00195}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_ac3802dee40d331a02f5d8fbc38bee04c}{LogInfo}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *category,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}})}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00196}00196\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00197}00197\ \ \ \ \ WriteLogLine(\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a00515b521a7bd2b7f527f09030636cef}{eServerLogLevel\_Info}},\ category,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}});}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00198}00198\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00199}00199\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00200}\doxymbox{\hyperlink{namespace_server_runtime_a75985b6b27a3e2b9f496b84ccccc262b}{00200}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_a75985b6b27a3e2b9f496b84ccccc262b}{LogWarn}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *category,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}})}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00201}00201\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00202}00202\ \ \ \ \ WriteLogLine(\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a9dc417484e537ec6149b3a04d0fca6fa}{eServerLogLevel\_Warn}},\ category,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}});}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00203}00203\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00204}00204\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00205}\doxymbox{\hyperlink{namespace_server_runtime_a39f080ac7b9e7090f81b8823f7920655}{00205}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_a39f080ac7b9e7090f81b8823f7920655}{LogError}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *category,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}})}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00206}00206\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00207}00207\ \ \ \ \ WriteLogLine(\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4ab6ddca4b8bef582cf87ceae8a6b33a9b}{eServerLogLevel\_Error}},\ category,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}});}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00208}00208\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00210}\doxymbox{\hyperlink{namespace_server_runtime_a05c70c22e29e6f2a38d9431f2eecae0a}{00210}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_a05c70c22e29e6f2a38d9431f2eecae0a}{LogDebugf}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *category,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00211}00211\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00212}00212\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00213}00213\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00214}00214\ \ \ \ \ WriteLogLineV(\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a688e1bf7bb60e4e8b130cd2cb40b8f8f}{eServerLogLevel\_Debug}},\ category,\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00215}00215\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00216}00216\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00218}\doxymbox{\hyperlink{namespace_server_runtime_a27b5f62791fd5c61710ede777fb91b57}{00218}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_a27b5f62791fd5c61710ede777fb91b57}{LogInfof}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *category,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00219}00219\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00220}00220\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00221}00221\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00222}00222\ \ \ \ \ WriteLogLineV(\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a00515b521a7bd2b7f527f09030636cef}{eServerLogLevel\_Info}},\ category,\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00223}00223\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00224}00224\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00225}00225\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00226}\doxymbox{\hyperlink{namespace_server_runtime_a7a4113b5b4ee3e0eb11d1d8447359ef8}{00226}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_a7a4113b5b4ee3e0eb11d1d8447359ef8}{LogWarnf}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *category,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00227}00227\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00228}00228\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00229}00229\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00230}00230\ \ \ \ \ WriteLogLineV(\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4a9dc417484e537ec6149b3a04d0fca6fa}{eServerLogLevel\_Warn}},\ category,\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00231}00231\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00232}00232\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00233}00233\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00234}\doxymbox{\hyperlink{namespace_server_runtime_a12182c5c96eecfcfbe426bcc97eb29ad}{00234}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_a12182c5c96eecfcfbe426bcc97eb29ad}{LogErrorf}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *category,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00235}00235\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00236}00236\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00237}00237\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00238}00238\ \ \ \ \ WriteLogLineV(\doxymbox{\hyperlink{namespace_server_runtime_a594a548fec739070824f9a584ba4ded4ab6ddca4b8bef582cf87ceae8a6b33a9b}{eServerLogLevel\_Error}},\ category,\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00239}00239\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00240}00240\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00242}\doxymbox{\hyperlink{namespace_server_runtime_a1fb9d1fe9e19c0485419b2e7a63bae0c}{00242}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_a1fb9d1fe9e19c0485419b2e7a63bae0c}{LogStartupStep}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}})}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00243}00243\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00244}00244\ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_ac3802dee40d331a02f5d8fbc38bee04c}{LogInfo}}(\textcolor{stringliteral}{"{}startup"{}},\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}});}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00245}00245\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00247}\doxymbox{\hyperlink{namespace_server_runtime_a1a74f4df0581b2bcbdf7a36291cf27f6}{00247}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_a1a74f4df0581b2bcbdf7a36291cf27f6}{LogWorldIO}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}})}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00248}00248\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00249}00249\ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_ac3802dee40d331a02f5d8fbc38bee04c}{LogInfo}}(\textcolor{stringliteral}{"{}world-\/io"{}},\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}});}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00250}00250\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00251}00251\ }
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00252}\doxymbox{\hyperlink{namespace_server_runtime_aa097dcd7b8885565d00589fa44586fcd}{00252}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_aa097dcd7b8885565d00589fa44586fcd}{LogWorldName}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *prefix,\ \textcolor{keyword}{const}\ std::wstring\ \&name)}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00253}00253\ \{}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00254}00254\ \ \ \ \ std::string\ utf8\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a2d940afc106d1a397e2077009458d3b9}{StringUtils::WideToUtf8}}(name);}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00255}00255\ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_a27b5f62791fd5c61710ede777fb91b57}{LogInfof}}(\textcolor{stringliteral}{"{}world-\/io"{}},\ \textcolor{stringliteral}{"{}\%s:\ \%s"{}},\ (prefix\ !=\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})\ ?\ prefix\ :\ \textcolor{stringliteral}{"{}name"{}},\ utf8.c\_str());}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00256}00256\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00257}00257\ \}}
+\DoxyCodeLine{\Hypertarget{_server_logger_8cpp_source_l00258}00258\ }
+
+\end{DoxyCode}

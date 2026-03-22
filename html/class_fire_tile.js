@@ -1,0 +1,28 @@
+var class_fire_tile =
+[
+    [ "FireTile", "class_fire_tile.html#ad496b71923a9bf9d2b3085204cc6b711", null ],
+    [ "~FireTile", "class_fire_tile.html#a7811b069eefd98ba18afef82a0f56513", null ],
+    [ "animateTick", "class_fire_tile.html#aa6149688dfa4abe95b5f04c7ae76eb2c", null ],
+    [ "blocksLight", "class_fire_tile.html#adc262fcfc8512a60beb3a8f0af49589b", null ],
+    [ "canBurn", "class_fire_tile.html#aece19606fa7e470fa794a6a4e8ec8bc3", null ],
+    [ "canInstantlyTick", "class_fire_tile.html#aa8002dba8482e9e3044e56ee78340678", null ],
+    [ "getAABB", "class_fire_tile.html#ace6ca3145c721184f8f0fc08f0328077", null ],
+    [ "getFlammability", "class_fire_tile.html#a7b96dfed484b79695141327c7ca21f2c", null ],
+    [ "getRenderShape", "class_fire_tile.html#a5fd5f26157a6c8883ea721b7e7db2e92", null ],
+    [ "getResourceCount", "class_fire_tile.html#a355c92ecbfd03881e39e76d50dc2727c", null ],
+    [ "getTexture", "class_fire_tile.html#a991eee2137067416eee678b64bb8088d", null ],
+    [ "getTextureLayer", "class_fire_tile.html#ace89884b1604f962a9b21032fa04aaa6", null ],
+    [ "getTickDelay", "class_fire_tile.html#a71f33e21147c32dd2bbd6cd2076db35d", null ],
+    [ "init", "class_fire_tile.html#a2d6031ac9be13e594773b9f4b799be6a", null ],
+    [ "isCubeShaped", "class_fire_tile.html#ad2be4d376ca81006530776d16077a97c", null ],
+    [ "isFlammable", "class_fire_tile.html#a64ed9e57742f8241cb0172a09fad8617", null ],
+    [ "isSolidRender", "class_fire_tile.html#a97ce3f0dabc722091e7e0b1afab22a9a", null ],
+    [ "mayPick", "class_fire_tile.html#acce913eb6fc8b33afd253692ae5bfe93", null ],
+    [ "mayPlace", "class_fire_tile.html#aa557dd2a19a078746325565a6ce5ca2e", null ],
+    [ "neighborChanged", "class_fire_tile.html#acf0b9741260cce62384d14df1b11706d", null ],
+    [ "onPlace", "class_fire_tile.html#aa5d69bc37de7d8339d2e1a7913b5b892", null ],
+    [ "registerIcons", "class_fire_tile.html#ab815080be19e874e9110ce9faba1fbdd", null ],
+    [ "tick", "class_fire_tile.html#a251cc65da76205162e8cb73a7a7e6365", null ],
+    [ "ChunkRebuildData", "class_fire_tile.html#aaa154d56c650ce85fa22c7d247f270ee", null ],
+    [ "Tile", "class_fire_tile.html#a8a6c6f6de547e6f39d3212d1f4d49a65", null ]
+];

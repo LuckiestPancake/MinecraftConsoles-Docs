@@ -1,0 +1,451 @@
+\doxysection{Access.\+cpp}
+\hypertarget{_access_8cpp_source}{}\label{_access_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/Access/Access.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/Access/Access.cpp}}
+\doxymbox{\hyperlink{_access_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_access_8h}{Access.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_utils_8h}{..\(\backslash\)Common\(\backslash\)StringUtils.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_logger_8h}{..\(\backslash\)ServerLogger.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00011}\doxymbox{\hyperlink{namespace_server_runtime}{00011}}\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_server_runtime}{ServerRuntime}}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00012}00012\ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00013}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access}{00013}}\ \ \ \ \ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_server_runtime_1_1_access}{Access}}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00014}00014\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00015}00015\ \ \ \ \ \ \ \ \ \textcolor{keyword}{namespace}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00016}00016\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00024}00024\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }AccessState}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00025}00025\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::mutex\ stateLock;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::mutex\ writeLock;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00028}00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ banManager;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<WhitelistManager>\ whitelistManager;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00030}00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ whitelistEnabled\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ AccessState\ g\_accessState;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ std::shared\_ptr<BanManager>\ GetBanManagerSnapshot()}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_accessState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_accessState.banManager;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ PublishBanManagerSnapshot(\textcolor{keyword}{const}\ std::shared\_ptr<BanManager>\ \&banManager)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_accessState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\_accessState.banManager\ =\ banManager;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ std::shared\_ptr<WhitelistManager>\ GetWhitelistManagerSnapshot()}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_accessState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_accessState.whitelistManager;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ PublishWhitelistManagerSnapshot(\textcolor{keyword}{const}\ std::shared\_ptr<WhitelistManager>\ \&whitelistManager)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_accessState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\_accessState.whitelistManager\ =\ whitelistManager;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00068}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a3867261be09dd1f4c9e986b4df4683e4}{00068}}\ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a3867261be09dd1f4c9e986b4df4683e4}{FormatXuid}}(\doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\ xuid)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (xuid\ ==\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ buffer[32]\ =\ \{\};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ sprintf\_s(buffer,\ \textcolor{keyword}{sizeof}(buffer),\ \textcolor{stringliteral}{"{}0x\%016llx"{}},\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})xuid);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ buffer;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00080}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_acfc477a912a932be8253ec2fd1a3e617}{00080}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_acfc477a912a932be8253ec2fd1a3e617}{TryParseXuid}}(\textcolor{keyword}{const}\ std::string\ \&text,\ \doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\ *outXuid)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (outXuid\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ parsed\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a7b3e3e12111b9c6f756ee5aa62ac657e}{StringUtils::TryParseUnsignedLongLong}}(text,\ \&parsed)\ ||\ parsed\ ==\ 0ULL)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ *outXuid\ =\ (\doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}})parsed;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00097}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a7fa8ecc9180dd4c5e0a326b918b6f762}{00097}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a7fa8ecc9180dd4c5e0a326b918b6f762}{Initialize}}(\textcolor{keyword}{const}\ std::string\ \&baseDirectory,\ \textcolor{keywordtype}{bool}\ whitelistEnabled)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ writeLock(g\_accessState.writeLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Build\ the\ replacement\ manager\ privately\ so\ readers\ keep\ using\ the\ last\ published\ snapshot\ during\ disk\ I/O.}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ banManager\ =\ std::make\_shared<BanManager>(baseDirectory);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<WhitelistManager>\ whitelistManager\ =\ std::make\_shared<WhitelistManager>(baseDirectory);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!banManager-\/>EnsureBanFilesExist())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_a39f080ac7b9e7090f81b8823f7920655}{LogError}}(\textcolor{stringliteral}{"{}access"{}},\ \textcolor{stringliteral}{"{}failed\ to\ ensure\ dedicated\ server\ ban\ files\ exist"{}});}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!whitelistManager-\/>EnsureWhitelistFileExists())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_a39f080ac7b9e7090f81b8823f7920655}{LogError}}(\textcolor{stringliteral}{"{}access"{}},\ \textcolor{stringliteral}{"{}failed\ to\ ensure\ dedicated\ server\ whitelist\ file\ exists"{}});}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!banManager-\/>Reload())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_a39f080ac7b9e7090f81b8823f7920655}{LogError}}(\textcolor{stringliteral}{"{}access"{}},\ \textcolor{stringliteral}{"{}failed\ to\ load\ dedicated\ server\ ban\ files"{}});}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!whitelistManager-\/>Reload())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_a39f080ac7b9e7090f81b8823f7920655}{LogError}}(\textcolor{stringliteral}{"{}access"{}},\ \textcolor{stringliteral}{"{}failed\ to\ load\ dedicated\ server\ whitelist\ file"{}});}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<BannedPlayerEntry>\ playerEntries;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<BannedIpEntry>\ ipEntries;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<WhitelistedPlayerEntry>\ whitelistEntries;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ banManager-\/>SnapshotBannedPlayers(\&playerEntries);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ banManager-\/>SnapshotBannedIps(\&ipEntries);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ whitelistManager-\/>SnapshotWhitelistedPlayers(\&whitelistEntries);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ PublishBanManagerSnapshot(banManager);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ PublishWhitelistManagerSnapshot(whitelistManager);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_accessState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\_accessState.whitelistEnabled\ =\ whitelistEnabled;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_a27b5f62791fd5c61710ede777fb91b57}{LogInfof}}(}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}access"{}},}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}loaded\ \%u\ player\ bans,\ \%u\ ip\ bans,\ and\ \%u\ whitelist\ entries\ (whitelist=\%s)"{}},}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned})playerEntries.size(),}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned})ipEntries.size(),}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned})whitelistEntries.size(),}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ whitelistEnabled\ ?\ \textcolor{stringliteral}{"{}enabled"{}}\ :\ \textcolor{stringliteral}{"{}disabled"{}});}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00149}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a7ecad1debcb6d6d6148839ea15db90e1}{00149}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a7ecad1debcb6d6d6148839ea15db90e1}{Shutdown}}()}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ writeLock(g\_accessState.writeLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ PublishBanManagerSnapshot(std::shared\_ptr<BanManager>\{\});}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ PublishWhitelistManagerSnapshot(std::shared\_ptr<WhitelistManager>\{\});}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_accessState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ g\_accessState.whitelistEnabled\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00158}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a6014d7ed330ecdfc2d28a500df829ff0}{00158}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a6014d7ed330ecdfc2d28a500df829ff0}{Reload}}()}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ writeLock(g\_accessState.writeLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ current\ =\ GetBanManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<WhitelistManager>\ currentWhitelist\ =\ GetWhitelistManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\ ==\ \textcolor{keyword}{nullptr}\ ||\ currentWhitelist\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ banManager\ =\ std::make\_shared<BanManager>(*current);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<WhitelistManager>\ whitelistManager\ =\ std::make\_shared<WhitelistManager>(*currentWhitelist);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!banManager-\/>EnsureBanFilesExist())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!whitelistManager-\/>EnsureWhitelistFileExists())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!banManager-\/>Reload())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!whitelistManager-\/>Reload())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ PublishBanManagerSnapshot(banManager);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ PublishWhitelistManagerSnapshot(whitelistManager);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00192}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a5809aaebae713c6b33f872a06296f592}{00192}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a5809aaebae713c6b33f872a06296f592}{ReloadWhitelist}}()}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ writeLock(g\_accessState.writeLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ current\ =\ GetWhitelistManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ whitelistManager\ =\ std::make\_shared<WhitelistManager>(*current);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!whitelistManager-\/>EnsureWhitelistFileExists())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!whitelistManager-\/>Reload())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ PublishWhitelistManagerSnapshot(whitelistManager);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00214}00214\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00215}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a451d1c19b25ba7c801edebf805d1bb5e}{00215}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a451d1c19b25ba7c801edebf805d1bb5e}{IsInitialized}}()}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ GetBanManagerSnapshot()\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ GetWhitelistManagerSnapshot()\ !=\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00220}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_aee0f4b588e42b2f07e22fdf167c85284}{00220}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_aee0f4b588e42b2f07e22fdf167c85284}{IsWhitelistEnabled}}()}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_accessState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ g\_accessState.whitelistEnabled;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00225}00225\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00226}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a0cc116db1b9062dfab00ae8cb627c7b1}{00226}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a0cc116db1b9062dfab00ae8cb627c7b1}{SetWhitelistEnabled}}(\textcolor{keywordtype}{bool}\ enabled)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ writeLock(g\_accessState.writeLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_accessState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ g\_accessState.whitelistEnabled\ =\ enabled;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00232}00232\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00233}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_acf4b09d811903bbff22947ae0f08017b}{00233}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_acf4b09d811903bbff22947ae0f08017b}{IsPlayerBanned}}(\doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\ xuid)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ formatted\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a3867261be09dd1f4c9e986b4df4683e4}{FormatXuid}}(xuid);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (formatted.empty())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ banManager\ =\ GetBanManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (banManager\ !=\ \textcolor{keyword}{nullptr})\ ?\ banManager-\/>IsPlayerBannedByXuid(formatted)\ :\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00243}00243\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00244}00244\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00245}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a0fe0e54ef10addd42fdc1d75d9ee94ef}{00245}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a0fe0e54ef10addd42fdc1d75d9ee94ef}{IsIpBanned}}(\textcolor{keyword}{const}\ std::string\ \&ip)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ banManager\ =\ GetBanManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (banManager\ !=\ \textcolor{keyword}{nullptr})\ ?\ banManager-\/>IsIpBanned(ip)\ :\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00251}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a904b7586a18a47258dd4486c60c9d4fa}{00251}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a904b7586a18a47258dd4486c60c9d4fa}{IsPlayerWhitelisted}}(\doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\ xuid)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00252}00252\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ formatted\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a3867261be09dd1f4c9e986b4df4683e4}{FormatXuid}}(xuid);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (formatted.empty())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00258}00258\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<WhitelistManager>\ whitelistManager\ =\ GetWhitelistManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (whitelistManager\ !=\ \textcolor{keyword}{nullptr})\ ?\ whitelistManager-\/>IsPlayerWhitelistedByXuid(formatted)\ :\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00261}00261\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00262}00262\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00263}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_af704f9faac1263f28bd16466201ea69a}{00263}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_af704f9faac1263f28bd16466201ea69a}{AddPlayerBan}}(\doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\ xuid,\ \textcolor{keyword}{const}\ std::string\ \&name,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_ban_metadata}{BanMetadata}}\ \&metadata)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ formatted\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a3867261be09dd1f4c9e986b4df4683e4}{FormatXuid}}(xuid);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (formatted.empty())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00270}00270\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ writeLock(g\_accessState.writeLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ current\ =\ GetBanManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ banManager\ =\ std::make\_shared<BanManager>(*current);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_banned_player_entry}{BannedPlayerEntry}}\ entry;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ entry.\doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_banned_player_entry_a78b5169e8f5a95784ebb0fbbef6ea7da}{xuid}}\ =\ formatted;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ entry.\doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_banned_player_entry_ab5f05b71c24280d3f3ef6ed63587a62e}{name}}\ =\ name;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ entry.\doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_banned_player_entry_ae8736b3f811557f27a5156e434a09f49}{metadata}}\ =\ metadata;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!banManager-\/>AddPlayerBan(entry))}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00284}00284\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00286}00286\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00287}00287\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00288}00288\ \ \ \ \ \ \ \ \ \ \ \ \ PublishBanManagerSnapshot(banManager);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00290}00290\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00291}00291\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00292}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a518bef475d237a3c8910de14c078d06d}{00292}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a518bef475d237a3c8910de14c078d06d}{AddIpBan}}(\textcolor{keyword}{const}\ std::string\ \&ip,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_ban_metadata}{BanMetadata}}\ \&metadata)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00293}00293\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ writeLock(g\_accessState.writeLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ current\ =\ GetBanManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ banManager\ =\ std::make\_shared<BanManager>(*current);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_banned_ip_entry}{BannedIpEntry}}\ entry;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ entry.\doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_banned_ip_entry_a5d445daf2e990945661f3574f497685a}{ip}}\ =\ ip;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ entry.\doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_banned_ip_entry_a1804b54dca938f28e5be9b8773df6f71}{metadata}}\ =\ metadata;}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!banManager-\/>AddIpBan(entry))}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00309}00309\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ PublishBanManagerSnapshot(banManager);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00314}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a58ce859d0184de9a8612fad8f5622945}{00314}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a58ce859d0184de9a8612fad8f5622945}{RemovePlayerBan}}(\doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\ xuid)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ formatted\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a3867261be09dd1f4c9e986b4df4683e4}{FormatXuid}}(xuid);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (formatted.empty())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ writeLock(g\_accessState.writeLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ current\ =\ GetBanManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ banManager\ =\ std::make\_shared<BanManager>(*current);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!banManager-\/>RemovePlayerBanByXuid(formatted))}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00334}00334\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ PublishBanManagerSnapshot(banManager);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00338}00338\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00339}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a1352b646d3007b967b7c128f0bb60db2}{00339}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a1352b646d3007b967b7c128f0bb60db2}{RemoveIpBan}}(\textcolor{keyword}{const}\ std::string\ \&ip)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ writeLock(g\_accessState.writeLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ current\ =\ GetBanManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00347}00347\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ banManager\ =\ std::make\_shared<BanManager>(*current);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!banManager-\/>RemoveIpBan(ip))}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00353}00353\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ PublishBanManagerSnapshot(banManager);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00357}00357\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00358}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a9f5b0df46ee3b1771f551c46d363b778}{00358}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a9f5b0df46ee3b1771f551c46d363b778}{AddWhitelistedPlayer}}(\doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\ xuid,\ \textcolor{keyword}{const}\ std::string\ \&name,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_whitelist_metadata}{WhitelistMetadata}}\ \&metadata)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ formatted\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a3867261be09dd1f4c9e986b4df4683e4}{FormatXuid}}(xuid);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (formatted.empty())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00365}00365\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ writeLock(g\_accessState.writeLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ current\ =\ GetWhitelistManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00372}00372\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ whitelistManager\ =\ std::make\_shared<WhitelistManager>(*current);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_whitelisted_player_entry}{WhitelistedPlayerEntry}}\ entry\ =\ \{\ formatted,\ name,\ metadata\ \};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!whitelistManager-\/>AddPlayer(entry))}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00378}00378\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00379}00379\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ \ \ \ \ PublishWhitelistManagerSnapshot(whitelistManager);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00382}00382\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00383}00383\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00384}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_accf97f5ad2c40675aa41df89cf8c6669}{00384}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_accf97f5ad2c40675aa41df89cf8c6669}{RemoveWhitelistedPlayer}}(\doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\ xuid)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ formatted\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a3867261be09dd1f4c9e986b4df4683e4}{FormatXuid}}(xuid);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (formatted.empty())}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00391}00391\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ writeLock(g\_accessState.writeLock);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00393}00393\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ current\ =\ GetWhitelistManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (current\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00397}00397\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00398}00398\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00399}00399\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ whitelistManager\ =\ std::make\_shared<WhitelistManager>(*current);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!whitelistManager-\/>RemovePlayerByXuid(formatted))}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00403}00403\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00405}00405\ \ \ \ \ \ \ \ \ \ \ \ \ PublishWhitelistManagerSnapshot(whitelistManager);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00406}00406\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00407}00407\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00408}00408\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00409}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a1a6e96ad4c13538211472f0b13890a3b}{00409}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a1a6e96ad4c13538211472f0b13890a3b}{SnapshotBannedPlayers}}(std::vector<BannedPlayerEntry>\ *outEntries)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00410}00410\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00411}00411\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (outEntries\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00412}00412\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00413}00413\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00415}00415\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00416}00416\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ banManager\ =\ GetBanManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00417}00417\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (banManager\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00418}00418\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ outEntries-\/>clear();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00420}00420\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00421}00421\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00422}00422\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00423}00423\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ banManager-\/>SnapshotBannedPlayers(outEntries);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00424}00424\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00425}00425\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00426}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_ae62f8ae268e16cbc8c2233fad46e24ed}{00426}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_ae62f8ae268e16cbc8c2233fad46e24ed}{SnapshotBannedIps}}(std::vector<BannedIpEntry>\ *outEntries)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00427}00427\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (outEntries\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00431}00431\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00432}00432\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00433}00433\ \ \ \ \ \ \ \ \ \ \ \ \ std::shared\_ptr<BanManager>\ banManager\ =\ GetBanManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00434}00434\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (banManager\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00435}00435\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00436}00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ outEntries-\/>clear();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00437}00437\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00439}00439\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ banManager-\/>SnapshotBannedIps(outEntries);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00441}00441\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00442}00442\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00443}\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_ac99ec812eb68bc0cf12990cac0e8d965}{00443}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_ac99ec812eb68bc0cf12990cac0e8d965}{SnapshotWhitelistedPlayers}}(std::vector<WhitelistedPlayerEntry>\ *outEntries)}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00444}00444\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00445}00445\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (outEntries\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00446}00446\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00447}00447\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00448}00448\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00449}00449\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00450}00450\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ whitelistManager\ =\ GetWhitelistManagerSnapshot();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00451}00451\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (whitelistManager\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00452}00452\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00453}00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ outEntries-\/>clear();}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00454}00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00455}00455\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00456}00456\ }
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00457}00457\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ whitelistManager-\/>SnapshotWhitelistedPlayers(outEntries);}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00458}00458\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00459}00459\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_access_8cpp_source_l00460}00460\ \}}
+
+\end{DoxyCode}

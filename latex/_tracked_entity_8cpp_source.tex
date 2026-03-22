@@ -1,0 +1,818 @@
+\doxysection{Tracked\+Entity.\+cpp}
+\hypertarget{_tracked_entity_8cpp_source}{}\label{_tracked_entity_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/TrackedEntity.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/TrackedEntity.cpp}}
+\doxymbox{\hyperlink{_tracked_entity_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_client_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_tracked_entity_8h}{TrackedEntity.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_player_8h}{ServerPlayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_player_connection_8h}{PlayerConnection.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_mth_8h}{..\(\backslash\)Minecraft.World\(\backslash\)Mth.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8item_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8monster_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.monster.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8player_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.player.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8animal_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.animal.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8global_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.global.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8projectile_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.projectile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8network_8packet_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.network.packet.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8saveddata_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.saveddata.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8attributes_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.ai.attributes.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00017}00017\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_server_8h}{MinecraftServer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00018}00018\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_level_8h}{ServerLevel.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00019}00019\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_player_list_8h}{PlayerList.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00020}00020\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_entity_tracker_8h}{EntityTracker.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00021}00021\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_player_chunk_map_8h}{PlayerChunkMap.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00022}00022\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{qnet_8h}{qnet.h}}>}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00024}00024\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00026}\doxymbox{\hyperlink{class_tracked_entity_aa22828b64ad5c337bea2438c9b0c9a2a}{00026}}\ \doxymbox{\hyperlink{class_tracked_entity_aa22828b64ad5c337bea2438c9b0c9a2a}{TrackedEntity::TrackedEntity}}(shared\_ptr<Entity>\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_tracked_entity_ab31d898dff707213407a2bdb96a15ef5}{range}},\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_tracked_entity_a33557a11a09f78b4f0096d874cec6320}{updateInterval}},\ \textcolor{keywordtype}{bool}\ trackDelta)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00027}00027\ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00028}00028\ \ \ \ \ \textcolor{comment}{//\ 4J\ added\ initialisers}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00029}00029\ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a1e52875cbbae07f016b0043b8183acbb}{xap}}\ =\ \doxymbox{\hyperlink{class_tracked_entity_ac8830552e94da3220463773e29abfbbb}{yap}}\ =\ \doxymbox{\hyperlink{class_tracked_entity_aaf91f74bd58d3f6e2a0559e98e4cc1d9}{zap}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00030}00030\ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a6cd23bc87c550cca5de4e26523f0e310}{tickCount}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00031}00031\ \ \ \ \ xpu\ =\ ypu\ =\ zpu\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00032}00032\ \ \ \ \ updatedPlayerVisibility\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00033}00033\ \ \ \ \ teleportDelay\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00034}00034\ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_ae1bbf8e2b7a393c3e621a0e24dc03225}{moved}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00035}00035\ \ \ \ \ wasRiding\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00037}00037\ \ \ \ \ this-\/>e\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00038}00038\ \ \ \ \ this-\/>range\ =\ \doxymbox{\hyperlink{class_tracked_entity_ab31d898dff707213407a2bdb96a15ef5}{range}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00039}00039\ \ \ \ \ this-\/>updateInterval\ =\ \doxymbox{\hyperlink{class_tracked_entity_a33557a11a09f78b4f0096d874cec6320}{updateInterval}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00040}00040\ \ \ \ \ this-\/>trackDelta\ =\ trackDelta;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00042}00042\ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}}\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>x\ *\ 32);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00043}00043\ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}}\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>y\ *\ 32);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00044}00044\ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}}\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>z\ *\ 32);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00046}00046\ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}}\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>yRot\ *\ 256\ /\ 360);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00047}00047\ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}}\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>xRot\ *\ 256\ /\ 360);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00048}00048\ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a6510146dfc144c8a748e971ccff892d8}{yHeadRotp}}\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>getYHeadRot()\ *\ 256\ /\ 360);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00049}00049\ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00051}\doxymbox{\hyperlink{_minecraft_server_8cpp_a2fee9ce5c6be8e067fa37c81cb35dd12}{00051}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_minecraft_server_8cpp_a2fee9ce5c6be8e067fa37c81cb35dd12}{c0a}}\ =\ 0,\ \doxymbox{\hyperlink{_minecraft_server_8cpp_ab504a775546055d0a61c83c193383d62}{c0b}}\ =\ 0,\ \doxymbox{\hyperlink{_minecraft_server_8cpp_ac77e0d52de9ae14f1afc64f37365e2e7}{c1a}}\ =\ 0,\ \doxymbox{\hyperlink{_minecraft_server_8cpp_ac8df1412a3e42017b9c96088e1a78466}{c1b}}\ =\ 0,\ \doxymbox{\hyperlink{_minecraft_server_8cpp_abe5e9aca408c43f18acd85d750897dbe}{c1c}}\ =\ 0,\ \doxymbox{\hyperlink{_minecraft_server_8cpp_ab05dad7ae8b4c6e51f72b4c2b16e5ad9}{c2a}}\ =\ 0,\ \doxymbox{\hyperlink{_minecraft_server_8cpp_aea5d6f350c372abbe7f8fc6df12c0c36}{c2b}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00053}\doxymbox{\hyperlink{class_tracked_entity_a6a49e06d986baa81cc93e92ffad37b44}{00053}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tracked_entity_a6a49e06d986baa81cc93e92ffad37b44}{TrackedEntity::tick}}(\doxymbox{\hyperlink{class_entity_tracker}{EntityTracker}}\ *\doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}},\ vector<shared\_ptr<Player>\ >\ *players)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00054}00054\ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00055}00055\ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_ae1bbf8e2b7a393c3e621a0e24dc03225}{moved}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00056}00056\ \ \ \ \ \textcolor{keywordflow}{if}\ (!updatedPlayerVisibility\ ||\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>distanceToSqr(xpu,\ ypu,\ zpu)\ >\ 4\ *\ 4)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00057}00057\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00058}00058\ \ \ \ \ \ \ \ \ xpu\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>x;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ ypu\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>y;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ zpu\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>z;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00061}00061\ \ \ \ \ \ \ \ \ updatedPlayerVisibility\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_ae1bbf8e2b7a393c3e621a0e24dc03225}{moved}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a2a4a6f8a26b7664581c5f44213148e25}{updatePlayers}}(\doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}},\ players);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00064}00064\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00066}00066\ \ \ \ \ \textcolor{keywordflow}{if}\ (lastRidingEntity\ !=\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>riding\ ||\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>riding\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{class_tracked_entity_a6cd23bc87c550cca5de4e26523f0e310}{tickCount}}\ \%\ (\doxymbox{\hyperlink{class_shared_constants_a170b00572bc783af06c9f0cda11f24c2}{SharedConstants::TICKS\_PER\_SECOND}}\ *\ 3)\ ==\ 0))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00067}00067\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ lastRidingEntity\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>riding;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a27582ee23e66a5ecb7b829d15d25398d}{broadcast}}(std::make\_shared<SetEntityLinkPacket>(\doxymbox{\hyperlink{class_set_entity_link_packet_ab47205fbd9f92553195edb0a2941fa92}{SetEntityLinkPacket::RIDING}},\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>riding));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00070}00070\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00072}00072\ \ \ \ \ \textcolor{comment}{//\ Moving\ forward\ \ special\ case\ for\ item\ frames}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00073}00073\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>GetType()==\ \doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6af799c4ded4e1e9fd79fc543d0e2c1a5a}{eTYPE\_ITEM\_FRAME}}\ \&\&\ \doxymbox{\hyperlink{class_tracked_entity_a6cd23bc87c550cca5de4e26523f0e310}{tickCount}}\ \%\ 10\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00074}00074\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ shared\_ptr<ItemFrame>\ \doxymbox{\hyperlink{gdraw__gl__shared_8inl_ae46c5d1d114efaa555061b464b630ec5}{frame}}\ =\ dynamic\_pointer\_cast<ItemFrame>\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ \doxymbox{\hyperlink{gdraw__gl__shared_8inl_ae46c5d1d114efaa555061b464b630ec5}{frame}}-\/>getItem();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getItem()-\/>id\ ==\ \doxymbox{\hyperlink{class_item_adaf35a2352c71adce38cdcc3ee7cd43e}{Item::map\_Id}}\ \&\&\ !\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>removed)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<MapItemSavedData>\ data\ =\ \doxymbox{\hyperlink{class_item_aeee00cd0673e952822347e34d6bb41e5}{Item::map}}-\/>getSavedData(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>level);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ it\ :\ *players)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<ServerPlayer>\ player\ =\ dynamic\_pointer\_cast<ServerPlayer>(it);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data-\/>tickCarriedBy(player,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!player-\/>removed\ \&\&\ player-\/>connection\ \&\&\ player-\/>connection-\/>countDelayedPackets()\ <=\ 5)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<Packet>\ packet\ =\ \doxymbox{\hyperlink{class_item_aeee00cd0673e952822347e34d6bb41e5}{Item::map}}-\/>getUpdatePacket(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>level,\ player);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (packet\ !=\ \textcolor{keyword}{nullptr})\ player-\/>connection-\/>send(packet);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ shared\_ptr<SynchedEntityData>\ entityData\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>getEntityData();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (entityData-\/>isDirty())}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a54abc7fd10f024d4037d840842148164}{broadcastAndSend}}(std::make\_shared<SetEntityDataPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ entityData,\ \textcolor{keyword}{false}));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00099}00099\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00100}00100\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_a6cd23bc87c550cca5de4e26523f0e310}{tickCount}}\ \%\ \doxymbox{\hyperlink{class_tracked_entity_a33557a11a09f78b4f0096d874cec6320}{updateInterval}}\ ==\ 0\ ||\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>hasImpulse\ ||\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>getEntityData()-\/>isDirty())}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00101}00101\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J:\ Moved\ this\ as\ it's\ shared}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ yRotn\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>yRot\ *\ 256\ /\ 360);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xRotn\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>xRot\ *\ 256\ /\ 360);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J:\ Changed\ rotation\ to\ be\ generally\ sent\ as\ a\ delta\ as\ well\ as\ position}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ yRota\ =\ yRotn\ -\/\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xRota\ =\ xRotn\ -\/\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>riding\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ teleportDelay++;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xn\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>x\ *\ 32.0);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ yn\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>y\ *\ 32.0);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ zn\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>z\ *\ 32.0);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xa\ =\ xn\ -\/\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ya\ =\ yn\ -\/\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ za\ =\ zn\ -\/\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<Packet>\ packet\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ this\ pos\ flag\ used\ to\ be\ set\ based\ on\ abs(xn)\ etc.\ but\ that\ just\ seems\ wrong}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ pos\ =\ abs(xa)\ >=\ TOLERANCE\_LEVEL\ ||\ abs(ya)\ >=\ TOLERANCE\_LEVEL\ ||\ abs(za)\ >=\ TOLERANCE\_LEVEL\ ||\ (\doxymbox{\hyperlink{class_tracked_entity_a6cd23bc87c550cca5de4e26523f0e310}{tickCount}}\ \%\ (\doxymbox{\hyperlink{class_shared_constants_a170b00572bc783af06c9f0cda11f24c2}{SharedConstants::TICKS\_PER\_SECOND}}\ *\ 3)\ ==\ 0);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Keep\ rotation\ deltas\ in\ +/-\/\ 180\ degree\ range}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ yRota\ >\ 127\ )\ yRota\ -\/=\ 256;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ yRota\ <\ -\/128\ )\ yRota\ +=\ 256;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ xRota\ >\ 127\ )\ xRota\ -\/=\ 256;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ xRota\ <\ -\/128\ )\ xRota\ +=\ 256;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ rot\ =\ abs(yRota)\ >=\ TOLERANCE\_LEVEL\ ||\ abs(xRota)\ >=\ TOLERANCE\_LEVEL;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J:\ Modified\ the\ following\ check.\ It\ was\ originally\ added\ by\ Mojang\ to\ address}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ certain\ unspecified\ issues\ with\ entity\ position.\ Turns\ out\ the\ issue\ effects\ a}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ variety\ of\ different\ entities\ so\ we've\ left\ it\ in\ and\ just\ added\ the\ new\ exceptions}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (so\ far\ just\ players)}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J:\ Original\ comment\ follows}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ Figure\ out\ how\ to\ fix\ this\ properly}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ skip\ first\ tick\ since\ position\ is\ sent\ in\ addEntity\ packet}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ FallingTile\ depends\ on\ this\ because\ it\ removes\ its\ source\ block\ in\ the\ first\ tick()}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_a6cd23bc87c550cca5de4e26523f0e310}{tickCount}}\ >\ 0\ ||\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a788717996dea974a2ee74759fde1c704}{eTYPE\_ARROW}})\ ||\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a81976c0b62a5e1b5bb0e672101ce8358}{eTYPE\_PLAYER}}))\ \textcolor{comment}{//\ 4J:\ Modifed,\ see\ above}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (xa\ <\ -\/128\ ||\ xa\ >=\ 128\ ||\ ya\ <\ -\/128\ ||\ ya\ >=\ 128\ ||\ za\ <\ -\/128\ ||\ za\ >=\ 128\ ||\ wasRiding}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ I\ fixed\ the\ initialisation\ of\ teleportDelay\ in\ the\ ctor,\ but\ we\ managed\ this\ far\ without\ out}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ and\ would\ prefer\ not\ to\ have\ all\ the\ extra\ traffix\ so\ ignore\ it}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Fix\ for\ \#9579\ -\/\ GAMEPLAY:\ Boats\ with\ a\ player\ in\ them\ slowly\ sink\ under\ the\ water\ over\ time,\ and\ with\ no\ player\ in\ them\ they\ float\ into\ the\ sky.}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ||\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>GetType()\ ==\ \doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a404355c534be02d37f0e7be5dc57bfd9}{eTYPE\_BOAT}}\ \&\&\ teleportDelay\ >\ 20\ *\ 20)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ teleportDelay\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ packet\ =\ std::make\_shared<TeleportEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ xn,\ yn,\ zn,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(yRotn),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(xRotn));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ printf("{}\%d:\ New\ teleport\ rot\ \%d\(\backslash\)n"{},e-\/>entityId,yRotn);}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}}\ =\ yRotn;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}}\ =\ xRotn;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pos\ \&\&\ rot)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ If\ the\ movement\ is\ small\ enough,\ and\ there's\ no\ xrot,\ then\ use\ the\ new\ smaller\ packets}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ xa\ >=\ -\/16\ )\ \&\&\ (\ xa\ <=\ 15\ )\ \&\&}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\ za\ >=\ -\/16\ )\ \&\&\ (\ za\ <=\ 15\ )\ \&\&}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\ ya\ >=\ -\/32\ )\ \&\&\ (\ ya\ <=\ 31\ )\ \&\&}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\ xRota\ ==\ 0\ ))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Clamp\ rotations\ that\ are\ too\ big}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ yRota\ <\ -\/16\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ yRota\ =\ -\/16;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ yRotn\ =\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}}\ +\ yRota;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ yRota\ >\ 15\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ yRota\ =\ 15;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ yRotn\ =\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}}\ +\ yRota;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 5\ bits\ each\ for\ x\ \&\ z,\ and\ 6\ for\ y}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ packet\ =\ std::make\_shared<MoveEntityPacketSmall::PosRot>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(xa),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(ya),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(za),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(yRota),\ 0);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_minecraft_server_8cpp_a2fee9ce5c6be8e067fa37c81cb35dd12}{c0a}}++;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ packet\ =\ std::make\_shared<MoveEntityPacket::PosRot>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(xa),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(ya),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(za),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(yRota),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(xRota));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ printf("{}\%d:\ New\ posrot\ \%d\ +\ \%d\ =\ \%d\(\backslash\)n"{},e-\/>entityId,yRotp,yRota,yRotn);}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_minecraft_server_8cpp_ab504a775546055d0a61c83c193383d62}{c0b}}++;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (pos)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ If\ the\ movement\ is\ small\ enough,\ then\ use\ the\ new\ smaller\ packets}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ xa\ >=\ -\/8\ )\ \&\&\ (\ xa\ <=\ 7\ )\ \&\&}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\ za\ >=\ -\/8\ )\ \&\&\ (\ za\ <=\ 7\ )\ \&\&}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\ ya\ >=\ -\/16\ )\ \&\&\ (\ ya\ <=\ 15\ )\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4\ bits\ each\ for\ x\ \&\ z,\ and\ 5\ for\ y}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ packet\ =\ std::make\_shared<MoveEntityPacketSmall::Pos>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(xa),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(ya),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(za));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_minecraft_server_8cpp_ac77e0d52de9ae14f1afc64f37365e2e7}{c1a}}++;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00203}00203\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ (\ xa\ >=\ -\/16\ )\ \&\&\ (\ xa\ <=\ 15\ )\ \&\&}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\ za\ >=\ -\/16\ )\ \&\&\ (\ za\ <=\ 15\ )\ \&\&}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\ ya\ >=\ -\/32\ )\ \&\&\ (\ ya\ <=\ 31\ )\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ use\ the\ packet\ with\ small\ packet\ with\ rotation\ if\ we\ can\ -\/\ 5\ bits\ each\ for\ x\ \&\ z,\ and\ 6\ for\ y\ -\/\ still\ a\ byte\ less\ than\ the\ alternative}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ packet\ =\ std::make\_shared<MoveEntityPacketSmall::PosRot>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(xa),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(ya),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(za),\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_minecraft_server_8cpp_ac8df1412a3e42017b9c96088e1a78466}{c1b}}++;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ packet\ =\ std::make\_shared<MoveEntityPacket::Pos>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(xa),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(ya),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(za));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_minecraft_server_8cpp_abe5e9aca408c43f18acd85d750897dbe}{c1c}}++;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (rot)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ If\ there's\ no\ x\ rotation,\ then\ use\ the\ new\ smaller\ packet\ type}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ xRota\ ==\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Clamp\ rotations\ that\ are\ too\ big}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ yRota\ <\ -\/16\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ yRota\ =\ -\/16;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ yRotn\ =\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}}\ +\ yRota;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ yRota\ >\ 15\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ yRota\ =\ 15;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ yRotn\ =\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}}\ +\ yRota;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ packet\ =\ std::make\_shared<MoveEntityPacketSmall::Rot>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(yRota),\ 0);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_minecraft_server_8cpp_ab05dad7ae8b4c6e51f72b4c2b16e5ad9}{c2a}}++;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ printf("{}\%d:\ New\ rot\ \%d\ +\ \%d\ =\ \%d\(\backslash\)n"{},e-\/>entityId,yRotp,yRota,yRotn);}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ packet\ =\ std::make\_shared<MoveEntityPacket::Rot>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(yRota),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}\textcolor{keyword}{>}(xRota));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_minecraft_server_8cpp_aea5d6f350c372abbe7f8fc6df12c0c36}{c2b}}++;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (trackDelta)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xad\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>xd\ -\/\ \doxymbox{\hyperlink{class_tracked_entity_a1e52875cbbae07f016b0043b8183acbb}{xap}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ yad\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>yd\ -\/\ \doxymbox{\hyperlink{class_tracked_entity_ac8830552e94da3220463773e29abfbbb}{yap}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ zad\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>zd\ -\/\ \doxymbox{\hyperlink{class_tracked_entity_aaf91f74bd58d3f6e2a0559e98e4cc1d9}{zap}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00252}00252\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ max\ =\ 0.02;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ diff\ =\ xad\ *\ xad\ +\ yad\ *\ yad\ +\ zad\ *\ zad;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00256}00256\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (diff\ >\ max\ *\ max\ ||\ (diff\ >\ 0\ \&\&\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>xd\ ==\ 0\ \&\&\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>yd\ ==\ 0\ \&\&\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>zd\ ==\ 0))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a1e52875cbbae07f016b0043b8183acbb}{xap}}\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>xd;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_ac8830552e94da3220463773e29abfbbb}{yap}}\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>yd;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_aaf91f74bd58d3f6e2a0559e98e4cc1d9}{zap}}\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>zd;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a27582ee23e66a5ecb7b829d15d25398d}{broadcast}}(std::make\_shared<SetEntityMotionPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \doxymbox{\hyperlink{class_tracked_entity_a1e52875cbbae07f016b0043b8183acbb}{xap}},\ \doxymbox{\hyperlink{class_tracked_entity_ac8830552e94da3220463773e29abfbbb}{yap}},\ \doxymbox{\hyperlink{class_tracked_entity_aaf91f74bd58d3f6e2a0559e98e4cc1d9}{zap}}));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00264}00264\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (packet\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a27582ee23e66a5ecb7b829d15d25398d}{broadcast}}(packet);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00271}00271\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ sendDirtyEntityData();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00273}00273\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pos)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}}\ =\ xn;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}}\ =\ yn;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}}\ =\ zn;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rot)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}}\ =\ yRotn;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}}\ =\ xRotn;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00284}00284\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00285}00285\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00286}00286\ \ \ \ \ \ \ \ \ \ \ \ \ wasRiding\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00287}00287\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00288}00288\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00289}00289\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ rot\ =\ abs(yRotn\ -\/\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}})\ >=\ TOLERANCE\_LEVEL\ ||\ abs(xRotn\ -\/\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}})\ >=\ TOLERANCE\_LEVEL;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rot)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J:\ Changed\ this\ to\ use\ deltas}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a27582ee23e66a5ecb7b829d15d25398d}{broadcast}}(std::make\_shared<MoveEntityPacket::Rot>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(yRota),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(xRota)));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}}\ =\ yRotn;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}}\ =\ xRotn;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00298}00298\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}}\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>x\ *\ 32.0);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}}\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>y\ *\ 32.0);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}}\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>z\ *\ 32.0);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00302}00302\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ sendDirtyEntityData();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00304}00304\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ wasRiding\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00307}00307\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ yHeadRot\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>getYHeadRot()\ *\ 256\ /\ 360);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00309}00309\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (abs(yHeadRot\ -\/\ \doxymbox{\hyperlink{class_tracked_entity_a6510146dfc144c8a748e971ccff892d8}{yHeadRotp}})\ >=\ TOLERANCE\_LEVEL)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a27582ee23e66a5ecb7b829d15d25398d}{broadcast}}(std::make\_shared<RotateHeadPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(yHeadRot)));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a6510146dfc144c8a748e971ccff892d8}{yHeadRotp}}\ =\ yHeadRot;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00314}00314\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>hasImpulse\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00316}00316\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00318}00318\ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a6cd23bc87c550cca5de4e26523f0e310}{tickCount}}++;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00319}00319\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00320}00320\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>hurtMarked)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00321}00321\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ broadcast(new\ AnimatePacket(e,\ AnimatePacket.HURT));}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00323}00323\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a54abc7fd10f024d4037d840842148164}{broadcastAndSend}}(std::make\_shared<SetEntityMotionPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>hurtMarked\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00325}00325\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00326}00326\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00327}00327\ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00329}00329\ \textcolor{keywordtype}{void}\ TrackedEntity::sendDirtyEntityData()}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00330}00330\ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00331}00331\ \ \ \ \ shared\_ptr<SynchedEntityData>\ entityData\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>getEntityData();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00332}00332\ \ \ \ \ \textcolor{keywordflow}{if}\ (entityData-\/>isDirty())}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00333}00333\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a54abc7fd10f024d4037d840842148164}{broadcastAndSend}}(std::make\_shared<SetEntityDataPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ entityData,\ \textcolor{keyword}{false}));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00335}00335\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00336}00336\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00337}00337\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aa0f4114708dacc2fc855b18a33863402}{eTYPE\_LIVINGENTITY}})\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00338}00338\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ shared\_ptr<LivingEntity>\ living\ =\ dynamic\_pointer\_cast<LivingEntity>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ ServersideAttributeMap\ *attributeMap\ =\ \textcolor{keyword}{static\_cast<}ServersideAttributeMap\ *\textcolor{keyword}{>}(living-\/>getAttributes());}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ unordered\_set<AttributeInstance\ *>\ *attributes\ =\ attributeMap-\/>\doxymbox{\hyperlink{class_serverside_attribute_map_a3b154af8180f5016f853a4491cf89d4b}{getDirtyAttributes}}();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00342}00342\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!attributes-\/>empty())}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00344}00344\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a54abc7fd10f024d4037d840842148164}{broadcastAndSend}}(std::make\_shared<UpdateAttributesPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ attributes));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00347}00347\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ attributes-\/>clear();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00349}00349\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00350}00350\ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00351}00351\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00352}\doxymbox{\hyperlink{class_tracked_entity_a27582ee23e66a5ecb7b829d15d25398d}{00352}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tracked_entity_a27582ee23e66a5ecb7b829d15d25398d}{TrackedEntity::broadcast}}(shared\_ptr<Packet>\ packet)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00353}00353\ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00354}00354\ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{class_packet_a41dbe79b52295cbb1423e4fd50fbfb7e}{Packet::canSendToAnyClient}}(\ packet\ )\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00355}00355\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ due\ to\ the\ knockback\ on\ a\ player\ being\ hit,\ we\ need\ to\ send\ to\ all\ players,\ but\ limit\ the\ network\ traffic\ here\ to\ players\ that\ have\ not\ already\ had\ it\ sent\ to\ their\ system}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ vector<\ shared\_ptr<ServerPlayer>\ >\ sentTo;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00358}00358\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ don't\ send\ to\ a\ player\ we've\ already\ sent\ this\ data\ to\ that\ shares\ the\ same\ machine.}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ EntityMotionPacket\ used\ to\ limit\ themselves\ to\ sending\ once\ to\ each\ machine}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00361}00361\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ by\ only\ sending\ to\ the\ primary\ player\ on\ each\ machine.\ This\ was\ causing\ trouble\ for\ split\ screen}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ as\ only\ the\ primary\ player\ would\ get\ a\ knockback\ velocity.\ Now\ these\ packets\ can\ be\ sent\ to\ any}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ player,\ but\ we\ try\ to\ restrict\ the\ network\ impact\ this\ has\ by\ not\ resending\ to\ the\ one\ machine}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00364}00364\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keyword}{auto}\&\ player\ :\ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}})}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ dontSend\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sentTo.size()\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *thisPlayer\ =player-\/>connection-\/>getNetworkPlayer();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ thisPlayer\ ==\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dontSend\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ player2\ :\ sentTo)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00378}00378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00379}00379\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *otherPlayer\ =\ player2-\/>connection-\/>getNetworkPlayer();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ otherPlayer\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ thisPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_ace293ccdf103ebd45b29c63f82b00613}{IsSameSystem}}(otherPlayer)\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dontSend\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ dontSend\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00391}00391\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00392}00392\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00393}00393\ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>connection-\/>send(packet);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ sentTo.push\_back(player);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00396}00396\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00397}00397\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00398}00398\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00399}00399\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ packet\ hasn't\ got\ canSendToAnyClient\ set,\ so\ just\ send\ to\ everyone\ here,\ and\ it}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00400}00400\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00401}00401\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}})}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00403}00403\ \ \ \ \ \ \ \ \ \ \ \ \ it-\/>connection-\/>send(packet);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00404}00404\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00405}00405\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00406}00406\ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00407}00407\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00408}\doxymbox{\hyperlink{class_tracked_entity_a54abc7fd10f024d4037d840842148164}{00408}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tracked_entity_a54abc7fd10f024d4037d840842148164}{TrackedEntity::broadcastAndSend}}(shared\_ptr<Packet>\ packet)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00409}00409\ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00410}00410\ \ \ \ \ vector<\ shared\_ptr<ServerPlayer>\ >\ sentTo;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00411}00411\ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a27582ee23e66a5ecb7b829d15d25398d}{broadcast}}(packet);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00412}00412\ \ \ \ \ shared\_ptr<ServerPlayer>\ sp\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a0a85531b4d1d16d1084813daad959edf}{eTYPE\_SERVERPLAYER}})\ ?\ dynamic\_pointer\_cast<ServerPlayer>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}})\ :\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00413}00413\ \ \ \ \ \textcolor{keywordflow}{if}\ (sp\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ sp-\/>connection)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00414}00414\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00415}00415\ \ \ \ \ \ \ \ \ sp-\/>connection-\/>send(packet);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00416}00416\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00417}00417\ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00418}00418\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00419}\doxymbox{\hyperlink{class_tracked_entity_abe13816bf2538fc0942f07dedddc955a}{00419}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tracked_entity_abe13816bf2538fc0942f07dedddc955a}{TrackedEntity::broadcastRemoved}}()}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00420}00420\ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00421}00421\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ it\ :\ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}})}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00422}00422\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00423}00423\ \ \ \ \ \ \ \ \ it-\/>entitiesToRemove.push\_back(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00424}00424\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00425}00425\ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00426}00426\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00427}\doxymbox{\hyperlink{class_tracked_entity_a3e24240c85cda0c18f4d5ad2ade33160}{00427}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tracked_entity_a3e24240c85cda0c18f4d5ad2ade33160}{TrackedEntity::removePlayer}}(shared\_ptr<ServerPlayer>\ sp)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00428}00428\ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00429}00429\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}}.find(sp);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00430}00430\ \ \ \ \ \textcolor{keywordflow}{if}(\ it\ !=\ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}}.end()\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00431}00431\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00432}00432\ \ \ \ \ \ \ \ \ sp-\/>entitiesToRemove.push\_back(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00433}00433\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}}.erase(\ it\ );}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00434}00434\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00435}00435\ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00436}00436\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00437}00437\ \textcolor{comment}{//\ 4J-\/JEV:\ Added\ for\ code\ reuse.}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00438}00438\ TrackedEntity::eVisibility\ TrackedEntity::isVisible(\doxymbox{\hyperlink{class_entity_tracker}{EntityTracker}}\ *\doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}},\ shared\_ptr<ServerPlayer>\ sp,\ \textcolor{keywordtype}{bool}\ forRider)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00439}00439\ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00440}00440\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ We\ call\ update\ players\ when\ the\ entity\ has\ moved\ more\ than\ a\ certain\ amount\ at\ the\ start\ of\ it's\ tick}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00441}00441\ \ \ \ \ \textcolor{comment}{//\ Before\ this\ call\ we\ set\ xpu,\ ypu\ and\ zpu\ to\ the\ entities\ new\ position,\ but\ xp,yp\ and\ zp\ are\ the\ old\ position\ until\ later\ in\ the\ tick.}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00442}00442\ \ \ \ \ \textcolor{comment}{//\ Therefore\ we\ should\ use\ the\ new\ position\ for\ visibility\ checks}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00443}00443\ \ \ \ \ \textcolor{keywordtype}{double}\ xd\ =\ sp-\/>x\ -\/\ xpu;\ \textcolor{comment}{//xp\ /\ 32;}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00444}00444\ \ \ \ \ \textcolor{keywordtype}{double}\ zd\ =\ sp-\/>z\ -\/\ zpu;\ \textcolor{comment}{//zp\ /\ 32;}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00445}00445\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00446}00446\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Fix\ for\ loading\ a\ player\ who\ is\ currently\ riding\ something\ (e.g.\ a\ horse)}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00447}00447\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>forcedLoading)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00448}00448\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00449}00449\ \ \ \ \ \ \ \ \ xd\ =\ sp-\/>x\ -\/\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}}\ /\ 32;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00450}00450\ \ \ \ \ \ \ \ \ zd\ =\ sp-\/>z\ -\/\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}}\ /\ 32;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00451}00451\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00452}00452\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00453}00453\ \ \ \ \ \textcolor{keywordtype}{int}\ playersRange\ =\ \doxymbox{\hyperlink{class_tracked_entity_ab31d898dff707213407a2bdb96a15ef5}{range}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00454}00454\ \ \ \ \ \textcolor{keywordflow}{if}(\ playersRange\ >\ \doxymbox{\hyperlink{_tracked_entity_8h_aaa016a1a8c6966abfee393dcfbd8c181}{TRACKED\_ENTITY\_MINIMUM\_VIEW\_DISTANCE}}\ \ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00455}00455\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00456}00456\ \ \ \ \ \ \ \ \ playersRange\ -\/=\ sp-\/>getPlayerViewDistanceModifier();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00457}00457\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00458}00458\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00459}00459\ \ \ \ \ \textcolor{keywordtype}{bool}\ bVisible\ =\ xd\ >=\ -\/playersRange\ \&\&\ xd\ <=\ playersRange\ \&\&\ zd\ >=\ -\/playersRange\ \&\&\ zd\ <=\ playersRange;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00460}00460\ \ \ \ \ \textcolor{keywordtype}{bool}\ canBeSeenBy\ =\ canBySeenBy(sp);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00461}00461\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00462}00462\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ added.\ Try\ and\ find\ other\ players\ who\ are\ in\ the\ same\ dimension\ as\ this\ one\ and\ on\ the\ same\ machine,\ and\ extend\ our\ visibility}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00463}00463\ \ \ \ \ \textcolor{comment}{//\ so\ things\ are\ consider\ visible\ to\ this\ player\ if\ they\ are\ near\ the\ other\ one.\ This\ is\ because\ we\ only\ send\ entity\ tracking\ info\ to}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00464}00464\ \ \ \ \ \textcolor{comment}{//\ players\ who\ canReceiveAllPackets().}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00465}00465\ \ \ \ \ \textcolor{keywordflow}{if}(!bVisible)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00466}00466\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00467}00467\ \ \ \ \ \ \ \ \ MinecraftServer\ *server\ =\ \doxymbox{\hyperlink{class_minecraft_server_ae8aa61b7338ea3b5616d347b47e29d53}{MinecraftServer::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00468}00468\ \ \ \ \ \ \ \ \ INetworkPlayer\ *thisPlayer\ =\ sp-\/>connection-\/>getNetworkPlayer();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00469}00469\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ thisPlayer\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00470}00470\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00471}00471\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ server-\/>\doxymbox{\hyperlink{class_minecraft_server_aebe4fa9eb4b2748df34200d4a66b6640}{getPlayers}}()-\/>players.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Consider\ extra\ players,\ but\ not\ if\ they\ are\ the\ entity\ we\ are\ tracking,\ or\ the\ player\ we've\ been\ passed\ as\ input,\ or\ in\ another\ dimension}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00474}00474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<ServerPlayer>\ ep\ =\ server-\/>\doxymbox{\hyperlink{class_minecraft_server_aebe4fa9eb4b2748df34200d4a66b6640}{getPlayers}}()-\/>\doxymbox{\hyperlink{class_player_list_ae3cf1077f1288431caaa6255d43cbc19}{players}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00475}00475\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ ep\ ==\ sp\ )\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ ep\ ==\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}\ )\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ ep-\/>dimension\ !=\ sp-\/>dimension\ )\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00478}00478\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ INetworkPlayer\ *\ otherPlayer\ =\ ep-\/>connection-\/>getNetworkPlayer();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ otherPlayer\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ thisPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_ace293ccdf103ebd45b29c63f82b00613}{IsSameSystem}}(otherPlayer)\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00481}00481\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00482}00482\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ We\ call\ update\ players\ when\ the\ entity\ has\ moved\ more\ than\ a\ certain\ amount\ at\ the\ start\ of\ it's\ tick}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Before\ this\ call\ we\ set\ xpu,\ ypu\ and\ zpu\ to\ the\ entities\ new\ position,\ but\ xp,yp\ and\ zp\ are\ the\ old\ position\ until\ later\ in\ the\ tick.}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00484}00484\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Therefore\ we\ should\ use\ the\ new\ position\ for\ visibility\ checks}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xd\ =\ ep-\/>x\ -\/\ xpu;\ \textcolor{comment}{//xp\ /\ 32;}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ zd\ =\ ep-\/>z\ -\/\ zpu;\ \textcolor{comment}{//zp\ /\ 32;}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bVisible\ |=\ (\ xd\ >=\ -\/playersRange\ \&\&\ xd\ <=\ playersRange\ \&\&\ zd\ >=\ -\/playersRange\ \&\&\ zd\ <=\ playersRange\ );}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ canBeSeenBy\ |=\ canBySeenBy(ep);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00490}00490\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00491}00491\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00492}00492\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00493}00493\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00494}00494\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ We\ need\ to\ ensure\ that\ we\ send\ the\ mount\ before\ the\ rider,\ so\ check\ that\ the\ player\ has\ been\ added\ to\ the\ seenBy\ list}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00495}00495\ \ \ \ \ \textcolor{keywordflow}{if}(forRider)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00496}00496\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00497}00497\ \ \ \ \ \ \ \ \ canBeSeenBy\ =\ canBeSeenBy\ \&\&\ (\doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}}.find(sp)\ !=\ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}}.end());}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00498}00498\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00499}00499\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00500}00500\ \ \ \ \ \textcolor{comment}{//\ 4J-\/JEV:\ ADDED!\ An\ entities\ mount\ has\ to\ be\ visible\ before\ the\ entity\ visible,}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00501}00501\ \ \ \ \ \textcolor{comment}{//\ this\ is\ to\ ensure\ that\ the\ mount\ is\ already\ in\ the\ client's\ game\ when\ the\ rider\ is\ added.}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00502}00502\ \ \ \ \ \textcolor{keywordflow}{if}\ (canBeSeenBy\ \&\&\ bVisible\ \&\&\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>riding\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00503}00503\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00504}00504\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}}-\/>getTracker(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>riding)-\/>isVisible(\doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}},\ sp,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00505}00505\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00506}00506\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (canBeSeenBy\ \&\&\ bVisible)\ \ \ \textcolor{keywordflow}{return}\ eVisibility\_SeenAndVisible;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00507}00507\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (bVisible)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ eVisibility\_IsVisible;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00508}00508\ \ \ \ \ \textcolor{keywordflow}{else}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ eVisibility\_NotVisible;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00509}00509\ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00510}00510\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00511}\doxymbox{\hyperlink{class_tracked_entity_a114bfdc4a9e03354ad75415de94a7cae}{00511}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tracked_entity_a114bfdc4a9e03354ad75415de94a7cae}{TrackedEntity::updatePlayer}}(\doxymbox{\hyperlink{class_entity_tracker}{EntityTracker}}\ *\doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}},\ shared\_ptr<ServerPlayer>\ sp)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00512}00512\ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00513}00513\ \ \ \ \ \textcolor{keywordflow}{if}\ (sp\ ==\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00514}00514\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00515}00515\ \ \ \ \ eVisibility\ visibility\ =\ this-\/>isVisible(\doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}},\ sp);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00516}00516\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00517}00517\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \ \ \ visibility\ ==\ eVisibility\_SeenAndVisible}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00518}00518\ \ \ \ \ \ \ \ \ \&\&\ \ (\doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}}.find(sp)\ ==\ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}}.end()\ ||\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>forcedLoading))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00519}00519\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00520}00520\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}}.insert(sp);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00521}00521\ \ \ \ \ \ \ \ \ shared\_ptr<Packet>\ packet\ =\ getAddEntityPacket();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00522}00522\ \ \ \ \ \ \ \ \ sp-\/>connection-\/>send(packet);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00523}00523\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00524}00524\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a1e52875cbbae07f016b0043b8183acbb}{xap}}\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>xd;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00525}00525\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_ac8830552e94da3220463773e29abfbbb}{yap}}\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>yd;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00526}00526\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_aaf91f74bd58d3f6e2a0559e98e4cc1d9}{zap}}\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>zd;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00527}00527\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00528}00528\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a81976c0b62a5e1b5bb0e672101ce8358}{eTYPE\_PLAYER}})\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00529}00529\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00530}00530\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<Player>\ plr\ =\ dynamic\_pointer\_cast<Player>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00531}00531\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\ \textcolor{stringliteral}{"{}TrackedEntity::\ Player\ '\%ls'\ is\ now\ visible\ to\ player\ '\%ls',\ \%s.\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00532}00532\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ plr-\/>name.c\_str(),\ sp-\/>name.c\_str(),}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00533}00533\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>riding==\textcolor{keyword}{nullptr}?\textcolor{stringliteral}{"{}not\ riding\ minecart"{}}:\textcolor{stringliteral}{"{}in\ minecart"{}})}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00534}00534\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00535}00535\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00536}00536\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00537}00537\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ isAddMobPacket\ =\ dynamic\_pointer\_cast<AddMobPacket>(packet)\ !=\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00538}00538\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00539}00539\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ brought\ forward\ to\ fix\ when\ Item\ Frames}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00540}00540\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>getEntityData()-\/>isEmpty()\ \&\&\ !isAddMobPacket)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00541}00541\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00542}00542\ \ \ \ \ \ \ \ \ \ \ \ \ sp-\/>connection-\/>send(std::make\_shared<SetEntityDataPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>getEntityData(),\ \textcolor{keyword}{true}));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00543}00543\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00544}00544\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00545}00545\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aa0f4114708dacc2fc855b18a33863402}{eTYPE\_LIVINGENTITY}})\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00546}00546\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00547}00547\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<LivingEntity>\ living\ =\ dynamic\_pointer\_cast<LivingEntity>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00548}00548\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_serverside_attribute_map}{ServersideAttributeMap}}\ *attributeMap\ =\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_serverside_attribute_map}{ServersideAttributeMap}}\ *\textcolor{keyword}{>}(living-\/>getAttributes());}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00549}00549\ \ \ \ \ \ \ \ \ \ \ \ \ unordered\_set<AttributeInstance\ *>\ *attributes\ =\ attributeMap-\/>\doxymbox{\hyperlink{class_serverside_attribute_map_a2cf3bf32d6e58fc649577ec884814548}{getSyncableAttributes}}();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00550}00550\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00551}00551\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!attributes-\/>empty())}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00552}00552\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00553}00553\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sp-\/>connection-\/>send(std::make\_shared<UpdateAttributesPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ attributes));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00554}00554\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00555}00555\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ attributes;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00556}00556\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00557}00557\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00558}00558\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (trackDelta\ \&\&\ !isAddMobPacket)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00559}00559\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00560}00560\ \ \ \ \ \ \ \ \ \ \ \ \ sp-\/>connection-\/>send(std::make\_shared<SetEntityMotionPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>xd,\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>yd,\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>zd));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00561}00561\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00562}00562\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00563}00563\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>riding\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00564}00564\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00565}00565\ \ \ \ \ \ \ \ \ \ \ \ \ sp-\/>connection-\/>send(std::make\_shared<SetEntityLinkPacket>(\doxymbox{\hyperlink{class_set_entity_link_packet_ab47205fbd9f92553195edb0a2941fa92}{SetEntityLinkPacket::RIDING}},\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>riding));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00566}00566\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00567}00567\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a8edc6babfa07e20301b4a7e3bc7eebc0}{eTYPE\_MOB}})\ \&\&\ dynamic\_pointer\_cast<Mob>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}})-\/>getLeashHolder()\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00568}00568\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00569}00569\ \ \ \ \ \ \ \ \ \ \ \ \ sp-\/>connection-\/>send(std::make\_shared<SetEntityLinkPacket>(\doxymbox{\hyperlink{class_set_entity_link_packet_a3b729f9773ef200ba6eb15221ff93a5c}{SetEntityLinkPacket::LEASH}},\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ dynamic\_pointer\_cast<Mob>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}})-\/>getLeashHolder()));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00570}00570\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00571}00571\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00572}00572\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aa0f4114708dacc2fc855b18a33863402}{eTYPE\_LIVINGENTITY}})\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00573}00573\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00574}00574\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 5;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00575}00575\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00576}00576\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ dynamic\_pointer\_cast<LivingEntity>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}})-\/>getCarried(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00577}00577\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr})\ sp-\/>connection-\/>send(std::make\_shared<SetEquippedItemPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}},\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00579}00579\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00580}00580\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00581}00581\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a81976c0b62a5e1b5bb0e672101ce8358}{eTYPE\_PLAYER}})\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00582}00582\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00583}00583\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<Player>\ spe\ =\ dynamic\_pointer\_cast<Player>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00584}00584\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spe-\/>isSleeping())}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00585}00585\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00586}00586\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sp-\/>connection-\/>send(std::make\_shared<EntityActionAtPositionPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_entity_action_at_position_packet_a8cb56154b34adede6bf41ff9ba0f245c}{EntityActionAtPositionPacket::START\_SLEEP}},\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>x),\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>y),\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>z)));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00587}00587\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00588}00588\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00589}00589\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00590}00590\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aa0f4114708dacc2fc855b18a33863402}{eTYPE\_LIVINGENTITY}})\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00591}00591\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<LivingEntity>\ mob\ =\ dynamic\_pointer\_cast<LivingEntity>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00593}00593\ \ \ \ \ \ \ \ \ \ \ \ \ vector<MobEffectInstance\ *>\ *activeEffects\ =\ mob-\/>getActiveEffects();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00594}00594\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ effect\ :\ *activeEffects)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00595}00595\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00596}00596\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sp-\/>connection-\/>send(std::make\_shared<UpdateMobEffectPacket>(\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ effect\ )\ );}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00597}00597\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00598}00598\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ activeEffects;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00599}00599\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00600}00600\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00601}00601\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (visibility\ ==\ eVisibility\_NotVisible)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00602}00602\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00603}00603\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}}.find(sp);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00604}00604\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}}.end())}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00605}00605\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}}.erase(it);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ sp-\/>entitiesToRemove.push\_back(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00608}00608\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00609}00609\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00610}00610\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00611}00611\ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00612}00612\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00613}00613\ \textcolor{keywordtype}{bool}\ TrackedEntity::canBySeenBy(shared\_ptr<ServerPlayer>\ player)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00614}00614\ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00615}00615\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ for\ some\ reason\ this\ isn't\ currently\ working,\ and\ is\ causing\ players\ to\ not\ appear\ until\ we\ are\ really\ close\ to\ them.\ Not\ sure}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00616}00616\ \ \ \ \ \textcolor{comment}{//\ what\ the\ conflict\ is\ between\ the\ java\ \&\ our\ version,\ but\ removing\ for\ now\ as\ it\ is\ causing\ issues\ and\ we\ shouldn't\ *really*\ need\ it}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00617}00617\ \ \ \ \ \textcolor{comment}{//\ TODO\ -\/\ investigate\ further}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00618}00618\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00619}00619\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00620}00620\ \ \ \ \ \textcolor{comment}{//\ \ return\ player-\/>getLevel()-\/>getChunkMap()-\/>isPlayerIn(player,\ e-\/>xChunk,\ e-\/>zChunk);}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00621}00621\ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00622}00622\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00623}\doxymbox{\hyperlink{class_tracked_entity_a2a4a6f8a26b7664581c5f44213148e25}{00623}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tracked_entity_a2a4a6f8a26b7664581c5f44213148e25}{TrackedEntity::updatePlayers}}(\doxymbox{\hyperlink{class_entity_tracker}{EntityTracker}}\ *\doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}},\ vector<shared\_ptr<Player>\ >\ *players)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00624}00624\ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00625}00625\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ players-\/>size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00626}00626\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00627}00627\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a114bfdc4a9e03354ad75415de94a7cae}{updatePlayer}}(\doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}},\ dynamic\_pointer\_cast<ServerPlayer>(\ players-\/>at(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})\ )\ );}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00628}00628\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00629}00629\ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00630}00630\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00631}00631\ shared\_ptr<Packet>\ TrackedEntity::getAddEntityPacket()}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00632}00632\ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00633}00633\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>removed)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00634}00634\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00635}00635\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Fetching\ addPacket\ for\ removed\ entity\ -\/\ \%ls\(\backslash\)n"{}},\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>getAName().c\_str());}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00636}00636\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00637}00637\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00638}00638\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ replacing\ with\ a\ switch,\ rather\ than\ tons\ of\ ifs}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00639}00639\ \ \ \ \ \textcolor{keywordflow}{if}\ (dynamic\_pointer\_cast<Creature>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}})\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00640}00640\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00641}00641\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a6510146dfc144c8a748e971ccff892d8}{yHeadRotp}}\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>getYHeadRot()\ *\ 256\ /\ 360);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00642}00642\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddMobPacket>(dynamic\_pointer\_cast<Mob>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}),\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}},\ \doxymbox{\hyperlink{class_tracked_entity_a6510146dfc144c8a748e971ccff892d8}{yHeadRotp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00643}00643\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00644}00644\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00645}00645\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aaaab144c0c1b5a3a571dd408c1bdc4e9}{eTYPE\_ITEMENTITY}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00646}00646\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00647}00647\ \ \ \ \ \ \ \ \ shared\_ptr<AddEntityPacket>\ packet\ =\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a785d7895058b71a4d0154fea20ed0a92}{AddEntityPacket::ITEM}},\ 1,\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00648}00648\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ packet;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00649}00649\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00650}00650\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a0a85531b4d1d16d1084813daad959edf}{eTYPE\_SERVERPLAYER}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00651}00651\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00652}00652\ \ \ \ \ \ \ \ \ shared\_ptr<ServerPlayer>\ player\ =\ dynamic\_pointer\_cast<ServerPlayer>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00653}00653\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00654}00654\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{extra_x64_8h_a069bb6137c1b18507f8e659887a53fb9}{PlayerUID}}\ xuid\ =\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00655}00655\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{extra_x64_8h_a069bb6137c1b18507f8e659887a53fb9}{PlayerUID}}\ OnlineXuid\ =\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00656}00656\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ player\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00657}00657\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00658}00658\ \ \ \ \ \ \ \ \ \ \ \ \ xuid\ =\ player-\/>getXuid();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00659}00659\ \ \ \ \ \ \ \ \ \ \ \ \ OnlineXuid\ =\ player-\/>getOnlineXuid();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00660}00660\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00661}00661\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Added\ yHeadRotp\ param\ to\ fix\ \#102563\ -\/\ TU12:\ Content:\ Gameplay:\ When\ one\ of\ the\ Players\ is\ idle\ for\ a\ few\ minutes\ his\ head\ turns\ 180\ degrees.}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00662}00662\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddPlayerPacket>(player,\ xuid,\ OnlineXuid,\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}},\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a6510146dfc144c8a748e971ccff892d8}{yHeadRotp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00663}00663\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00664}00664\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a6ef4616061249b0069a8324df6fb652b}{eTYPE\_MINECART}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00665}00665\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00666}00666\ \ \ \ \ \ \ \ \ shared\_ptr<Minecart>\ minecart\ =\ dynamic\_pointer\_cast<Minecart>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00667}00667\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a4c13a233b9e76a746ba484a580c717e2}{AddEntityPacket::MINECART}},\ minecart-\/>getType(),\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00668}00668\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00669}00669\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a404355c534be02d37f0e7be5dc57bfd9}{eTYPE\_BOAT}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00670}00670\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00671}00671\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a3be4056faacb583f49b309f7be5366a9}{AddEntityPacket::BOAT}},\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00672}00672\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00673}00673\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6ab8fece05b36c6d28d264a1559bf24fac}{eTYPE\_ENDERDRAGON}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00674}00674\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00675}00675\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_a6510146dfc144c8a748e971ccff892d8}{yHeadRotp}}\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>getYHeadRot()\ *\ 256\ /\ 360);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00676}00676\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddMobPacket>(dynamic\_pointer\_cast<LivingEntity>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}),\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}},\ \doxymbox{\hyperlink{class_tracked_entity_a6510146dfc144c8a748e971ccff892d8}{yHeadRotp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00677}00677\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00678}00678\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a4bfad622652b9afd382e9cd9d3fedb7b}{eTYPE\_FISHINGHOOK}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00679}00679\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00680}00680\ \ \ \ \ \ \ \ \ shared\_ptr<Entity>\ owner\ =\ dynamic\_pointer\_cast<FishingHook>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}})-\/>owner;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00681}00681\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a4f1344e25b319489b52cbcbbc769f847}{AddEntityPacket::FISH\_HOOK}},\ owner\ !=\ \textcolor{keyword}{nullptr}\ ?\ owner-\/>entityId\ :\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00682}00682\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00683}00683\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a788717996dea974a2ee74759fde1c704}{eTYPE\_ARROW}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00684}00684\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00685}00685\ \ \ \ \ \ \ \ \ shared\_ptr<Entity>\ owner\ =\ (dynamic\_pointer\_cast<Arrow>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}))-\/>owner;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00686}00686\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a9c96428c0a95e292820d04d00a2ac344}{AddEntityPacket::ARROW}},\ owner\ !=\ \textcolor{keyword}{nullptr}\ ?\ owner-\/>entityId\ :\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId,\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00687}00687\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00688}00688\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a97af46afb7fa3048bb78544610cfead3}{eTYPE\_SNOWBALL}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00689}00689\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00690}00690\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a5ec561578cd9063b368ad262bb3675bf}{AddEntityPacket::SNOWBALL}},\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00691}00691\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00692}00692\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6ae53d1235fe2de1c927125897139b5e6f}{eTYPE\_THROWNPOTION}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00693}00693\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00694}00694\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a4b58bd01b077b2632eeb521a8996021b}{AddEntityPacket::THROWN\_POTION}},\ ((dynamic\_pointer\_cast<ThrownPotion>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}))-\/>getPotionValue()),\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00695}00695\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00696}00696\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a10c0cfe27a44be840dd187683f24ef9b}{eTYPE\_THROWNEXPBOTTLE}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00697}00697\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00698}00698\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a276e524f7804d571ddda5f6a8539c500}{AddEntityPacket::THROWN\_EXPBOTTLE}},\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00699}00699\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00700}00700\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6abb8b8eca5364f2657cf6f40f9374624c}{eTYPE\_THROWNENDERPEARL}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00701}00701\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00702}00702\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a3ad1fd335a060d8310985ca0b566cb8b}{AddEntityPacket::THROWN\_ENDERPEARL}},\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00703}00703\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00704}00704\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aae45f057c9eee026dcfbba2318b3c721}{eTYPE\_EYEOFENDERSIGNAL}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00705}00705\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00706}00706\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a912e503801ee0576bae22017f20b7738}{AddEntityPacket::EYEOFENDERSIGNAL}},\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00707}00707\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00708}00708\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aa001a93f5bb1f953d64d1a01b1086057}{eTYPE\_FIREWORKS\_ROCKET}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00709}00709\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00710}00710\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a999489d535ae9b34465c5858d1757ea0}{AddEntityPacket::FIREWORKS}},\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00711}00711\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00712}00712\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a1fc3f84ecb359dbf6278ae7e0aef0712}{eTYPE\_FIREBALL}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00713}00713\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00714}00714\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6}{eINSTANCEOF}}\ classType\ =\ \doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>GetType();}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00715}00715\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{namespace_sentient_aa9303d5ce47bc813ce06e14c1ed37a22}{type}}\ =\ \doxymbox{\hyperlink{class_add_entity_packet_a5e79bf267df5e4d5d02acf169e507e86}{AddEntityPacket::FIREBALL}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00716}00716\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (classType\ ==\ \doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a27832cd0b79810d5b55943d9b9703ea9}{eTYPE\_SMALL\_FIREBALL}})}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00717}00717\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00718}00718\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_sentient_aa9303d5ce47bc813ce06e14c1ed37a22}{type}}\ =\ \doxymbox{\hyperlink{class_add_entity_packet_afc09715675c8babc2a19c4ebea33126d}{AddEntityPacket::SMALL\_FIREBALL}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00719}00719\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00720}00720\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (classType\ ==\ \doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6ace05191cdbe5aa3da7144907c86596b9}{eTYPE\_DRAGON\_FIREBALL}})}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00721}00721\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00722}00722\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_sentient_aa9303d5ce47bc813ce06e14c1ed37a22}{type}}\ =\ \doxymbox{\hyperlink{class_add_entity_packet_ada333451a7db426fcb43ac3445cb81d4}{AddEntityPacket::DRAGON\_FIRE\_BALL}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00723}00723\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00724}00724\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (classType\ ==\ \doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aa3a414d97789fd163f78cfc564e0a401}{eTYPE\_WITHER\_SKULL}})}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00725}00725\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00726}00726\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_sentient_aa9303d5ce47bc813ce06e14c1ed37a22}{type}}\ =\ \doxymbox{\hyperlink{class_add_entity_packet_a67f51354f140fbc0af6caa0389ae23a0}{AddEntityPacket::WITHER\_SKULL}};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00727}00727\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00728}00728\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00729}00729\ \ \ \ \ \ \ \ \ shared\_ptr<Fireball>\ fb\ =\ dynamic\_pointer\_cast<Fireball>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00730}00730\ \ \ \ \ \ \ \ \ shared\_ptr<AddEntityPacket>\ aep\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00731}00731\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (fb-\/>owner\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00732}00732\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00733}00733\ \ \ \ \ \ \ \ \ \ \ \ \ aep\ =\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ type,\ fb-\/>owner-\/>entityId,\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00734}00734\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00735}00735\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00736}00736\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00737}00737\ \ \ \ \ \ \ \ \ \ \ \ \ aep\ =\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ type,\ 0,\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00738}00738\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00739}00739\ \ \ \ \ \ \ \ \ aep-\/>xa\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(fb-\/>xPower\ *\ 8000);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00740}00740\ \ \ \ \ \ \ \ \ aep-\/>ya\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(fb-\/>yPower\ *\ 8000);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00741}00741\ \ \ \ \ \ \ \ \ aep-\/>za\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(fb-\/>zPower\ *\ 8000);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00742}00742\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ aep;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00743}00743\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00744}00744\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a6f0cde2bb1303d8a96ae8daf1b6468af}{eTYPE\_THROWNEGG}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00745}00745\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00746}00746\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a1e04b1840b3b3f659a11c0d8cde279c2}{AddEntityPacket::EGG}},\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00747}00747\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00748}00748\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a14e9f1785c8bf78f8723838d10f3ce7c}{eTYPE\_PRIMEDTNT}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00749}00749\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00750}00750\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_abaadd66e55d3e5208ef5bddc40330086}{AddEntityPacket::PRIMED\_TNT}},\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00751}00751\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00752}00752\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6add739ca1c93752b71997aec98ba1441a}{eTYPE\_ENDER\_CRYSTAL}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00753}00753\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00754}00754\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_acae8d79b7201c0931f816e8d523dbe87}{AddEntityPacket::ENDER\_CRYSTAL}},\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00755}00755\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00756}00756\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6ac8f1102e4f44dd0f727bb24038992d00}{eTYPE\_FALLINGTILE}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00757}00757\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00758}00758\ \ \ \ \ \ \ \ \ shared\_ptr<FallingTile>\ ft\ =\ dynamic\_pointer\_cast<FallingTile>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00759}00759\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a3ce138b0d0dfb309cb43dfa86919509d}{AddEntityPacket::FALLING}},\ ft-\/>tile\ |\ (ft-\/>data\ <<\ 16),\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00760}00760\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00761}00761\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a0be319fd2cec6b77077e169989360b29}{eTYPE\_PAINTING}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00762}00762\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00763}00763\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddPaintingPacket>(dynamic\_pointer\_cast<Painting>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00764}00764\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00765}00765\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6af799c4ded4e1e9fd79fc543d0e2c1a5a}{eTYPE\_ITEM\_FRAME}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00766}00766\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00767}00767\ \ \ \ \ \ \ \ \ shared\_ptr<ItemFrame>\ \doxymbox{\hyperlink{gdraw__gl__shared_8inl_ae46c5d1d114efaa555061b464b630ec5}{frame}}\ =\ dynamic\_pointer\_cast<ItemFrame>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00768}00768\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00769}00769\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00770}00770\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00771}00771\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ix=\ (int)\doxymbox{\hyperlink{gdraw__gl__shared_8inl_ae46c5d1d114efaa555061b464b630ec5}{frame}}-\/>xTile;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00772}00772\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ iy=\ (int)\doxymbox{\hyperlink{gdraw__gl__shared_8inl_ae46c5d1d114efaa555061b464b630ec5}{frame}}-\/>yTile;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00773}00773\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ iz=\ (int)\doxymbox{\hyperlink{gdraw__gl__shared_8inl_ae46c5d1d114efaa555061b464b630ec5}{frame}}-\/>zTile;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00774}00774\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}eTYPE\_ITEM\_FRAME\ xyz\ \%d,\%d,\%d\(\backslash\)n"{}},ix,iy,iz);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00775}00775\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00776}00776\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00777}00777\ \ \ \ \ \ \ \ \ shared\_ptr<AddEntityPacket>\ packet\ =\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a02e76ea1ca7bfeb370c16ce086edacc6}{AddEntityPacket::ITEM\_FRAME}},\ \doxymbox{\hyperlink{gdraw__gl__shared_8inl_ae46c5d1d114efaa555061b464b630ec5}{frame}}-\/>dir,\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00778}00778\ \ \ \ \ \ \ \ \ packet-\/>x\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{gdraw__gl__shared_8inl_ae46c5d1d114efaa555061b464b630ec5}{frame}}-\/>xTile\ *\ 32.0f);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00779}00779\ \ \ \ \ \ \ \ \ packet-\/>y\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{gdraw__gl__shared_8inl_ae46c5d1d114efaa555061b464b630ec5}{frame}}-\/>yTile\ *\ 32.0f);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00780}00780\ \ \ \ \ \ \ \ \ packet-\/>z\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{gdraw__gl__shared_8inl_ae46c5d1d114efaa555061b464b630ec5}{frame}}-\/>zTile\ *\ 32.0f);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00781}00781\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ packet;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00782}00782\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00783}00783\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a917a97a487da0b9b356a34dc421c452d}{eTYPE\_LEASHFENCEKNOT}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00784}00784\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00785}00785\ \ \ \ \ \ \ \ \ shared\_ptr<LeashFenceKnotEntity>\ knot\ =\ dynamic\_pointer\_cast<LeashFenceKnotEntity>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00786}00786\ \ \ \ \ \ \ \ \ shared\_ptr<AddEntityPacket>\ packet\ =\ std::make\_shared<AddEntityPacket>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}},\ \doxymbox{\hyperlink{class_add_entity_packet_a66e9278e0f7da89af27cfc5fb14bccb3}{AddEntityPacket::LEASH\_KNOT}},\ \doxymbox{\hyperlink{class_tracked_entity_aee1c539231ba6260ab84040f83ddaea3}{yRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a5ae4df07d9c179d2f2731429651d261d}{xRotp}},\ \doxymbox{\hyperlink{class_tracked_entity_a320cbed2cad9ae1083db1013eaa95dd5}{xp}},\ \doxymbox{\hyperlink{class_tracked_entity_afc532ba59cc6ae6cf49a3f5987bccb85}{yp}},\ \doxymbox{\hyperlink{class_tracked_entity_aab10cde79841e6e3fc9d351065c658dc}{zp}});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00787}00787\ \ \ \ \ \ \ \ \ packet-\/>x\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(knot-\/>xTile)\ *\ 32);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00788}00788\ \ \ \ \ \ \ \ \ packet-\/>y\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(knot-\/>yTile)\ *\ 32);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00789}00789\ \ \ \ \ \ \ \ \ packet-\/>z\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(knot-\/>zTile)\ *\ 32);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00790}00790\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ packet;}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00791}00791\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00792}00792\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6aea711d79838fec967446dd1d67b420ef}{eTYPE\_EXPERIENCEORB}}))}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00793}00793\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00794}00794\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<AddExperienceOrbPacket>(dynamic\_pointer\_cast<ExperienceOrb>(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}));}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00795}00795\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00796}00796\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00797}00797\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00798}00798\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00799}00799\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00800}00800\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00801}00801\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00802}00802\ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00803}00803\ }
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00804}\doxymbox{\hyperlink{class_tracked_entity_a2a547f33946f6637f3521c7e43363313}{00804}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tracked_entity_a2a547f33946f6637f3521c7e43363313}{TrackedEntity::clear}}(shared\_ptr<ServerPlayer>\ sp)}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00805}00805\ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00806}00806\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}}.find(sp);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00807}00807\ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ !=\ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}}.end())}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00808}00808\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00809}00809\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tracked_entity_aa3916048a6a072e004fd7aa90bb51acf}{seenBy}}.erase(it);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00810}00810\ \ \ \ \ \ \ \ \ sp-\/>entitiesToRemove.push\_back(\doxymbox{\hyperlink{class_tracked_entity_af0c6b5b888fa2ba6b3dbd7479daa7a7f}{e}}-\/>entityId);}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00811}00811\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tracked_entity_8cpp_source_l00812}00812\ \}}
+
+\end{DoxyCode}

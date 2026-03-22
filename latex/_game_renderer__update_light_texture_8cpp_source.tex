@@ -1,0 +1,149 @@
+\doxysection{Game\+Renderer\+\_\+update\+Light\+Texture.\+cpp}
+\hypertarget{_game_renderer__update_light_texture_8cpp_source}{}\label{_game_renderer__update_light_texture_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/SPU\_Tasks/GameRenderer\_updateLightTexture/GameRenderer\_updateLightTexture.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/SPU\_Tasks/GameRenderer\_updateLightTexture/GameRenderer\_updateLightTexture.cpp}}
+\doxymbox{\hyperlink{_game_renderer__update_light_texture_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00001}00001\ \textcolor{comment}{/*\ SCE\ CONFIDENTIAL}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00002}00002\ \textcolor{comment}{PlayStation(R)3\ Programmer\ Tool\ Runtime\ Library\ 430.001}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00003}00003\ \textcolor{comment}{*\ Copyright\ (C)\ 2007\ Sony\ Computer\ Entertainment\ Inc.}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00004}00004\ \textcolor{comment}{*\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00005}00005\ \textcolor{comment}{*/}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00007}00007\ \textcolor{comment}{/*\ common\ headers\ */}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <spu\_intrinsics.h>}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <cell/spurs.h>}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <spu\_printf.h>}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <cell/dma.h>}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#include\ <cell/spurs/job\_queue.h>}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00017}00017\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_dma_data_8h}{..\(\backslash\)Common\(\backslash\)DmaData.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00019}00019\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_game_renderer__update_light_texture_8h}{GameRenderer\_updateLightTexture.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00021}00021\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ sc\_verbose\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00023}\doxymbox{\hyperlink{_game_renderer__update_light_texture_8cpp_a306b5fcc0cae50a7195b460bb38e364a}{00023}}\ CellSpursJobContext2*\ \doxymbox{\hyperlink{task_8cpp_a306b5fcc0cae50a7195b460bb38e364a}{g\_pSpursJobContext}};}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00024}00024\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00028}\doxymbox{\hyperlink{_game_renderer__update_light_texture_8cpp_ade220d6f167e1cabbcd678013763bd00}{00028}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_game_renderer__update_light_texture_8cpp_ade220d6f167e1cabbcd678013763bd00}{updateLightTexture}}(\doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in}{GameRenderer\_updateLightTexture\_dataIn}}\&\ dataIn)}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00029}00029\ \{}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00030}00030\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ we've\ added\ separate\ light\ textures\ for\ all\ dimensions,\ and\ this\ loop\ to\ update\ them\ all\ here}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00031}00031\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 3;\ j++\ )}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00032}00032\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ lightPixels[16*16];}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00034}00034\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in_1_1_level_data}{GameRenderer\_updateLightTexture\_dataIn::LevelData}}\&\ levelDataIn\ =\ dataIn.\doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in_a71f5c759162635538956c167dc807e92}{m\_levelData}}[j];}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00035}00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (levelDataIn.\doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in_1_1_level_data_a8431f1b6867b6af684abfc78ffaa120d}{m\_valid}}\ ==\ \textcolor{keyword}{false})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00036}00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 256;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ darken\ =\ levelDataIn.\doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in_1_1_level_data_a3eed28a4545f2da6597ddef053d46b4e}{m\_skyDarken}}\ *\ 0.95f\ +\ 0.05f;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ sky\ =\ levelDataIn.\doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in_1_1_level_data_add2556eca6b0dd029026d0b1b9a5642f}{m\_brightnessRamp}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ /\ 16]\ *\ darken;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ block\ =\ levelDataIn.\doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in_1_1_level_data_add2556eca6b0dd029026d0b1b9a5642f}{m\_brightnessRamp}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ \%\ 16]\ *\ (dataIn.\doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in_a4633e838ae7ef2f2a38c12debb346eb2}{blr}}\ *\ 0.1f\ +\ 1.5f);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (levelDataIn.\doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in_1_1_level_data_ae16245e68fdc7ec27116ddd9fa38af2e}{m\_lightningBoltTime}}\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sky\ =\ levelDataIn.\doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in_1_1_level_data_add2556eca6b0dd029026d0b1b9a5642f}{m\_brightnessRamp}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ /\ 16];}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ rs\ =\ sky\ *\ (levelDataIn.\doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in_1_1_level_data_a3eed28a4545f2da6597ddef053d46b4e}{m\_skyDarken}}\ *\ 0.65f\ +\ 0.35f);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ gs\ =\ sky\ *\ (levelDataIn.\doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in_1_1_level_data_a3eed28a4545f2da6597ddef053d46b4e}{m\_skyDarken}}\ *\ 0.65f\ +\ 0.35f);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ bs\ =\ sky;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00051}00051\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00052}00052\ \textcolor{comment}{\ \ \ \ *\ float\ dr\ =\ darken;\ dr\ =\ dr\ -\/\ dr\ *\ dr;\ System.out.println(dr);\ if\ (dr\ >\ 0)\ \{}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00053}00053\ \textcolor{comment}{\ \ \ \ *\ gs\ +=\ dr\ *\ 0.5f;\ rs\ +=\ dr;\ \}}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00054}00054\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rs\ =\ gs\ =\ bs;}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ rb\ =\ block;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ gb\ =\ block\ *\ ((block\ *\ 0.6f\ +\ 0.4f)\ *\ 0.6f\ +\ 0.4f);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ bb\ =\ block\ *\ ((block\ *\ block)\ *\ 0.6f\ +\ 0.4f);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \_r\ =\ (rs\ +\ rb);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \_g\ =\ (gs\ +\ gb);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \_b\ =\ (bs\ +\ bb);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \_r\ =\ \_r\ *\ 0.96f\ +\ 0.03f;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \_g\ =\ \_g\ *\ 0.96f\ +\ 0.03f;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \_b\ =\ \_b\ *\ 0.96f\ +\ 0.03f;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (levelDataIn.\doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in_1_1_level_data_a013d378a9bcf92fbf4f90534722d1adf}{m\_dimensionID}}\ ==\ 1)}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_r\ =\ (0.22f\ +\ rb\ *\ 0.75f);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_g\ =\ (0.28f\ +\ gb\ *\ 0.75f);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_b\ =\ (0.25f\ +\ bb\ *\ 0.75f);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ brightness\ =\ 0.0f;\ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ TODO\ -\/\ was\ mc-\/>options-\/>gamma;}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_r\ >\ 1)\ \_r\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_g\ >\ 1)\ \_g\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_b\ >\ 1)\ \_b\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ ir\ =\ 1\ -\/\ \_r;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ ig\ =\ 1\ -\/\ \_g;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ ib\ =\ 1\ -\/\ \_b;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ ir\ =\ 1\ -\/\ (ir\ *\ ir\ *\ ir\ *\ ir);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ ig\ =\ 1\ -\/\ (ig\ *\ ig\ *\ ig\ *\ ig);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ ib\ =\ 1\ -\/\ (ib\ *\ ib\ *\ ib\ *\ ib);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \_r\ =\ \_r\ *\ (1\ -\/\ brightness)\ +\ ir\ *\ brightness;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \_g\ =\ \_g\ *\ (1\ -\/\ brightness)\ +\ ig\ *\ brightness;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \_b\ =\ \_b\ *\ (1\ -\/\ brightness)\ +\ ib\ *\ brightness;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \_r\ =\ \_r\ *\ 0.96f\ +\ 0.03f;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \_g\ =\ \_g\ *\ 0.96f\ +\ 0.03f;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \_b\ =\ \_b\ *\ 0.96f\ +\ 0.03f;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_r\ >\ 1)\ \_r\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_g\ >\ 1)\ \_g\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_b\ >\ 1)\ \_b\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_r\ <\ 0)\ \_r\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_g\ <\ 0)\ \_g\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_b\ <\ 0)\ \_b\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}\ =\ 255;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ (int)\ (\_r\ *\ 255);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ g\ =\ (int)\ (\_g\ *\ 255);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ (int)\ (\_b\ *\ 255);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ lightPixels[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ r\ <<\ 24\ |\ g\ <<\ 16\ |\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ <<\ 8\ |\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}};}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_dma_data___s_p_u_a7857a22b3871edd93cd9ee5e24f120fa}{DmaData\_SPU::putAndWait}}(lightPixels,\ (uintptr\_t)levelDataIn.\doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in_1_1_level_data_a8e8d6aad8b2691062527595c114f9357}{m\_lightPixelsOutput}},\ 16*16*\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00113}00113\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00114}00114\ \}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00124}\doxymbox{\hyperlink{_game_renderer__update_light_texture_8cpp_a3f174bec6854ffe9e8b1e7bb4aafc9f6}{00124}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_game_renderer__update_light_texture_8cpp_a3f174bec6854ffe9e8b1e7bb4aafc9f6}{cellSpursJobQueueMain}}(CellSpursJobContext2\ *pContext,\ CellSpursJob256\ *pJob)}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00125}00125\ \{}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00126}00126\ \textcolor{comment}{//\ \ CellSpursTaskId\ idTask\ =\ cellSpursGetTaskId();}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00127}00127\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ idSpu\ =\ cellSpursGetCurrentSpuId();}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00129}00129\ \ \ \ \ \textcolor{keywordflow}{if}(sc\_verbose)}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ spu\_printf(\textcolor{stringliteral}{"{}GameRenderer\_updateLightTexture\ [SPU\#\%u]\ start\(\backslash\)n"{}},\ idSpu);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00132}00132\ \ \ \ \ \doxymbox{\hyperlink{task_8cpp_a306b5fcc0cae50a7195b460bb38e364a}{g\_pSpursJobContext}}\ =\ pContext;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00133}00133\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00134}00134\ \ \ \ \ uint32\_t\ eaDataIn\ =\ pJob-\/>workArea.userData[0];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00135}00135\ \ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00136}00136\ \ \ \ \ \doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in}{GameRenderer\_updateLightTexture\_dataIn}}\ dataIn;}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00137}00137\ \ \ \ \ \doxymbox{\hyperlink{class_dma_data___s_p_u_a554786827d16a48f76f0d06f2112bbb4}{DmaData\_SPU::getAndWait}}(\&dataIn,\ eaDataIn,\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{class_game_renderer__update_light_texture__data_in}{GameRenderer\_updateLightTexture\_dataIn}}));}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00138}00138\ \ \ \ \ \doxymbox{\hyperlink{_game_renderer__update_light_texture_8cpp_ade220d6f167e1cabbcd678013763bd00}{updateLightTexture}}(dataIn);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00140}00140\ \ \ \ \ \textcolor{keywordflow}{if}(sc\_verbose)}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ spu\_printf(\textcolor{stringliteral}{"{}GameRenderer\_updateLightTexture\ [SPU\#\%u]\ exit\(\backslash\)n"{}},\ idSpu);}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00142}00142\ \}}
+\DoxyCodeLine{\Hypertarget{_game_renderer__update_light_texture_8cpp_source_l00143}00143\ }
+
+\end{DoxyCode}

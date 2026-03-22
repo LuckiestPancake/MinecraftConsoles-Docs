@@ -1,0 +1,117 @@
+\doxysection{Sound\+Engine.\+h}
+\hypertarget{_xbox_2_audio_2_sound_engine_8h_source}{}\label{_xbox_2_audio_2_sound_engine_8h_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Xbox/Audio/SoundEngine.h@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Xbox/Audio/SoundEngine.h}}
+\doxymbox{\hyperlink{_xbox_2_audio_2_sound_engine_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00001}00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00002}00002\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_mob}{Mob}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00003}00003\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_options}{Options}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00004}00004\ \textcolor{keyword}{using\ namespace\ }\doxymbox{\hyperlink{namespacestd}{std}};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_sound_types_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)SoundTypes.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00007}00007\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00008}00008\ \textcolor{keyword}{extern}\ IXAudio2*\ \doxymbox{\hyperlink{_xbox_2_audio_2_sound_engine_8cpp_a7d296aab1786b1e1cb363a97571c9cf5}{g\_pXAudio2}};\ \ \ \ \ \ \ \textcolor{comment}{//\ pointer\ to\ XAudio2\ instance\ used\ by\ QNet\ and\ XACT}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00009}00009\ \textcolor{keyword}{extern}\ IXAudio2MasteringVoice*\ \doxymbox{\hyperlink{_xbox_2_audio_2_sound_engine_8cpp_ad44a41b6d80721cd8cf40ab67a4dda83}{g\_pXAudio2MasteringVoice}};\ \ \textcolor{comment}{//\ pointer\ to\ XAudio2\ mastering\ voice}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00010}00010\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00012}00012\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_sound_engine}{SoundEngine}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{class_console_sound_engine}{ConsoleSoundEngine}}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00013}00013\ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00014}00014\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00015}00015\ \ \ \ \ \textcolor{comment}{//static\ const\ unsigned\ char\ *ucSoundNames[eSoundType\_MAX][32];}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00016}00016\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ MAX\_POLYPHONY\ =\ 30;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00017}00017\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ MAX\_SAME\_SOUNDS\_PLAYING\ =\ 8;\ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00018}00018\ \ \ \ \ \textcolor{keyword}{static}\ IXACT3Engine\ \ \ \ \ \ \ \ \ \ \ \ \ *m\_pXACT3Engine;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00019}00019\ \ \ \ \ \textcolor{keyword}{static}\ X3DAUDIO\_HANDLE\ \ \ \ \ \ \ \ \ \ m\_xact3dInstance;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00020}00020\ \ \ \ \ \textcolor{keyword}{static}\ X3DAUDIO\_DSP\_SETTINGS\ \ \ \ m\_DSPSettings;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00021}00021\ \ \ \ \ \textcolor{keyword}{static}\ X3DAUDIO\_EMITTER\ \ \ \ \ \ \ \ \ m\_emitter;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00022}00022\ \ \ \ \ \textcolor{keyword}{static}\ X3DAUDIO\_LISTENER\ \ \ \ \ \ \ \ m\_listeners[4];}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00023}00023\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_validListenerCount;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00025}00025\ \ \ \ \ \textcolor{keyword}{static}\ X3DAUDIO\_DISTANCE\_CURVE\ \ m\_VolumeCurve;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00026}00026\ \ \ \ \ \textcolor{keyword}{static}\ X3DAUDIO\_DISTANCE\_CURVE\_POINT\ m\_VolumeCurvePoints[2];}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00028}00028\ \ \ \ \ \textcolor{keyword}{static}\ X3DAUDIO\_DISTANCE\_CURVE\ \ m\_DragonVolumeCurve;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00029}00029\ \ \ \ \ \textcolor{keyword}{static}\ X3DAUDIO\_DISTANCE\_CURVE\_POINT\ m\_DragonVolumeCurvePoints[2];}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00031}00031\ \ \ \ \ \textcolor{keyword}{static}\ X3DAUDIO\_DISTANCE\_CURVE\ \ m\_VolumeCurveNoDecay;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00032}00032\ \ \ \ \ \textcolor{keyword}{static}\ X3DAUDIO\_DISTANCE\_CURVE\_POINT\ m\_VolumeCurvePointsNoDecay[2];}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00034}00034\ \ \ \ \ \textcolor{keyword}{static}\ IXACT3WaveBank\ \ \ *m\_pWaveBank;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00035}00035\ \ \ \ \ \textcolor{keyword}{static}\ IXACT3WaveBank\ \ \ *m\_pWaveBank2;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00036}00036\ \ \ \ \ \textcolor{keyword}{static}\ IXACT3WaveBank\ \ \ *m\_pStreamedWaveBank;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00037}00037\ \ \ \ \ \textcolor{keyword}{static}\ IXACT3WaveBank\ \ \ *m\_pStreamedWaveBankAdditional;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00038}00038\ \ \ \ \ \textcolor{keyword}{static}\ IXACT3SoundBank\ \ *m\_pSoundBank;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00039}00039\ \ \ \ \ \textcolor{keyword}{static}\ IXACT3SoundBank\ \ *m\_pSoundBank2;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00041}00041\ \ \ \ \ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{_orbis_stubs_8h_a18c881c9602dbf86a11ec558ec2cc990}{CRITICAL\_SECTION}}\ \ \ \ \ m\_CS;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00043}00043\ \ \ \ \ \textcolor{keyword}{struct\ }soundInfo}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00044}00044\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ adding\ the\ cue\ index\ so\ we\ can\ limit\ the\ number\ of\ the\ same\ sounds\ playing\ (rain)}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00046}00046\ \ \ \ \ \ \ \ \ XACTINDEX\ \ \ idx;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00047}00047\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ iSoundBank;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00048}00048\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87}{eSOUND\_TYPE}}\ eSoundID;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00049}00049\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ x,\ y,\ z;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ volume;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00051}00051\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \ \ \ \ \ \ pitch;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00052}00052\ \ \ \ \ \ \ \ \ IXACT3Cue\ \ \ *pCue;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ updatePos;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00054}00054\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00056}00056\ \ \ \ \ \textcolor{keywordtype}{void}\ update3DPosition(\ soundInfo\ *pInfo,\ \textcolor{keywordtype}{bool}\ bPlaceEmitterAtListener\ =\ \textcolor{keyword}{false},\ \textcolor{keywordtype}{bool}\ bIsCDMusic\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00057}00057\ \ \ \ \ \textcolor{keyword}{static}\ vector<soundInfo\ *>currentSounds;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00059}00059\ \ \ \ \ \textcolor{keywordtype}{int}\ noMusicDelay;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00060}00060\ \ \ \ \ Random\ *random;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00062}00062\ \ \ \ \ \textcolor{comment}{//\ 4J\ Added}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00063}00063\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00065}00065\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00066}00066\ \ \ \ \ \textcolor{keywordtype}{char}\ *\ m\_chMusicName;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00067}00067\ \ \ \ \ soundInfo\ m\_MusicInfo;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00069}00069\ \ \ \ \ XACTINDEX\ m\_musicIDX;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00070}00070\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_bStreamingMusicReady;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00071}00071\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_bStreamingWaveBank1Ready;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00072}00072\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_bStreamingWaveBank2Ready;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00074}00074\ \ \ \ \ \textcolor{comment}{//\ to\ handle\ volume\ changes}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00075}00075\ \ \ \ \ XACTCATEGORY\ m\_xactSFX;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00076}00076\ \ \ \ \ XACTCATEGORY\ m\_xactMusic;}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00077}00077\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00078}00078\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00079}\doxymbox{\hyperlink{class_sound_engine_ac5863ba4d2022eb8c76b78b95584496c}{00079}}\ \ \ \ \ \doxymbox{\hyperlink{class_sound_engine_ac5863ba4d2022eb8c76b78b95584496c}{SoundEngine}}();}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00080}\doxymbox{\hyperlink{class_sound_engine_a6c059b2452661429004a780a44093241}{00080}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a6c059b2452661429004a780a44093241}{destroy}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00081}\doxymbox{\hyperlink{class_sound_engine_a7f320663236a680ad83c887d60162790}{00081}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a7f320663236a680ad83c887d60162790}{play}}(\textcolor{keywordtype}{int}\ iSound,\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z,\ \textcolor{keywordtype}{float}\ volume,\ \textcolor{keywordtype}{float}\ pitch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00082}\doxymbox{\hyperlink{class_sound_engine_ab7b81993e0b29116d8539aea01ad425d}{00082}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_ab7b81993e0b29116d8539aea01ad425d}{playStreaming}}(\textcolor{keyword}{const}\ wstring\&\ name,\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y\ ,\ \textcolor{keywordtype}{float}\ z,\ \textcolor{keywordtype}{float}\ volume,\ \textcolor{keywordtype}{float}\ pitch,\ \textcolor{keywordtype}{bool}\ bMusicDelay=\textcolor{keyword}{true})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00083}\doxymbox{\hyperlink{class_sound_engine_aed44e7ce4cdc8516776b672f0040c340}{00083}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_aed44e7ce4cdc8516776b672f0040c340}{playUI}}(\textcolor{keywordtype}{int}\ iSound,\ \textcolor{keywordtype}{float}\ volume,\ \textcolor{keywordtype}{float}\ pitch)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00084}\doxymbox{\hyperlink{class_sound_engine_a4c31dd1b58eb0e027fcfd1d2275926bf}{00084}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a4c31dd1b58eb0e027fcfd1d2275926bf}{playMusicTick}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00085}\doxymbox{\hyperlink{class_sound_engine_a0c3300fb75012e267c7ab3dfeef438d3}{00085}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a0c3300fb75012e267c7ab3dfeef438d3}{updateMusicVolume}}(\textcolor{keywordtype}{float}\ fVal)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00086}\doxymbox{\hyperlink{class_sound_engine_ae84db931159772145ce2eceef5b595e3}{00086}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_ae84db931159772145ce2eceef5b595e3}{updateSystemMusicPlaying}}(\textcolor{keywordtype}{bool}\ isPlaying)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00087}\doxymbox{\hyperlink{class_sound_engine_ac0b091df2437c80187e2b74c1149a5b5}{00087}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_ac0b091df2437c80187e2b74c1149a5b5}{updateSoundEffectVolume}}(\textcolor{keywordtype}{float}\ fVal)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00088}\doxymbox{\hyperlink{class_sound_engine_a1671272a18fa6c1c7de26d00e51001a6}{00088}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a1671272a18fa6c1c7de26d00e51001a6}{init}}(\doxymbox{\hyperlink{class_options}{Options}}\ *)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00089}\doxymbox{\hyperlink{class_sound_engine_ac7213798894d75dca850bbcee60eed6b}{00089}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_ac7213798894d75dca850bbcee60eed6b}{tick}}(shared\_ptr<Mob>\ *players,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})\ \textcolor{keyword}{override};\ \ \textcolor{comment}{//\ 4J\ -\/\ updated\ to\ take\ array\ of\ local\ players\ rather\ than\ single\ one}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00090}\doxymbox{\hyperlink{class_sound_engine_a77ab855cbd08ea84358c1ee06f71fc8c}{00090}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a77ab855cbd08ea84358c1ee06f71fc8c}{add}}(\textcolor{keyword}{const}\ wstring\&\ name,\ \doxymbox{\hyperlink{class_file}{File}}\ *file)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00091}\doxymbox{\hyperlink{class_sound_engine_a03f1344e9194001e3d4c63c35b2f27a3}{00091}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a03f1344e9194001e3d4c63c35b2f27a3}{addMusic}}(\textcolor{keyword}{const}\ wstring\&\ name,\ \doxymbox{\hyperlink{class_file}{File}}\ *file)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00092}\doxymbox{\hyperlink{class_sound_engine_a760db60d0dfba1c491bbb92d82d07c5a}{00092}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a760db60d0dfba1c491bbb92d82d07c5a}{addStreaming}}(\textcolor{keyword}{const}\ wstring\&\ name,\ \doxymbox{\hyperlink{class_file}{File}}\ *file)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00093}00093\ \textcolor{preprocessor}{\#ifndef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00094}00094\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a99f7d455129ff752994d6ba5f30332c0}{setXACTEngine}}(\ IXACT3Engine\ *pXACT3Engine);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00095}00095\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a690f002cad88ea4556e80297aa776fff}{CreateStreamingWavebank}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *pchName,\ IXACT3WaveBank\ **ppStreamedWaveBank);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00096}00096\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sound_engine_a4c73b1c738bcba16adbae0ef549b27e9}{CreateSoundbank}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *pchName,\ IXACT3SoundBank\ **ppSoundBank);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00098}00098\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00099}\doxymbox{\hyperlink{class_sound_engine_ad00c27e158817f6fbf407beba58c9789}{00099}}\ \ \ \ \ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_sound_engine_ad00c27e158817f6fbf407beba58c9789}{ConvertSoundPathToName}}(\textcolor{keyword}{const}\ wstring\&\ name,\ \textcolor{keywordtype}{bool}\ bConvertSpaces=\textcolor{keyword}{false})\ \textcolor{keyword}{override};}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00100}\doxymbox{\hyperlink{class_sound_engine_ab06474cec4d4d78f48426eb75e5b3f2e}{00100}}\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_sound_engine_ab06474cec4d4d78f48426eb75e5b3f2e}{isStreamingWavebankReady}}();\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Added}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00101}00101\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_sound_engine_ab06474cec4d4d78f48426eb75e5b3f2e}{isStreamingWavebankReady}}(IXACT3WaveBank\ *pWaveBank);}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00103}00103\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00104}\doxymbox{\hyperlink{class_sound_engine_ad81d68589287f92f24976fb708752a33}{00104}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_sound_engine_ad81d68589287f92f24976fb708752a33}{initAudioHardware}}(\textcolor{keywordtype}{int}\ iMinSpeakers)\textcolor{keyword}{\ override}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00105}00105\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{\ \textcolor{keywordflow}{return}\ iMinSpeakers;\}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00107}00107\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00108}00108\ \textcolor{preprocessor}{\#ifndef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00109}00109\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ XACTNotificationCallback(\ \textcolor{keyword}{const}\ XACT\_NOTIFICATION*\ pNotification\ );}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00110}00110\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_xbox_2_audio_2_sound_engine_8h_source_l00111}00111\ \};\ }
+
+\end{DoxyCode}

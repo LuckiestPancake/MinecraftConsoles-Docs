@@ -1,0 +1,262 @@
+\doxysection{Minimap.\+cpp}
+\hypertarget{_minimap_8cpp_source}{}\label{_minimap_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Minimap.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Minimap.cpp}}
+\doxymbox{\hyperlink{_minimap_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_client_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8h}{Minecraft.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minimap_8h}{Minimap.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_font_8h}{Font.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_options_8h}{Options.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_textures_8h}{Textures.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_tesselator_8h}{Tesselator.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8saveddata_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.saveddata.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8material_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.material.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#ifdef\ \_\_ORBIS\_\_}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00012}00012\ \textcolor{keywordtype}{short}\ Minimap::LUT[256];\ \ \ \ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00014}00014\ \textcolor{keywordtype}{int}\ Minimap::LUT[256];\ \ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00016}00016\ \textcolor{keywordtype}{bool}\ Minimap::genLUT\ =\ \textcolor{keyword}{true};\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00018}\doxymbox{\hyperlink{class_minimap_a2cfa19980e6aaae7a535c55e89633192}{00018}}\ \doxymbox{\hyperlink{class_minimap_a2cfa19980e6aaae7a535c55e89633192}{Minimap::Minimap}}(\doxymbox{\hyperlink{class_font}{Font}}\ *font,\ \doxymbox{\hyperlink{class_options}{Options}}\ *options,\ \doxymbox{\hyperlink{class_textures}{Textures}}\ *textures,\ \textcolor{keywordtype}{bool}\ optimised)}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00019}00019\ \{}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00020}00020\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00021}00021\ \ \ \ \ \textcolor{comment}{//\ we're\ using\ the\ RSX\ now\ to\ upload\ textures\ to\ vram,\ so\ we\ need\ the\ main\ ram\ textures\ allocated\ from\ io\ space}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00022}00022\ \ \ \ \ this-\/>pixels\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a5f64a90f12b834c164105b12c7396999}{intArray}}((\textcolor{keywordtype}{int}*)\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.allocIOMem(w*h*\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})),\ 16*16);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00024}00024\ \textcolor{preprocessor}{\#elif\ defined\ \_\_ORBIS\_\_}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00025}00025\ \ \ \ \ this-\/>pixels\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a2a93653b395cdccf6d3155da82df9453}{shortArray}}(w*h);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00026}00026\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00027}00027\ \ \ \ \ this-\/>pixels\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a5f64a90f12b834c164105b12c7396999}{intArray}}(w*h);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00028}00028\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00029}00029\ \ \ \ \ this-\/>options\ =\ options;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00030}00030\ \ \ \ \ this-\/>font\ =\ font;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00031}00031\ \ \ \ \ \doxymbox{\hyperlink{class_buffered_image}{BufferedImage}}\ *img\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_buffered_image}{BufferedImage}}(w,\ h,\ \doxymbox{\hyperlink{class_buffered_image_a51853bd5aaa11c5064bc745c7c2d9745}{BufferedImage::TYPE\_INT\_ARGB}});}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00032}00032\ \textcolor{preprocessor}{\#ifdef\ \_\_ORBIS\_\_}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00033}00033\ \ \ \ \ mapTexture\ =\ textures-\/>\doxymbox{\hyperlink{class_textures_a4c35aafb01d302d3b1eb01a25271bcce}{getTexture}}(img,\ \doxymbox{\hyperlink{class_c4_j_render_ac2b8e7e081f596e410e3b5e3ab3a105aa421faf02b5f82ae7ab3f81d23c388f15}{C4JRender::TEXTURE\_FORMAT\_RxGyBzAw5551}},\ \textcolor{keyword}{false}\ );\ \textcolor{comment}{//\ 4J\ -\/\ make\ sure\ we\ aren't\ mipmapping\ as\ we\ never\ set\ the\ data\ for\ mipmaps}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00034}00034\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00035}00035\ \ \ \ \ mapTexture\ =\ textures-\/>\doxymbox{\hyperlink{class_textures_a4c35aafb01d302d3b1eb01a25271bcce}{getTexture}}(img,\ \doxymbox{\hyperlink{class_c4_j_render_ac2b8e7e081f596e410e3b5e3ab3a105aae93a04a5d8262a19a7867bc14ee77ead}{C4JRender::TEXTURE\_FORMAT\_RxGyBzAw}},\ \textcolor{keyword}{false}\ );\ \textcolor{comment}{//\ 4J\ -\/\ make\ sure\ we\ aren't\ mipmapping\ as\ we\ never\ set\ the\ data\ for\ mipmaps}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00036}00036\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00037}00037\ \ \ \ \ \textcolor{keyword}{delete}\ img;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00038}00038\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ w\ *\ h;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00039}00039\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ pixels[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ 0x00000000;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00041}00041\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00043}00043\ \ \ \ \ \textcolor{comment}{//\ 4J\ added\ -\/\ generate\ the\ colour\ mapping\ that\ we'll\ be\ needing\ as\ a\ LUT\ to\ minimise\ processing\ we\ actually\ need\ to\ do\ during\ normal\ rendering}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00044}00044\ \ \ \ \ \textcolor{keywordflow}{if}(\ genLUT\ )}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00045}00045\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00046}00046\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minimap_a91e0c99b011ff0879f36799280b7af92}{reloadColours}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00047}00047\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00048}00048\ \ \ \ \ renderCount\ =\ 0;\ \ \ \ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00049}00049\ \ \ \ \ m\_optimised\ =\ optimised;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00050}00050\ \}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00052}\doxymbox{\hyperlink{class_minimap_a91e0c99b011ff0879f36799280b7af92}{00052}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minimap_a91e0c99b011ff0879f36799280b7af92}{Minimap::reloadColours}}()}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00053}00053\ \{}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00054}00054\ \ \ \ \ \doxymbox{\hyperlink{class_colour_table}{ColourTable}}\ *colourTable\ =\ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_a3f19a2d5cb1b3b4d216b4107df887a6b}{getColourTable}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00055}00055\ \ \ \ \ \textcolor{comment}{//\ 4J\ note\ that\ this\ code\ has\ been\ extracted\ pretty\ much\ as\ it\ was\ in\ Minimap::render,\ although\ with\ some\ byte\ order\ changes}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00056}00056\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ (14\ *\ 4);\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )\ \textcolor{comment}{//\ 14\ material\ colours\ currently,\ 4\ brightnesses\ of\ each}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00057}00057\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00058}00058\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ /\ 4\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ changed\ byte\ order\ to\ save\ having\ to\ reorder\ later}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00061}00061\ \textcolor{preprocessor}{\#ifdef\ \_\_ORBIS\_\_}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ LUT[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00063}00063\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ LUT[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ (((\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ /\ w)\ \&\ 1)\ *\ 8\ +\ 16);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00065}00065\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//pixels[i]\ =\ (((i\ +\ i\ /\ w)\ \&\ 1)\ *\ 8\ +\ 16)\ <<\ 24;}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ color\ =\ colourTable-\/>\doxymbox{\hyperlink{class_colour_table_a0e221d372a697f1f24864cfbbc542cc5}{getColor}}(\ \doxymbox{\hyperlink{class_material_color_aef02c1cf4ba3e542b92a6f0fe776ecb1}{MaterialColor::colors}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ /\ 4]-\/>col\ );}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ brightness\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ \&\ 3;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ br\ =\ 220;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (brightness\ ==\ 2)\ br\ =\ 255;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (brightness\ ==\ 0)\ br\ =\ 180;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ ((color\ >>\ 16)\ \&\ 0xff)\ *\ br\ /\ 255;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ g\ =\ ((color\ >>\ 8)\ \&\ 0xff)\ *\ br\ /\ 255;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ ((color)\ \&\ 0xff)\ *\ br\ /\ 255;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ changed\ byte\ order\ to\ save\ having\ to\ reorder\ later}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00082}00082\ \textcolor{preprocessor}{\#if\ (\ defined\ \_DURANGO\ ||\ defined\ \_WIN64\ ||\ \_\_PSVITA\_\_\ )}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ LUT[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \ 255\ <<\ 24\ |\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ <<\ 16\ |\ g\ <<\ 8\ |\ r;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00084}00084\ \textcolor{preprocessor}{\#elif\ defined\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ LUT[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \ 255\ <<\ 24\ |\ r\ <<\ 16\ |\ g\ <<\ 8\ |\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}};}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00086}00086\ \textcolor{preprocessor}{\#elif\ defined\ \_\_ORBIS\_\_}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ r\ >>=\ 3;\ g\ >>=\ 3;\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ >>=\ 3;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ LUT[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ 1\ <<\ 15\ |\ (\ r\ <<\ 10\ )\ |\ (\ g\ <<\ 5\ )\ |\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}};}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00089}00089\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ LUT[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \ r\ <<\ 24\ |\ g\ <<\ 16\ |\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ <<\ 8\ |\ 255;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00091}00091\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//pixels[i]\ =\ (255)\ <<\ 24\ |\ r\ <<\ 16\ |\ g\ <<\ 8\ |\ b;}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00096}00096\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00097}00097\ \ \ \ \ genLUT\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00098}00098\ \}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00100}00100\ \textcolor{comment}{//\ 4J\ added\ entityId}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00101}\doxymbox{\hyperlink{class_minimap_ad9e4f7f5b3a47838ff81270902d6a09d}{00101}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_minimap_ad9e4f7f5b3a47838ff81270902d6a09d}{Minimap::render}}(shared\_ptr<Player>\ player,\ \doxymbox{\hyperlink{class_textures}{Textures}}\ *textures,\ shared\_ptr<MapItemSavedData>\ data,\ \textcolor{keywordtype}{int}\ entityId)}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00102}00102\ \{}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00103}00103\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ only\ update\ every\ 8\ renders,\ as\ an\ optimisation}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00104}00104\ \ \ \ \ \textcolor{comment}{//\ We\ don't\ want\ to\ use\ this\ for\ ItemFrame\ renders\ of\ maps,\ as\ then\ we\ can't\ have\ different\ maps\ together}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00105}00105\ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_optimised\ ||\ (\ renderCount\ \&\ 7\ )\ ==\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00106}00106\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ w\ *\ h;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ val\ =\ data-\/>colors[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ moved\ the\ code\ that\ used\ to\ run\ here\ into\ a\ LUT\ that\ is\ generated\ once\ in\ the\ ctor\ above}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ pixels[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ LUT[val];}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00113}00113\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00114}00114\ \ \ \ \ renderCount++;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00116}00116\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ changed\ -\/\ have\ changed\ texture\ generation\ here\ to\ put\ the\ bytes\ in\ the\ right\ order\ already,\ so\ we\ don't\ have\ to\ do\ any\ copying\ round\ etc.\ in\ the\ texture\ replacement\ itself}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00117}00117\ \ \ \ \ textures-\/>\doxymbox{\hyperlink{class_textures_ad470af005d18eb85b9232c94ae0fbc49}{replaceTextureDirect}}(pixels,\ w,\ h,\ mapTexture);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00119}00119\ \ \ \ \ \textcolor{keywordtype}{int}\ x\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00120}00120\ \ \ \ \ \textcolor{keywordtype}{int}\ y\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00121}00121\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator}{Tesselator}}\ *t\ =\ \doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{Tesselator::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00123}00123\ \ \ \ \ \textcolor{keywordtype}{float}\ vo\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00125}00125\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9f7394ec92b287ce8e47c0ba999e67c9}{glBindTexture}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_afbebef4b261b4a80484b5ac02a402aa2}{GL\_TEXTURE\_2D}},\ mapTexture);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00126}00126\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a83a31fb2bff21972c45e737ab22ca7c7}{GL\_BLEND}});}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00127}00127\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ab1bdb0ffac837fbff1930ab41f146829}{glBlendFunc}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a3fecd4af71ce9a34f968322cd13fb379}{GL\_ONE}},\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a2ea55774040dadfac77b7c6c4f295fb2}{GL\_ONE\_MINUS\_SRC\_ALPHA}});}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00128}00128\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a4b124156e80d1ef02fba1176aab54063}{GL\_ALPHA\_TEST}});}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00129}00129\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00130}00130\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ moved\ to\ -\/0.02\ to\ stop\ z\ fighting\ (\ was\ -\/0.01)}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00131}00131\ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ Vita\ still\ has\ issues\ so\ push\ it\ a\ bit\ more}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00132}00132\ \ \ \ \ \textcolor{keywordtype}{float}\ Offset\ =\ -\/0.02f;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00133}00133\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00134}00134\ \ \ \ \ Offset\ =\ -\/0.03f;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00135}00135\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00136}00136\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}((\textcolor{keywordtype}{float})(x\ +\ 0\ +\ vo),\ (\textcolor{keywordtype}{float})(\ y\ +\ h\ -\/\ vo),\ (\textcolor{keywordtype}{float})(\ Offset),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00137}00137\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}((\textcolor{keywordtype}{float})(x\ +\ w\ -\/\ vo),\ (\textcolor{keywordtype}{float})(\ y\ +\ h\ -\/\ vo),\ (\textcolor{keywordtype}{float})(\ Offset),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00138}00138\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}((\textcolor{keywordtype}{float})(x\ +\ w\ -\/\ vo),\ (\textcolor{keywordtype}{float})(\ y\ +\ 0\ +\ vo),\ (\textcolor{keywordtype}{float})(\ Offset),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0));}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00139}00139\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}((\textcolor{keywordtype}{float})(x\ +\ 0\ +\ vo),\ (\textcolor{keywordtype}{float})(\ y\ +\ 0\ +\ vo),\ (\textcolor{keywordtype}{float})(\ Offset),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0));}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00140}00140\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00141}00141\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a4b124156e80d1ef02fba1176aab54063}{GL\_ALPHA\_TEST}});}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00142}00142\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a83a31fb2bff21972c45e737ab22ca7c7}{GL\_BLEND}});}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00145}00145\ \ \ \ \ textures-\/>\doxymbox{\hyperlink{class_textures_a4e4e397fde66d1e93bdafbdbe2b8ff71}{bind}}(textures-\/>loadTexture(\doxymbox{\hyperlink{_textures_8h_a3bc692de7f45db575aad1a0adbeb12f3ad226c54015f993bb7dcc017a906d95a6}{TN\_MISC\_MAPICONS}}));\textcolor{comment}{//L"{}/misc/mapicons.png"{}));}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00147}00147\ \textcolor{preprocessor}{\#ifdef\ \_LARGE\_WORLDS}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00148}00148\ \ \ \ \ vector<MapItemSavedData::MapDecoration\ *>\ m\_edgeIcons;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00149}00149\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00151}00151\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ stack\ the\ map\ icons}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00152}00152\ \ \ \ \ \textcolor{keywordtype}{float}\ fIconZ=-\/0.04f;\textcolor{comment}{//\ 4J\ -\/\ moved\ to\ -\/0.04\ (was\ -\/0.02)\ to\ stop\ z\ fighting}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00153}00153\ \ \ \ \ \textcolor{keywordflow}{for}(\ \doxymbox{\hyperlink{class_map_item_saved_data_1_1_map_decoration}{MapItemSavedData::MapDecoration}}\ *dec\ :\ data-\/>decorations\ )}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00154}00154\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!dec-\/>\doxymbox{\hyperlink{class_map_item_saved_data_1_1_map_decoration_a246d9d649c28a138d051b54a697fe98a}{visible}})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ imgIndex\ =\ dec-\/>\doxymbox{\hyperlink{class_map_item_saved_data_1_1_map_decoration_adcfae5ed473352d15a666e1f8d8bb655}{img}};}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00159}00159\ \textcolor{preprocessor}{\#ifdef\ \_LARGE\_WORLDS}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ For\ edge\ icons,\ use\ a\ different\ texture}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(imgIndex\ >=\ 16)}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ m\_edgeIcons.push\_back(dec);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00166}00166\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ For\ item\ frame\ renders,\ the\ player\ is\ nullptr.\ We\ do\ not\ want\ to\ show\ player\ icons\ on\ the\ frames.}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(player\ ==\ \textcolor{keyword}{nullptr}\ \&\&\ (imgIndex\ !=\ 12))\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (player\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ imgIndex\ ==\ 12)\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ imgIndex\ ==\ 12\ \&\&\ dec-\/>\doxymbox{\hyperlink{class_map_item_saved_data_1_1_map_decoration_a22842972ada37ed5b427c6cb745eb6c6}{entityId}}\ !=\ entityId)\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(x\ +\ dec-\/>\doxymbox{\hyperlink{class_map_item_saved_data_1_1_map_decoration_aec00adee342c2053470a5717ea3dfff0}{x}}\ /\ 2.0f\ +\ w\ /\ 2,\ y\ +\ dec-\/>\doxymbox{\hyperlink{class_map_item_saved_data_1_1_map_decoration_af57707c90a2c90329db4cebbd3400c32}{y}}\ /\ 2.0f\ +\ h\ /\ 2,\ fIconZ);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(dec-\/>\doxymbox{\hyperlink{class_map_item_saved_data_1_1_map_decoration_aa12ecada372147a099175daf6b261bbc}{rot}}\ *\ 360\ /\ 16.0f,\ 0,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(4,\ 4,\ 3);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(-\/1.0f\ /\ 8.0f,\ +1.0f\ /\ 8.0f,\ 0);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00178}00178\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ u0\ =\ (imgIndex\ \%\ 4\ +\ 0)\ /\ 4.0f;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ v0\ =\ (imgIndex\ /\ 4\ +\ 0)\ /\ 4.0f;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ u1\ =\ (imgIndex\ \%\ 4\ +\ 1)\ /\ 4.0f;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ v1\ =\ (imgIndex\ /\ 4\ +\ 1)\ /\ 4.0f;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(-\/1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(+1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0),\ (\textcolor{keywordtype}{float})(\ u0),\ (\textcolor{keywordtype}{float})(\ v0));}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(+1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(+1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0),\ (\textcolor{keywordtype}{float})(\ u1),\ (\textcolor{keywordtype}{float})(\ v0));}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(+1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(-\/1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0),\ (\textcolor{keywordtype}{float})(\ u1),\ (\textcolor{keywordtype}{float})(\ v1));}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(-\/1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(-\/1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0),\ (\textcolor{keywordtype}{float})(\ u0),\ (\textcolor{keywordtype}{float})(\ v1));}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ fIconZ-\/=0.01f;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00192}00192\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00193}00193\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00194}00194\ \textcolor{preprocessor}{\#ifdef\ \_LARGE\_WORLDS}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00195}00195\ \ \ \ \ \textcolor{comment}{//\ For\ players\ on\ the\ edge\ of\ the\ world}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00196}00196\ \ \ \ \ textures-\/>\doxymbox{\hyperlink{class_textures_a4e4e397fde66d1e93bdafbdbe2b8ff71}{bind}}(textures-\/>loadTexture(TN\_MISC\_ADDITIONALMAPICONS));}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00198}00198\ \ \ \ \ fIconZ=-\/0.04f;\textcolor{comment}{//\ 4J\ -\/\ moved\ to\ -\/0.04\ (was\ -\/0.02)\ to\ stop\ z\ fighting}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00199}00199\ \ \ \ \ \textcolor{keywordflow}{for}(\ \doxymbox{\hyperlink{class_map_item_saved_data_1_1_map_decoration}{MapItemSavedData::MapDecoration}}\ *dec\ :\ m\_edgeIcons\ )}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00200}00200\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ imgIndex\ =\ dec-\/>\doxymbox{\hyperlink{class_map_item_saved_data_1_1_map_decoration_adcfae5ed473352d15a666e1f8d8bb655}{img}};}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ imgIndex\ -\/=\ 16;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00203}00203\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ For\ item\ frame\ renders,\ the\ player\ is\ nullptr.\ We\ do\ not\ want\ to\ show\ player\ icons\ on\ the\ frames.}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(player\ ==\ \textcolor{keyword}{nullptr}\ \&\&\ (imgIndex\ !=\ 12))\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (player\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ imgIndex\ ==\ 12)\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ imgIndex\ ==\ 12\ \&\&\ dec-\/>\doxymbox{\hyperlink{class_map_item_saved_data_1_1_map_decoration_a22842972ada37ed5b427c6cb745eb6c6}{entityId}}\ !=\ entityId)\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(x\ +\ dec-\/>\doxymbox{\hyperlink{class_map_item_saved_data_1_1_map_decoration_aec00adee342c2053470a5717ea3dfff0}{x}}\ /\ 2.0f\ +\ w\ /\ 2,\ y\ +\ dec-\/>\doxymbox{\hyperlink{class_map_item_saved_data_1_1_map_decoration_af57707c90a2c90329db4cebbd3400c32}{y}}\ /\ 2.0f\ +\ h\ /\ 2,\ fIconZ);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(dec-\/>\doxymbox{\hyperlink{class_map_item_saved_data_1_1_map_decoration_aa12ecada372147a099175daf6b261bbc}{rot}}\ *\ 360\ /\ 16.0f,\ 0,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(4,\ 4,\ 3);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(-\/1.0f\ /\ 8.0f,\ +1.0f\ /\ 8.0f,\ 0);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00214}00214\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ u0\ =\ (imgIndex\ \%\ 4\ +\ 0)\ /\ 4.0f;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ v0\ =\ (imgIndex\ /\ 4\ +\ 0)\ /\ 4.0f;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ u1\ =\ (imgIndex\ \%\ 4\ +\ 1)\ /\ 4.0f;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ v1\ =\ (imgIndex\ /\ 4\ +\ 1)\ /\ 4.0f;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(-\/1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(+1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0),\ (\textcolor{keywordtype}{float})(\ u0),\ (\textcolor{keywordtype}{float})(\ v0));}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(+1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(+1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0),\ (\textcolor{keywordtype}{float})(\ u1),\ (\textcolor{keywordtype}{float})(\ v0));}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(+1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(-\/1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0),\ (\textcolor{keywordtype}{float})(\ u1),\ (\textcolor{keywordtype}{float})(\ v1));}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(-\/1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(-\/1),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0),\ (\textcolor{keywordtype}{float})(\ u0),\ (\textcolor{keywordtype}{float})(\ v1));}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ fIconZ-\/=0.01f;}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00228}00228\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00229}00229\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00231}00231\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00232}00232\ \textcolor{comment}{//\ \ \ \ \ \ \ \ glRotatef(0,\ 1,\ 0,\ 0);}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00233}00233\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(0,\ 0,\ -\/0.06f);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00234}00234\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(1,\ 1,\ 1);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00235}00235\ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Don't\ render\ the\ text\ name,\ except\ in\ debug}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00236}00236\ \textcolor{comment}{//\#if\ 1}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00237}00237\ \textcolor{comment}{//\#ifdef\ \_DEBUG}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00238}00238\ \textcolor{comment}{//\ \ \ \ font-\/>draw(data-\/>id,\ x,\ y,\ 0xff000000);}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00239}00239\ \textcolor{comment}{//\#else}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00240}00240\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ TU-\/1\ hotfix}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00241}00241\ \ \ \ \ \textcolor{comment}{//\ DCR:\ Render\ the\ players\ current\ position\ here\ instead}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00242}00242\ \ \ \ \ \textcolor{keywordflow}{if}(player\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00243}00243\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00244}00244\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ playerPosText[32];}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a1078089d09549c80df3d4320d5798d24}{ZeroMemory}}(\&playerPosText,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{wchar\_t})\ *\ 32);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ posx\ =\ floor(player-\/>x);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ posy\ =\ floor(player-\/>y);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ posz\ =\ floor(player-\/>z);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ swprintf(playerPosText,\ 32,\ L\textcolor{stringliteral}{"{}X:\ \%d,\ Y:\ \%d,\ Z:\ \%d"{}},\ posx,\ posy,\ posz);}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00251}00251\ \ \ \ \ \ \ \ \ font-\/>draw(playerPosText,\ x,\ y,\ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>getColourTable()-\/>getColour(\doxymbox{\hyperlink{_app__enums_8h_a2002da069475994a59bdad11e6aa4142a5fca82ba96ad3a54954cee690d342587}{eMinecraftColour\_Map\_Text}}));}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00252}00252\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00253}00253\ \textcolor{comment}{//\#endif}}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00254}00254\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{_minimap_8cpp_source_l00256}00256\ \}}
+
+\end{DoxyCode}

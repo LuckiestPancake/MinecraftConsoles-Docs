@@ -1,0 +1,631 @@
+\doxysection{Sparse\+Data\+Storage.\+cpp}
+\hypertarget{_sparse_data_storage_8cpp_source}{}\label{_sparse_data_storage_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/SparseDataStorage.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/SparseDataStorage.cpp}}
+\doxymbox{\hyperlink{_sparse_data_storage_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_sparse_data_storage_8h}{SparseDataStorage.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00004}00004\ \textcolor{comment}{//\ Note:\ See\ header\ for\ an\ overview\ of\ this\ class}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00006}00006\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_sparse_data_storage_acbc0e1cbfd1dfd72ddbd9889e43c61d9}{SparseDataStorage::deleteQueueIndex}};}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00007}00007\ XLockFreeStack\ <unsigned\ char>\ \doxymbox{\hyperlink{class_sparse_data_storage_a3ecd8d99b6e152520c415afd5a7fddc5}{SparseDataStorage::deleteQueue}}[3];}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00009}\doxymbox{\hyperlink{class_sparse_data_storage_a87efe37c59194e746f067017b45f9b09}{00009}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sparse_data_storage_a87efe37c59194e746f067017b45f9b09}{SparseDataStorage::staticCtor}}()}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00010}00010\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00011}00011\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 3;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00012}00012\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00013}00013\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_a3ecd8d99b6e152520c415afd5a7fddc5}{deleteQueue}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].Initialize();}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00014}00014\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00015}00015\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00017}00017\ \textcolor{comment}{//\ Initialise\ data\ storage,\ with\ very\ limited\ compression\ -\/\ the\ very\ first\ plane\ is\ stored\ as\ either\ compressed\ to\ be\ "{}all\ 0"{},\ and\ the\ rest\ of\ the\ planes\ aren't\ compressed\ at\ all.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00018}00018\ \textcolor{comment}{//\ The\ reason\ behind\ this\ is\ to\ keep\ the\ total\ allocation\ as\ a\ round\ number\ of\ 4K\ (small)\ pages,\ ie\ 16K.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00019}00019\ \textcolor{comment}{//\ By\ doing\ this,\ and\ doing\ this\ "{}special"{}\ allocation\ as\ a\ XPhysicalAlloc\ rather\ than\ a\ malloc,\ we\ can\ help\ ensure\ that\ this\ full\ allocation\ gets\ cleaned\ up\ properly\ when\ the\ first}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00020}00020\ \textcolor{comment}{//\ proper\ compression\ is\ done\ on\ this\ storage.\ If\ it\ were\ just\ allocated\ with\ malloc,\ then\ the\ memory\ management\ system\ would\ have\ a\ large\ number\ of\ 16512\ allocations\ to\ free,\ and}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00021}00021\ \textcolor{comment}{//\ it\ seems\ from\ experimentation\ that\ these\ basically\ don't\ make\ it\ back\ to\ the\ system\ as\ free\ pages.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00022}00022\ \textcolor{comment}{//\ Note\ -\/\ the\ other\ approach\ here\ would\ be\ to\ allocate\ *no*\ actual\ storage\ for\ the\ data\ at\ the\ ctor\ stage.\ However,\ as\ chunks\ are\ created\ then\ this\ creates\ an\ awful\ lot\ of\ intermediate}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00023}00023\ \textcolor{comment}{//\ stages\ as\ each\ line\ of\ data\ is\ added,\ so\ it\ is\ actually\ much\ cleaner\ to\ just\ allocate\ almost\ fully\ here\ \&\ then\ attempt\ to\ do\ a\ single\ compression\ pass\ over\ the\ data\ later\ on.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00024}\doxymbox{\hyperlink{class_sparse_data_storage_af4264cc31b07463a6a164396e0163da4}{00024}}\ \doxymbox{\hyperlink{class_sparse_data_storage_af4264cc31b07463a6a164396e0163da4}{SparseDataStorage::SparseDataStorage}}()}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00025}00025\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00026}00026\ \ \ \ \ \textcolor{comment}{//\ Allocate\ using\ physical\ alloc.\ As\ this\ will\ (by\ default)\ return\ memory\ from\ the\ pool\ of\ 4KB\ pages,\ the\ address\ will\ in\ the\ range\ of\ MM\_PHYSICAL\_4KB\_BASE\ upwards.\ We\ can\ use}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00027}00027\ \ \ \ \ \textcolor{comment}{//\ this\ fact\ to\ identify\ the\ allocation\ later,\ and\ so\ free\ it\ with\ the\ corresponding\ call\ to\ XPhysicalFree.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00028}00028\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00029}00029\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *planeIndices\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)\doxymbox{\hyperlink{_extrax64_stubs_8cpp_a8b2942a18759003029851add8d8e59da}{XPhysicalAlloc}}(128\ *\ 128,\ \doxymbox{\hyperlink{_orbis_stubs_8h_a3172fdfcf8c4a113f7b669b00c12033b}{MAXULONG\_PTR}},\ 4096,\ \doxymbox{\hyperlink{_orbis_stubs_8h_a42fcee19fa47dbf8252f593d0c565c67}{PAGE\_READWRITE}});}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00030}00030\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00031}00031\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *planeIndices\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(128\ *\ 128));}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00032}00032\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00033}00033\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data\ =\ planeIndices\ +\ 128;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00034}00034\ \ \ \ \ planeIndices[0]\ =\ ALL\_0\_INDEX;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00035}00035\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 1;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 128;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00036}00036\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ planeIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00038}00038\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00039}00039\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_acc8200714c9183c5a458a428d5586e6e}{XMemSet}}(data,\ 0,\ 128\ *\ 127);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00041}00041\ \ \ \ \ \textcolor{comment}{//\ Data\ and\ count\ packs\ together\ the\ pointer\ to\ our\ data\ and\ the\ count\ of\ planes\ allocated\ -\/\ 127\ planes\ allocated\ in\ this\ case}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00042}00042\ \textcolor{preprocessor}{\#pragma\ warning\ (\ disable\ :\ 4826\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00043}00043\ \ \ \ \ dataAndCount\ =\ 0x007F000000000000L\ |\ ((\ (int64\_t)\ planeIndices\ )\ \&\ 0x0000ffffffffffffL);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00044}00044\ \textcolor{preprocessor}{\#pragma\ warning\ (\ default\ :\ 4826\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00045}00045\ \textcolor{preprocessor}{\#ifdef\ DATA\_COMPRESSION\_STATS}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00046}00046\ \ \ \ \ count\ =\ 128;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00047}00047\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00048}00048\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00050}\doxymbox{\hyperlink{class_sparse_data_storage_a6cfe085522c242e1d5edf1091f879248}{00050}}\ \doxymbox{\hyperlink{class_sparse_data_storage_af4264cc31b07463a6a164396e0163da4}{SparseDataStorage::SparseDataStorage}}(\textcolor{keywordtype}{bool}\ isUpper)}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00051}00051\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{comment}{//\ Allocate\ using\ physical\ alloc.\ As\ this\ will\ (by\ default)\ return\ memory\ from\ the\ pool\ of\ 4KB\ pages,\ the\ address\ will\ in\ the\ range\ of\ MM\_PHYSICAL\_4KB\_BASE\ upwards.\ We\ can\ use}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00053}00053\ \ \ \ \ \textcolor{comment}{//\ this\ fact\ to\ identify\ the\ allocation\ later,\ and\ so\ free\ it\ with\ the\ corresponding\ call\ to\ XPhysicalFree.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00054}00054\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *planeIndices\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(128));}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00055}00055\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 128;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00056}00056\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ planeIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ ALL\_0\_INDEX;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00058}00058\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00060}00060\ \ \ \ \ \textcolor{comment}{//\ Data\ and\ count\ packs\ together\ the\ pointer\ to\ our\ data\ and\ the\ count\ of\ planes\ allocated\ -\/\ 127\ planes\ allocated\ in\ this\ case}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00061}00061\ \textcolor{preprocessor}{\#pragma\ warning\ (\ disable\ :\ 4826\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00062}00062\ \ \ \ \ dataAndCount\ =\ 0x0000000000000000L\ |\ ((\ (int64\_t)\ planeIndices\ )\ \&\ 0x0000ffffffffffffL);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00063}00063\ \textcolor{preprocessor}{\#pragma\ warning\ (\ default\ :\ 4826\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00064}00064\ \textcolor{preprocessor}{\#ifdef\ DATA\_COMPRESSION\_STATS}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00065}00065\ \ \ \ \ count\ =\ 128;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00066}00066\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00067}00067\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00069}\doxymbox{\hyperlink{class_sparse_data_storage_ac937030ac81e458de2cb8f9c8efda8ba}{00069}}\ \doxymbox{\hyperlink{class_sparse_data_storage_ac937030ac81e458de2cb8f9c8efda8ba}{SparseDataStorage::\string~SparseDataStorage}}()}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00070}00070\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00071}00071\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *indicesAndData\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)(dataAndCount\ \&\ 0x0000ffffffffffff);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00072}00072\ \ \ \ \ \textcolor{comment}{//\ Determine\ correct\ means\ to\ free\ this\ data\ -\/\ could\ have\ been\ allocated\ either\ with\ XPhysicalAlloc\ or\ malloc}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00074}00074\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00075}00075\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})indicesAndData\ >=\ MM\_PHYSICAL\_4KB\_BASE\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00076}00076\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a800dbd2e571d7232fe3466c067d2753c}{XPhysicalFree}}(indicesAndData);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00078}00078\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00079}00079\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00080}00080\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00081}00081\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(indicesAndData);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00083}00083\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00084}00084\ \textcolor{comment}{//\ \ printf("{}Free\ (in\ dtor)\ 0x\%x\(\backslash\)n"{},\ indicesAndData);}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00085}00085\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00087}\doxymbox{\hyperlink{class_sparse_data_storage_a48020876182ac87ec3ecd9d241f93324}{00087}}\ \doxymbox{\hyperlink{class_sparse_data_storage_af4264cc31b07463a6a164396e0163da4}{SparseDataStorage::SparseDataStorage}}(\doxymbox{\hyperlink{class_sparse_data_storage_af4264cc31b07463a6a164396e0163da4}{SparseDataStorage}}\ *copyFrom)}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00088}00088\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00089}00089\ \ \ \ \ \textcolor{comment}{//\ Extra\ details\ of\ source\ storage}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00090}00090\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ sourceDataAndCount\ =\ copyFrom-\/>dataAndCount;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00091}00091\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *sourceIndicesAndData\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)(sourceDataAndCount\ \&\ 0x0000ffffffffffff);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00092}00092\ \ \ \ \ \textcolor{keywordtype}{int}\ sourceCount\ =\ (sourceDataAndCount\ >>\ 48\ )\ \&\ 0xffff;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00094}00094\ \ \ \ \ \textcolor{comment}{//\ Allocate\ \&\ copy\ indices\ (\ 128\ bytes\ )\ and\ any\ allocated\ planes\ (128\ *\ count)}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00095}00095\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *destIndicesAndData\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(sourceCount\ *\ 128\ +\ 128));}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00097}00097\ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ I've\ moved\ this\ to\ be\ before\ the\ memcpy\ because\ of\ a\ very\ strange\ bug\ on\ vita.\ Sometimes\ dataAndCount\ wasn't\ valid\ in\ time\ when\ ::get\ was\ called.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00098}00098\ \ \ \ \ \textcolor{comment}{//\ This\ should\ never\ happen\ and\ this\ isn't\ a\ proper\ solution\ but\ fixes\ it\ for\ now.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00099}00099\ \textcolor{preprocessor}{\#pragma\ warning\ (\ disable\ :\ 4826\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00100}00100\ \ \ \ \ dataAndCount\ =\ (\ sourceDataAndCount\ \&\ 0xffff000000000000L\ )\ |\ (\ ((int64\_t)\ destIndicesAndData\ )\ \&\ 0x0000ffffffffffffL\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00101}00101\ \textcolor{preprocessor}{\#pragma\ warning\ (\ default\ :\ 4826\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00103}00103\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a047650ed34d3e8b487dcc84d40e8b5b7}{XMemCpy}}(\ destIndicesAndData,\ sourceIndicesAndData,\ sourceCount\ *\ 128\ +\ 128\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00105}00105\ \textcolor{preprocessor}{\#ifdef\ DATA\_COMPRESSION\_STATS}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00106}00106\ \ \ \ \ count\ =\ sourceCount;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00107}00107\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00108}00108\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00110}00110\ \textcolor{comment}{//\ Set\ all\ data\ values\ from\ a\ data\ array\ of\ length\ 16384\ (128\ x\ 16\ x\ 16\ x\ 0.5).\ Source\ data\ must\ have\ same\ order\ as\ original\ java\ game}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00111}\doxymbox{\hyperlink{class_sparse_data_storage_ab02e0f1d1420b9f0babae433638a7621}{00111}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sparse_data_storage_ab02e0f1d1420b9f0babae433638a7621}{SparseDataStorage::setData}}(\doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ dataIn,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ inOffset)}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00112}00112\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00113}00113\ \ \ \ \ \textcolor{comment}{//\ \ Original\ order\ is\ defined\ as:}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00114}00114\ \ \ \ \ \textcolor{comment}{//\ \ pos\ =\ (x\ <<\ 11\ |\ z\ <<\ 7\ |\ y);}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00115}00115\ \ \ \ \ \textcolor{comment}{//\ \ slot\ =\ pos\ >>\ 1;}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00116}00116\ \ \ \ \ \textcolor{comment}{//\ \ part\ =\ pos\ \&\ 1;}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00117}00117\ \ \ \ \ \textcolor{comment}{//\ \ if\ (\ part\ ==\ 0\ )\ value\ =\ data[slot]\ \&\ 0xf}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00118}00118\ \ \ \ \ \textcolor{comment}{//\ \ else\ value\ =\ (data[slot]\ >>\ 4)\ \&\ 0xf}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00120}00120\ \ \ \ \ \textcolor{comment}{//\ Two\ passed\ through\ the\ data.\ First\ pass\ sets\ up\ plane\ indices,\ and\ counts\ number\ of\ planes\ that\ we\ actually\ need\ to\ allocate}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00121}00121\ \ \ \ \ \textcolor{keywordtype}{int}\ allocatedPlaneCount\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00122}00122\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ \_planeIndices[128];}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00124}00124\ \ \ \ \ \textcolor{comment}{//unsigned\ char\ *lastDataPointer\ =\ (unsigned\ char\ *)(dataAndCount\ \&\ 0x0000ffffffffffff);}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00126}00126\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ y\ =\ 0;\ y\ <\ 128;\ y++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00127}00127\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ all0\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00129}00129\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ xz\ =\ 0;\ xz\ <\ 256;\ xz++\ )\ \ \ \textcolor{comment}{//\ 256\ in\ loop\ as\ 16\ x\ 16\ separate\ bytes\ need\ checked}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ pos\ =\ (\ xz\ <<\ 7\ )\ |\ y;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ slot\ =\ pos\ >>\ 1;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ part\ =\ pos\ \&\ 1;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ value\ =\ (\ dataIn[slot\ +\ inOffset]\ >>\ (part\ *\ 4)\ )\ \&\ 15;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ value\ !=\ 0\ )\ all0\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ all0\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \_planeIndices[y]\ =\ ALL\_0\_INDEX;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \_planeIndices[y]\ =\ allocatedPlaneCount++;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00146}00146\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00148}00148\ \ \ \ \ \textcolor{comment}{//\ Allocate\ required\ storage}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00149}00149\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *planeIndices\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(128\ *\ allocatedPlaneCount\ +\ 128));}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00150}00150\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data\ =\ planeIndices\ +\ 128;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00151}00151\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a047650ed34d3e8b487dcc84d40e8b5b7}{XMemCpy}}(planeIndices,\ \_planeIndices,\ 128);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00153}00153\ \ \ \ \ \textcolor{comment}{//\ Second\ pass\ through\ to\ actually\ copy\ the\ data\ in\ to\ the\ storage\ allocated\ for\ the\ required\ planes}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00154}00154\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *pucOut\ =\ data;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00155}00155\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ y\ =\ 0;\ y\ <\ 128\ ;\ y++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00156}00156\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Index\ will\ be\ <\ 128\ if\ we\ allocated\ storage\ for\ it\ and\ it\ has\ a\ valid\ index.\ No\ need\ to\ actually\ check\ the\ index\ as}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ know\ they\ were\ sequentially\ allocated\ above.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ planeIndices[y]\ <\ 128\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ part\ =\ y\ \&\ 1;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//int\ shift\ =\ 4\ *\ part;}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *pucIn\ =\ \&dataIn[\ (y\ >>\ 1)\ +\ inOffset];}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ xz\ =\ 0;\ xz\ <\ 128;\ xz++\ )\ \ \ \textcolor{comment}{//\ 128\ (\ 16\ x\ 16\ x\ 0.5\ )\ in\ loop\ as\ packing\ 2\ values\ into\ each\ destination\ byte}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *pucOut\ =\ (\ (\ *pucIn\ )\ >>\ (\ part\ *\ 4\ )\ )\ \&\ 15;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pucIn\ +=\ 64;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00169}00169\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *pucOut\ |=\ (\ (\ (\ *pucIn\ )\ >>\ (\ part\ *\ 4\ )\ )\ \&\ 15\ )\ <<\ 4;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pucIn\ +=\ 64;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pucOut++;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00175}00175\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00176}00176\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00177}00177\ \ \ \ \ \textcolor{comment}{//\ Get\ new\ data\ and\ count\ packed\ info}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00178}00178\ \textcolor{preprocessor}{\#pragma\ warning\ (\ disable\ :\ 4826\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00179}00179\ \ \ \ \ int64\_t\ newDataAndCount\ =\ \textcolor{keyword}{reinterpret\_cast<}int64\_t\textcolor{keyword}{>}(planeIndices)\ \&\ 0x0000ffffffffffffL;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00180}00180\ \textcolor{preprocessor}{\#pragma\ warning\ (\ default\ :\ 4826\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00181}00181\ \ \ \ \ newDataAndCount\ |=\ \textcolor{keyword}{static\_cast<}int64\_t\textcolor{keyword}{>}(allocatedPlaneCount)\ <<\ 48;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00183}00183\ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_af2eaba732a937d3582a76f9475062e5b}{updateDataAndCount}}(\ newDataAndCount\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00184}00184\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00186}00186\ \textcolor{comment}{//\ Gets\ all\ data\ values\ into\ an\ array\ of\ length\ 16384.\ Destination\ data\ will\ have\ same\ order\ as\ original\ java\ game.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00187}\doxymbox{\hyperlink{class_sparse_data_storage_ac14d9cc5f3be8d87c9947f9f98c97d67}{00187}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sparse_data_storage_ac14d9cc5f3be8d87c9947f9f98c97d67}{SparseDataStorage::getData}}(\doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ retArray,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ retOffset)}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00188}00188\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00189}00189\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_acc8200714c9183c5a458a428d5586e6e}{XMemSet}}(retArray.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}}\ +\ \ +\ retOffset,\ 0,\ 16384);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00190}00190\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *planeIndices,\ *data;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00191}00191\ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_aa2142619a27b5c75612c946a2b95f543}{getPlaneIndicesAndData}}(\&planeIndices,\ \&data);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00193}00193\ \ \ \ \ \textcolor{comment}{//\ \ Original\ order\ is\ defined\ as:}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00194}00194\ \ \ \ \ \textcolor{comment}{//\ \ pos\ =\ (x\ <<\ 11\ |\ z\ <<\ 7\ |\ y);}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00195}00195\ \ \ \ \ \textcolor{comment}{//\ \ slot\ =\ pos\ >>\ 1;}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00196}00196\ \ \ \ \ \textcolor{comment}{//\ \ part\ =\ pos\ \&\ 1;}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00197}00197\ \ \ \ \ \textcolor{comment}{//\ \ if\ (\ part\ ==\ 0\ )\ value\ =\ data[slot]\ \&\ 0xf}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00198}00198\ \ \ \ \ \textcolor{comment}{//\ \ else\ value\ =\ (data[slot]\ >>\ 4)\ \&\ 0xf}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00199}00199\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00200}00200\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ y\ =\ 0;\ y\ <\ 128;\ y++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00201}00201\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ planeIndices[y]\ ==\ ALL\_0\_INDEX\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ No\ need\ to\ do\ anything\ in\ this\ case\ as\ retArray\ is\ initialised\ to\ zero}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ part\ =\ y\ \&\ 1;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ shift\ =\ 4\ *\ part;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *pucOut\ =\ \&retArray.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}}[\ (y\ >>\ 1)\ +\ \ +\ retOffset];}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *pucIn\ =\ \&data[\ planeIndices[\ y\ ]\ *\ 128\ ];}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ xz\ =\ 0;\ xz\ <\ 128;\ xz++\ )\ \ \ \ \ \ \ \textcolor{comment}{//\ 128\ in\ loop\ (16\ x\ 16\ x\ 0.5)\ as\ input\ data\ is\ being\ treated\ in\ pairs\ of\ nybbles\ that\ are\ packed\ in\ the\ same\ byte}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ value\ =\ (*pucIn)\ \&\ 15;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *pucOut\ |=\ (\ value\ <<\ shift\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pucOut\ +=\ 64;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\ =\ ((*pucIn)\ >>\ 4\ )\ \&\ 15;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *pucOut\ |=\ (\ value\ <<\ shift\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pucOut\ +=\ 64;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00221}00221\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pucIn++;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00225}00225\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00226}00226\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00227}00227\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00228}00228\ \textcolor{comment}{//\ Get\ an\ individual\ data\ value}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00229}\doxymbox{\hyperlink{class_sparse_data_storage_afccb95c3014e4692da9efe58b4c7ab8b}{00229}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_sparse_data_storage_afccb95c3014e4692da9efe58b4c7ab8b}{SparseDataStorage::get}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00230}00230\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00231}00231\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *planeIndices,\ *data;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00232}00232\ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_aa2142619a27b5c75612c946a2b95f543}{getPlaneIndicesAndData}}(\&planeIndices,\ \&data);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00233}00233\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00234}00234\ \ \ \ \ \textcolor{keywordflow}{if}(\ planeIndices[y]\ ==\ ALL\_0\_INDEX\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00235}00235\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00237}00237\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00238}00238\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00239}00239\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00240}00240\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ planeIndex\ =\ x\ *\ 16\ +\ z;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Index\ within\ this\ xz\ plane}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00241}00241\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ byteIndex\ =\ planeIndex\ /\ 2;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Byte\ index\ within\ the\ plane\ (2\ tiles\ stored\ per\ byte)}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00242}00242\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ shift\ =\ (\ planeIndex\ \&\ 1\ )\ *\ 4;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Bit\ shift\ within\ the\ byte}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00243}00243\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ retval\ =\ (\ data[\ planeIndices[y]\ *\ 128\ +\ byteIndex\ ]\ >>\ shift\ )\ \&\ 15;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00244}00244\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ retval;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00246}00246\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00247}00247\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00248}00248\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00249}00249\ \textcolor{comment}{//\ Set\ an\ individual\ data\ value}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00250}\doxymbox{\hyperlink{class_sparse_data_storage_a1b3ddc178b1ac11ddc71ec615e8e3efa}{00250}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sparse_data_storage_a1b3ddc178b1ac11ddc71ec615e8e3efa}{SparseDataStorage::set}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ val)}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00251}00251\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00252}00252\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *planeIndices,\ *data;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00253}00253\ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_aa2142619a27b5c75612c946a2b95f543}{getPlaneIndicesAndData}}(\&planeIndices,\ \&data);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00255}00255\ \ \ \ \ \textcolor{comment}{//\ If\ this\ plane\ isn't\ yet\ allocated,\ then\ we\ might\ have\ some\ extra\ work\ to\ do}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00256}00256\ \ \ \ \ \textcolor{keywordflow}{if}(\ planeIndices[y]\ >=\ ALL\_0\_INDEX\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00257}00257\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ No\ data\ allocated.\ Early\ out\ though\ if\ we\ are\ storing\ what\ is\ already\ represented\ by\ our\ special\ index.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ val\ ==\ 0\ )\ \&\&\ (\ planeIndices[y]\ ==\ ALL\_0\_INDEX\ )\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00262}00262\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00263}00263\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reallocate\ the\ storage\ for\ planes\ to\ accomodate\ one\ extra}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00265}00265\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_ab844474e7892b0992750c4d1a71059f4}{addNewPlane}}(y);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ pointers\ again\ as\ these\ may\ have\ moved}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_aa2142619a27b5c75612c946a2b95f543}{getPlaneIndicesAndData}}(\&planeIndices,\ \&data);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00269}00269\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00270}00270\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00271}00271\ \ \ \ \ \textcolor{comment}{//\ Either\ data\ was\ already\ allocated,\ or\ we've\ just\ done\ that.\ Now\ store\ our\ value\ into\ the\ right\ place.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00273}00273\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ planeIndex\ =\ x\ *\ 16\ +\ z;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Index\ within\ this\ xz\ plane}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00274}00274\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ byteIndex\ =\ planeIndex\ /\ 2;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Byte\ index\ within\ the\ plane\ (2\ tiles\ stored\ per\ byte)}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00275}00275\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ shift\ =\ (\ planeIndex\ \&\ 1\ )\ *\ 4;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Bit\ shift\ within\ the\ byte}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00276}00276\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ mask\ =\ 0xf0\ >>\ shift;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00278}00278\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ idx\ =\ planeIndices[y]\ *\ 128\ +\ byteIndex;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00279}00279\ \ \ \ \ data[idx]\ =\ (\ data[idx]\ \&\ mask\ )\ |\ (\ val\ <<\ shift\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00280}00280\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00281}00281\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00283}00283\ \textcolor{comment}{//\ Sets\ a\ region\ of\ data\ values\ with\ the\ data\ at\ offset\ position\ in\ the\ array\ dataIn\ -\/\ external\ ordering\ compatible\ with\ java\ DataLayer}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00284}00284\ \textcolor{comment}{//\ Note\ -\/\ when\ data\ was\ extracted\ from\ the\ original\ data\ layers\ by\ LevelChunk::getBlocksAndData,\ y0\ had\ to\ have\ even\ alignment\ and\ y1\ -\/\ y0\ also}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00285}00285\ \textcolor{comment}{//\ needed\ to\ be\ even\ as\ data\ was\ packed\ in\ nyblles\ in\ this\ dimension,\ and\ the\ code\ didn't\ make\ any\ attempt\ to\ unpack\ it.\ This\ behaviour\ is\ copied}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00286}00286\ \textcolor{comment}{//\ here\ for\ compatibility\ even\ though\ our\ source\ data\ isn't\ packed\ this\ way.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00287}00287\ \textcolor{comment}{//\ Returns\ size\ of\ data\ copied.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00288}\doxymbox{\hyperlink{class_sparse_data_storage_a721f18b95126334ef6744d8dd7ec0691}{00288}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_sparse_data_storage_a721f18b95126334ef6744d8dd7ec0691}{SparseDataStorage::setDataRegion}}(\doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ dataIn,\ \textcolor{keywordtype}{int}\ x0,\ \textcolor{keywordtype}{int}\ y0,\ \textcolor{keywordtype}{int}\ z0,\ \textcolor{keywordtype}{int}\ x1,\ \textcolor{keywordtype}{int}\ y1,\ \textcolor{keywordtype}{int}\ z1,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}},\ \doxymbox{\hyperlink{class_sparse_data_storage_afa7557252d61fc8ebc8032dd76857033}{tileUpdatedCallback}}\ callback,\ \textcolor{keywordtype}{void}\ *param,\ \textcolor{keywordtype}{int}\ yparam)}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00289}00289\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00290}00290\ \ \ \ \ \textcolor{comment}{//\ Actual\ setting\ of\ data\ happens\ when\ calling\ set\ method\ so\ no\ need\ to\ lock\ here}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00291}00291\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *pucIn\ =\ \&dataIn.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}}[\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}];}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00292}00292\ \ \ \ \ \textcolor{keywordflow}{if}(\ callback\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00293}00293\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ x\ =\ x0;\ x\ <\ x1;\ x++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ z\ =\ z0;\ z\ <\ z1;\ z++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Emulate\ how\ data\ was\ extracted\ from\ DataLayer...\ see\ comment\ above}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ yy0\ =\ y0\ \&\ 0xfffffffe;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ len\ =\ (\ y1\ -\/\ y0\ )\ /\ 2;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ len;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ y\ =\ yy0\ +\ (\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ *\ 2\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00304}00304\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ toSet\ =\ (*pucIn)\ \&\ 15;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{class_sparse_data_storage_afccb95c3014e4692da9efe58b4c7ab8b}{get}}(x,\ y,\ z)\ !=\ toSet\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_a1b3ddc178b1ac11ddc71ec615e8e3efa}{set}}(x,\ y,\ z,\ toSet\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ callback(x,\ y,\ z,\ param,\ yparam);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ toSet\ =\ ((*pucIn)\ >>\ 4\ )\ \&\ 15;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{class_sparse_data_storage_afccb95c3014e4692da9efe58b4c7ab8b}{get}}(x,\ y\ +\ 1,\ z)\ !=\ toSet\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_a1b3ddc178b1ac11ddc71ec615e8e3efa}{set}}(x,\ y\ +\ 1,\ z,\ toSet\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ callback(x,\ y\ +\ 1,\ z,\ param,\ yparam);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pucIn++;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00321}00321\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00322}00322\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00323}00323\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ x\ =\ x0;\ x\ <\ x1;\ x++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ z\ =\ z0;\ z\ <\ z1;\ z++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Emulate\ how\ data\ was\ extracted\ from\ DataLayer...\ see\ comment\ above}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ yy0\ =\ y0\ \&\ 0xfffffffe;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ len\ =\ (\ y1\ -\/\ y0\ )\ /\ 2;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ len;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ y\ =\ yy0\ +\ (\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ *\ 2\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00334}00334\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_a1b3ddc178b1ac11ddc71ec615e8e3efa}{set}}(x,\ y,\ z,\ (*pucIn)\ \&\ 15\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_a1b3ddc178b1ac11ddc71ec615e8e3efa}{set}}(x,\ y\ +\ 1,\ z,\ ((*pucIn)\ >>\ 4\ )\ \&\ 15\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pucIn++;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00338}00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00341}00341\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00342}00342\ \ \ \ \ \textcolor{keyword}{const}\ ptrdiff\_t\ count\ =\ pucIn\ -\/\ \&dataIn.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}}[\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}];}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00343}00343\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00344}00344\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(count);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00345}00345\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00347}00347\ \textcolor{comment}{//\ Updates\ the\ data\ at\ offset\ position\ dataInOut\ with\ a\ region\ of\ data\ information\ -\/\ external\ ordering\ compatible\ with\ java\ DataLayer}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00348}00348\ \textcolor{comment}{//\ Note\ -\/\ when\ data\ was\ placed\ in\ the\ original\ data\ layers\ by\ LevelChunk::setBlocksAndData,\ y0\ had\ to\ have\ even\ alignment\ and\ y1\ -\/\ y0\ also}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00349}00349\ \textcolor{comment}{//\ needed\ to\ be\ even\ as\ data\ was\ packed\ in\ nyblles\ in\ this\ dimension,\ and\ the\ code\ didn't\ make\ any\ attempt\ to\ unpack\ it.\ This\ behaviour\ is\ copied}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00350}00350\ \textcolor{comment}{//\ here\ for\ compatibility\ even\ though\ our\ source\ data\ isn't\ packed\ this\ way}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00351}00351\ \textcolor{comment}{//\ Returns\ size\ of\ data\ copied.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00352}\doxymbox{\hyperlink{class_sparse_data_storage_ad1cca40b82f7cad47e4cde111c4bb0d1}{00352}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_sparse_data_storage_ad1cca40b82f7cad47e4cde111c4bb0d1}{SparseDataStorage::getDataRegion}}(\doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ dataInOut,\ \textcolor{keywordtype}{int}\ x0,\ \textcolor{keywordtype}{int}\ y0,\ \textcolor{keywordtype}{int}\ z0,\ \textcolor{keywordtype}{int}\ x1,\ \textcolor{keywordtype}{int}\ y1,\ \textcolor{keywordtype}{int}\ z1,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}})}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00353}00353\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00354}00354\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *pucOut\ =\ \&dataInOut.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}}[\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}];}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00355}00355\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ x\ =\ x0;\ x\ <\ x1;\ x++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00356}00356\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ z\ =\ z0;\ z\ <\ z1;\ z++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Emulate\ how\ data\ was\ extracted\ from\ DataLayer...\ see\ comment\ above}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ yy0\ =\ y0\ \&\ 0xfffffffe;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ len\ =\ (\ y1\ -\/\ y0\ )\ /\ 2;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ len;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ y\ =\ yy0\ +\ (\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ *\ 2\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00365}00365\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *pucOut\ =\ \doxymbox{\hyperlink{class_sparse_data_storage_afccb95c3014e4692da9efe58b4c7ab8b}{get}}(\ x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *pucOut\ |=\ \doxymbox{\hyperlink{class_sparse_data_storage_afccb95c3014e4692da9efe58b4c7ab8b}{get}}(\ x,\ y\ +\ 1,\ z)\ <<\ 4;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pucOut++;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00371}00371\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00372}00372\ \ \ \ \ \textcolor{keyword}{const}\ ptrdiff\_t\ count\ =\ pucOut\ -\/\ \&dataInOut.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}}[\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}];}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00373}00373\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00374}00374\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(count);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00375}00375\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00376}00376\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00377}\doxymbox{\hyperlink{class_sparse_data_storage_ab844474e7892b0992750c4d1a71059f4}{00377}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sparse_data_storage_ab844474e7892b0992750c4d1a71059f4}{SparseDataStorage::addNewPlane}}(\textcolor{keywordtype}{int}\ y)}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00378}00378\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00379}00379\ \ \ \ \ \textcolor{keywordtype}{bool}\ success\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00380}00380\ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00381}00381\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00382}00382\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ last\ packed\ data\ pointer\ \&\ count}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00383}00383\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ lastDataAndCount\ =\ dataAndCount;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00384}00384\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unpack\ count\ \&\ data\ pointer}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ lastLinesUsed\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}((lastDataAndCount\ >>\ 48)\ \&\ 0xffff);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *lastDataPointer\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)(lastDataAndCount\ \&\ 0x0000ffffffffffff);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00388}00388\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Find\ out\ what\ to\ prefill\ the\ newly\ allocated\ line\ with}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ planeIndex\ =\ lastDataPointer[y];}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00391}00391\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00392}00392\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ planeIndex\ <\ ALL\_0\_INDEX\ )\ \textcolor{keywordflow}{return};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Something\ has\ already\ allocated\ this\ line\ -\/\ we're\ done}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00393}00393\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00394}00394\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ linesUsed\ =\ lastLinesUsed\ +\ 1;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00395}00395\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00396}00396\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Allocate\ new\ memory\ storage,\ copy\ over\ anything\ from\ old\ storage,\ and\ initialise\ remainder}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00397}00397\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ dataPointer\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(linesUsed\ *\ 128\ +\ 128));}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00398}00398\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a047650ed34d3e8b487dcc84d40e8b5b7}{XMemCpy}}(\ dataPointer,\ lastDataPointer,\ 128\ *\ lastLinesUsed\ +\ 128);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00399}00399\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_acc8200714c9183c5a458a428d5586e6e}{XMemSet}}(\ dataPointer\ +\ (\ 128\ *\ lastLinesUsed\ )\ +\ 128,\ 0,\ 128\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00400}00400\ \ \ \ \ \ \ \ \ dataPointer[y]\ =\ lastLinesUsed;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00401}00401\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ new\ data\ and\ count\ packed\ info}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00403}00403\ \textcolor{preprocessor}{\#pragma\ warning\ (\ disable\ :\ 4826\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00404}00404\ \ \ \ \ \ \ \ \ int64\_t\ newDataAndCount\ =\ \textcolor{keyword}{reinterpret\_cast<}int64\_t\textcolor{keyword}{>}(dataPointer)\ \&\ 0x0000ffffffffffffL;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00405}00405\ \textcolor{preprocessor}{\#pragma\ warning\ (\ default\ :\ 4826\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00406}00406\ \ \ \ \ \ \ \ \ newDataAndCount\ |=\ \textcolor{keyword}{static\_cast<}int64\_t\textcolor{keyword}{>}(linesUsed)\ <<\ 48;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00407}00407\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00408}00408\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Attempt\ to\ update\ the\ data\ \&\ count\ atomically.\ This\ command\ will\ Only\ succeed\ if\ the\ data\ stored\ at}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00409}00409\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dataAndCount\ is\ equal\ to\ lastDataAndCount,\ and\ will\ return\ the\ value\ present\ just\ before\ the\ write\ took\ place}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00410}00410\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ lastDataAndCount2\ =\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a1c147d87e7b6599f2d7d0c0c6de00ced}{InterlockedCompareExchangeRelease64}}(\ \&dataAndCount,\ newDataAndCount,\ lastDataAndCount\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00411}00411\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00412}00412\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ lastDataAndCount2\ ==\ lastDataAndCount\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00413}00413\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ success\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Queue\ old\ data\ to\ be\ deleted}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00416}00416\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_acc8f8000487885d4585227d2be773d45}{queueForDelete}}(\ lastDataPointer\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00417}00417\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ printf("{}Marking\ for\ delete\ 0x\%x\(\backslash\)n"{},\ lastDataPointer);}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00418}00418\ \textcolor{preprocessor}{\#ifdef\ DATA\_COMPRESSION\_STATS}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ count\ =\ linesUsed;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00420}00420\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00421}00421\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00422}00422\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00423}00423\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00424}00424\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ we\ didn't\ succeed,\ queue\ data\ that\ we\ made\ to\ be\ deleted,\ and\ try\ again}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00425}00425\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_acc8f8000487885d4585227d2be773d45}{queueForDelete}}(\ dataPointer\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00426}00426\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ printf("{}Marking\ for\ delete\ (fail)\ 0x\%x\(\backslash\)n"{},\ dataPointer);}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00427}00427\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00428}00428\ \ \ \ \ \}\ \textcolor{keywordflow}{while}(\ !success\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00429}00429\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00430}00430\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00431}\doxymbox{\hyperlink{class_sparse_data_storage_aa2142619a27b5c75612c946a2b95f543}{00431}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sparse_data_storage_aa2142619a27b5c75612c946a2b95f543}{SparseDataStorage::getPlaneIndicesAndData}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ **planeIndices,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ **data)}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00432}00432\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00433}00433\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *indicesAndData\ =\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(dataAndCount\ \&\ 0x0000ffffffffffff);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00434}00434\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00435}00435\ \ \ \ \ *planeIndices\ =\ indicesAndData;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00436}00436\ \ \ \ \ *data\ =\ indicesAndData\ +\ 128;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00437}00437\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00438}00438\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00439}00439\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00440}\doxymbox{\hyperlink{class_sparse_data_storage_acc8f8000487885d4585227d2be773d45}{00440}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sparse_data_storage_acc8f8000487885d4585227d2be773d45}{SparseDataStorage::queueForDelete}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data)}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00441}00441\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00442}00442\ \ \ \ \ \textcolor{comment}{//\ Add\ this\ into\ a\ queue\ for\ deleting.\ This\ shouldn't\ be\ actually\ deleted\ until\ tick\ has\ been\ called\ twice\ from\ when}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00443}00443\ \ \ \ \ \textcolor{comment}{//\ the\ data\ went\ into\ the\ queue.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00444}00444\ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_a3ecd8d99b6e152520c415afd5a7fddc5}{deleteQueue}}[\doxymbox{\hyperlink{class_sparse_data_storage_acbc0e1cbfd1dfd72ddbd9889e43c61d9}{deleteQueueIndex}}].Push(\ data\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00445}00445\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00446}00446\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00447}\doxymbox{\hyperlink{class_sparse_data_storage_a28ad53f146f10b58df6649816178b119}{00447}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sparse_data_storage_a28ad53f146f10b58df6649816178b119}{SparseDataStorage::tick}}()}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00448}00448\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00449}00449\ \ \ \ \ \textcolor{comment}{//\ We\ have\ 3\ queues\ for\ deleting.\ Always\ delete\ from\ the\ next\ one\ after\ where\ we\ are\ writing\ to,\ so\ it\ should\ take\ 2\ ticks}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00450}00450\ \ \ \ \ \textcolor{comment}{//\ before\ we\ ever\ delete\ something,\ from\ when\ the\ request\ to\ delete\ it\ came\ in}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00451}00451\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ freeIndex\ =\ (\ \doxymbox{\hyperlink{class_sparse_data_storage_acbc0e1cbfd1dfd72ddbd9889e43c61d9}{deleteQueueIndex}}\ +\ 1\ )\ \%\ 3;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00452}00452\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00453}00453\ \textcolor{comment}{//\ \ printf("{}Free\ queue:\ \%d,\ \%d\(\backslash\)n"{},deleteQueue[freeIndex].GetEntryCount(),deleteQueue[freeIndex].GetAllocated());}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00454}00454\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *toFree\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00455}00455\ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00456}00456\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00457}00457\ \ \ \ \ \ \ \ \ toFree\ =\ \doxymbox{\hyperlink{class_sparse_data_storage_a3ecd8d99b6e152520c415afd5a7fddc5}{deleteQueue}}[freeIndex].Pop();}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00458}00458\ \textcolor{comment}{//\ \ \ \ \ \ if(\ toFree\ )\ printf("{}Deleting\ 0x\%x\(\backslash\)n"{},\ toFree);}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00459}00459\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Determine\ correct\ means\ to\ free\ this\ data\ -\/\ could\ have\ been\ allocated\ either\ with\ XPhysicalAlloc\ or\ malloc}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00460}00460\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})toFree\ >=\ MM\_PHYSICAL\_4KB\_BASE\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00462}00462\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00463}00463\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a800dbd2e571d7232fe3466c067d2753c}{XPhysicalFree}}(toFree);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00464}00464\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00465}00465\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00466}00466\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00467}00467\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00468}00468\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(toFree);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00469}00469\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00470}00470\ \ \ \ \ \}\ \textcolor{keywordflow}{while}(\ toFree\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00471}00471\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00472}00472\ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_acbc0e1cbfd1dfd72ddbd9889e43c61d9}{deleteQueueIndex}}\ =\ (\ \doxymbox{\hyperlink{class_sparse_data_storage_acbc0e1cbfd1dfd72ddbd9889e43c61d9}{deleteQueueIndex}}\ +\ 1\ )\ \%\ 3;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00473}00473\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00474}00474\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00475}00475\ \textcolor{comment}{//\ Update\ storage\ with\ a\ new\ values\ for\ dataAndCount,\ repeating\ as\ necessary\ if\ other\ simultaneous\ writes\ happen.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00476}\doxymbox{\hyperlink{class_sparse_data_storage_af2eaba732a937d3582a76f9475062e5b}{00476}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sparse_data_storage_af2eaba732a937d3582a76f9475062e5b}{SparseDataStorage::updateDataAndCount}}(int64\_t\ newDataAndCount)}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00477}00477\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00478}00478\ \ \ \ \ \textcolor{comment}{//\ Now\ actually\ assign\ this\ data\ to\ the\ storage.\ Just\ repeat\ until\ successful,\ there\ isn't\ any\ useful\ really\ that\ we\ can\ merge\ the\ results\ of\ this}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00479}00479\ \ \ \ \ \textcolor{comment}{//\ with\ any\ other\ simultaneous\ writes\ that\ might\ be\ happening.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00480}00480\ \ \ \ \ \textcolor{keywordtype}{bool}\ success\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00481}00481\ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00482}00482\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00483}00483\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ lastDataAndCount\ =\ dataAndCount;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00484}00484\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *lastDataPointer\ =\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(lastDataAndCount\ \&\ 0x0000ffffffffffff);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00485}00485\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00486}00486\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Attempt\ to\ update\ the\ data\ \&\ count\ atomically.\ This\ command\ will\ Only\ succeed\ if\ the\ data\ stored\ at}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00487}00487\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dataAndCount\ is\ equal\ to\ lastDataAndCount,\ and\ will\ return\ the\ value\ present\ just\ before\ the\ write\ took\ place}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00488}00488\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ lastDataAndCount2\ =\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a1c147d87e7b6599f2d7d0c0c6de00ced}{InterlockedCompareExchangeRelease64}}(\ \&dataAndCount,\ newDataAndCount,\ lastDataAndCount\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00489}00489\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00490}00490\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ lastDataAndCount2\ ==\ lastDataAndCount\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00491}00491\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ success\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Queue\ old\ data\ to\ be\ deleted}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00494}00494\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ printf("{}Marking\ for\ delete\ 0x\%x\ (full\ replace)\(\backslash\)n"{},\ lastDataPointer);}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00495}00495\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_acc8f8000487885d4585227d2be773d45}{queueForDelete}}(\ lastDataPointer\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00496}00496\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00497}00497\ \ \ \ \ \}\ \textcolor{keywordflow}{while}(\ !success);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00498}00498\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00499}00499\ \textcolor{preprocessor}{\#ifdef\ DATA\_COMPRESSION\_STATS}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00500}00500\ \ \ \ \ count\ =\ (\ newDataAndCount\ >>\ 48\ )\ \&\ 0xffff;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00501}00501\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00502}00502\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00503}00503\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00504}00504\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00505}00505\ \textcolor{comment}{//\ Attempt\ to\ compress\ the\ stored\ data.\ This\ method\ makes\ no\ guarantee\ of\ success\ -\/\ if\ it\ fails\ due\ to\ something\ else\ writing\ to\ the\ storage\ whilst\ this\ is\ running,\ then\ it\ won't\ actually\ do\ anything.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00506}\doxymbox{\hyperlink{class_sparse_data_storage_a3e0c5744daad0faf4b30453bfa1fc433}{00506}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_sparse_data_storage_a3e0c5744daad0faf4b30453bfa1fc433}{SparseDataStorage::compress}}()}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00507}00507\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00508}00508\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ \_planeIndices[128];}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00509}00509\ \ \ \ \ \textcolor{keywordtype}{bool}\ needsCompressed\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00510}00510\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00511}00511\ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ lastDataAndCount\ =\ dataAndCount;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00512}00512\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00513}00513\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *planeIndices\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)(lastDataAndCount\ \&\ 0x0000ffffffffffff);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00514}00514\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data\ =\ planeIndices\ +\ 128;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00515}00515\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00516}00516\ \ \ \ \ \textcolor{keywordtype}{int}\ planesToAlloc\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00517}00517\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 128;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00518}00518\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00519}00519\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ planeIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ ==\ ALL\_0\_INDEX\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00520}00520\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00521}00521\ \ \ \ \ \ \ \ \ \ \ \ \ \_planeIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ ALL\_0\_INDEX;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00522}00522\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00523}00523\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00524}00524\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00525}00525\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *pucData\ =\ \&data[\ 128\ *\ planeIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ ];}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00526}00526\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ all0\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 128;\ j++\ )\ \ \textcolor{comment}{//\ 16\ x\ 16\ x\ 4-\/bits}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00528}00528\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00529}00529\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ *pucData\ !=\ 0\ )\ all0\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00530}00530\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pucData++;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00531}00531\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00532}00532\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ all0\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00533}00533\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00534}00534\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_planeIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ ALL\_0\_INDEX;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00535}00535\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ needsCompressed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00536}00536\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00537}00537\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00538}00538\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00539}00539\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_planeIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ planesToAlloc++;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00540}00540\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00541}00541\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00542}00542\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00543}00543\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00544}00544\ \ \ \ \ \textcolor{keywordflow}{if}(\ needsCompressed\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00545}00545\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00546}00546\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *newIndicesAndData\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(128\ +\ 128\ *\ planesToAlloc));}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00547}00547\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *pucData\ =\ newIndicesAndData\ +\ 128;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00548}00548\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a047650ed34d3e8b487dcc84d40e8b5b7}{XMemCpy}}(\ newIndicesAndData,\ \_planeIndices,\ 128\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00549}00549\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00550}00550\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 128;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00551}00551\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00552}00552\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ newIndicesAndData[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ <\ ALL\_0\_INDEX\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00553}00553\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00554}00554\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a047650ed34d3e8b487dcc84d40e8b5b7}{XMemCpy}}(\ pucData,\ \&data[\ 128\ *\ planeIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ ],\ 128\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00555}00555\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pucData\ +=\ 128;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00556}00556\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00557}00557\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00558}00558\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00559}00559\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ new\ data\ and\ count\ packed\ info}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00560}00560\ \textcolor{preprocessor}{\#pragma\ warning\ (\ disable\ :\ 4826\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00561}00561\ \ \ \ \ \ \ \ \ int64\_t\ newDataAndCount\ =\ ((int64\_t)\ newIndicesAndData)\ \&\ 0x0000ffffffffffffL;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00562}00562\ \textcolor{preprocessor}{\#pragma\ warning\ (\ default\ :\ 4826\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00563}00563\ \ \ \ \ \ \ \ \ newDataAndCount\ |=\ \textcolor{keyword}{static\_cast<}int64\_t\textcolor{keyword}{>}(planesToAlloc)\ <<\ 48;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00564}00564\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00565}00565\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Attempt\ to\ update\ the\ data\ \&\ count\ atomically.\ This\ command\ will\ Only\ succeed\ if\ the\ data\ stored\ at}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00566}00566\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dataAndCount\ is\ equal\ to\ lastDataAndCount,\ and\ will\ return\ the\ value\ present\ just\ before\ the\ write\ took\ place}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00567}00567\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ lastDataAndCount2\ =\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a1c147d87e7b6599f2d7d0c0c6de00ced}{InterlockedCompareExchangeRelease64}}(\ \&dataAndCount,\ newDataAndCount,\ lastDataAndCount\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00568}00568\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00569}00569\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ lastDataAndCount2\ !=\ lastDataAndCount\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00570}00570\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00571}00571\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Failed\ to\ write.\ Don't\ bother\ trying\ again...\ being\ very\ conservative\ here.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00572}00572\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ printf("{}Marking\ for\ delete\ 0x\%x\ (compress\ fail)\(\backslash\)n"{},\ newIndicesAndData);}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00573}00573\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_acc8f8000487885d4585227d2be773d45}{queueForDelete}}(\ newIndicesAndData\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00574}00574\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00575}00575\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00576}00576\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00577}00577\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Success}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_acc8f8000487885d4585227d2be773d45}{queueForDelete}}(\ planeIndices\ );}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00579}00579\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ printf("{}Successfully\ compressed\ to\ \%d\ planes,\ to\ delete\ 0x\%x\(\backslash\)n"{},\ planesToAlloc,\ planeIndices);}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00580}00580\ \textcolor{preprocessor}{\#ifdef\ DATA\_COMPRESSION\_STATS}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00581}00581\ \ \ \ \ \ \ \ \ \ \ \ \ count\ =\ planesToAlloc;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00582}00582\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00583}00583\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00584}00584\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00585}00585\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ planesToAlloc;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00586}00586\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00587}00587\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00588}00588\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00589}00589\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}((lastDataAndCount\ >>\ 48)\ \&\ 0xffff);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00590}00590\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00591}00591\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00592}00592\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00593}00593\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00594}\doxymbox{\hyperlink{class_sparse_data_storage_a0bffdf7be2e02db151b589c5ea9c734a}{00594}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_sparse_data_storage_a0bffdf7be2e02db151b589c5ea9c734a}{SparseDataStorage::isCompressed}}()}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00595}00595\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00596}00596\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00597}00597\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \ \ count\ =\ (\ dataAndCount\ >>\ 48\ )\ \&\ 0xffff;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00598}00598\ \ \ \ \ \textcolor{keywordflow}{return}\ (count\ <\ 127);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00599}00599\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00600}00600\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00601}00601\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00602}00602\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00603}\doxymbox{\hyperlink{class_sparse_data_storage_ac61ae7acb8c5bdc3f3b052bb9b24ca9b}{00603}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sparse_data_storage_ac61ae7acb8c5bdc3f3b052bb9b24ca9b}{SparseDataStorage::write}}(\doxymbox{\hyperlink{class_data_output_stream}{DataOutputStream}}\ *dos)}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00604}00604\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00605}00605\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ count\ =\ (\ dataAndCount\ >>\ 48\ )\ \&\ 0xffff;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00606}00606\ \ \ \ \ dos-\/>\doxymbox{\hyperlink{class_data_output_stream_a04b9bfc9e072cd176baaab3f8221c613}{writeInt}}(count);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00607}00607\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *dataPointer\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)(dataAndCount\ \&\ 0x0000ffffffffffff);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00608}00608\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ wrapper(dataPointer,\ count\ *\ 128\ +\ 128);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00609}00609\ \ \ \ \ dos-\/>\doxymbox{\hyperlink{class_data_output_stream_a804758c7434819e6f1f64f339279a672}{write}}(wrapper);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00610}00610\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00611}00611\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00612}\doxymbox{\hyperlink{class_sparse_data_storage_a9ce03f3621e1edf13f0f629da68d32a7}{00612}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sparse_data_storage_a9ce03f3621e1edf13f0f629da68d32a7}{SparseDataStorage::read}}(\doxymbox{\hyperlink{class_data_input_stream}{DataInputStream}}\ *dis)}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00613}00613\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00614}00614\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ count\ =\ dis-\/>\doxymbox{\hyperlink{class_data_input_stream_ac8fc70aad0ec1c9b1a79e8f24b037c5e}{readInt}}();}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00615}00615\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *dataPointer\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(count\ *\ 128\ +\ 128));}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00616}00616\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ wrapper(dataPointer,\ count\ *\ 128\ +\ 128);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00617}00617\ \ \ \ \ dis-\/>\doxymbox{\hyperlink{class_data_input_stream_a661f64b6616a34c7e2a9a439fd77b490}{readFully}}(wrapper);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00618}00618\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00619}00619\ \textcolor{preprocessor}{\#pragma\ warning\ (\ disable\ :\ 4826\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00620}00620\ \ \ \ \ int64\_t\ newDataAndCount\ =\ \textcolor{keyword}{reinterpret\_cast<}int64\_t\textcolor{keyword}{>}(dataPointer)\ \&\ 0x0000ffffffffffffL;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00621}00621\ \textcolor{preprocessor}{\#pragma\ warning\ (\ default\ :\ 4826\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00622}00622\ \ \ \ \ newDataAndCount\ |=\ \textcolor{keyword}{static\_cast<}int64\_t\textcolor{keyword}{>}(count)\ <<\ 48;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00623}00623\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00624}00624\ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage_af2eaba732a937d3582a76f9475062e5b}{updateDataAndCount}}(newDataAndCount);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage_8cpp_source_l00625}00625\ \}}
+
+\end{DoxyCode}

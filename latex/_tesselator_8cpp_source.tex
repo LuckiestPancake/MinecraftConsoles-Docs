@@ -1,0 +1,1086 @@
+\doxysection{Tesselator.\+cpp}
+\hypertarget{_tesselator_8cpp_source}{}\label{_tesselator_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Tesselator.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Tesselator.cpp}}
+\doxymbox{\hyperlink{_tesselator_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_client_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_tesselator_8h}{Tesselator.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_basic_type_containers_8h}{..\(\backslash\)Minecraft.World\(\backslash\)BasicTypeContainers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_float_buffer_8h}{..\(\backslash\)Minecraft.World\(\backslash\)FloatBuffer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_int_buffer_8h}{..\(\backslash\)Minecraft.World\(\backslash\)IntBuffer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_byte_buffer_8h}{..\(\backslash\)Minecraft.World\(\backslash\)ByteBuffer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00008}00008\ \textcolor{keywordtype}{bool}\ Tesselator::TRIANGLE\_MODE\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00009}00009\ \textcolor{keywordtype}{bool}\ Tesselator::USE\_VBO\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00011}00011\ \textcolor{comment}{/*\ Things\ to\ check\ we\ are\ intialising\ in\ the\ constructor...}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00012}00012\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00013}00013\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00014}00014\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00015}00015\ \textcolor{comment}{double\ u,\ v;}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00016}00016\ \textcolor{comment}{int\ col;}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00017}00017\ \textcolor{comment}{int\ mode;}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00018}00018\ \textcolor{comment}{double\ xo,\ yo,\ zo;}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00019}00019\ \textcolor{comment}{int\ normal;}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00020}00020\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00021}00021\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00022}00022\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00023}00023\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00024}00024\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00025}00025\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00026}00026\ \textcolor{comment}{*/}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00027}00027\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ Tesselator::tlsIdx\ =\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a11f8d36738ade6c9b3aa5c1d07fdfe09}{TlsAlloc}}();}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00029}\doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{00029}}\ Tesselator\ *\doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{Tesselator::getInstance}}()}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00030}00030\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00031}00031\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}Tesselator\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{_orbis_stubs_8cpp_a2c50d07843de4cd91bc8339ff75d037b}{TlsGetValue}}(tlsIdx));}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00032}00032\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00034}\doxymbox{\hyperlink{class_tesselator_a3156739582278d6c5a44623e09c4f7fb}{00034}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_a3156739582278d6c5a44623e09c4f7fb}{Tesselator::CreateNewThreadStorage}}(\textcolor{keywordtype}{int}\ bytes)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00035}00035\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00036}00036\ \ \ \ \ Tesselator\ *instance\ =\ \textcolor{keyword}{new}\ Tesselator(bytes/4);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00037}00037\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_aa8cb521a63c17b6bb78457ada43505a9}{TlsSetValue}}(tlsIdx,\ instance);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00038}00038\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00040}00040\ Tesselator::Tesselator(\textcolor{keywordtype}{int}\ size)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00041}00041\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00042}00042\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ this\ block\ of\ things\ moved\ to\ constructor\ from\ general\ initialisations\ round\ Java\ class}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00043}00043\ \ \ \ \ vertices\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00044}00044\ \ \ \ \ hasColor\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00045}00045\ \ \ \ \ hasTexture\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00046}00046\ \ \ \ \ hasTexture2\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00047}00047\ \ \ \ \ hasNormal\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00048}00048\ \ \ \ \ p\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00049}00049\ \ \ \ \ count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00050}00050\ \ \ \ \ \_noColor\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00051}00051\ \ \ \ \ tesselating\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00052}00052\ \ \ \ \ vboMode\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00053}00053\ \ \ \ \ vboId\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00054}00054\ \ \ \ \ vboCounts\ =\ 10;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00056}00056\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ adding\ these\ things\ to\ constructor\ just\ to\ be\ sure\ that\ they\ are\ initialised\ with\ something}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00057}00057\ \ \ \ \ u\ =\ v\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00058}00058\ \ \ \ \ col\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00059}00059\ \ \ \ \ mode\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00060}00060\ \ \ \ \ xo\ =\ yo\ =\ zo\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00061}00061\ \ \ \ \ xoo\ =\ yoo\ =\ zoo\ =\ 0;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00062}00062\ \ \ \ \ \_normal\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00064}00064\ \ \ \ \ useCompactFormat360\ =\ \textcolor{keyword}{false};\ \ \ \ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00065}00065\ \ \ \ \ mipmapEnable\ =\ \textcolor{keyword}{true};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00066}00066\ \ \ \ \ useProjectedTexturePixelShader\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00068}00068\ \ \ \ \ this-\/>size\ =\ size;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00070}00070\ \ \ \ \ \_array\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{_array_with_length_8h_a5f64a90f12b834c164105b12c7396999}{intArray}}(size);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00072}00072\ \ \ \ \ vboMode\ =\ USE\_VBO;\ \ \textcolor{comment}{//\ 4J\ removed\ -\/\ \&\&\ GLContext.getCapabilities().GL\_ARB\_vertex\_buffer\_object;}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00073}00073\ \ \ \ \ \textcolor{keywordflow}{if}\ (vboMode)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00074}00074\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ vboIds\ =\ \doxymbox{\hyperlink{class_memory_tracker_a9b021a4e74c9667d8fd7b9c3a9900699}{MemoryTracker::createIntBuffer}}(vboCounts);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_a_r_b_vertex_buffer_object_a8380940a8fff5332a74bce0c93ae91fc}{ARBVertexBufferObject::glGenBuffersARB}}(vboIds);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00077}00077\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00079}00079\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00080}00080\ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ alpha\ cut\ out\ is\ expensive\ on\ vita.\ Use\ this\ to\ defer\ primitives\ that\ use\ icons\ with\ alpha}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00081}00081\ \ \ \ \ alphaCutOutEnabled\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00083}00083\ \ \ \ \ \textcolor{comment}{//\ this\ is\ the\ cut\ out\ enabled\ vertex\ array}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00084}00084\ \ \ \ \ \_array2\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{_array_with_length_8h_a5f64a90f12b834c164105b12c7396999}{intArray}}(size);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00085}00085\ \ \ \ \ vertices2\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00086}00086\ \ \ \ \ p2\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00087}00087\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00088}00088\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00090}\doxymbox{\hyperlink{class_tesselator_a2614978a6fb8e1a2a92e2819f709c5b4}{00090}}\ Tesselator\ *\doxymbox{\hyperlink{class_tesselator_a2614978a6fb8e1a2a92e2819f709c5b4}{Tesselator::getUniqueInstance}}(\textcolor{keywordtype}{int}\ size)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00091}00091\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00092}00092\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ Tesselator(size);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00093}00093\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00095}\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{00095}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{Tesselator::end}}()}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00096}00096\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00097}00097\ \textcolor{comment}{//\ \ \ \ if\ (!tesselating)\ throw\ new\ IllegalStateException("{}Not\ tesselating!"{});\ \ \ \ //\ 4J\ -\/\ removed}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00098}00098\ \ \ \ \ tesselating\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00099}00099\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00100}00100\ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ alpha\ cut\ out\ is\ expensive\ on\ vita.\ Check\ both\ counts\ for\ valid\ vertices}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00101}00101\ \ \ \ \ \textcolor{keywordflow}{if}(\ vertices\ >\ 0\ ||\ vertices2\ >\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00102}00102\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00103}00103\ \ \ \ \ \textcolor{keywordflow}{if}\ (vertices\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00104}00104\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00105}00105\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ a\ lot\ of\ stuff\ taken\ out\ here\ for\ fiddling\ round\ with\ enable\ client\ states\ etc.}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ that\ don't\ matter\ for\ our\ renderer}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!hasColor)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ TEMP\ put\ in\ fixed\ vertex\ colors\ if\ we\ don't\ have\ any,\ until\ we\ have\ a\ shader\ that\ can\ cope\ without\ them}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *pColData\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)\_array-\/>data;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ pColData\ +=\ 5;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ vertices;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *pColData\ =\ 0xffffffff;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pColData\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00118}00118\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ alpha\ cut\ out\ is\ expensive\ on\ vita.\ Check\ both\ counts\ for\ valid\ vertices}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ pColData\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)\_array2-\/>data;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ pColData\ +=\ 5;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ vertices2;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *pColData\ =\ 0xffffffff;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pColData\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00127}00127\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mode\ ==\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_aff429e9ffe1cf471275528e48c0568cf}{GL\_QUADS}}\ \&\&\ TRIANGLE\_MODE)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ glDrawArrays(GL\_TRIANGLES,\ 0,\ vertices);\ //\ 4J\ -\/\ changed\ for\ xbox}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00132}00132\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.DrawVertices(D3DPT\_TRIANGLELIST,vertices,\_array-\/>data,}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ useCompactFormat360?\doxymbox{\hyperlink{class_c4_j_render_a59fef362515275875fc16dfb15024f47a6031ff6b2c52dc944b1d30533c2a0be2}{C4JRender::VERTEX\_TYPE\_PS3\_TS2\_CS1}}:\doxymbox{\hyperlink{class_c4_j_render_a59fef362515275875fc16dfb15024f47aa6f4516bafdbef2075117466050ad668}{C4JRender::VERTEX\_TYPE\_PF3\_TF2\_CB4\_NB4\_XW1}},}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ useProjectedTexturePixelShader?\doxymbox{\hyperlink{class_c4_j_render_a8bb7c47154ff1147c602942312448f11a27791ef740e0b545d7b93996fcd4d98c}{C4JRender::PIXEL\_SHADER\_TYPE\_PROJECTION}}:\doxymbox{\hyperlink{class_c4_j_render_a8bb7c47154ff1147c602942312448f11a8f9ef6ff4bae318c8eb0861d35561f7b}{C4JRender::PIXEL\_SHADER\_TYPE\_STANDARD}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00136}00136\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.DrawVertices(\doxymbox{\hyperlink{class_c4_j_render_a099172a04e6ea5eb0a2b7851f6871390a377f722616e799faad41432bfb3d7281}{C4JRender::PRIMITIVE\_TYPE\_TRIANGLE\_LIST}},vertices,\_array-\/>data,}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ useCompactFormat360?\doxymbox{\hyperlink{class_c4_j_render_a59fef362515275875fc16dfb15024f47aaa2f8d3c3bfb6e98b5dd1fee6c835e2f}{C4JRender::VERTEX\_TYPE\_COMPRESSED}}:\doxymbox{\hyperlink{class_c4_j_render_a59fef362515275875fc16dfb15024f47aa6f4516bafdbef2075117466050ad668}{C4JRender::VERTEX\_TYPE\_PF3\_TF2\_CB4\_NB4\_XW1}},}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ useProjectedTexturePixelShader?\doxymbox{\hyperlink{class_c4_j_render_a8bb7c47154ff1147c602942312448f11a27791ef740e0b545d7b93996fcd4d98c}{C4JRender::PIXEL\_SHADER\_TYPE\_PROJECTION}}:\doxymbox{\hyperlink{class_c4_j_render_a8bb7c47154ff1147c602942312448f11a8f9ef6ff4bae318c8eb0861d35561f7b}{C4JRender::PIXEL\_SHADER\_TYPE\_STANDARD}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00140}00140\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00144}00144\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ glDrawArrays(mode,\ 0,\ vertices);\ \ //\ 4J\ -\/\ changed\ for\ xbox}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ For\ compact\ vertices,\ the\ vertexCount\ has\ to\ be\ calculated\ from\ the\ amount\ of\ data\ written,\ as}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ insert\ extra\ fake\ vertices\ to\ encode\ supplementary\ data\ for\ more\ awkward\ quads\ that\ have\ non}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ axis\ aligned\ UVs\ (eg\ flowing\ lava/water)}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00148}00148\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ vertexCount\ =\ vertices;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ useCompactFormat360\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vertexCount\ =\ p\ /\ 2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.DrawVertices((D3DPRIMITIVETYPE)mode,vertexCount,\_array-\/>data,\doxymbox{\hyperlink{class_c4_j_render_a59fef362515275875fc16dfb15024f47a6031ff6b2c52dc944b1d30533c2a0be2}{C4JRender::VERTEX\_TYPE\_PS3\_TS2\_CS1}},\ \doxymbox{\hyperlink{class_c4_j_render_a8bb7c47154ff1147c602942312448f11a8f9ef6ff4bae318c8eb0861d35561f7b}{C4JRender::PIXEL\_SHADER\_TYPE\_STANDARD}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ useProjectedTexturePixelShader\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.DrawVertices((D3DPRIMITIVETYPE)mode,vertexCount,\_array-\/>data,\doxymbox{\hyperlink{class_c4_j_render_a59fef362515275875fc16dfb15024f47a8c98585652b2f8ccbbe943aa0a78c445}{C4JRender::VERTEX\_TYPE\_PF3\_TF2\_CB4\_NB4\_XW1\_TEXGEN}},\ \doxymbox{\hyperlink{class_c4_j_render_a8bb7c47154ff1147c602942312448f11a27791ef740e0b545d7b93996fcd4d98c}{C4JRender::PIXEL\_SHADER\_TYPE\_PROJECTION}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.DrawVertices((D3DPRIMITIVETYPE)mode,vertexCount,\_array-\/>data,\doxymbox{\hyperlink{class_c4_j_render_a59fef362515275875fc16dfb15024f47aa6f4516bafdbef2075117466050ad668}{C4JRender::VERTEX\_TYPE\_PF3\_TF2\_CB4\_NB4\_XW1}},\ \doxymbox{\hyperlink{class_c4_j_render_a8bb7c47154ff1147c602942312448f11a8f9ef6ff4bae318c8eb0861d35561f7b}{C4JRender::PIXEL\_SHADER\_TYPE\_STANDARD}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00166}00166\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ vertexCount\ =\ vertices;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ useCompactFormat360\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00170}00170\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ alpha\ cut\ out\ is\ expensive\ on\ vita.\ Render\ non-\/cut\ out\ stuff\ first\ then\ send\ the\ cut\ out\ stuff}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ vertexCount\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.DrawVertices((\doxymbox{\hyperlink{class_c4_j_render_a099172a04e6ea5eb0a2b7851f6871390}{C4JRender::ePrimitiveType}})mode,vertexCount,\_array-\/>data,\doxymbox{\hyperlink{class_c4_j_render_a59fef362515275875fc16dfb15024f47aaa2f8d3c3bfb6e98b5dd1fee6c835e2f}{C4JRender::VERTEX\_TYPE\_COMPRESSED}},\ \doxymbox{\hyperlink{class_c4_j_render_a8bb7c47154ff1147c602942312448f11a8f9ef6ff4bae318c8eb0861d35561f7b}{C4JRender::PIXEL\_SHADER\_TYPE\_STANDARD}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ vertices2\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.DrawVerticesCutOut((\doxymbox{\hyperlink{class_c4_j_render_a099172a04e6ea5eb0a2b7851f6871390}{C4JRender::ePrimitiveType}})mode,vertices2,\_array2-\/>data,\doxymbox{\hyperlink{class_c4_j_render_a59fef362515275875fc16dfb15024f47aaa2f8d3c3bfb6e98b5dd1fee6c835e2f}{C4JRender::VERTEX\_TYPE\_COMPRESSED}},\ \doxymbox{\hyperlink{class_c4_j_render_a8bb7c47154ff1147c602942312448f11a8f9ef6ff4bae318c8eb0861d35561f7b}{C4JRender::PIXEL\_SHADER\_TYPE\_STANDARD}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00180}00180\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.DrawVertices(\textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_c4_j_render_a099172a04e6ea5eb0a2b7851f6871390}{C4JRender::ePrimitiveType}}\textcolor{keyword}{>}(mode),vertexCount,\_array-\/>data,\doxymbox{\hyperlink{class_c4_j_render_a59fef362515275875fc16dfb15024f47aaa2f8d3c3bfb6e98b5dd1fee6c835e2f}{C4JRender::VERTEX\_TYPE\_COMPRESSED}},\ \doxymbox{\hyperlink{class_c4_j_render_a8bb7c47154ff1147c602942312448f11a8f9ef6ff4bae318c8eb0861d35561f7b}{C4JRender::PIXEL\_SHADER\_TYPE\_STANDARD}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00183}00183\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ useProjectedTexturePixelShader\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.DrawVertices(\textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_c4_j_render_a099172a04e6ea5eb0a2b7851f6871390}{C4JRender::ePrimitiveType}}\textcolor{keyword}{>}(mode),vertexCount,\_array-\/>data,\doxymbox{\hyperlink{class_c4_j_render_a59fef362515275875fc16dfb15024f47a8c98585652b2f8ccbbe943aa0a78c445}{C4JRender::VERTEX\_TYPE\_PF3\_TF2\_CB4\_NB4\_XW1\_TEXGEN}},\ \doxymbox{\hyperlink{class_c4_j_render_a8bb7c47154ff1147c602942312448f11a27791ef740e0b545d7b93996fcd4d98c}{C4JRender::PIXEL\_SHADER\_TYPE\_PROJECTION}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.DrawVertices(\textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_c4_j_render_a099172a04e6ea5eb0a2b7851f6871390}{C4JRender::ePrimitiveType}}\textcolor{keyword}{>}(mode),vertexCount,\_array-\/>data,\doxymbox{\hyperlink{class_c4_j_render_a59fef362515275875fc16dfb15024f47aa6f4516bafdbef2075117466050ad668}{C4JRender::VERTEX\_TYPE\_PF3\_TF2\_CB4\_NB4\_XW1}},\ \doxymbox{\hyperlink{class_c4_j_render_a8bb7c47154ff1147c602942312448f11a8f9ef6ff4bae318c8eb0861d35561f7b}{C4JRender::PIXEL\_SHADER\_TYPE\_STANDARD}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00196}00196\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{stubs___s_p_u_8h_a26d455124adb143163a90ab1f3c0bf9d}{glDisableClientState}}(\doxymbox{\hyperlink{stubs___s_p_u_8h_a68d92be87eb857e13ebfe69c1aaac965}{GL\_VERTEX\_ARRAY}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasTexture)\ \doxymbox{\hyperlink{stubs___s_p_u_8h_a26d455124adb143163a90ab1f3c0bf9d}{glDisableClientState}}(\doxymbox{\hyperlink{stubs___s_p_u_8h_a6b47ccbc106910b7d99da048d4f79720}{GL\_TEXTURE\_COORD\_ARRAY}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasColor)\ \doxymbox{\hyperlink{stubs___s_p_u_8h_a26d455124adb143163a90ab1f3c0bf9d}{glDisableClientState}}(\doxymbox{\hyperlink{stubs___s_p_u_8h_a4cdc2c9638ba54b122aac56b01dea52a}{GL\_COLOR\_ARRAY}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasNormal)\ \doxymbox{\hyperlink{stubs___s_p_u_8h_a26d455124adb143163a90ab1f3c0bf9d}{glDisableClientState}}(\doxymbox{\hyperlink{stubs___s_p_u_8h_a7145785fb7240a25dc6b847e8f645ae5}{GL\_NORMAL\_ARRAY}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00202}00202\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00203}00203\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00204}00204\ \ \ \ \ clear();}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00205}00205\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00206}00206\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00207}00207\ \textcolor{keywordtype}{void}\ Tesselator::clear()}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00208}00208\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00209}00209\ \ \ \ \ vertices\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00211}00211\ \ \ \ \ p\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00212}00212\ \ \ \ \ count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00214}00214\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00215}00215\ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ alpha\ cut\ out\ is\ expensive\ on\ vita.\ Clear\ the\ cut\ out\ variables}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00216}00216\ \ \ \ \ vertices2\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00217}00217\ \ \ \ \ p2\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00218}00218\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00219}00219\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00220}00220\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00221}\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{00221}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{Tesselator::begin}}()}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00222}00222\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00223}00223\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_aff429e9ffe1cf471275528e48c0568cf}{GL\_QUADS}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00224}00224\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_acfbfc10f1231250d1ae1901a931a7b6f}{bounds}}.reset();\ \textcolor{comment}{//\ 4J\ MGH\ -\/\ added}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00225}00225\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00226}00226\ \ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00227}\doxymbox{\hyperlink{class_tesselator_a2fe1794850554ece3f788a9956ed0ff6}{00227}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_a2fe1794850554ece3f788a9956ed0ff6}{Tesselator::useProjectedTexture}}(\textcolor{keywordtype}{bool}\ enable)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00228}00228\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00229}00229\ \ \ \ \ useProjectedTexturePixelShader\ =\ enable;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00230}00230\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00231}00231\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00232}\doxymbox{\hyperlink{class_tesselator_ab746a2936b4ad80a8e9b7c161eacbee0}{00232}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_ab746a2936b4ad80a8e9b7c161eacbee0}{Tesselator::useCompactVertices}}(\textcolor{keywordtype}{bool}\ enable)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00233}00233\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00234}00234\ \ \ \ \ useCompactFormat360\ =\ enable;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00235}00235\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00236}00236\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00237}\doxymbox{\hyperlink{class_tesselator_a5b6a3e87d2a36e7ddfa7d41c927db69c}{00237}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_tesselator_a5b6a3e87d2a36e7ddfa7d41c927db69c}{Tesselator::getCompactVertices}}()}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00238}00238\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00239}00239\ \ \ \ \ \textcolor{keywordflow}{return}\ useCompactFormat360;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00240}00240\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00242}\doxymbox{\hyperlink{class_tesselator_afa461cca60178ef468f55ec9f5a12f66}{00242}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_tesselator_afa461cca60178ef468f55ec9f5a12f66}{Tesselator::setMipmapEnable}}(\textcolor{keywordtype}{bool}\ enable)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00243}00243\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00244}00244\ \ \ \ \ \textcolor{keywordtype}{bool}\ prev\ =\ mipmapEnable;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00245}00245\ \ \ \ \ mipmapEnable\ =\ enable;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00246}00246\ \ \ \ \ \textcolor{keywordflow}{return}\ prev;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00247}00247\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00248}00248\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00249}00249\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00250}00250\ \textcolor{comment}{//\ AP\ -\/\ alpha\ cut\ out\ is\ expensive\ on\ vita.\ Use\ this\ to\ defer\ primitives\ that\ use\ icons\ with\ alpha}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00251}00251\ \textcolor{keywordtype}{void}\ Tesselator::setAlphaCutOut(\textcolor{keywordtype}{bool}\ enable)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00252}00252\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00253}00253\ \ \ \ \ alphaCutOutEnabled\ =\ enable;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00254}00254\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00256}00256\ \textcolor{comment}{//\ AP\ -\/\ was\ any\ cut\ out\ geometry\ added\ since\ the\ last\ call\ to\ Clear}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00257}00257\ \textcolor{keywordtype}{bool}\ Tesselator::getCutOutFound()}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00258}00258\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00259}00259\ \ \ \ \ \textcolor{keywordflow}{if}(\ vertices2\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00262}00262\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00263}00263\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00264}00264\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00265}00265\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00266}\doxymbox{\hyperlink{class_tesselator_a68059f67fdf70f7db29b2e5e1e52ad3f}{00266}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{Tesselator::begin}}(\textcolor{keywordtype}{int}\ mode)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00267}00267\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00268}00268\ \ \ \ \ \textcolor{comment}{/*\ \ //\ 4J\ -\/\ removed}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00269}00269\ \textcolor{comment}{\ \ \ \ if\ (tesselating)\ \{}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00270}00270\ \textcolor{comment}{\ \ \ \ \ \ \ \ throw\ new\ IllegalStateException("{}Already\ tesselating!"{});}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00271}00271\ \textcolor{comment}{\ \ \ \ \}\ */}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00272}00272\ \ \ \ \ tesselating\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00273}00273\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00274}00274\ \ \ \ \ clear();}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00275}00275\ \ \ \ \ this-\/>mode\ =\ mode;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00276}00276\ \ \ \ \ hasNormal\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00277}00277\ \ \ \ \ hasColor\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00278}00278\ \ \ \ \ hasTexture\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00279}00279\ \ \ \ \ hasTexture2\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00280}00280\ \ \ \ \ \_noColor\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00281}00281\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00283}\doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{00283}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{Tesselator::tex}}(\textcolor{keywordtype}{float}\ u,\ \textcolor{keywordtype}{float}\ v)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00284}00284\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00285}00285\ \ \ \ \ hasTexture\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00286}00286\ \ \ \ \ this-\/>u\ =\ u;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00287}00287\ \ \ \ \ this-\/>v\ =\ v;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00288}00288\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00289}00289\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00290}\doxymbox{\hyperlink{class_tesselator_aaa8f40e93b7e2654d96390ce1961cd3d}{00290}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_aaa8f40e93b7e2654d96390ce1961cd3d}{Tesselator::tex2}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_tesselator_aaa8f40e93b7e2654d96390ce1961cd3d}{tex2}})}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00291}00291\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00292}00292\ \ \ \ \ hasTexture2\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00293}00293\ \ \ \ \ this-\/>\_tex2\ =\ \doxymbox{\hyperlink{class_tesselator_aaa8f40e93b7e2654d96390ce1961cd3d}{tex2}};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00294}00294\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00295}00295\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00296}\doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{00296}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{Tesselator::color}}(\textcolor{keywordtype}{float}\ r,\ \textcolor{keywordtype}{float}\ g,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}})}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00297}00297\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00298}00298\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{color}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(r\ *\ 255),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(g\ *\ 255),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ *\ 255));}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00299}00299\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00301}\doxymbox{\hyperlink{class_tesselator_aa8fe50cee39679f6a21f035e08a5d5b0}{00301}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{Tesselator::color}}(\textcolor{keywordtype}{float}\ r,\ \textcolor{keywordtype}{float}\ g,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}},\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00302}00302\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00303}00303\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{color}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(r\ *\ 255),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(g\ *\ 255),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ *\ 255),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}\ *\ 255));}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00304}00304\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00306}\doxymbox{\hyperlink{class_tesselator_a294b22c948eea9ffdd191ea5b74fe32b}{00306}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{Tesselator::color}}(\textcolor{keywordtype}{int}\ r,\ \textcolor{keywordtype}{int}\ g,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}})}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00307}00307\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00308}00308\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{color}}(r,\ g,\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}},\ 255);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00309}00309\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00310}00310\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00311}\doxymbox{\hyperlink{class_tesselator_aa7b9d5c5d62feee1ead43d9f1326de48}{00311}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{Tesselator::color}}(\textcolor{keywordtype}{int}\ r,\ \textcolor{keywordtype}{int}\ g,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}},\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00312}00312\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00313}00313\ \ \ \ \ \textcolor{keywordflow}{if}\ (\_noColor)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00314}00314\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00315}00315\ \ \ \ \ \textcolor{keywordflow}{if}\ (r\ >\ 255)\ r\ =\ 255;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00316}00316\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\ >\ 255)\ g\ =\ 255;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00317}00317\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ >\ 255)\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ 255;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00318}00318\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}\ >\ 255)\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}\ =\ 255;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00319}00319\ \ \ \ \ \textcolor{keywordflow}{if}\ (r\ <\ 0)\ r\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00320}00320\ \ \ \ \ \textcolor{keywordflow}{if}\ (g\ <\ 0)\ g\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00321}00321\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ <\ 0)\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00322}00322\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}\ <\ 0)\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00323}00323\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00324}00324\ \ \ \ \ hasColor\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00325}00325\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ removed\ little-\/endian\ option}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00326}00326\ \ \ \ \ col\ =\ (r\ <<\ 24)\ |\ (g\ <<\ 16)\ |\ (\doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ <<\ 8)\ |\ (\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00327}00327\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00329}\doxymbox{\hyperlink{class_tesselator_afd0e4539e35594141dece230eeb1877d}{00329}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{Tesselator::color}}(\textcolor{keywordtype}{byte}\ r,\ \textcolor{keywordtype}{byte}\ g,\ \textcolor{keywordtype}{byte}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}})}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00330}00330\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00331}00331\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{color}}(r\ \&\ 0xff,\ g\ \&\ 0xff,\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ \&\ 0xff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00332}00332\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00333}00333\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00334}\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{00334}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{Tesselator::vertexUV}}(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z,\ \textcolor{keywordtype}{float}\ u,\ \textcolor{keywordtype}{float}\ v)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00335}00335\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00336}00336\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_a27267a2f3010d0c7cdcf95337a55439c}{tex}}(u,\ v);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00337}00337\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00338}00338\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00340}00340\ \textcolor{comment}{//\ Pack\ the\ 4\ vertices\ of\ a\ quad\ up\ into\ a\ compact\ format.\ This\ is\ structured\ as\ 8\ bytes\ per\ vertex,}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00341}00341\ \textcolor{comment}{//\ arranged\ in\ blocks\ of\ 4\ vertices\ per\ quad.\ Currently\ this\ is\ (one\ letter\ per\ nyblle):}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00342}00342\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00343}00343\ \textcolor{comment}{//\ cccc\ xxyy\ zzll\ rgbi\ \ \ \ \ \ (vertex\ 0)}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00344}00344\ \textcolor{comment}{//\ umin\ xxyy\ zzll\ rgbi\ \ \ \ \ \ (vertex\ 1)}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00345}00345\ \textcolor{comment}{//\ vmin\ xxyy\ zzll\ rgbi\ \ \ \ \ \ (vertex\ 2)}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00346}00346\ \textcolor{comment}{//\ udvd\ xxyy\ zzll\ rgbi\ \ \ \ \ \ (vertex\ 3)}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00347}00347\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00348}00348\ \textcolor{comment}{//\ where:\ cccc\ \ \ \ \ \ \ is\ a\ 15-\/bit\ (5\ bits\ per\ x/y/z)\ origin\ position\ /\ offset\ for\ the\ whole\ quad.\ Each}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00349}00349\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ component\ is\ unsigned,\ and\ offset\ by\ 16\ so\ has\ a\ range\ 0\ to\ 31\ actually\ representing\ -\/16\ to\ 15}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00350}00350\ \textcolor{comment}{//\ \ \ \ \ \ \ \ xx,yy,zz\ \ \ are\ 8-\/bit\ deltas\ from\ this\ origin\ to\ each\ vertex.\ These\ are\ unsigned\ 1.7\ fixed\ point,\ ie}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00351}00351\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ representing\ a\ range\ of\ 0\ to\ 1.9921875}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00352}00352\ \textcolor{comment}{//\ \ \ \ \ \ \ \ rgb\ \ \ \ \ \ \ \ is\ 4:4:4\ RGB}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00353}00353\ \textcolor{comment}{//\ \ \ \ \ \ \ \ umin,\ vmin\ are\ 3:13\ unsigned\ fixed\ point\ UVs\ reprenting\ the\ min\ u\ and\ v\ required\ by\ the\ quad}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00354}00354\ \textcolor{comment}{//\ \ \ \ \ \ \ \ ud,vd\ \ \ \ \ \ are\ 8-\/bit\ unsigned\ fixed\ pont\ UV\ deltas,\ which\ can\ be\ added\ to\ umin/vmin\ to\ get\ umax,\ vmax}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00355}00355\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ and\ therefore\ define\ the\ 4\ corners\ of\ an\ axis\ aligned\ UV\ mapping}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00356}00356\ \textcolor{comment}{//\ \ \ \ \ \ \ \ i\ \ \ \ \ \ \ \ \ \ is\ a\ code\ per\ vertex\ that\ indicates\ which\ of\ umin/umax\ should\ be\ used\ for\ u,\ and\ which}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00357}00357\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ of\ vmin/vmax\ should\ be\ used\ for\ v\ for\ this\ vertex.\ The\ coding\ is:}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00358}00358\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0\ -\/\ u\ =\ umin,\ v\ =\ vmin}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00359}00359\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1\ -\/\ u\ =\ umin,\ v\ =\ vmax}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00360}00360\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2\ -\/\ u\ =\ umax,\ v\ =\ vmin}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00361}00361\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 3\ -\/\ u\ =\ umax,\ v\ =\ vmax}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00362}00362\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 4\ -\/\ not\ axis\ aligned,\ use\ uv\ stored\ in\ the\ vertex\ data\ 4\ on\ from\ this\ one}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00363}00363\ \textcolor{comment}{//\ \ \ \ \ \ \ \ ll\ \ \ \ \ \ \ \ \ is\ an\ 8-\/bit\ (4\ bit\ per\ u/v)\ index\ into\ the\ current\ lighting\ texture}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00364}00364\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00365}00365\ \textcolor{comment}{//\ For\ quads\ that\ don't\ have\ axis\ aligned\ UVs\ (ie\ have\ a\ code\ for\ 4\ in\ i\ as\ described\ above)\ the\ 8\ byte\ vertex}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00366}00366\ \textcolor{comment}{//\ is\ followed\ by\ a\ further\ 8\ bytes\ which\ have\ explicit\ UVs\ defined\ for\ each\ vertex:}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00367}00367\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00368}00368\ \textcolor{comment}{//\ 0000\ 0000\ uuuu\ vvvv\ \ \ \ \ \ (vertex\ 0)}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00369}00369\ \textcolor{comment}{//\ 0000\ 0000\ uuuu\ vvvv\ \ \ \ \ \ (vertex\ 1)}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00370}00370\ \textcolor{comment}{//\ 0000\ 0000\ uuuu\ vvvv\ \ \ \ \ \ (vertex\ 2)}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00371}00371\ \textcolor{comment}{//\ 0000\ 0000\ uuuu\ vvvv\ \ \ \ \ \ (vertex\ 3)}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00372}00372\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00373}00373\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00374}00374\ \textcolor{keywordtype}{void}\ Tesselator::packCompactQuad()}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00375}00375\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00376}00376\ \ \ \ \ \textcolor{comment}{//\ Offset\ x/y/z\ by\ 16\ so\ that\ we\ can\ deal\ with\ a\ -\/16\ -\/>\ 16\ range}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00377}00377\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 4;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00378}00378\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00379}00379\ \ \ \ \ \ \ \ \ m\_ix[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +=\ 16\ *\ 128;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ m\_iy[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +=\ 16\ *\ 128;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ m\_iz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ +=\ 16\ *\ 128;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00382}00382\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00383}00383\ \ \ \ \ \textcolor{comment}{//\ Find\ min\ x/y/z}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00384}00384\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ minx\ =\ m\_ix[0];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00385}00385\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ miny\ =\ m\_iy[0];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00386}00386\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ minz\ =\ m\_iz[0];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00387}00387\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 1;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 4;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00388}00388\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_ix[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ <\ minx\ )\ minx\ =\ m\_ix[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_iy[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ <\ miny\ )\ miny\ =\ m\_iy[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00391}00391\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_iz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ <\ minz\ )\ minz\ =\ m\_iz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00392}00392\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00393}00393\ \ \ \ \ \textcolor{comment}{//\ Everything\ has\ been\ scaled\ by\ a\ factor\ of\ 128\ to\ get\ it\ into\ an\ int,\ and\ so}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00394}00394\ \ \ \ \ \textcolor{comment}{//\ the\ minimum\ now\ should\ be\ in\ the\ range\ of\ (0-\/>32)\ *\ 128.\ Get\ the\ base\ x/y/z}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00395}00395\ \ \ \ \ \textcolor{comment}{//\ that\ our\ quad\ will\ be\ referenced\ from\ now,\ which\ can\ be\ stored\ in\ 5\ bits}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00396}00396\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ basex\ =\ (\ minx\ >>\ 7\ );}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00397}00397\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ basey\ =\ (\ miny\ >>\ 7\ );}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00398}00398\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ basez\ =\ (\ minz\ >>\ 7\ );}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00399}00399\ \ \ \ \ \textcolor{comment}{//\ If\ the\ min\ is\ 32,\ then\ this\ whole\ quad\ must\ be\ in\ that\ plane\ -\/\ make\ the\ min\ 15\ instead\ so}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00400}00400\ \ \ \ \ \textcolor{comment}{//\ we\ can\ still\ offset\ from\ that\ with\ our\ delta\ to\ get\ to\ the\ exact\ edge}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00401}00401\ \ \ \ \ \textcolor{keywordflow}{if}(\ basex\ ==\ 32\ )\ basex\ =\ 31;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00402}00402\ \ \ \ \ \textcolor{keywordflow}{if}(\ basey\ ==\ 32\ )\ basey\ =\ 31;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00403}00403\ \ \ \ \ \textcolor{keywordflow}{if}(\ basez\ ==\ 32\ )\ basez\ =\ 31;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00404}00404\ \ \ \ \ \textcolor{comment}{//\ Now\ get\ deltas\ to\ each\ vertex\ -\/\ these\ have\ an\ 8-\/bit\ range\ so\ they\ can\ span\ a}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00405}00405\ \ \ \ \ \textcolor{comment}{//\ full\ unit\ range\ from\ the\ base\ position}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00406}00406\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 4;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00407}00407\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00408}00408\ \ \ \ \ \ \ \ \ m\_ix[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/=\ basex\ <<\ 7;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00409}00409\ \ \ \ \ \ \ \ \ m\_iy[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/=\ basey\ <<\ 7;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00410}00410\ \ \ \ \ \ \ \ \ m\_iz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ -\/=\ basez\ <<\ 7;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00411}00411\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00412}00412\ \ \ \ \ \textcolor{comment}{//\ Now\ write\ the\ data\ out}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00413}00413\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *data\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)\&\_array-\/>data[p];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00414}00414\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00415}00415\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 4;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00416}00416\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00417}00417\ \ \ \ \ \ \ \ \ data[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ *\ 2\ +\ 0]\ =\ (\ m\_ix[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ <<\ 8\ )\ |\ (\ m\_iy[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ );}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00418}00418\ \ \ \ \ \ \ \ \ data[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ *\ 2\ +\ 1]\ =\ (\ m\_iz[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ <<\ 24\ )\ |\ (\ m\_clr[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ );}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00419}00419\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00420}00420\ \ \ \ \ data[0]\ |=\ (\ basex\ <<\ 26\ )\ |\ (\ basey\ <<\ 21\ )|\ (\ basez\ <<\ 16\ );}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00421}00421\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00422}00422\ \ \ \ \ \textcolor{comment}{//\ Now\ process\ UVs.\ First\ find\ min\ \&\ max\ U\ \&\ V}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00423}00423\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ minu\ =\ m\_u[0];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00424}00424\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ minv\ =\ m\_v[0];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00425}00425\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ maxu\ =\ m\_u[0];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00426}00426\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ maxv\ =\ m\_v[0];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00427}00427\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00428}00428\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 1;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 4;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00429}00429\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00430}00430\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_u[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ <\ minu\ )\ minu\ =\ m\_u[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00431}00431\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_v[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ <\ minv\ )\ minv\ =\ m\_v[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00432}00432\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_u[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ >\ maxu\ )\ maxu\ =\ m\_u[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00433}00433\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_v[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ >\ maxv\ )\ maxv\ =\ m\_v[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00434}00434\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00435}00435\ \ \ \ \ \textcolor{comment}{//\ In\ nearly\ all\ cases,\ all\ our\ UVs\ should\ be\ axis\ aligned\ for\ this\ quad.\ So\ the\ only\ values\ they\ should}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00436}00436\ \ \ \ \ \textcolor{comment}{//\ have\ in\ each\ dimension\ should\ be\ the\ min/max.\ We're\ going\ to\ store:}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00437}00437\ \ \ \ \ \textcolor{comment}{//\ (1)\ minu/maxu\ (16\ bits\ each,\ only\ actuall\ needs\ to\ store\ 14\ bits\ to\ get\ a\ 0\ to\ 2\ range\ for\ each}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00438}00438\ \ \ \ \ \textcolor{comment}{//\ (2)\ du/dv\ (\ ie\ maxu-\/minu,\ maxv-\/minv)\ -\/\ 8\ bits\ each,\ to\ store\ a\ range\ of\ 0\ to\ 15.9375\ texels.\ This}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00439}00439\ \ \ \ \ \textcolor{comment}{//\ should\ be\ enough\ to\ map\ the\ full\ UV\ range\ of\ a\ single\ 16x16\ region\ of\ the\ terrain\ texture,\ since}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00440}00440\ \ \ \ \ \textcolor{comment}{//\ we\ always\ pull\ UVs\ in\ by\ 1/16th\ of\ their\ range\ at\ the\ sides}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00441}00441\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ du\ =\ maxu\ -\/\ minu;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00442}00442\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dv\ =\ maxv\ -\/\ minv;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00443}00443\ \ \ \ \ \textcolor{keywordflow}{if}(\ du\ >\ 255\ )\ \ du\ =\ 255;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00444}00444\ \ \ \ \ \textcolor{keywordflow}{if}(\ dv\ >\ 255\ )\ \ dv\ =\ 255;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00445}00445\ \ \ \ \ \textcolor{comment}{//\ Check\ if\ this\ quad\ has\ UVs\ that\ can\ be\ referenced\ this\ way.\ This\ should\ only\ happen\ for\ flowing\ water}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00446}00446\ \ \ \ \ \textcolor{comment}{//\ and\ lava,\ where\ the\ texture\ coordinates\ are\ rotated\ for\ the\ top\ surface\ of\ the\ tile.}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00447}00447\ \ \ \ \ \textcolor{keywordtype}{bool}\ axisAligned\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00448}00448\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 4;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00449}00449\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00450}00450\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!\ (\ (\ (\ m\_u[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ ==\ minu\ )\ ||\ (\ m\_u[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ ==\ maxu\ )\ )\ \&\&}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00451}00451\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\ (\ m\_v[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ ==\ minv\ )\ ||\ (\ m\_v[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ ==\ maxv\ )\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00452}00452\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00453}00453\ \ \ \ \ \ \ \ \ \ \ \ \ axisAligned\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00454}00454\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00455}00455\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00456}00456\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00457}00457\ \ \ \ \ \textcolor{keywordflow}{if}(\ axisAligned\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00458}00458\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00459}00459\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Now\ go\ through\ each\ vertex,\ and\ work\ out\ which\ of\ the\ min/max\ should\ be\ used\ for\ each\ dimension,}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00460}00460\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ and\ store}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 4;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00462}00462\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00463}00463\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ code\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00464}00464\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_u[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ ==\ maxu\ )\ code\ |=\ 2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_v[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ ==\ maxv\ )\ code\ |=\ 1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00466}00466\ \ \ \ \ \ \ \ \ \ \ \ \ data[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ *\ 2\ +\ 1]\ |=\ code;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00467}00467\ \ \ \ \ \ \ \ \ \ \ \ \ data[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ *\ 2\ +\ 1]\ |=\ m\_t2[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ <<\ 16;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00468}00468\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00469}00469\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Finally,\ store\ the\ minu/minv/du/dv}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00470}00470\ \ \ \ \ \ \ \ \ data[1\ *\ 2\ +\ 0]\ |=\ minu\ <<\ 16;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00471}00471\ \ \ \ \ \ \ \ \ data[2\ *\ 2\ +\ 0]\ |=\ minv\ <<\ 16;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00472}00472\ \ \ \ \ \ \ \ \ data[3\ *\ 2\ +\ 0]\ |=\ (\ du\ <<\ 24\ |\ dv\ <<\ 16\ );}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00473}00473\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00474}00474\ \ \ \ \ \ \ \ \ p\ +=\ 4\ *\ 2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00475}00475\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00476}00476\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00477}00477\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00478}00478\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ UVs\ aren't\ axis\ aligned\ -\/\ store\ them\ in\ the\ next\ 4\ vertices.\ These\ will\ be\ indexed\ from}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00479}00479\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ our\ base\ vertices\ because\ we'll\ set\ a\ special\ code\ (4)\ for\ the\ UVs.\ They\ won't\ be\ drawn\ as\ actual}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00480}00480\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ verts\ when\ these\ extra\ vertices\ go\ through\ the\ vertex\ shader,\ because\ we'll\ make\ sure\ that}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00481}00481\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ they\ get\ interpreted\ as\ a\ zero\ area\ quad\ and\ so\ they'll\ be\ quickly\ eliminated\ from\ rendering\ post-\/tranform}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00482}00482\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00483}00483\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 4;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00484}00484\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ data[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ *\ 2\ +\ 1]\ |=\ (\ 4\ );\ \ \ \textcolor{comment}{//\ The\ special\ code\ to\ indicate\ they\ need\ further\ data\ to\ be\ fetched}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ data[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ *\ 2\ +\ 1]\ |=\ m\_t2[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ <<\ 16;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ data[8\ +\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ *\ 2]\ =\ 0;\ \ \ \ \textcolor{comment}{//\ This\ includes\ x/y\ coordinate\ of\ each\ vert\ as\ (0,0)\ so\ they\ will\ be\ interpreted\ as\ a\ zero\ area\ quad}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ data[9\ +\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ *\ 2]\ =\ m\_u[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ <<\ 16\ |\ m\_v[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00489}00489\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00490}00490\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00491}00491\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Extra\ 8\ bytes\ required}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00492}00492\ \ \ \ \ \ \ \ \ p\ +=\ 8\ *\ 2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00493}00493\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00494}00494\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00495}00495\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00496}00496\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00497}00497\ \textcolor{keywordtype}{void}\ Tesselator::tileQuad(\textcolor{keywordtype}{float}\ x1,\ \textcolor{keywordtype}{float}\ y1,\ \textcolor{keywordtype}{float}\ z1,\ \textcolor{keywordtype}{float}\ u1,\ \textcolor{keywordtype}{float}\ v1,\ \textcolor{keywordtype}{float}\ r1,\ \textcolor{keywordtype}{float}\ g1,\ \textcolor{keywordtype}{float}\ b1,\ \textcolor{keywordtype}{int}\ tex1,}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00498}00498\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ x2,\ \textcolor{keywordtype}{float}\ y2,\ \textcolor{keywordtype}{float}\ z2,\ \textcolor{keywordtype}{float}\ u2,\ \textcolor{keywordtype}{float}\ v2,\ \textcolor{keywordtype}{float}\ r2,\ \textcolor{keywordtype}{float}\ g2,\ \textcolor{keywordtype}{float}\ b2,\ \textcolor{keywordtype}{int}\ tex2,}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00499}00499\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ x3,\ \textcolor{keywordtype}{float}\ y3,\ \textcolor{keywordtype}{float}\ z3,\ \textcolor{keywordtype}{float}\ u3,\ \textcolor{keywordtype}{float}\ v3,\ \textcolor{keywordtype}{float}\ r3,\ \textcolor{keywordtype}{float}\ g3,\ \textcolor{keywordtype}{float}\ b3,\ \textcolor{keywordtype}{int}\ tex3,}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00500}00500\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ x4,\ \textcolor{keywordtype}{float}\ y4,\ \textcolor{keywordtype}{float}\ z4,\ \textcolor{keywordtype}{float}\ u4,\ \textcolor{keywordtype}{float}\ v4,\ \textcolor{keywordtype}{float}\ r4,\ \textcolor{keywordtype}{float}\ g4,\ \textcolor{keywordtype}{float}\ b4,\ \textcolor{keywordtype}{int}\ tex4}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00501}00501\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00502}00502\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00503}00503\ \ \ \ \ hasTexture\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00504}00504\ \ \ \ \ hasTexture2\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00505}00505\ \ \ \ \ hasColor\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00506}00506\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00507}00507\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_a57d82a8f44c55af0619c615c4e47d5e4}{count}}+=4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00508}00508\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00509}00509\ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ alpha\ cut\ out\ is\ expensive\ on\ vita.\ This\ will\ choose\ the\ correct\ data\ buffer\ depending\ on\ cut\ out\ enabled}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00510}00510\ \ \ \ \ int16\_t*\ pShortData;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00511}00511\ \ \ \ \ \textcolor{keywordflow}{if}(\ !alphaCutOutEnabled\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00512}00512\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00513}00513\ \ \ \ \ \ \ \ \ pShortData\ =\ \ (int16\_t*)\&\_array-\/>data[p];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00514}00514\ \ \ \ \ \ \ \ \ p\ +=\ 16;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00515}00515\ \ \ \ \ \ \ \ \ vertices+=4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00516}00516\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00517}00517\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00518}00518\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00519}00519\ \ \ \ \ \ \ \ \ pShortData\ =\ \ (int16\_t*)\&\_array2-\/>data[p2];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00520}00520\ \ \ \ \ \ \ \ \ p2\ +=\ 16;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00521}00521\ \ \ \ \ \ \ \ \ vertices2+=4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00522}00522\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00523}00523\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00524}00524\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ ((int)\ (r1\ *\ 31))\ <<\ 11;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00525}00525\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ g\ =\ ((int)\ (g1\ *\ 63))\ <<\ 5;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00526}00526\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ ((int)\ (b1\ *\ 31));}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00527}00527\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ipackedcol\ =\ r\ |\ g\ |\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00528}00528\ \ \ \ \ \ \ \ \ ipackedcol\ -\/=\ 32768;\ \ \ \ \textcolor{comment}{//\ -\/32768\ to\ 32767\ range}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00529}00529\ \ \ \ \ \ \ \ \ ipackedcol\ \&=\ 0xffff;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00530}00530\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00531}00531\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_acfbfc10f1231250d1ae1901a931a7b6f}{bounds}}.addVert(x1+xo,\ y1+yo,\ z1+zo);\ \ \ \ \textcolor{comment}{//\ 4J\ MGH\ -\/\ added}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00532}00532\ \ \ \ \ \ \ \ \ pShortData[0]\ =\ (((int)((x1\ +\ xo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00533}00533\ \ \ \ \ \ \ \ \ pShortData[1]\ =\ (((int)((y1\ +\ yo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00534}00534\ \ \ \ \ \ \ \ \ pShortData[2]\ =\ (((int)((z1\ +\ zo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00535}00535\ \ \ \ \ \ \ \ \ pShortData[3]\ =\ ipackedcol;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00536}00536\ \ \ \ \ \ \ \ \ pShortData[4]\ =\ (((int)(u1\ *\ 8192.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00537}00537\ \ \ \ \ \ \ \ \ pShortData[5]\ =\ (((int)(v1\ *\ 8192.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00538}00538\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}\ *)pShortData)[3]\ =\ tex1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00539}00539\ \ \ \ \ \ \ \ \ pShortData\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00540}00540\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00541}00541\ \ \ \ \ \ \ \ \ r\ =\ ((int)\ (r2\ *\ 31))\ <<\ 11;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00542}00542\ \ \ \ \ \ \ \ \ g\ =\ ((int)\ (g2\ *\ 63))\ <<\ 5;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00543}00543\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ ((int)\ (b2\ *\ 31));}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00544}00544\ \ \ \ \ \ \ \ \ ipackedcol\ =\ r\ |\ g\ |\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00545}00545\ \ \ \ \ \ \ \ \ ipackedcol\ -\/=\ 32768;\ \ \ \ \textcolor{comment}{//\ -\/32768\ to\ 32767\ range}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00546}00546\ \ \ \ \ \ \ \ \ ipackedcol\ \&=\ 0xffff;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00547}00547\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00548}00548\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_acfbfc10f1231250d1ae1901a931a7b6f}{bounds}}.addVert(x2+xo,\ y2+yo,\ z2+zo);\ \ \ \ \textcolor{comment}{//\ 4J\ MGH\ -\/\ added}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00549}00549\ \ \ \ \ \ \ \ \ pShortData[0]\ =\ (((int)((x2\ +\ xo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00550}00550\ \ \ \ \ \ \ \ \ pShortData[1]\ =\ (((int)((y2\ +\ yo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00551}00551\ \ \ \ \ \ \ \ \ pShortData[2]\ =\ (((int)((z2\ +\ zo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00552}00552\ \ \ \ \ \ \ \ \ pShortData[3]\ =\ ipackedcol;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00553}00553\ \ \ \ \ \ \ \ \ pShortData[4]\ =\ (((int)(u2\ *\ 8192.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00554}00554\ \ \ \ \ \ \ \ \ pShortData[5]\ =\ (((int)(v2\ *\ 8192.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00555}00555\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}\ *)pShortData)[3]\ =\ \doxymbox{\hyperlink{class_tesselator_aaa8f40e93b7e2654d96390ce1961cd3d}{tex2}};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00556}00556\ \ \ \ \ \ \ \ \ pShortData\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00557}00557\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00558}00558\ \ \ \ \ \ \ \ \ r\ =\ ((int)\ (r3\ *\ 31))\ <<\ 11;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00559}00559\ \ \ \ \ \ \ \ \ g\ =\ ((int)\ (g3\ *\ 63))\ <<\ 5;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00560}00560\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ ((int)\ (b3\ *\ 31));}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00561}00561\ \ \ \ \ \ \ \ \ ipackedcol\ =\ r\ |\ g\ |\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00562}00562\ \ \ \ \ \ \ \ \ ipackedcol\ -\/=\ 32768;\ \ \ \ \textcolor{comment}{//\ -\/32768\ to\ 32767\ range}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00563}00563\ \ \ \ \ \ \ \ \ ipackedcol\ \&=\ 0xffff;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00564}00564\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00565}00565\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_acfbfc10f1231250d1ae1901a931a7b6f}{bounds}}.addVert(x3+xo,\ y3+yo,\ z3+zo);\ \ \ \ \textcolor{comment}{//\ 4J\ MGH\ -\/\ added}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00566}00566\ \ \ \ \ \ \ \ \ pShortData[0]\ =\ (((int)((x3\ +\ xo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00567}00567\ \ \ \ \ \ \ \ \ pShortData[1]\ =\ (((int)((y3\ +\ yo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00568}00568\ \ \ \ \ \ \ \ \ pShortData[2]\ =\ (((int)((z3\ +\ zo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00569}00569\ \ \ \ \ \ \ \ \ pShortData[3]\ =\ ipackedcol;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00570}00570\ \ \ \ \ \ \ \ \ pShortData[4]\ =\ (((int)(u3\ *\ 8192.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00571}00571\ \ \ \ \ \ \ \ \ pShortData[5]\ =\ (((int)(v3\ *\ 8192.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00572}00572\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}\ *)pShortData)[3]\ =\ tex3;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00573}00573\ \ \ \ \ \ \ \ \ pShortData\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00574}00574\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00575}00575\ \ \ \ \ \ \ \ \ r\ =\ ((int)\ (r4\ *\ 31))\ <<\ 11;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00576}00576\ \ \ \ \ \ \ \ \ g\ =\ ((int)\ (g4\ *\ 63))\ <<\ 5;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00577}00577\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ ((int)\ (b4\ *\ 31));}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00578}00578\ \ \ \ \ \ \ \ \ ipackedcol\ =\ r\ |\ g\ |\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00579}00579\ \ \ \ \ \ \ \ \ ipackedcol\ -\/=\ 32768;\ \ \ \ \textcolor{comment}{//\ -\/32768\ to\ 32767\ range}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00580}00580\ \ \ \ \ \ \ \ \ ipackedcol\ \&=\ 0xffff;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00581}00581\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00582}00582\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_acfbfc10f1231250d1ae1901a931a7b6f}{bounds}}.addVert(x4+xo,\ y4+yo,\ z4+zo);\ \ \ \ \textcolor{comment}{//\ 4J\ MGH\ -\/\ added}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00583}00583\ \ \ \ \ \ \ \ \ pShortData[0]\ =\ (((int)((x4\ +\ xo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00584}00584\ \ \ \ \ \ \ \ \ pShortData[1]\ =\ (((int)((y4\ +\ yo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00585}00585\ \ \ \ \ \ \ \ \ pShortData[2]\ =\ (((int)((z4\ +\ zo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00586}00586\ \ \ \ \ \ \ \ \ pShortData[3]\ =\ ipackedcol;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00587}00587\ \ \ \ \ \ \ \ \ pShortData[4]\ =\ (((int)(u4\ *\ 8192.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00588}00588\ \ \ \ \ \ \ \ \ pShortData[5]\ =\ (((int)(v4\ *\ 8192.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00589}00589\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}\ *)pShortData)[3]\ =\ tex4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00590}00590\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00591}00591\ \ \ \ \ \textcolor{comment}{//\ Max\ 65535\ verts\ in\ D3D,\ so\ 65532\ is\ the\ last\ point\ at\ the\ end\ of\ a\ quad\ to\ catch\ it}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00592}00592\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ (!alphaCutOutEnabled\ \&\&\ vertices\ \%\ 4\ ==\ 0\ \&\&\ (\ (\ p\ >=\ size\ -\/\ 4\ *\ 4\ )\ ||\ (\ (\ p\ /\ 4\ )\ >=\ 65532\ )\ ))\ ||}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00593}00593\ \ \ \ \ \ \ \ \ (alphaCutOutEnabled\ \&\&\ vertices2\ \%\ 4\ ==\ 0\ \&\&\ (\ (\ p2\ >=\ size\ -\/\ 4\ *\ 4\ )\ ||\ (\ (\ p2\ /\ 4\ )\ >=\ 65532\ )\ ))\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00594}00594\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00595}00595\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00596}00596\ \ \ \ \ \ \ \ \ tesselating\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00597}00597\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00598}00598\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00599}00599\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00600}00600\ \textcolor{keywordtype}{void}\ Tesselator::tileRainQuad(\textcolor{keywordtype}{float}\ x1,\ \textcolor{keywordtype}{float}\ y1,\ \textcolor{keywordtype}{float}\ z1,\ \textcolor{keywordtype}{float}\ u1,\ \textcolor{keywordtype}{float}\ v1,\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00601}00601\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ x2,\ \textcolor{keywordtype}{float}\ y2,\ \textcolor{keywordtype}{float}\ z2,\ \textcolor{keywordtype}{float}\ u2,\ \textcolor{keywordtype}{float}\ v2,\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00602}00602\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ x3,\ \textcolor{keywordtype}{float}\ y3,\ \textcolor{keywordtype}{float}\ z3,\ \textcolor{keywordtype}{float}\ u3,\ \textcolor{keywordtype}{float}\ v3,\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00603}00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ x4,\ \textcolor{keywordtype}{float}\ y4,\ \textcolor{keywordtype}{float}\ z4,\ \textcolor{keywordtype}{float}\ u4,\ \textcolor{keywordtype}{float}\ v4,\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00604}00604\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ r1,\ \textcolor{keywordtype}{float}\ g1,\ \textcolor{keywordtype}{float}\ b1,\ \textcolor{keywordtype}{float}\ a1,}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00605}00605\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ r2,\ \textcolor{keywordtype}{float}\ g2,\ \textcolor{keywordtype}{float}\ b2,\ \textcolor{keywordtype}{float}\ a2,}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tex1}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00608}00608\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00609}00609\ \ \ \ \ hasTexture\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00610}00610\ \ \ \ \ hasTexture2\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00611}00611\ \ \ \ \ hasColor\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00612}00612\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00613}00613\ \ \ \ \ \textcolor{keywordtype}{float}*\ pfData\ =\ (\textcolor{keywordtype}{float}*)\&\_array-\/>data[p];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00614}00614\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00615}00615\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_a57d82a8f44c55af0619c615c4e47d5e4}{count}}+=4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00616}00616\ \ \ \ \ p\ +=\ 4\ *\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00617}00617\ \ \ \ \ vertices+=4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00618}00618\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00619}00619\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ col1\ =\ ((int)(r1*255)\ <<\ 24)\ |\ ((\textcolor{keywordtype}{int})(g1*255)\ <<\ 16)\ |\ ((int)(b1*255)\ <<\ 8)\ |\ (\textcolor{keywordtype}{int})(a1*255);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00620}00620\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00621}00621\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_acfbfc10f1231250d1ae1901a931a7b6f}{bounds}}.addVert(x1+xo,\ y1+yo,\ z1+zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00622}00622\ \ \ \ \ \ \ \ \ pfData[0]\ =\ (x1\ +\ xo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00623}00623\ \ \ \ \ \ \ \ \ pfData[1]\ =\ (y1\ +\ yo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00624}00624\ \ \ \ \ \ \ \ \ pfData[2]\ =\ (z1\ +\ zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00625}00625\ \ \ \ \ \ \ \ \ pfData[3]\ =\ u1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00626}00626\ \ \ \ \ \ \ \ \ pfData[4]\ =\ v1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00627}00627\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[5]\ =\ col1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00628}00628\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[7]\ =\ tex1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00629}00629\ \ \ \ \ \ \ \ \ pfData\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00630}00630\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00631}00631\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_acfbfc10f1231250d1ae1901a931a7b6f}{bounds}}.addVert(x2+xo,\ y2+yo,\ z2+zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00632}00632\ \ \ \ \ \ \ \ \ pfData[0]\ =\ (x2\ +\ xo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00633}00633\ \ \ \ \ \ \ \ \ pfData[1]\ =\ (y2\ +\ yo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00634}00634\ \ \ \ \ \ \ \ \ pfData[2]\ =\ (z2\ +\ zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00635}00635\ \ \ \ \ \ \ \ \ pfData[3]\ =\ u2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00636}00636\ \ \ \ \ \ \ \ \ pfData[4]\ =\ v2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00637}00637\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[5]\ =\ col1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00638}00638\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[7]\ =\ tex1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00639}00639\ \ \ \ \ \ \ \ \ pfData\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00640}00640\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00641}00641\ \ \ \ \ \ \ \ \ col1\ =\ ((int)(r2*255)\ <<\ 24)\ |\ ((\textcolor{keywordtype}{int})(g2*255)\ <<\ 16)\ |\ ((int)(b2*255)\ <<\ 8)\ |\ (\textcolor{keywordtype}{int})(a2*255);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00642}00642\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00643}00643\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_acfbfc10f1231250d1ae1901a931a7b6f}{bounds}}.addVert(x3+xo,\ y3+yo,\ z3+zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00644}00644\ \ \ \ \ \ \ \ \ pfData[0]\ =\ (x3\ +\ xo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00645}00645\ \ \ \ \ \ \ \ \ pfData[1]\ =\ (y3\ +\ yo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00646}00646\ \ \ \ \ \ \ \ \ pfData[2]\ =\ (z3\ +\ zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00647}00647\ \ \ \ \ \ \ \ \ pfData[3]\ =\ u3;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00648}00648\ \ \ \ \ \ \ \ \ pfData[4]\ =\ v3;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00649}00649\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[5]\ =\ col1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00650}00650\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[7]\ =\ tex1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00651}00651\ \ \ \ \ \ \ \ \ pfData\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00652}00652\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00653}00653\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_acfbfc10f1231250d1ae1901a931a7b6f}{bounds}}.addVert(x4+xo,\ y4+yo,\ z4+zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00654}00654\ \ \ \ \ \ \ \ \ pfData[0]\ =\ (x4\ +\ xo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00655}00655\ \ \ \ \ \ \ \ \ pfData[1]\ =\ (y4\ +\ yo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00656}00656\ \ \ \ \ \ \ \ \ pfData[2]\ =\ (z4\ +\ zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00657}00657\ \ \ \ \ \ \ \ \ pfData[3]\ =\ u4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00658}00658\ \ \ \ \ \ \ \ \ pfData[4]\ =\ v4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00659}00659\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[5]\ =\ col1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00660}00660\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[7]\ =\ tex1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00661}00661\ \ \ \ \ \ \ \ \ pfData\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00662}00662\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00663}00663\ \ \ \ \ \textcolor{keywordflow}{if}\ (vertices\ \%\ 4\ ==\ 0\ \&\&\ p\ >=\ size\ -\/\ 8\ *\ 4)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00664}00664\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00665}00665\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00666}00666\ \ \ \ \ \ \ \ \ tesselating\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00667}00667\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00668}00668\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00669}00669\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00670}00670\ \textcolor{keywordtype}{void}\ Tesselator::tileParticleQuad(\textcolor{keywordtype}{float}\ x1,\ \textcolor{keywordtype}{float}\ y1,\ \textcolor{keywordtype}{float}\ z1,\ \textcolor{keywordtype}{float}\ u1,\ \textcolor{keywordtype}{float}\ v1,\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00671}00671\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ x2,\ \textcolor{keywordtype}{float}\ y2,\ \textcolor{keywordtype}{float}\ z2,\ \textcolor{keywordtype}{float}\ u2,\ \textcolor{keywordtype}{float}\ v2,\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00672}00672\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ x3,\ \textcolor{keywordtype}{float}\ y3,\ \textcolor{keywordtype}{float}\ z3,\ \textcolor{keywordtype}{float}\ u3,\ \textcolor{keywordtype}{float}\ v3,\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00673}00673\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ x4,\ \textcolor{keywordtype}{float}\ y4,\ \textcolor{keywordtype}{float}\ z4,\ \textcolor{keywordtype}{float}\ u4,\ \textcolor{keywordtype}{float}\ v4,\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00674}00674\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ r1,\ \textcolor{keywordtype}{float}\ g1,\ \textcolor{keywordtype}{float}\ b1,\ \textcolor{keywordtype}{float}\ a1)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00675}00675\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00676}00676\ \ \ \ \ hasTexture\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00677}00677\ \ \ \ \ hasTexture2\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00678}00678\ \ \ \ \ hasColor\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00679}00679\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00680}00680\ \ \ \ \ \textcolor{keywordtype}{float}*\ pfData\ =\ (\textcolor{keywordtype}{float}*)\&\_array-\/>data[p];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00681}00681\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00682}00682\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_a57d82a8f44c55af0619c615c4e47d5e4}{count}}+=4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00683}00683\ \ \ \ \ p\ +=\ 4\ *\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00684}00684\ \ \ \ \ vertices+=4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00685}00685\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00686}00686\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ col1\ =\ ((int)(r1*255)\ <<\ 24)\ |\ ((\textcolor{keywordtype}{int})(g1*255)\ <<\ 16)\ |\ ((int)(b1*255)\ <<\ 8)\ |\ (\textcolor{keywordtype}{int})(a1*255);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00687}00687\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00688}00688\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_acfbfc10f1231250d1ae1901a931a7b6f}{bounds}}.addVert(x1+xo,\ y1+yo,\ z1+zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00689}00689\ \ \ \ \ \ \ \ \ pfData[0]\ =\ (x1\ +\ xo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00690}00690\ \ \ \ \ \ \ \ \ pfData[1]\ =\ (y1\ +\ yo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00691}00691\ \ \ \ \ \ \ \ \ pfData[2]\ =\ (z1\ +\ zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00692}00692\ \ \ \ \ \ \ \ \ pfData[3]\ =\ u1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00693}00693\ \ \ \ \ \ \ \ \ pfData[4]\ =\ v1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00694}00694\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[5]\ =\ col1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00695}00695\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[7]\ =\ \_tex2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00696}00696\ \ \ \ \ \ \ \ \ pfData\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00697}00697\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00698}00698\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_acfbfc10f1231250d1ae1901a931a7b6f}{bounds}}.addVert(x2+xo,\ y2+yo,\ z2+zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00699}00699\ \ \ \ \ \ \ \ \ pfData[0]\ =\ (x2\ +\ xo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00700}00700\ \ \ \ \ \ \ \ \ pfData[1]\ =\ (y2\ +\ yo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00701}00701\ \ \ \ \ \ \ \ \ pfData[2]\ =\ (z2\ +\ zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00702}00702\ \ \ \ \ \ \ \ \ pfData[3]\ =\ u2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00703}00703\ \ \ \ \ \ \ \ \ pfData[4]\ =\ v2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00704}00704\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[5]\ =\ col1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00705}00705\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[7]\ =\ \_tex2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00706}00706\ \ \ \ \ \ \ \ \ pfData\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00707}00707\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00708}00708\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_acfbfc10f1231250d1ae1901a931a7b6f}{bounds}}.addVert(x3+xo,\ y3+yo,\ z3+zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00709}00709\ \ \ \ \ \ \ \ \ pfData[0]\ =\ (x3\ +\ xo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00710}00710\ \ \ \ \ \ \ \ \ pfData[1]\ =\ (y3\ +\ yo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00711}00711\ \ \ \ \ \ \ \ \ pfData[2]\ =\ (z3\ +\ zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00712}00712\ \ \ \ \ \ \ \ \ pfData[3]\ =\ u3;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00713}00713\ \ \ \ \ \ \ \ \ pfData[4]\ =\ v3;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00714}00714\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[5]\ =\ col1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00715}00715\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[7]\ =\ \_tex2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00716}00716\ \ \ \ \ \ \ \ \ pfData\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00717}00717\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00718}00718\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_acfbfc10f1231250d1ae1901a931a7b6f}{bounds}}.addVert(x4+xo,\ y4+yo,\ z4+zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00719}00719\ \ \ \ \ \ \ \ \ pfData[0]\ =\ (x4\ +\ xo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00720}00720\ \ \ \ \ \ \ \ \ pfData[1]\ =\ (y4\ +\ yo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00721}00721\ \ \ \ \ \ \ \ \ pfData[2]\ =\ (z4\ +\ zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00722}00722\ \ \ \ \ \ \ \ \ pfData[3]\ =\ u4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00723}00723\ \ \ \ \ \ \ \ \ pfData[4]\ =\ v4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00724}00724\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[5]\ =\ col1;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00725}00725\ \ \ \ \ \ \ \ \ ((\textcolor{keywordtype}{int}*)pfData)[7]\ =\ \_tex2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00726}00726\ \ \ \ \ \ \ \ \ pfData\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00727}00727\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00728}00728\ \ \ \ \ \textcolor{keywordflow}{if}\ (vertices\ \%\ 4\ ==\ 0\ \&\&\ p\ >=\ size\ -\/\ 8\ *\ 4)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00729}00729\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00730}00730\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00731}00731\ \ \ \ \ \ \ \ \ tesselating\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00732}00732\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00733}00733\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00734}00734\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00735}00735\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00736}00736\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \ \ \ \doxymbox{\hyperlink{_tesselator___s_p_u_8cpp_a82f473f821e9450813b08246579d1b00}{hfloat}};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00737}00737\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{_tesselator___s_p_u_8cpp_a82f473f821e9450813b08246579d1b00}{hfloat}}\ \doxymbox{\hyperlink{_tesselator_8cpp_a75d184100c89ef5f5c9545d6a00c59c3}{convertFloatToHFloat}}(\textcolor{keywordtype}{float}\ f);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00738}00738\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{_tesselator_8cpp_a30c791b471081367e12b60a87101f862}{convertHFloatToFloat}}(\doxymbox{\hyperlink{_tesselator___s_p_u_8cpp_a82f473f821e9450813b08246579d1b00}{hfloat}}\ hf);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00739}00739\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00740}\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{00740}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{Tesselator::vertex}}(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00741}00741\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00742}00742\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_acfbfc10f1231250d1ae1901a931a7b6f}{bounds}}.addVert(x+xo,\ y+yo,\ z+zo);\ \ \ \textcolor{comment}{//\ 4J\ MGH\ -\/\ added}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00743}00743\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_a57d82a8f44c55af0619c615c4e47d5e4}{count}}++;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00744}00744\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00745}00745\ \ \ \ \ \textcolor{comment}{//\ Signal\ to\ pixel\ shader\ whether\ to\ use\ mipmapping\ or\ not,\ by\ putting\ u\ into\ >\ 1\ range\ if\ it\ is\ to\ be\ disabled}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00746}00746\ \ \ \ \ \textcolor{keywordtype}{float}\ uu\ =\ mipmapEnable\ ?\ u\ :\ (u\ +\ 1.0f);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00747}00747\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00748}00748\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ this\ format\ added\ for\ 360\ to\ keep\ memory\ size\ of\ tesselated\ tiles\ down\ -\/}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00749}00749\ \ \ \ \ \textcolor{comment}{//\ see\ comments\ in\ packCompactQuad()\ for\ exact\ format}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00750}00750\ \ \ \ \ \textcolor{keywordflow}{if}(\ useCompactFormat360\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00751}00751\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00752}00752\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ ucol\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\textcolor{keyword}{>}(col);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00753}00753\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00754}00754\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00755}00755\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Pack\ as\ 4:4:4\ RGB\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00756}00756\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ packedcol\ =\ (((col\ \&\ 0xf0000000\ )\ >>\ 16\ )\ |}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00757}00757\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((col\ \&\ 0x00f00000\ )\ >>\ 12\ )\ |}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00758}00758\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((col\ \&\ 0x0000f000\ )\ >>\ 8\ ));}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00759}00759\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ipackedcol\ =\ ((int)packedcol)\ \&\ 0xffff;\ \textcolor{comment}{//\ 0\ to\ 65535\ range}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00760}00760\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00761}00761\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ quadIdx\ =\ vertices\ \%\ 4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00762}00762\ \ \ \ \ \ \ \ \ m\_ix[\ quadIdx\ ]\ =\ (\textcolor{keywordtype}{unsigned}\ int)((x\ +\ xo)\ *\ 128.0f);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00763}00763\ \ \ \ \ \ \ \ \ m\_iy[\ quadIdx\ ]\ =\ (\textcolor{keywordtype}{unsigned}\ int)((y\ +\ yo)\ *\ 128.0f);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00764}00764\ \ \ \ \ \ \ \ \ m\_iz[\ quadIdx\ ]\ =\ (\textcolor{keywordtype}{unsigned}\ int)((z\ +\ zo)\ *\ 128.0f);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00765}00765\ \ \ \ \ \ \ \ \ m\_clr[\ quadIdx\ ]\ =\ (\textcolor{keywordtype}{unsigned}\ int)ipackedcol;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00766}00766\ \ \ \ \ \ \ \ \ m\_u[\ quadIdx\ ]\ =\ (int)(uu\ *\ 4096.0f);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00767}00767\ \ \ \ \ \ \ \ \ m\_v[\ quadIdx\ ]\ =\ (int)(v\ *\ 4096.0f);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00768}00768\ \ \ \ \ \ \ \ \ m\_t2[\ quadIdx\ ]\ =\ (\ (\ \_tex2\ \&\ 0x00f00000\ )\ >>\ 20\ )\ |\ (\ \_tex2\ \&\ 0x000000f0\ );}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00769}00769\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ quadIdx\ ==\ 3\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00770}00770\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00771}00771\ \ \ \ \ \ \ \ \ \ \ \ \ packCompactQuad();}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00772}00772\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00773}00773\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00774}00774\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ packedcol\ =\ ((col\ \&\ 0xf8000000\ )\ >>\ 16\ )\ |}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00775}00775\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((col\ \&\ 0x00fc0000\ )\ >>\ 13\ )\ |}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00776}00776\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((col\ \&\ 0x0000f800\ )\ >>\ 11\ );}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00777}00777\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ipackedcol\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(packedcol)\ \&\ 0xffff;\ \ \textcolor{comment}{//\ 0\ to\ 65535\ range}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00778}00778\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00779}00779\ \ \ \ \ \ \ \ \ ipackedcol\ -\/=\ 32768;\ \ \ \ \textcolor{comment}{//\ -\/32768\ to\ 32767\ range}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00780}00780\ \ \ \ \ \ \ \ \ ipackedcol\ \&=\ 0xffff;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00781}00781\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00782}00782\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00783}00783\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ alpha\ cut\ out\ is\ expensive\ on\ vita.\ This\ will\ choose\ the\ correct\ data\ buffer\ depending\ on\ cut\ out\ enabled}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00784}00784\ \ \ \ \ \ \ \ \ int16\_t*\ pShortData;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00785}00785\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !alphaCutOutEnabled\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00786}00786\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00787}00787\ \ \ \ \ \ \ \ \ \ \ \ \ pShortData\ =\ \ (int16\_t*)\&\_array-\/>data[p];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00788}00788\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00789}00789\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00790}00790\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00791}00791\ \ \ \ \ \ \ \ \ \ \ \ \ pShortData\ =\ \ (int16\_t*)\&\_array2-\/>data[p2];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00792}00792\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00793}00793\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00794}00794\ \ \ \ \ \ \ \ \ int16\_t*\ pShortData\ =\ \ (int16\_t*)\&\_array-\/>data[p];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00795}00795\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00796}00796\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00797}00797\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00798}00798\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00799}00799\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00800}00800\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00801}00801\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ tex2U\ =\ ((int16\_t*)\&\_tex2)[1]\ +\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00802}00802\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ tex2V\ =\ ((int16\_t*)\&\_tex2)[0]\ +\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00803}00803\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ colVal1\ =\ ((col\&0xff000000)>>24)/256.0f;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00804}00804\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ colVal2\ =\ ((col\&0x00ff0000)>>16)/256.0f;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00805}00805\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ colVal3\ =\ ((col\&0x0000ff00)>>8)/256.0f;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00806}00806\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00807}00807\ \textcolor{comment}{//\ \ \ \ \ \ pShortData[0]\ =\ convertFloatToHFloat(x\ +\ xo);}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00808}00808\ \textcolor{comment}{//\ \ \ \ \ \ pShortData[1]\ =\ convertFloatToHFloat(y\ +\ yo);}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00809}00809\ \textcolor{comment}{//\ \ \ \ \ \ pShortData[2]\ =\ convertFloatToHFloat(z\ +\ zo);}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00810}00810\ \textcolor{comment}{//\ \ \ \ \ \ pShortData[3]\ =\ convertFloatToHFloat(uu);}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00811}00811\ \textcolor{comment}{//\ \ \ \ \ \ pShortData[4]\ =\ convertFloatToHFloat(tex2U\ +\ colVal1);}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00812}00812\ \textcolor{comment}{//\ \ \ \ \ \ pShortData[5]\ =\ convertFloatToHFloat(tex2V\ +\ colVal2);}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00813}00813\ \textcolor{comment}{//\ \ \ \ \ \ pShortData[6]\ =\ convertFloatToHFloat(colVal3);}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00814}00814\ \textcolor{comment}{//\ \ \ \ \ \ pShortData[7]\ =\ convertFloatToHFloat(v);}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00815}00815\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00816}00816\ \ \ \ \ \ \ \ \ pShortData[0]\ =\ (((int)((x\ +\ xo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00817}00817\ \ \ \ \ \ \ \ \ pShortData[1]\ =\ (((int)((y\ +\ yo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00818}00818\ \ \ \ \ \ \ \ \ pShortData[2]\ =\ (((int)((z\ +\ zo\ )\ *\ 1024.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00819}00819\ \ \ \ \ \ \ \ \ pShortData[3]\ =\ ipackedcol;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00820}00820\ \ \ \ \ \ \ \ \ pShortData[4]\ =\ (((int)(uu\ *\ 8192.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00821}00821\ \ \ \ \ \ \ \ \ pShortData[5]\ =\ (((int)(v\ *\ 8192.0f))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00822}00822\ \ \ \ \ \ \ \ \ pShortData[6]\ =\ (((int)(tex2U\ *\ (8192.0f/256.0f)))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00823}00823\ \ \ \ \ \ \ \ \ pShortData[7]\ =\ (((int)(tex2V\ *\ (8192.0f/256.0f)))\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00824}00824\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00825}00825\ \ \ \ \ \ \ \ \ p\ +=\ 4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00826}00826\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00827}00827\ \ \ \ \ \ \ \ \ pShortData[0]\ =\ (\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}((x\ +\ xo)\ *\ 1024.0f)\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00828}00828\ \ \ \ \ \ \ \ \ pShortData[1]\ =\ (\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}((y\ +\ yo)\ *\ 1024.0f)\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00829}00829\ \ \ \ \ \ \ \ \ pShortData[2]\ =\ (\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}((z\ +\ zo)\ *\ 1024.0f)\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00830}00830\ \ \ \ \ \ \ \ \ pShortData[3]\ =\ ipackedcol;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00831}00831\ \ \ \ \ \ \ \ \ pShortData[4]\ =\ (\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(uu\ *\ 8192.0f)\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00832}00832\ \ \ \ \ \ \ \ \ pShortData[5]\ =\ (\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(v\ *\ 8192.0f)\&0xffff);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00833}00833\ \ \ \ \ \ \ \ \ int16\_t\ u2\ =\ ((int16\_t*)\&\_tex2)[0];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00834}00834\ \ \ \ \ \ \ \ \ int16\_t\ v2\ =\ ((int16\_t*)\&\_tex2)[1];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00835}00835\ \textcolor{preprocessor}{\#if\ defined\ \_XBOX\_ONE\ ||\ defined\ \_\_ORBIS\_\_\ }}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00836}00836\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Optimisation\ -\/\ pack\ the\ second\ UVs\ into\ a\ single\ short\ (they\ could\ actually\ go\ in\ a\ byte),\ which\ frees\ up\ a\ short\ to\ store\ the\ x\ offset\ for\ this\ chunk\ in\ the\ vertex\ itself.}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00837}00837\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ means\ that\ when\ rendering\ chunks,\ we\ don't\ need\ to\ update\ the\ vertex\ constants\ that\ specify\ the\ location\ for\ a\ chunk,\ when\ only\ the\ x\ offset\ has\ changed.}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00838}00838\ \ \ \ \ \ \ \ \ pShortData[6]\ =\ (\ u2\ <<\ 8\ )\ |\ v2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00839}00839\ \ \ \ \ \ \ \ \ pShortData[7]\ =\ -\/xoo;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00840}00840\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00841}00841\ \ \ \ \ \ \ \ \ pShortData[6]\ =\ u2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00842}00842\ \ \ \ \ \ \ \ \ pShortData[7]\ =\ v2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00843}00843\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00844}00844\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00845}00845\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00846}00846\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ alpha\ cut\ out\ is\ expensive\ on\ vita.\ This\ will\ choose\ the\ correct\ data\ buffer\ depending\ on\ cut\ out\ enabled}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00847}00847\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !alphaCutOutEnabled\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00848}00848\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00849}00849\ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ 4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00850}00850\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00851}00851\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00852}00852\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00853}00853\ \ \ \ \ \ \ \ \ \ \ \ \ p2\ +=\ 4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00854}00854\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00855}00855\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00856}00856\ \ \ \ \ \ \ \ \ p\ +=\ 4;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00857}00857\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00858}00858\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00859}00859\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00860}00860\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00861}00861\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00862}00862\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00863}00863\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00864}00864\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ alpha\ cut\ out\ is\ expensive\ on\ vita.\ Increase\ the\ correct\ vertices\ depending\ on\ cut\ out\ enabled}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00865}00865\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !alphaCutOutEnabled\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00866}00866\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00867}00867\ \ \ \ \ \ \ \ \ \ \ \ \ vertices++;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00868}00868\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00869}00869\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00870}00870\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00871}00871\ \ \ \ \ \ \ \ \ \ \ \ \ vertices2++;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00872}00872\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00873}00873\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00874}00874\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00875}00875\ \ \ \ \ \ \ \ \ vertices++;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00876}00876\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00877}00877\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00878}00878\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00879}00879\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (vertices\ \%\ 4\ ==\ 0\ \&\&\ (\ (\ p\ >=\ size\ -\/\ 8\ *\ 2\ )\ ||\ (\ (\ p\ /\ 2\ )\ >=\ 65532\ )\ )\ )\ \ \ \ \ \ \textcolor{comment}{//\ Max\ 65535\ verts\ in\ D3D,\ so\ 65532\ is\ the\ last\ point\ at\ the\ end\ of\ a\ quad\ to\ catch\ it}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00880}00880\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00881}00881\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00882}00882\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00883}00883\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Max\ 65535\ verts\ in\ D3D,\ so\ 65532\ is\ the\ last\ point\ at\ the\ end\ of\ a\ quad\ to\ catch\ it}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00884}00884\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ (!alphaCutOutEnabled\ \&\&\ vertices\ \%\ 4\ ==\ 0\ \&\&\ (\ (\ p\ >=\ size\ -\/\ 4\ *\ 4\ )\ ||\ (\ (\ p\ /\ 4\ )\ >=\ 65532\ )\ ))\ ||}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00885}00885\ \ \ \ \ \ \ \ \ \ \ \ \ (alphaCutOutEnabled\ \&\&\ vertices2\ \%\ 4\ ==\ 0\ \&\&\ (\ (\ p2\ >=\ size\ -\/\ 4\ *\ 4\ )\ ||\ (\ (\ p2\ /\ 4\ )\ >=\ 65532\ )\ ))\ )}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00886}00886\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00887}00887\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00888}00888\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (vertices\ \%\ 4\ ==\ 0\ \&\&\ (\ (\ p\ >=\ size\ -\/\ 4\ *\ 4\ )\ ||\ (\ (\ p\ /\ 4\ )\ >=\ 65532\ )\ )\ )\ \ \ \ \ \ \textcolor{comment}{//\ Max\ 65535\ verts\ in\ D3D,\ so\ 65532\ is\ the\ last\ point\ at\ the\ end\ of\ a\ quad\ to\ catch\ it}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00889}00889\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00890}00890\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00891}00891\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00892}00892\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00893}00893\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00894}00894\ \ \ \ \ \ \ \ \ \ \ \ \ tesselating\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00895}00895\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00896}00896\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00897}00897\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00898}00898\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00899}00899\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mode\ ==\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_aff429e9ffe1cf471275528e48c0568cf}{GL\_QUADS}}\ \&\&\ TRIANGLE\_MODE\ \&\&\ \doxymbox{\hyperlink{class_tesselator_a57d82a8f44c55af0619c615c4e47d5e4}{count}}\ \%\ 4\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00900}00900\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00901}00901\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 2;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00902}00902\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00903}00903\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ offs\ =\ 8\ *\ (3\ -\/\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00904}00904\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasTexture)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00905}00905\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00906}00906\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_array-\/>data[p\ +\ 3]\ =\ \_array-\/>data[p\ -\/\ offs\ +\ 3];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00907}00907\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_array-\/>data[p\ +\ 4]\ =\ \_array-\/>data[p\ -\/\ offs\ +\ 4];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00908}00908\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00909}00909\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasColor)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00910}00910\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00911}00911\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_array-\/>data[p\ +\ 5]\ =\ \_array-\/>data[p\ -\/\ offs\ +\ 5];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00912}00912\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00913}00913\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00914}00914\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_array-\/>data[p\ +\ 0]\ =\ \_array-\/>data[p\ -\/\ offs\ +\ 0];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00915}00915\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_array-\/>data[p\ +\ 1]\ =\ \_array-\/>data[p\ -\/\ offs\ +\ 1];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00916}00916\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_array-\/>data[p\ +\ 2]\ =\ \_array-\/>data[p\ -\/\ offs\ +\ 2];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00917}00917\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00918}00918\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vertices++;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00919}00919\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00920}00920\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00921}00921\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00922}00922\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00923}00923\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasTexture)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00924}00924\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00925}00925\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *fdata\ =\ (\textcolor{keywordtype}{float}\ *)(\_array-\/>data\ +\ p\ +\ 3);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00926}00926\ \ \ \ \ \ \ \ \ \ \ \ \ *fdata++\ =\ uu;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00927}00927\ \ \ \ \ \ \ \ \ \ \ \ \ *fdata++\ =\ v;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00928}00928\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00929}00929\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasColor)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00930}00930\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00931}00931\ \ \ \ \ \ \ \ \ \ \ \ \ \_array-\/>data[p\ +\ 5]\ =\ col;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00932}00932\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00933}00933\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasNormal)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00934}00934\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00935}00935\ \ \ \ \ \ \ \ \ \ \ \ \ \_array-\/>data[p\ +\ 6]\ =\ \_normal;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00936}00936\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00937}00937\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasTexture2)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00938}00938\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00939}00939\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00940}00940\ \ \ \ \ \ \ \ \ \ \ \ \ \_array-\/>data[p\ +\ 7]\ =\ (\ (\ \_tex2\ >>\ 16\ )\ \&\ 0xffff\ )\ |\ (\ \_tex2\ <<\ 16\ );}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00941}00941\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00942}00942\ \textcolor{preprocessor}{\ \ \ \ \#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00943}00943\ \ \ \ \ \ \ \ \ \ \ \ \ int16\_t\ tex2U\ =\ ((int16\_t*)\&\_tex2)[1]\ +\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00944}00944\ \ \ \ \ \ \ \ \ \ \ \ \ int16\_t\ tex2V\ =\ ((int16\_t*)\&\_tex2)[0]\ +\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00945}00945\ \ \ \ \ \ \ \ \ \ \ \ \ int16\_t*\ pShortArray\ =\ (int16\_t*)\&\_array-\/>data[p\ +\ 7];}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00946}00946\ \ \ \ \ \ \ \ \ \ \ \ \ pShortArray[0]\ =\ tex2U;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00947}00947\ \ \ \ \ \ \ \ \ \ \ \ \ pShortArray[1]\ =\ tex2V;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00948}00948\ \textcolor{preprocessor}{\ \ \ \ \#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00949}00949\ \ \ \ \ \ \ \ \ \ \ \ \ \_array-\/>data[p\ +\ 7]\ =\ \_tex2;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00950}00950\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00951}00951\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00952}00952\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00953}00953\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00954}00954\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00955}00955\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/512\ each\ for\ u/v\ will\ mean\ that\ the\ renderer\ will\ use\ global\ settings\ (set\ via}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00956}00956\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ RenderManager.StateSetVertexTextureUV)\ rather\ than\ these\ local\ ones}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00957}00957\ \ \ \ \ \ \ \ \ \ \ \ \ *(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)(\&\_array-\/>data[p\ +\ 7])\ =\ 0xfe00fe00;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00958}00958\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00959}00959\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00960}00960\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ *fdata\ =\ (\textcolor{keywordtype}{float}\ *)(\_array-\/>data\ +\ p);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00961}00961\ \ \ \ \ \ \ \ \ *fdata++\ =\ (x\ +\ xo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00962}00962\ \ \ \ \ \ \ \ \ *fdata++\ =\ (y\ +\ yo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00963}00963\ \ \ \ \ \ \ \ \ *fdata++\ =\ (z\ +\ zo);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00964}00964\ \ \ \ \ \ \ \ \ p\ +=\ 8;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00965}00965\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00966}00966\ \ \ \ \ \ \ \ \ vertices++;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00967}00967\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (vertices\ \%\ 4\ ==\ 0\ \&\&\ p\ >=\ size\ -\/\ 8\ *\ 4)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00968}00968\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00969}00969\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00970}00970\ \ \ \ \ \ \ \ \ \ \ \ \ tesselating\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00971}00971\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00972}00972\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00973}00973\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00974}00974\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00975}\doxymbox{\hyperlink{class_tesselator_a9be3f36f62617d326744f6862896cf4a}{00975}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{Tesselator::color}}(\textcolor{keywordtype}{int}\ c)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00976}00976\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00977}00977\ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ ((c\ >>\ 16)\ \&\ 255);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00978}00978\ \ \ \ \ \textcolor{keywordtype}{int}\ g\ =\ ((c\ >>\ 8)\ \&\ 255);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00979}00979\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ ((c)\ \&\ 255);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00980}00980\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{color}}(r,\ g,\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}});}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00981}00981\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00982}00982\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00983}\doxymbox{\hyperlink{class_tesselator_a6fedfa02516cf43dff341b25834f5dce}{00983}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{Tesselator::color}}(\textcolor{keywordtype}{int}\ c,\ \textcolor{keywordtype}{int}\ alpha)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00984}00984\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00985}00985\ \ \ \ \ \textcolor{keywordtype}{int}\ r\ =\ ((c\ >>\ 16)\ \&\ 255);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00986}00986\ \ \ \ \ \textcolor{keywordtype}{int}\ g\ =\ ((c\ >>\ 8)\ \&\ 255);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00987}00987\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ ((c)\ \&\ 255);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00988}00988\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{color}}(r,\ g,\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}},\ alpha);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00989}00989\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00990}00990\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00991}\doxymbox{\hyperlink{class_tesselator_a545e96c6d201ca5671ff9d91cd10ec26}{00991}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_a545e96c6d201ca5671ff9d91cd10ec26}{Tesselator::noColor}}()}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00992}00992\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00993}00993\ \ \ \ \ \_noColor\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00994}00994\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00995}00995\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00996}00996\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00997}00997\ uint32\_t\ \_ConvertF32toX11Y11Z10N(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00998}00998\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l00999}00999\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 11111111111\ X\ 0x000007FF}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01000}01000\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ 1111111111100000000000\ Y\ 0x003FF800}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01001}01001\ \ \ \ \ \textcolor{comment}{//\ 11111111110000000000000000000000\ Z\ 0xFFC00000}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01002}01002\ \ \ \ \ \textcolor{comment}{//\ ZZZZZZZZZZYYYYYYYYYYYXXXXXXXXXXX}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01003}01003\ \ \ \ \ \textcolor{comment}{//\ \#defines\ for\ X11Y11Z10N\ format}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01004}01004\ \textcolor{preprocessor}{\#define\ X11Y11Z10N\_X\_MASK\ 0x000007FF}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01005}01005\ \textcolor{preprocessor}{\#define\ X11Y11Z10N\_X\_BITS\ 11}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01006}01006\ \textcolor{preprocessor}{\#define\ X11Y11Z10N\_X\_SHIFT\ 0}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01007}01007\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01008}01008\ \textcolor{preprocessor}{\#define\ X11Y11Z10N\_Y\_MASK\ 0x003FF800}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01009}01009\ \textcolor{preprocessor}{\#define\ X11Y11Z10N\_Y\_BITS\ 11}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01010}01010\ \textcolor{preprocessor}{\#define\ X11Y11Z10N\_Y\_SHIFT\ 11}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01011}01011\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01012}01012\ \textcolor{preprocessor}{\#define\ X11Y11Z10N\_Z\_MASK\ 0xFFC00000}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01013}01013\ \textcolor{preprocessor}{\#define\ X11Y11Z10N\_Z\_BITS\ 10}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01014}01014\ \textcolor{preprocessor}{\#define\ X11Y11Z10N\_Z\_SHIFT\ 22}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01015}01015\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01016}01016\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01017}01017\ \ \ \ \ \textcolor{keywordflow}{if}\ (x<-\/1.0f\ ||\ x>1.0f)\ \ \{\ printf(\textcolor{stringliteral}{"{}Value\ (\%5.3f)\ should\ be\ in\ range\ [-\/1..1].\ \ Conversion\ will\ clamp\ to\ X11Y11Z10N.\(\backslash\)n"{}},\ x);\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01018}01018\ \ \ \ \ \textcolor{keywordflow}{if}\ (y<-\/1.0f\ ||\ y>1.0f)\ \ \{\ printf(\textcolor{stringliteral}{"{}Value\ (\%5.3f)\ should\ be\ in\ range\ [-\/1..1].\ \ Conversion\ will\ clamp\ to\ X11Y11Z10N.\(\backslash\)n"{}},\ y);\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01019}01019\ \ \ \ \ \textcolor{keywordflow}{if}\ (z<-\/1.0f\ ||\ z>1.0f)\ \ \{\ printf(\textcolor{stringliteral}{"{}Value\ (\%5.3f)\ should\ be\ in\ range\ [-\/1..1].\ \ Conversion\ will\ clamp\ to\ X11Y11Z10N.\(\backslash\)n"{}},\ z);\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01020}01020\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01021}01021\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01022}01022\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ uX\ =\ ((int32\_t(max(min(((x)*2047.f\ -\/\ 1.f)*0.5f,\ 1023.f),\ -\/1024.f))\ \&\ (X11Y11Z10N\_X\_MASK\ >>\ X11Y11Z10N\_X\_SHIFT))\ <<\ X11Y11Z10N\_X\_SHIFT);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01023}01023\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ uY\ =\ ((int32\_t(max(min(((y)*2047.f\ -\/\ 1.f)*0.5f,\ 1023.f),\ -\/1024.f))\ \&\ (X11Y11Z10N\_Y\_MASK\ >>\ X11Y11Z10N\_Y\_SHIFT))\ <<\ X11Y11Z10N\_Y\_SHIFT);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01024}01024\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ uZ\ =\ ((int32\_t(max(min(((z)*1023.f\ -\/\ 1.f)*0.5f,\ \ 511.f),\ -\/512.f\ ))\ \&\ (X11Y11Z10N\_Z\_MASK\ >>\ X11Y11Z10N\_Z\_SHIFT))\ <<\ X11Y11Z10N\_Z\_SHIFT);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01025}01025\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ xyz\ =\ uX\ |\ uY\ |\ uZ;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01026}01026\ \ \ \ \ \textcolor{keywordflow}{return}\ xyz;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01027}01027\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01028}01028\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01029}01029\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01030}\doxymbox{\hyperlink{class_tesselator_a079cc2047d3be4f57e26c62b7b9c4104}{01030}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_a079cc2047d3be4f57e26c62b7b9c4104}{Tesselator::normal}}(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01031}01031\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01032}01032\ \ \ \ \ hasNormal\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01033}01033\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01034}01034\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01035}01035\ \ \ \ \ \_normal\ =\ \_ConvertF32toX11Y11Z10N(x,y,z);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01036}01036\ \textcolor{preprocessor}{\#elif\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01037}01037\ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ casting\ a\ negative\ value\ to\ 'byte'\ on\ Vita\ results\ in\ zero.\ changed\ to\ a\ signed\ 8\ value}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01038}01038\ \ \ \ \ int8\_t\ xx\ =\ (int8\_t)\ (x\ *\ 127);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01039}01039\ \ \ \ \ int8\_t\ yy\ =\ (int8\_t)\ (y\ *\ 127);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01040}01040\ \ \ \ \ int8\_t\ zz\ =\ (int8\_t)\ (z\ *\ 127);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01041}01041\ \ \ \ \ \_normal\ =\ (xx\ \&\ 0xff)\ |\ ((yy\ \&\ 0xff)\ <<\ 8)\ |\ ((zz\ \&\ 0xff)\ <<\ 16);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01042}01042\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01043}01043\ \ \ \ \ \textcolor{keywordtype}{byte}\ xx\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(x\ *\ 127);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01044}01044\ \ \ \ \ \textcolor{keywordtype}{byte}\ yy\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(y\ *\ 127);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01045}01045\ \ \ \ \ \textcolor{keywordtype}{byte}\ zz\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(z\ *\ 127);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01046}01046\ \ \ \ \ \_normal\ =\ (xx\ \&\ 0xff)\ |\ ((yy\ \&\ 0xff)\ <<\ 8)\ |\ ((zz\ \&\ 0xff)\ <<\ 16);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01047}01047\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01048}01048\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01049}01049\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01050}\doxymbox{\hyperlink{class_tesselator_afaef73105b32db12a07860705f364167}{01050}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_afaef73105b32db12a07860705f364167}{Tesselator::offset}}(\textcolor{keywordtype}{float}\ xo,\ \textcolor{keywordtype}{float}\ yo,\ \textcolor{keywordtype}{float}\ zo)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01051}01051\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01052}01052\ \ \ \ \ this-\/>xo\ =\ xo;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01053}01053\ \ \ \ \ this-\/>yo\ =\ yo;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01054}01054\ \ \ \ \ this-\/>zo\ =\ zo;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01055}01055\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01056}01056\ \ \ \ \ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01057}01057\ \ \ \ \ this-\/>xoo\ =\ xo;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01058}01058\ \ \ \ \ this-\/>yoo\ =\ yo;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01059}01059\ \ \ \ \ this-\/>zoo\ =\ zo;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01060}01060\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01061}01061\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01062}\doxymbox{\hyperlink{class_tesselator_a4fb57de0931a4841b7bc36986cbdb311}{01062}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_tesselator_a4fb57de0931a4841b7bc36986cbdb311}{Tesselator::addOffset}}(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z)}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01063}01063\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01064}01064\ \ \ \ \ xo\ +=\ x;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01065}01065\ \ \ \ \ yo\ +=\ y;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01066}01066\ \ \ \ \ zo\ +=\ z;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01067}01067\ \}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01068}01068\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01069}\doxymbox{\hyperlink{class_tesselator_a2f9229862b4cfb63b815c337396bee0f}{01069}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_tesselator_a2f9229862b4cfb63b815c337396bee0f}{Tesselator::hasMaxVertices}}()}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01070}01070\ \{}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01071}01071\ \textcolor{preprocessor}{\#ifdef\ \_\_ORBIS\_\_}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01072}01072\ \ \ \ \ \textcolor{comment}{//\ On\ PS4,\ the\ way\ we\ push\ data\ to\ the\ command\ buffer\ has\ a\ maximum\ size\ of\ a\ single\ command\ packet\ of\ 2\string^16\ bytes,}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01073}01073\ \ \ \ \ \textcolor{comment}{//\ and\ the\ effective\ maximum\ size\ will\ be\ slightly\ less\ than\ that\ due\ to\ packet\ headers\ and\ padding.}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01074}01074\ \ \ \ \ \textcolor{keywordtype}{int}\ bytes\ =\ vertices\ *\ (useCompactFormat360?16:32);}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01075}01075\ }
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01076}01076\ \ \ \ \ \textcolor{keywordflow}{return}\ bytes\ >\ 60\ *\ 1024;}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01077}01077\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01078}01078\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01079}01079\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_tesselator_8cpp_source_l01080}01080\ \}}
+
+\end{DoxyCode}

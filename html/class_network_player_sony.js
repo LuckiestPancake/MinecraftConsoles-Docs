@@ -1,0 +1,28 @@
+var class_network_player_sony =
+[
+    [ "NetworkPlayerSony", "class_network_player_sony.html#ae695725dc0a62a2f82cf41550d7bfa0a", null ],
+    [ "GetCurrentRtt", "class_network_player_sony.html#acef38bd176f752c6261d3ba643faa2bd", null ],
+    [ "GetDisplayName", "class_network_player_sony.html#ac52de12ff186dce4d74b68887bc070a1", null ],
+    [ "GetOnlineName", "class_network_player_sony.html#a2acae71f61e5b6d1cf4211769d96625c", null ],
+    [ "GetOutstandingAckCount", "class_network_player_sony.html#a9ad0fec43423c099bfdb2719eddff938", null ],
+    [ "GetSendQueueSizeBytes", "class_network_player_sony.html#a8281dabb7b13f694d662cb5f14807216", null ],
+    [ "GetSendQueueSizeMessages", "class_network_player_sony.html#ab92f686a2f0aa5a4de196a86ded35f1d", null ],
+    [ "GetSessionIndex", "class_network_player_sony.html#a7467a9e7eb19b66dce4510ed1ea96424", null ],
+    [ "GetSmallId", "class_network_player_sony.html#a31179d2db71e11933212aea736dfc5ae", null ],
+    [ "GetSocket", "class_network_player_sony.html#a12db769b51e053daf242198f5713f600", null ],
+    [ "GetTimeSinceLastChunkPacket_ms", "class_network_player_sony.html#a47b611f6b4552d220869653859a33b1a", null ],
+    [ "GetUID", "class_network_player_sony.html#a602cd907b4fa54e242b7e11346c29a23", null ],
+    [ "GetUserIndex", "class_network_player_sony.html#a5e20dabb68f73226252a04be3a03938c", null ],
+    [ "HasCamera", "class_network_player_sony.html#a1c1b48866778d319a6807f571dd0af5c", null ],
+    [ "HasVoice", "class_network_player_sony.html#a07c6c2d5f6f13d7c421663c4ec3d59c7", null ],
+    [ "IsGuest", "class_network_player_sony.html#af0c936825bd9000d9e517c4a5476e0c6", null ],
+    [ "IsHost", "class_network_player_sony.html#a61a1e6eda49921b7eb89964670aa432d", null ],
+    [ "IsLocal", "class_network_player_sony.html#a3cda6da8af22b8e7f1829e869e4336c5", null ],
+    [ "IsMutedByLocalUser", "class_network_player_sony.html#aa11a3051ccc4c6d6ae463a7eacaff896", null ],
+    [ "IsSameSystem", "class_network_player_sony.html#ab0f60973208fb948447ef417f3960c47", null ],
+    [ "IsTalking", "class_network_player_sony.html#ad2988a986bbf4cb30e310e7f1f40667e", null ],
+    [ "SendData", "class_network_player_sony.html#a4762afe72f3210516348a0943e59e30b", null ],
+    [ "SentChunkPacket", "class_network_player_sony.html#ab321df5711661925ff6db49aa2906550", null ],
+    [ "SetSocket", "class_network_player_sony.html#a9e0fa43615a2f2e65fab2515b93c9c3f", null ],
+    [ "SetUID", "class_network_player_sony.html#a32b24a38f7a29c1957fb860003966c0d", null ]
+];

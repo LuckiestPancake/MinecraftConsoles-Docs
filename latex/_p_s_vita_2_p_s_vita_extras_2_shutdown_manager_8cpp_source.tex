@@ -1,0 +1,210 @@
+\doxysection{Shutdown\+Manager.\+cpp}
+\hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source}{}\label{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PSVita/PSVitaExtras/ShutdownManager.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PSVita/PSVitaExtras/ShutdownManager.cpp}}
+\doxymbox{\hyperlink{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8h}{ShutdownManager.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_leaderboard_manager_8h}{..\(\backslash\)..\(\backslash\)Common\(\backslash\)Leaderboards\(\backslash\)LeaderboardManager.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_server_8h}{..\(\backslash\)..\(\backslash\)MinecraftServer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_c4_j_spurs_job_8h}{C4JSpursJob.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00009}00009\ \textcolor{keywordtype}{bool}\ ShutdownManager::s\_threadShouldRun[\doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fafe5f7ce5ed119af9d302fdd5f36aa7cb}{ShutdownManager::eThreadIdCount}}];}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00010}00010\ \textcolor{keywordtype}{int}\ ShutdownManager::s\_threadRunning[\doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fafe5f7ce5ed119af9d302fdd5f36aa7cb}{ShutdownManager::eThreadIdCount}}];}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00011}00011\ \doxymbox{\hyperlink{_orbis_stubs_8h_a18c881c9602dbf86a11ec558ec2cc990}{CRITICAL\_SECTION}}\ ShutdownManager::s\_threadRunningCS;}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00012}00012\ \doxymbox{\hyperlink{class_c4_j_thread_1_1_event_array}{C4JThread::EventArray}}\ *ShutdownManager::s\_eventArray[eThreadIdCount];}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00015}00015\ \textcolor{comment}{//\ Initialises\ the\ shutdown\ manager\ -\/\ this\ needs\ to\ be\ called\ as\ soon\ as\ the\ game\ is\ started\ so\ it\ can\ respond\ as\ quickly\ as\ possible\ to\ shut\ down\ requests}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00016}00016\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_shutdown_manager_a7f12efbfc67d153d5f5a0088455e0b7e}{ShutdownManager::Initialise}}()}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00017}00017\ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00018}00018\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00019}00019\ \ \ \ \ cellSysutilRegisterCallback(\ 1,\ SysUtilCallback,\ \textcolor{keyword}{nullptr}\ );}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00020}00020\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fafe5f7ce5ed119af9d302fdd5f36aa7cb}{eThreadIdCount}};\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00021}00021\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00022}00022\ \ \ \ \ \ \ \ \ s\_threadShouldRun[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00023}00023\ \ \ \ \ \ \ \ \ s\_threadRunning[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00024}00024\ \ \ \ \ \ \ \ \ s\_eventArray[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00025}00025\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00026}00026\ \ \ \ \ \textcolor{comment}{//\ Special\ case\ for\ storage\ manager,\ which\ we\ will\ manually\ set\ now\ to\ be\ considered\ as\ running\ -\/\ this\ will\ be\ unset\ by\ StorageManager.ExitRequest\ if\ required}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00027}00027\ \ \ \ \ s\_threadRunning[\doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fa777d8ce00f7edfdcc0cbfb264b416f1e}{eStorageManagerThreads}}]\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00028}00028\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_af41f87535f6c7854166e69f18e0c123a}{InitializeCriticalSection}}(\&s\_threadRunningCS);}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00029}00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00030}00030\ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00032}00032\ \textcolor{comment}{//\ Called\ in\ response\ to\ a\ system\ request\ to\ exit\ the\ game.\ This\ just\ requests\ that\ the\ main\ thread\ should\ stop,\ and\ then\ the\ main\ thread\ is\ responsible\ for\ calling\ MainThreadHandleShutdown\ which}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00033}00033\ \textcolor{comment}{//\ starts\ the\ rest\ of\ the\ shut\ down\ process,\ then\ waits\ until\ it\ is\ complete.}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00034}00034\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_shutdown_manager_aaeb7f648f365c67c1b2838ca6c910515}{ShutdownManager::StartShutdown}}()}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00035}00035\ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00036}00036\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00037}00037\ \ \ \ \ s\_threadShouldRun[\ \doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fa339b5c75a819f82b6f3fa2be77726c3c}{eMainThread}}\ ]\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00038}00038\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00039}00039\ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00041}00041\ \textcolor{comment}{//\ This\ should\ be\ called\ from\ the\ main\ thread\ after\ it\ has\ been\ requested\ to\ shut\ down\ (ShouldRun\ for\ main\ thread\ returns\ false),\ and\ before\ it\ returns\ control\ to\ the\ kernel.\ This\ is\ responsible\ for}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00042}00042\ \textcolor{comment}{//\ signalling\ to\ all\ other\ threads\ to\ stop,\ and\ wait\ until\ their\ completion\ before\ returning.}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00043}00043\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_shutdown_manager_ae0c81624c05331730f9023d9e4ced60d}{ShutdownManager::MainThreadHandleShutdown}}()}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00044}00044\ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00045}00045\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00046}00046\ \ \ \ \ \textcolor{comment}{//\ Set\ flags\ for\ each\ thread\ which\ will\ be\ reset\ when\ they\ are\ complete}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00047}00047\ \ \ \ \ s\_threadRunning[\ \doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fa339b5c75a819f82b6f3fa2be77726c3c}{eMainThread}}\ ]\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00049}00049\ \ \ \ \ \textcolor{comment}{//\ Second\ wave\ of\ things\ we\ would\ like\ to\ shut\ down\ (after\ main)}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00050}00050\ \ \ \ \ \doxymbox{\hyperlink{class_leaderboard_manager_a91a0375fb7a7635521043f69fe972e2e}{LeaderboardManager::Instance}}()-\/>\doxymbox{\hyperlink{class_leaderboard_manager_a9feefb1b5b21c9c097a2def6431a307a}{CancelOperation}}();}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00051}00051\ \ \ \ \ RequestThreadToStop(\ \doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fa643a7b181aacec6e3f7a0b13ef07dda3}{eLeaderboardThread}}\ );}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00052}00052\ \ \ \ \ RequestThreadToStop(\ \doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fa5e5ea45f6b828ab38fbb80b2af9e73ad}{eCommerceThread}}\ );}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00053}00053\ \ \ \ \ RequestThreadToStop(\ \doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fae72ea10930f2f17e542e0b8bbdc117f1}{ePostProcessThread}}\ );}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00054}00054\ \ \ \ \ RequestThreadToStop(\ \doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fa6e81365485e386e08ae515c61a9f4e3b}{eRunUpdateThread}}\ );}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00055}00055\ \ \ \ \ RequestThreadToStop(\ \doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fabbae213b6c32bdca8d8137ba96a0e16d}{eRenderChunkUpdateThread}}\ );}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00056}00056\ \ \ \ \ RequestThreadToStop(\ \doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4faa328e4fb01b1b79fbf985daab1bea09f}{eConnectionReadThreads}}\ );}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00057}00057\ \ \ \ \ RequestThreadToStop(\ \doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fafd72c2847c9e8e774e02b1a29bed7c15}{eConnectionWriteThreads}}\ );}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00058}00058\ \ \ \ \ RequestThreadToStop(\ \doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fa15442538999aef7eedc0218cac0721e0}{eEventQueueThreads}}\ );}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00059}00059\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}Shutdown\ manager:\ waiting\ on\ first\ batch\ of\ threads\ requested\ to\ terminate...\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00060}00060\ \ \ \ \ WaitForSignalledToComplete();}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00061}00061\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}Shutdown\ manager:\ terminated.\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00063}00063\ \ \ \ \ \textcolor{comment}{//\ Now\ shut\ down\ the\ server\ thread}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00064}00064\ \ \ \ \ \doxymbox{\hyperlink{class_minecraft_server_a971d2e35b427c97efef54b4b2813288b}{MinecraftServer::HaltServer}}();}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00065}00065\ \ \ \ \ RequestThreadToStop(\ \doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fae066c97babf96e0ad69d6c7633f5058a}{eServerThread}}\ );}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00066}00066\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}Shutdown\ manager:\ waiting\ on\ server\ to\ terminate...\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00067}00067\ \ \ \ \ WaitForSignalledToComplete();}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00068}00068\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}Shutdown\ manager:\ terminated.\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00070}00070\ \ \ \ \ \textcolor{comment}{//And\ shut\ down\ the\ storage\ manager}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00071}00071\ \ \ \ \ RequestThreadToStop(\ \doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fa777d8ce00f7edfdcc0cbfb264b416f1e}{eStorageManagerThreads}}\ );}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00072}00072\ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___storage_8h_a24a67ae8c928fe1f29f76167beeccd4b}{StorageManager}}.\doxymbox{\hyperlink{class_c4_j_storage_a36718582e2e73da5ae83a4e8bfb77277}{ExitRequest}}(\&StorageManagerCompleteFn);}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00073}00073\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}Shutdown\ manager:\ waiting\ on\ storage\ manager\ to\ terminate...\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00074}00074\ \ \ \ \ WaitForSignalledToComplete();}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00075}00075\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}Shutdown\ manager:\ terminated.\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00077}00077\ \ \ \ \ \textcolor{comment}{//\ Audio\ system\ shutdown}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00078}00078\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}Shutdown\ manager:\ Audio\ shutdown.\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00079}00079\ \ \ \ \ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a5745673fcf1335a1ad542eed50e4c48f}{AIL\_shutdown}}();}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00081}00081\ \ \ \ \ \textcolor{comment}{//\ Trophy\ system\ shutdown}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00082}00082\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}Shutdown\ manager:\ Trophy\ system\ shutdown.\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00083}00083\ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___profile_8h_a027fde7e99d773afa28ec11d244459bf}{ProfileManager}}.\doxymbox{\hyperlink{class_c__4_j_profile_a795b46e82a107767cd37b76499c9cd0e}{Terminate}}();}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00085}00085\ \ \ \ \ \textcolor{comment}{//\ Network\ manager\ shutdown}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00086}00086\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}Shutdown\ manager:\ Network\ manager\ shutdown.\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00087}00087\ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.\doxymbox{\hyperlink{class_c_game_network_manager_a4e1b190ca751ec3bb1c3201501595f76}{Terminate}}();}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00089}00089\ \ \ \ \ \textcolor{comment}{//\ Finally\ shut\ down\ the\ spurs\ job\ queue\ -\/\ leaving\ until\ last\ so\ there\ should\ be\ nothing\ else\ dependent\ on\ this\ still\ running}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00090}00090\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}Shutdown\ manager:\ SPURS\ shutdown.\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00091}00091\ \ \ \ \ \doxymbox{\hyperlink{class_c4_j_spurs_job_queue_ad9fac7db0d011a00c0a33b80d96a62ee}{C4JSpursJobQueue::getMainJobQueue}}().\doxymbox{\hyperlink{class_c4_j_spurs_job_queue_a17445a8c5ba9676cb730d943d74c22e3}{shutdown}}();}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00092}00092\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}Shutdown\ manager:\ Complete.\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00093}00093\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00094}00094\ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00096}00096\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_shutdown_manager_a97fdc15027248690ac232cd08d7b15e7}{ShutdownManager::HasStarted}}(\doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4f}{ShutdownManager::EThreadId}}\ threadId)}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00097}00097\ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00098}00098\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00099}00099\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&s\_threadRunningCS);}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00100}00100\ \ \ \ \ s\_threadRunning[threadId]++;}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00101}00101\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&s\_threadRunningCS);}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00102}00102\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00103}00103\ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00105}00105\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_shutdown_manager_a97fdc15027248690ac232cd08d7b15e7}{ShutdownManager::HasStarted}}(\doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4f}{ShutdownManager::EThreadId}}\ threadId,\ \doxymbox{\hyperlink{class_c4_j_thread_1_1_event_array}{C4JThread::EventArray}}\ *eventArray)}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00106}00106\ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00107}00107\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00108}00108\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&s\_threadRunningCS);}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00109}00109\ \ \ \ \ s\_threadRunning[threadId]++;}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00110}00110\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&s\_threadRunningCS);}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00111}00111\ \ \ \ \ s\_eventArray[threadId]\ =\ eventArray;}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00112}00112\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00113}00113\ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00115}00115\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_shutdown_manager_aab0301cea2cb3e64d205d233e0c482a6}{ShutdownManager::ShouldRun}}(\doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4f}{ShutdownManager::EThreadId}}\ threadId)}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00116}00116\ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00117}00117\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00118}00118\ \ \ \ \ \textcolor{keywordflow}{return}\ s\_threadShouldRun[threadId];}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00119}00119\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00120}00120\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00121}00121\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00122}00122\ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00124}00124\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_shutdown_manager_a25068584ec29200f52ab9f5a519620b9}{ShutdownManager::HasFinished}}(\doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4f}{ShutdownManager::EThreadId}}\ threadId)}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00125}00125\ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00126}00126\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00127}00127\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&s\_threadRunningCS);}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00128}00128\ \ \ \ \ s\_threadRunning[threadId]-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00129}00129\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&s\_threadRunningCS);}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00130}00130\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00131}00131\ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00133}00133\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00134}00134\ \textcolor{keywordtype}{void}\ ShutdownManager::SysUtilCallback(uint64\_t\ status,\ uint64\_t\ param,\ \textcolor{keywordtype}{void}\ *userdata)}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00135}00135\ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00136}00136\ \ \ \ \ Minecraft\ *minecraft\ =\ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}();}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00137}00137\ \ \ \ \ \textcolor{keywordflow}{switch}(status)}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00138}00138\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00139}00139\ \ \ \ \ \textcolor{keywordflow}{case}\ CELL\_SYSUTIL\_REQUEST\_EXITGAME:}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}CELL\_SYSUTIL\_REQUEST\_EXITGAME\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_shutdown_manager_aaeb7f648f365c67c1b2838ca6c910515}{StartShutdown}}();}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00143}00143\ \ \ \ \ \textcolor{keywordflow}{case}\ CELL\_SYSUTIL\_SYSTEM\_MENU\_OPEN:}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Tell\ the\ game\ UI\ to\ stop\ processing}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___storage_8h_a24a67ae8c928fe1f29f76167beeccd4b}{StorageManager}}.\doxymbox{\hyperlink{class_c4_j_storage_a3fa62d393be3b4d2506cfb0a77327885}{SetSystemUIDisplaying}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00147}00147\ \ \ \ \ \textcolor{keywordflow}{case}\ CELL\_SYSUTIL\_DRAWING\_END:}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___storage_8h_a24a67ae8c928fe1f29f76167beeccd4b}{StorageManager}}.\doxymbox{\hyperlink{class_c4_j_storage_a3fa62d393be3b4d2506cfb0a77327885}{SetSystemUIDisplaying}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00150}00150\ \ \ \ \ \textcolor{keywordflow}{case}\ CELL\_SYSUTIL\_DRAWING\_BEGIN:}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00151}00151\ \ \ \ \ \textcolor{keywordflow}{case}\ CELL\_SYSUTIL\_SYSTEM\_MENU\_CLOSE:}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00153}00153\ \ \ \ \ \textcolor{keywordflow}{case}\ CELL\_SYSUTIL\_BGMPLAYBACK\_PLAY:}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ minecraft\ )}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ minecraft-\/>\doxymbox{\hyperlink{class_minecraft_a3bd4ad36e88c160e3ae26b5d8c0e541f}{soundEngine}}-\/>\doxymbox{\hyperlink{class_sound_engine_ae84db931159772145ce2eceef5b595e3}{updateSystemMusicPlaying}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}BGM\ playing\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00160}00160\ \ \ \ \ \textcolor{keywordflow}{case}\ CELL\_SYSUTIL\_BGMPLAYBACK\_STOP:}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ minecraft\ )}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ minecraft-\/>\doxymbox{\hyperlink{class_minecraft_a3bd4ad36e88c160e3ae26b5d8c0e541f}{soundEngine}}-\/>\doxymbox{\hyperlink{class_sound_engine_ae84db931159772145ce2eceef5b595e3}{updateSystemMusicPlaying}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}BGM\ stopped\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00166}00166\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00167}00167\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00168}00168\ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00169}00169\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00171}00171\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00172}00172\ \textcolor{keywordtype}{void}\ ShutdownManager::WaitForSignalledToComplete()}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00173}00173\ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00174}00174\ \ \ \ \ \textcolor{keywordtype}{bool}\ allComplete;}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00175}00175\ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00176}00176\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ cellSysutilCheckCallback();}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a49ad8ff2c1f594703bf526d7f35aff4e}{Sleep}}(10);}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ allComplete\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fafe5f7ce5ed119af9d302fdd5f36aa7cb}{eThreadIdCount}};\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !s\_threadShouldRun[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ )}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ s\_threadRunning[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ 0\ )\ allComplete\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00187}00187\ \ \ \ \ \}\ \textcolor{keywordflow}{while}(\ !allComplete);}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00188}00188\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00189}00189\ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00190}00190\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00191}00191\ \textcolor{keywordtype}{void}\ ShutdownManager::RequestThreadToStop(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00192}00192\ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00193}00193\ \ \ \ \ s\_threadShouldRun[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00194}00194\ \ \ \ \ \textcolor{keywordflow}{if}(\ s\_eventArray[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ )}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00195}00195\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ s\_eventArray[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>Cancel();}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00197}00197\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00198}00198\ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00199}00199\ }
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00200}00200\ \textcolor{keywordtype}{void}\ ShutdownManager::StorageManagerCompleteFn()}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00201}00201\ \{}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00202}00202\ \ \ \ \ \doxymbox{\hyperlink{class_shutdown_manager_a25068584ec29200f52ab9f5a519620b9}{HasFinished}}(\doxymbox{\hyperlink{class_shutdown_manager_ad4f290e38ca2b755afbc78f8ea60ed4fa777d8ce00f7edfdcc0cbfb264b416f1e}{eStorageManagerThreads}});}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00203}00203\ \}}
+\DoxyCodeLine{\Hypertarget{_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp_source_l00204}00204\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

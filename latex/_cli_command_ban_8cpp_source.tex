@@ -1,0 +1,143 @@
+\doxysection{Cli\+Command\+Ban.\+cpp}
+\hypertarget{_cli_command_ban_8cpp_source}{}\label{_cli_command_ban_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/Console/commands/ban/CliCommandBan.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/Console/commands/ban/CliCommandBan.cpp}}
+\doxymbox{\hyperlink{_cli_command_ban_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_cli_command_ban_8h}{CliCommandBan.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_cli_engine_8h}{..\(\backslash\)..\(\backslash\)ServerCliEngine.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_cli_parser_8h}{..\(\backslash\)..\(\backslash\)ServerCliParser.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_access_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Access\(\backslash\)Access.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_utils_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Common\(\backslash\)StringUtils.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_player_connection_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.Client\(\backslash\)PlayerConnection.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_player_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.Client\(\backslash\)ServerPlayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_disconnect_packet_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)DisconnectPacket.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00015}00015\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_server_runtime}{ServerRuntime}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00016}00016\ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00017}00017\ \ \ \ \ \textcolor{keyword}{namespace}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00018}00018\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ AppendUniqueXuid(\doxymbox{\hyperlink{extra_x64_8h_a069bb6137c1b18507f8e659887a53fb9}{PlayerUID}}\ xuid,\ std::vector<PlayerUID>\ *out)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00020}00020\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00021}00021\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (out\ ==\ \textcolor{keyword}{nullptr}\ ||\ xuid\ ==\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}})}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00022}00022\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00023}00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00024}00024\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::find(out-\/>begin(),\ out-\/>end(),\ xuid)\ ==\ out-\/>end())}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00028}00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out-\/>push\_back(xuid);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00030}00030\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ CollectPlayerBanXuids(\textcolor{keyword}{const}\ std::shared\_ptr<ServerPlayer>\ \&player,\ std::vector<PlayerUID>\ *out)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (player\ ==\ \textcolor{keyword}{nullptr}\ ||\ out\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Keep\ both\ identity\ variants\ because\ the\ dedicated\ server\ checks\ login\ and\ online\ XUIDs\ separately.}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ AppendUniqueXuid(player-\/>getXuid(),\ out);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ AppendUniqueXuid(player-\/>getOnlineXuid(),\ out);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00043}00043\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00045}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_abe095b967dacade52f74d873e0c9fcec}{00045}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_abe095b967dacade52f74d873e0c9fcec}{CliCommandBan::Name}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00046}00046\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00047}00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}ban"{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00048}00048\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00050}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_a2e01627702dce19446b0fde30259545a}{00050}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_a2e01627702dce19446b0fde30259545a}{CliCommandBan::Usage}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00051}00051\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}ban\ <player>\ [reason\ ...]"{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00053}00053\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00055}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_afb27e5bced9b1458039ea2ad6e7042d8}{00055}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_afb27e5bced9b1458039ea2ad6e7042d8}{CliCommandBan::Description}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00056}00056\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Ban\ an\ online\ player."{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00058}00058\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00064}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_a2385c23e9eb054ad6ff1a35eb41e7304}{00064}}\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_a2385c23e9eb054ad6ff1a35eb41e7304}{CliCommandBan::Execute}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_parsed_line}{ServerCliParsedLine}}\ \&\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}},\ \doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine}{ServerCliEngine}}\ *engine)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00065}00065\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens.size()\ <\ 2)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(\textcolor{stringliteral}{"{}Usage:\ ban\ <player>\ [reason\ ...]"{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a451d1c19b25ba7c801edebf805d1bb5e}{ServerRuntime::Access::IsInitialized}}())}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(\textcolor{stringliteral}{"{}Access\ manager\ is\ not\ initialized."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ target\ =\ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_aed9ae6af347dc5852a86a421b7e12579}{FindPlayerByNameUtf8}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens[1]);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (target\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(\textcolor{stringliteral}{"{}Unknown\ player:\ "{}}\ +\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens[1]\ +\ \textcolor{stringliteral}{"{}\ (this\ server\ build\ can\ only\ ban\ players\ that\ are\ currently\ online)."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ std::vector<PlayerUID>\ xuids;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ CollectPlayerBanXuids(target,\ \&xuids);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (xuids.empty())}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(\textcolor{stringliteral}{"{}Cannot\ ban\ that\ player\ because\ no\ valid\ XUID\ is\ available."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ hasUnbannedIdentity\ =\ std::any\_of(}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ xuids.begin(),}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ xuids.end(),}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ [](\doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\ xuid)\ \{\ return\ !ServerRuntime::Access::IsPlayerBanned(xuid);\ \});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!hasUnbannedIdentity)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(\textcolor{stringliteral}{"{}That\ player\ is\ already\ banned."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_ban_metadata}{ServerRuntime::Access::BanMetadata}}\ metadata\ =\ \doxymbox{\hyperlink{class_server_runtime_1_1_access_1_1_ban_manager_a3dea880bcf973364da3999a69559c5e8}{ServerRuntime::Access::BanManager::BuildDefaultMetadata}}(\textcolor{stringliteral}{"{}Console"{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ metadata.\doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_ban_metadata_a606ee66cdf24df3ef29d68b32f6f40d7}{reason}}\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_aafc94f79888f09a2961b2fcf908bc4df}{StringUtils::JoinTokens}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens,\ 2);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (metadata.\doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_ban_metadata_a606ee66cdf24df3ef29d68b32f6f40d7}{reason}}.empty())}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ metadata.\doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_ban_metadata_a606ee66cdf24df3ef29d68b32f6f40d7}{reason}}\ =\ \textcolor{stringliteral}{"{}Banned\ by\ an\ operator."{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ playerName\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a2d940afc106d1a397e2077009458d3b9}{StringUtils::WideToUtf8}}(target-\/>getName());}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ xuid\ :\ xuids)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_acf4b09d811903bbff22947ae0f08017b}{ServerRuntime::Access::IsPlayerBanned}}(xuid))}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_af704f9faac1263f28bd16466201ea69a}{ServerRuntime::Access::AddPlayerBan}}(xuid,\ playerName,\ metadata))}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a5e5e9360a74eb94417493b56efcf9117}{LogError}}(\textcolor{stringliteral}{"{}Failed\ to\ write\ player\ ban."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (target-\/>connection\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ target-\/>connection-\/>disconnect(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a42c764efd646cbc8650220396a6a082a}{DisconnectPacket::eDisconnect\_Banned}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a16825c0113b4f1d8b1d9a5c0db5e773b}{LogInfo}}(\textcolor{stringliteral}{"{}Banned\ player\ "{}}\ +\ playerName\ +\ \textcolor{stringliteral}{"{}."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00131}00131\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00137}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_af8e2e44943ce2cc23ee80b7a44f2b1d8}{00137}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_af8e2e44943ce2cc23ee80b7a44f2b1d8}{CliCommandBan::Complete}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context}{ServerCliCompletionContext}}\ \&context,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine}{ServerCliEngine}}\ *engine,\ std::vector<std::string>\ *out)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00138}00138\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a4ed728c8b79bb6c56d93d9a341c9177f}{currentTokenIndex}}\ ==\ 1)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a572fa8d24b07a3ed717c2e0aca3ed7f3}{SuggestPlayers}}(context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a5ecd8db2a67c61ded39bda263e91c25b}{prefix}},\ context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a9c2ac089ded13868cc9401f654bfa816}{linePrefix}},\ out);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00143}00143\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00144}00144\ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_8cpp_source_l00145}00145\ }
+
+\end{DoxyCode}

@@ -1,0 +1,169 @@
+\doxysection{Cli\+Command\+Ban\+Ip.\+cpp}
+\hypertarget{_cli_command_ban_ip_8cpp_source}{}\label{_cli_command_ban_ip_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/Console/commands/ban-\/ip/CliCommandBanIp.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/Console/commands/ban-\/ip/CliCommandBanIp.cpp}}
+\doxymbox{\hyperlink{_cli_command_ban_ip_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_cli_command_ban_ip_8h}{CliCommandBanIp.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_cli_engine_8h}{..\(\backslash\)..\(\backslash\)ServerCliEngine.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_cli_parser_8h}{..\(\backslash\)..\(\backslash\)ServerCliParser.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_access_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Access\(\backslash\)Access.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_network_utils_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Common\(\backslash\)NetworkUtils.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_utils_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Common\(\backslash\)StringUtils.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_log_manager_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)ServerLogManager.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_server_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.Client\(\backslash\)MinecraftServer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_player_connection_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.Client\(\backslash\)PlayerConnection.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_player_list_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.Client\(\backslash\)PlayerList.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_player_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.Client\(\backslash\)ServerPlayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_connection_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)Connection.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_disconnect_packet_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)DisconnectPacket.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00018}00018\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_server_runtime}{ServerRuntime}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00019}00019\ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00020}00020\ \ \ \ \ \textcolor{keyword}{namespace}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00021}00021\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00022}00022\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ dedicated\ server\ keeps\ the\ accepted\ remote\ IP\ in\ ServerLogManager,\ keyed\ by\ connection\ smallId.}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00023}00023\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ It's\ a\ bit\ strange\ from\ a\ responsibility\ standpoint,\ so\ we'll\ need\ to\ implement\ it\ separately.}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00024}00024\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ TryGetPlayerRemoteIp(\textcolor{keyword}{const}\ std::shared\_ptr<ServerPlayer>\ \&player,\ std::string\ *outIp)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00025}00025\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (outIp\ ==\ \textcolor{keyword}{nullptr}\ ||\ player\ ==\ \textcolor{keyword}{nullptr}\ ||\ player-\/>connection\ ==\ \textcolor{keyword}{nullptr}\ ||\ player-\/>connection-\/>connection\ ==\ \textcolor{keyword}{nullptr}\ ||\ player-\/>connection-\/>connection-\/>getSocket()\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00028}00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ smallId\ =\ player-\/>connection-\/>connection-\/>getSocket()-\/>getSmallId();}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (smallId\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a47c88c85d2faf27b56abf10872cad0ae}{ServerRuntime::ServerLogManager::TryGetConnectionRemoteIp}}(smallId,\ outIp);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ After\ persisting\ the\ ban,\ walk\ a\ snapshot\ of\ current\ players\ so\ every\ matching\ session\ is\ removed.}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00041}00041\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ DisconnectPlayersByRemoteIp(\textcolor{keyword}{const}\ std::string\ \&ip)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ *server\ =\ \doxymbox{\hyperlink{class_minecraft_server_ae8aa61b7338ea3b5616d347b47e29d53}{MinecraftServer::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (server\ ==\ \textcolor{keyword}{nullptr}\ ||\ server-\/>getPlayers()\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ normalizedIp\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_network_utils_a600b860870ca8fb5126b7ae62aff7af1}{NetworkUtils::NormalizeIpToken}}(ip);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::shared\_ptr<ServerPlayer>>\ playerSnapshot\ =\ server-\/>getPlayers()-\/>players;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ disconnectedCount\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&player\ :\ playerSnapshot)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ playerIp;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!TryGetPlayerRemoteIp(player,\ \&playerIp))}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{namespace_server_runtime_1_1_network_utils_a600b860870ca8fb5126b7ae62aff7af1}{NetworkUtils::NormalizeIpToken}}(playerIp)\ ==\ normalizedIp)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (player\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ player-\/>connection\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>connection-\/>disconnect(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a42c764efd646cbc8650220396a6a082a}{DisconnectPacket::eDisconnect\_Banned}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++disconnectedCount;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ disconnectedCount;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00072}00072\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00074}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_ip_a0011d6e2ca204e35226edd58a7dc13c7}{00074}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_ip_a0011d6e2ca204e35226edd58a7dc13c7}{CliCommandBanIp::Name}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00075}00075\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}ban-\/ip"{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00077}00077\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00079}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_ip_a5acf26d890b0829a573de546142bc869}{00079}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_ip_a5acf26d890b0829a573de546142bc869}{CliCommandBanIp::Usage}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00080}00080\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}ban-\/ip\ <address|player>\ [reason\ ...]"{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00082}00082\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00084}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_ip_a468fbe7b0bbff14c7acc9b98e710ad2e}{00084}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_ip_a468fbe7b0bbff14c7acc9b98e710ad2e}{CliCommandBanIp::Description}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00085}00085\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Ban\ an\ IP\ address\ or\ a\ player's\ current\ IP."{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00087}00087\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00093}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_ip_a5ab4581c79452ab57b6506e32a75682d}{00093}}\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_ip_a5ab4581c79452ab57b6506e32a75682d}{CliCommandBanIp::Execute}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_parsed_line}{ServerCliParsedLine}}\ \&\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}},\ \doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine}{ServerCliEngine}}\ *engine)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00094}00094\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens.size()\ <\ 2)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(\textcolor{stringliteral}{"{}Usage:\ ban-\/ip\ <address|player>\ [reason\ ...]"{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a451d1c19b25ba7c801edebf805d1bb5e}{ServerRuntime::Access::IsInitialized}}())}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(\textcolor{stringliteral}{"{}Access\ manager\ is\ not\ initialized."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ targetToken\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens[1];}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ std::string\ remoteIp;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Match\ Java\ Edition\ behavior\ by\ accepting\ either\ a\ literal\ IP\ or\ an\ online\ player\ name.}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ targetPlayer\ =\ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_aed9ae6af347dc5852a86a421b7e12579}{FindPlayerByNameUtf8}}(targetToken);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (targetPlayer\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!TryGetPlayerRemoteIp(targetPlayer,\ \&remoteIp))}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(\textcolor{stringliteral}{"{}Cannot\ ban\ that\ player's\ IP\ because\ no\ current\ remote\ IP\ is\ available."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{namespace_server_runtime_1_1_network_utils_ae75aac4e1647158dd851828ac0709d6c}{NetworkUtils::IsIpLiteral}}(targetToken))}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ remoteIp\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a4b5407a60f704748a4c67b5cbba12ce2}{StringUtils::TrimAscii}}(targetToken);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(\textcolor{stringliteral}{"{}Unknown\ player\ or\ invalid\ IP\ address:\ "{}}\ +\ targetToken);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Refuse\ duplicate\ bans\ so\ operators\ get\ immediate\ feedback\ instead\ of\ rewriting\ the\ same\ entry.}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a0fe0e54ef10addd42fdc1d75d9ee94ef}{ServerRuntime::Access::IsIpBanned}}(remoteIp))}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(\textcolor{stringliteral}{"{}That\ IP\ address\ is\ already\ banned."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_ban_metadata}{ServerRuntime::Access::BanMetadata}}\ metadata\ =\ \doxymbox{\hyperlink{class_server_runtime_1_1_access_1_1_ban_manager_a3dea880bcf973364da3999a69559c5e8}{ServerRuntime::Access::BanManager::BuildDefaultMetadata}}(\textcolor{stringliteral}{"{}Console"{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ metadata.\doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_ban_metadata_a606ee66cdf24df3ef29d68b32f6f40d7}{reason}}\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_aafc94f79888f09a2961b2fcf908bc4df}{StringUtils::JoinTokens}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens,\ 2);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (metadata.\doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_ban_metadata_a606ee66cdf24df3ef29d68b32f6f40d7}{reason}}.empty())}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ metadata.\doxymbox{\hyperlink{struct_server_runtime_1_1_access_1_1_ban_metadata_a606ee66cdf24df3ef29d68b32f6f40d7}{reason}}\ =\ \textcolor{stringliteral}{"{}Banned\ by\ an\ operator."{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Publish\ the\ ban\ before\ disconnecting\ players\ so\ reconnect\ attempts\ are\ rejected\ immediately.}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a518bef475d237a3c8910de14c078d06d}{ServerRuntime::Access::AddIpBan}}(remoteIp,\ metadata))}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a5e5e9360a74eb94417493b56efcf9117}{LogError}}(\textcolor{stringliteral}{"{}Failed\ to\ write\ IP\ ban."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ disconnectedCount\ =\ DisconnectPlayersByRemoteIp(remoteIp);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Report\ the\ resolved\ IP\ rather\ than\ the\ original\ token\ so\ player-\/name\ targets\ are\ explicit\ in\ the\ console.}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a16825c0113b4f1d8b1d9a5c0db5e773b}{LogInfo}}(\textcolor{stringliteral}{"{}Banned\ IP\ address\ "{}}\ +\ remoteIp\ +\ \textcolor{stringliteral}{"{}."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (disconnectedCount\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a16825c0113b4f1d8b1d9a5c0db5e773b}{LogInfo}}(\textcolor{stringliteral}{"{}Disconnected\ "{}}\ +\ std::to\_string(disconnectedCount)\ +\ \textcolor{stringliteral}{"{}\ player(s)\ with\ that\ IP."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00157}00157\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00163}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_ip_a784a8fa0892b472fdc95af82198ed882}{00163}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_ip_a784a8fa0892b472fdc95af82198ed882}{CliCommandBanIp::Complete}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context}{ServerCliCompletionContext}}\ \&context,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine}{ServerCliEngine}}\ *engine,\ std::vector<std::string>\ *out)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00164}00164\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a4ed728c8b79bb6c56d93d9a341c9177f}{currentTokenIndex}}\ ==\ 1)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00166}00166\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a572fa8d24b07a3ed717c2e0aca3ed7f3}{SuggestPlayers}}(context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a5ecd8db2a67c61ded39bda263e91c25b}{prefix}},\ context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a9c2ac089ded13868cc9401f654bfa816}{linePrefix}},\ out);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00169}00169\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00170}00170\ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_ip_8cpp_source_l00171}00171\ }
+
+\end{DoxyCode}

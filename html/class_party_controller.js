@@ -1,0 +1,27 @@
+var class_party_controller =
+[
+    [ "PartyController", "class_party_controller.html#ab65847e42d5e59ff89e0f43ee6880120", null ],
+    [ "AddLocalUsersToParty", "class_party_controller.html#a8937833958e4307cc501f11a8dea201f", null ],
+    [ "CanInvitePartyToMyGame", "class_party_controller.html#af483d90cf3d2f1c36f6b70f0e60d2e85", null ],
+    [ "CanJoinParty", "class_party_controller.html#ad1cde32b4d8578014fccf8b484a8d968", null ],
+    [ "CheckPartySessionFull", "class_party_controller.html#a72ab293f07788c93414434cd8dbd2338", null ],
+    [ "ClearGameSessionReadyEventTriggered", "class_party_controller.html#abc80c244603baa5a68ce46c6f0a0c529", null ],
+    [ "DisassociateSessionFromParty", "class_party_controller.html#ac8a06a92cb4338ae9b38394f8ebc02f5", null ],
+    [ "DoesPartyAndSessionPlayersMatch", "class_party_controller.html#ac648074f7205aacfc5ceab3dfbb4f668", null ],
+    [ "DoesPartySessionExist", "class_party_controller.html#a197f161dc4872f288a6cc8fc0f9b0be3", null ],
+    [ "GetActiveAndReservedMemberPartySize", "class_party_controller.html#adc67d252d853cd6d1688ac16a2837a2d", null ],
+    [ "GetGamePartySessionReference", "class_party_controller.html#ab39f6d7f27dc154fab22b0fdbce2b147", null ],
+    [ "GetPartyView", "class_party_controller.html#abaaffd7bb6dcdc62795590c96c294fff", null ],
+    [ "IsGameSessionReadyEventTriggered", "class_party_controller.html#a4f03675fc484c00a55c95f0f9b5b2360", null ],
+    [ "IsPartyInAnotherTitle", "class_party_controller.html#a9f3ea6bbe0eecea3e4127df117dcf770", null ],
+    [ "RefreshPartyView", "class_party_controller.html#ad0cbbe76e9d2cc35ee09e1ea55e6215b", null ],
+    [ "RegisterEventHandlers", "class_party_controller.html#a25b729e64c4c7f7446b3cfbc32f71ecf", null ],
+    [ "RegisterGamePlayersChangedEventHandler", "class_party_controller.html#a78265bc01fe18d6cabc68d87c3d6f9a8", null ],
+    [ "RemoveLocalUserFromParty", "class_party_controller.html#a63e9d28edda633d68b0f4433b148a745", null ],
+    [ "RemoveLocalUsersFromParty", "class_party_controller.html#aeb24bacd05055db4e035922a3963cebf", null ],
+    [ "RemoveLocalUsersFromParty", "class_party_controller.html#a31e23f79478a5d747f9b684c620fb41c", null ],
+    [ "SetJoinability", "class_party_controller.html#ab51e714475dbde96c2f4a0fce9b73102", null ],
+    [ "SetPartyView", "class_party_controller.html#a7ebf2015a21a6289888267873c4a0204", null ],
+    [ "UnregisterEventHandlers", "class_party_controller.html#a8f65da193e47a7e9737747bf4c4e0127", null ],
+    [ "UnregisterGamePlayersEventHandler", "class_party_controller.html#a85b173b332cd1f77113e55bf830f5e4a", null ]
+];

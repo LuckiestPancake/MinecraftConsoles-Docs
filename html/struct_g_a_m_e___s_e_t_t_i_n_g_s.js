@@ -1,0 +1,26 @@
+var struct_g_a_m_e___s_e_t_t_i_n_g_s =
+[
+    [ "bSettingsChanged", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#af0e026719061bf37f1f467c2e51e7b35", null ],
+    [ "dwSelectedCape", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#aeb18b0ac4906a08f2922c739283efbd0", null ],
+    [ "dwSelectedSkin", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#a4c649b525142d42df5086f05719e03bc", null ],
+    [ "ucCurrentFavoriteSkinPos", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#ae75359fc00f612a0113a7f234a983bd5", null ],
+    [ "ucFov", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#a3a26b285da3bb2ef323edfc4379e6032", null ],
+    [ "ucGamma", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#aad64e8feb2846430f48c14422d28ecdb", null ],
+    [ "ucInterfaceOpacity", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#ae9bdec980da973422d981f3db3eb8b4d", null ],
+    [ "ucLanguage", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#a5e39827967c611695294c54a6841836c", null ],
+    [ "ucLocale", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#aa1841559bb43559a93db12c7070bb527", null ],
+    [ "ucMenuSensitivity", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#ab01d058a4e84a99f39a7b6a6237e01aa", null ],
+    [ "ucMusicVolume", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#aa5823d75bdae97c866571af3f5fd6f44", null ],
+    [ "ucPad01", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#a31c9a74a83d830fc79fe6d557ee893b0", null ],
+    [ "ucPad02", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#adbd9183558e1978c441b7fa946762b2a", null ],
+    [ "ucReservedSpace", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#ab7b8bc8659f718123545575e253db7f5", null ],
+    [ "ucSensitivity", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#a9c51272e9e8b95530e9e0ec665c8d8d3", null ],
+    [ "ucSoundFXVolume", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#a05e2aba13967388e1bb46652d8202244", null ],
+    [ "ucTutorialCompletion", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#aee7e4e427e9967fdf6159cb5b1ab25b7", null ],
+    [ "uiBitmaskValues", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#a3782c5c1791d8ec89391b76693009680", null ],
+    [ "uiDebugBitmask", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#ab2f50f5f0e55dfcafcc41cf7a307d333", null ],
+    [ "uiFavoriteSkinA", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#ae5ced9c35f80e431e6a0a51efa165382", null ],
+    [ "uiMashUpPackWorldsDisplay", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#a6cfee6eab3637fd33bfe0a2e91084458", null ],
+    [ "uiSpecialTutorialBitmask", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#ad4723900fa187f373a2b69126d93b4ff", null ],
+    [ "usBitmaskValues", "struct_g_a_m_e___s_e_t_t_i_n_g_s.html#ae8a2a4bf1235881519aad1f3c420da26", null ]
+];

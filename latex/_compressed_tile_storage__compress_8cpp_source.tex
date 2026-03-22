@@ -1,0 +1,403 @@
+\doxysection{Compressed\+Tile\+Storage\+\_\+compress.\+cpp}
+\hypertarget{_compressed_tile_storage__compress_8cpp_source}{}\label{_compressed_tile_storage__compress_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/SPU\_Tasks/CompressedTileStorage\_compress/CompressedTileStorage\_compress.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/SPU\_Tasks/CompressedTileStorage\_compress/CompressedTileStorage\_compress.cpp}}
+\doxymbox{\hyperlink{_compressed_tile_storage__compress_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00001}00001\ \textcolor{comment}{/*\ SCE\ CONFIDENTIAL}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00002}00002\ \textcolor{comment}{PlayStation(R)3\ Programmer\ Tool\ Runtime\ Library\ 430.001}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00003}00003\ \textcolor{comment}{*\ Copyright\ (C)\ 2007\ Sony\ Computer\ Entertainment\ Inc.}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00004}00004\ \textcolor{comment}{*\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00005}00005\ \textcolor{comment}{*/}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00007}00007\ \textcolor{comment}{/*\ common\ headers\ */}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <spu\_intrinsics.h>}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <cell/spurs.h>}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <cell/dma.h>}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <cell/spurs/job\_queue.h>}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_dma_data_8h}{..\(\backslash\)Common\(\backslash\)DmaData.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00018}00018\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_compressed_tile_storage__compress_8h}{CompressedTileStorage\_compress.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00020}00020\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ sc\_verbose\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00022}\doxymbox{\hyperlink{_compressed_tile_storage__compress_8cpp_a306b5fcc0cae50a7195b460bb38e364a}{00022}}\ CellSpursJobContext2*\ \doxymbox{\hyperlink{task_8cpp_a306b5fcc0cae50a7195b460bb38e364a}{g\_pSpursJobContext}};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00023}00023\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00027}\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress}{00027}}\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_a207760786368dc29a6b32307c9b87011}{CCompressedTileStorage\_compress}}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00028}00028\ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00029}00029\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00030}\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_a309c15101cd5bf6d9c3ca7336a8bf908}{00030}}\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ \ \ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_a309c15101cd5bf6d9c3ca7336a8bf908}{indicesAndData}}[32768+4096];}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00031}\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_af456c02d491ca57bff16c104d386bcf8}{00031}}\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ \ \ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_af456c02d491ca57bff16c104d386bcf8}{newIndicesAndData}}[32768+4096];}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00032}\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_a33855cdb55036410933b152fdf94a5fd}{00032}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_a33855cdb55036410933b152fdf94a5fd}{allocatedSize}};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00033}\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_aa222ce16ce735cc3280a622bc937c02f}{00033}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_aa222ce16ce735cc3280a622bc937c02f}{newAllocatedSize}};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00034}\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_aff076d3f6a7b582e90c556c8e0c10296}{00034}}\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_aff076d3f6a7b582e90c556c8e0c10296}{newIndicesPPU}};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00035}00035\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00037}00037\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ INDEX\_OFFSET\_MASK\ \ \ \ \ \ \ \ \ \ =\ 0x7ffe;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00038}00038\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ INDEX\_OFFSET\_SHIFT\ \ \ \ \ \ \ \ \ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00039}00039\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ INDEX\_TILE\_MASK\ \ \ \ \ \ \ \ \ \ \ \ =\ 0x00ff;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00040}00040\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ INDEX\_TILE\_SHIFT\ \ \ \ \ \ \ \ \ \ \ =\ 8;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00041}00041\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ INDEX\_TYPE\_MASK\ \ \ \ \ \ \ \ \ \ \ \ =\ 0x0003;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00042}00042\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ INDEX\_TYPE\_1\_BIT\ \ \ \ \ \ \ \ \ \ \ =\ 0x0000;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00043}00043\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ INDEX\_TYPE\_2\_BIT\ \ \ \ \ \ \ \ \ \ \ =\ 0x0001;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00044}00044\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ INDEX\_TYPE\_4\_BIT\ \ \ \ \ \ \ \ \ \ \ =\ 0x0002;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00045}00045\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ INDEX\_TYPE\_0\_OR\_8\_BIT\ \ \ \ \ \ =\ 0x0003;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00046}00046\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ INDEX\_TYPE\_0\_BIT\_FLAG\ \ \ \ \ \ =\ 0x0004;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00048}00048\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00049}\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_a207760786368dc29a6b32307c9b87011}{00049}}\ \ \ \ \ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_a207760786368dc29a6b32307c9b87011}{CCompressedTileStorage\_compress}}(\doxymbox{\hyperlink{class_compressed_tile_storage__compress__data_in}{CompressedTileStorage\_compress\_dataIn}}\&\ dataIn)\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00050}00050\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00051}00051\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_a33855cdb55036410933b152fdf94a5fd}{allocatedSize}}\ =\ dataIn.\doxymbox{\hyperlink{class_compressed_tile_storage__compress__data_in_a61f39cee435bc8a85a77a9f5cbc5187e}{allocatedSize}};\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_aff076d3f6a7b582e90c556c8e0c10296}{newIndicesPPU}}\ =\ (uint32\_t)dataIn.\doxymbox{\hyperlink{class_compressed_tile_storage__compress__data_in_a3c1fa05c870a585587fbcb2da408d6ec}{newIndicesAndData}};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{spu__assert_8h_a8d7ab2d964f1e25c83e6f7ad229812d2}{spu\_assert}}(\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_a33855cdb55036410933b152fdf94a5fd}{allocatedSize}}\ <\ (\textcolor{keywordtype}{int})\textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_a309c15101cd5bf6d9c3ca7336a8bf908}{indicesAndData}}));}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_dma_data___s_p_u_a554786827d16a48f76f0d06f2112bbb4}{DmaData\_SPU::getAndWait}}(\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_a309c15101cd5bf6d9c3ca7336a8bf908}{indicesAndData}},\ (uintptr\_t)dataIn.\doxymbox{\hyperlink{class_compressed_tile_storage__compress__data_in_adbe70fca9af8519fa930145a02c1156d}{indicesAndData}},\ \doxymbox{\hyperlink{class_dma_data___s_p_u_a1c56ed60711fe7ad0b0ed25567c86e30}{DmaData\_SPU::roundUpDMASize}}(\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_a33855cdb55036410933b152fdf94a5fd}{allocatedSize}}));}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00055}00055\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00056}00056\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_af21078740aeb04429991ef7e7f8f11b4}{compress}}(\textcolor{keywordtype}{int}\ upgradeBlock\ =\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00057}00057\ \};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00059}00059\ \textcolor{comment}{//\ Compresses\ the\ data\ currently\ stored\ in\ one\ of\ two\ ways:}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00060}00060\ \textcolor{comment}{//\ (1)\ Attempt\ to\ compresses\ every\ block\ as\ much\ as\ possible\ (if\ upgradeBlock\ is\ -\/1)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00061}00061\ \textcolor{comment}{//\ (2)\ Copy\ all\ blocks\ as-\/is\ apart\ from\ the\ block\ specified\ by\ upgradeBlock\ (\ if\ >\ -\/1\ ),\ which\ is\ changed\ to\ be\ the\ next-\/most-\/accomodating\ storage\ from\ its\ current\ state}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00062}\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_af21078740aeb04429991ef7e7f8f11b4}{00062}}\ \textcolor{keywordtype}{bool}\ \ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_af21078740aeb04429991ef7e7f8f11b4}{CCompressedTileStorage\_compress::compress}}(\textcolor{keywordtype}{int}\ upgradeBlock\textcolor{comment}{/*=-\/1*/})}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00063}00063\ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00064}00064\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ tempdata[64];}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00065}00065\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \_blockIndices[512];}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00066}00066\ \ \ \ \ \textcolor{keywordtype}{bool}\ needsCompressed\ =\ (\ upgradeBlock\ >\ -\/1\ );\ \ \ \textcolor{comment}{//\ If\ an\ upgrade\ block\ is\ specified,\ we'll\ always\ need\ to\ recompress\ -\/\ otherwise\ default\ to\ false}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00069}00069\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ *blockIndices\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ *)\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_a309c15101cd5bf6d9c3ca7336a8bf908}{indicesAndData}};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00070}00070\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data\ =\ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_a309c15101cd5bf6d9c3ca7336a8bf908}{indicesAndData}}\ +\ 1024;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00072}00072\ \ \ \ \ \textcolor{keywordtype}{int}\ memToAlloc\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00073}00073\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 512;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00074}00074\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ indexType\ =\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ \&\ INDEX\_TYPE\_MASK;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *unpacked\_data\ =\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *packed\_data;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ First\ task\ is\ to\ find\ out\ what\ type\ of\ storage\ each\ block\ needs.\ Need\ to\ unpack\ each\ where\ required.\ }}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note\ that\ we\ don't\ need\ to\ fully\ unpack\ the\ data\ at\ this\ stage\ since\ we\ are\ only\ interested\ in\ working\ out\ how\ many\ unique\ types\ of\ tiles\ are\ in\ each\ block,\ not}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ what\ those\ actual\ tile\ ids\ are.}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ upgradeBlock\ ==\ -\/1\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ indexType\ ==\ INDEX\_TYPE\_0\_OR\_8\_BIT\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note\ that\ we\ are\ only\ interested\ in\ data\ that\ can\ be\ packed\ further,\ so\ we\ don't\ need\ to\ consider\ things\ that\ are\ already\ at\ their\ most\ compressed}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (ie\ with\ INDEX\_TYPE\_0\_BIT\_FLAG\ set)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ \&\ INDEX\_TYPE\_0\_BIT\_FLAG\ )\ ==\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ unpacked\_data\ =\ data\ +\ (\ (\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ >>\ INDEX\_OFFSET\_SHIFT\ )\ \&\ INDEX\_OFFSET\_MASK\ );}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bitspertile\ =\ 1\ <<\ indexType;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ will\ be\ 1,\ 2\ or\ 4\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tiletypecount\ =\ 1\ <<\ bitspertile;\ \ \ \ \ \ \ \textcolor{comment}{//\ will\ be\ 2,\ 4\ or\ 16}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tiletypemask\ =\ tiletypecount\ -\/\ 1;\ \ \ \ \ \ \ \textcolor{comment}{//\ will\ be\ 1,\ 3\ or\ 15}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ indexshift\ =\ 3\ -\/\ indexType;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ will\ be\ 3,\ 2\ or\ 1\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ indexmask\_bits\ =\ 7\ >>\ indexType;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ will\ be\ 7,\ 3\ or\ 1\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ indexmask\_bytes\ =\ 62\ >>\ indexshift;\ \ \ \ \ \textcolor{comment}{//\ will\ be\ 7,\ 15\ or\ 31\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ unpacked\_data\ =\ tempdata;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ packed\_data\ =\ data\ +\ (\ (\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ >>\ INDEX\_OFFSET\_SHIFT\ )\ \&\ INDEX\_OFFSET\_MASK\ )\ +\ tiletypecount;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 64;\ j++\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ idx\ =\ (j\ >>\ indexshift)\ \&\ indexmask\_bytes;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bit\ =\ (\ j\ \&\ indexmask\_bits\ )\ *\ bitspertile;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ unpacked\_data[j]\ =\ (\ packed\_data[idx]\ >>\ bit\ )\ \&\ tiletypemask;\ \ \textcolor{comment}{//\ Doesn't\ need\ the\ actual\ data\ for\ each\ tile,\ just\ unique\ values}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ unpacked\_data\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Now\ count\ how\ many\ unique\ tile\ types\ are\ in\ the\ block\ -\/\ if\ unpacked\_data\ isn't\ set\ then\ there\ isn't\ any\ data\ so\ we\ can't\ compress\ any\ further\ and\ require\ no\ storage.}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Store\ flags\ for\ each\ tile\ type\ used\ in\ an\ array\ of\ 4\ 64-\/bit\ flags.}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ usedFlags[4]\ =\ \{0,0,0,0\};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ i64\_1\ =\ 1;\ \ \textcolor{comment}{//\ MGH\ -\/\ instead\ of\ 1i64,\ which\ is\ MS\ specific}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 64;\ j++\ )\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ loop\ of\ 64\ is\ to\ go\ round\ the\ 4x4x4\ tiles\ in\ the\ block}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tiletype\ =\ unpacked\_data[j];}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ usedFlags[tiletype\ \&\ 3]\ |=\ (\ i64\_1\ <<\ (\ tiletype\ >>\ 2\ )\ );}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ tiletype\ =\ 0;\ tiletype\ <\ 256;\ tiletype++\ )\ \textcolor{comment}{//\ This\ loop\ of\ 256\ is\ to\ go\ round\ the\ 256\ possible\ values\ that\ the\ tiles\ might\ have\ had\ to\ find\ how\ many\ are\ actually\ used}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ usedFlags[tiletype\ \&\ 3]\ \&\ (\ i64\_1\ <<\ (\ tiletype\ >>\ 2\ )\ )\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ count++;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ count\ ==\ 1\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ INDEX\_TYPE\_0\_OR\_8\_BIT\ |\ INDEX\_TYPE\_0\_BIT\_FLAG;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We'll\ need\ to\ compress\ if\ this\ isn't\ the\ same\ type\ as\ before.\ If\ it\ *was*\ a\ 0-\/bit\ one\ though,\ then\ unpacked\_data\ wouldn't\ have\ been\ set\ and\ we\ wouldn't\ be\ here}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ needsCompressed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ count\ ==\ 2\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ INDEX\_TYPE\_1\_BIT;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ indexType\ !=\ INDEX\_TYPE\_1\_BIT\ )\ needsCompressed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memToAlloc\ +=\ 10;\ \ \ \ \ \ \ \textcolor{comment}{//\ 8\ bytes\ +\ 2\ tile\ index}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\ count\ <=\ 4\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ INDEX\_TYPE\_2\_BIT;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ indexType\ !=\ INDEX\_TYPE\_2\_BIT\ )\ needsCompressed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memToAlloc\ +=\ 20;\ \ \ \ \ \ \ \textcolor{comment}{//\ 16\ bytes\ +\ 4\ tile\ index}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\ count\ <=\ 16\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ INDEX\_TYPE\_4\_BIT;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ indexType\ !=\ INDEX\_TYPE\_4\_BIT\ )\ needsCompressed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memToAlloc\ +=\ 48;\ \ \ \ \ \ \ \textcolor{comment}{//\ 32\ bytes\ +\ 16\ tile\ index}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ INDEX\_TYPE\_0\_OR\_8\_BIT;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memToAlloc\ =\ (\ memToAlloc\ +\ 3\ )\ \&\ 0xfffc;\ \ \ \ \ \ \ \textcolor{comment}{//\ Make\ sure\ we\ are\ 4-\/byte\ aligned\ for\ 8-\/bit\ storage}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memToAlloc\ +=\ 64;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Already\ will\ be\ 0\ bits,\ so\ we\ can't\ do\ any\ further\ compression\ -\/\ just\ copy\ the\ index\ over.}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ ==\ upgradeBlock\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ INDEX\_TYPE\_1\_BIT\ (0)\ -\/>\ INDEX\_TYPE\_2\_BIT\ (1)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ INDEX\_TYPE\_2\_BIT\ (1)\ -\/>\ INDEX\_TYPE\_4\_BIT\ (2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ INDEX\_TYPE\_4\_BIT\ (2)\ -\/>\ INDEX\_TYPE\_0\_OR\_8\_BIT\ (3)\ \ \ \ (new\ will\ be\ 8-\/bit)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ INDEX\_TYPE\_0\_OR\_8\_BIT\ (3)\ -\/>\ INDEX\_TYPE\_1\_BIT\ (0)\ \ \ \ (assuming\ old\ was\ 0-\/bit)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ (\ (\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ \&\ INDEX\_TYPE\_MASK\ )\ +\ 1\ )\ \&\ INDEX\_TYPE\_MASK;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Copy\ over\ the\ index,\ without\ the\ offset.}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ \&\ INDEX\_TYPE\_MASK;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \_blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ ==\ INDEX\_TYPE\_0\_OR\_8\_BIT\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ |=\ (\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ \&\ INDEX\_TYPE\_0\_BIT\_FLAG\ );}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}(\_blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}])}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ INDEX\_TYPE\_1\_BIT:}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memToAlloc\ +=\ 10;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ INDEX\_TYPE\_2\_BIT:}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memToAlloc\ +=\ 20;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ INDEX\_TYPE\_4\_BIT:}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memToAlloc\ +=\ 48;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ INDEX\_TYPE\_0\_OR\_8\_BIT:}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memToAlloc\ =\ (\ memToAlloc\ +\ 3\ )\ \&\ 0xfffc;\ \ \ \ \ \ \ \textcolor{comment}{//\ Make\ sure\ we\ are\ 4-\/byte\ aligned\ for\ 8-\/bit\ storage}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memToAlloc\ +=\ 64;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note\ that\ INDEX\_TYPE\_8\_BIT|INDEX\_TYPE\_0\_BIT\_FLAG\ not\ in\ here\ as\ it\ doesn't\ need\ any\ further\ allocation}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00211}00211\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00213}00213\ \ \ \ \ \textcolor{comment}{//\ If\ we\ need\ to\ do\ something\ here,\ then\ lets\ allocate\ some\ memory}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00214}00214\ \ \ \ \ \textcolor{keywordflow}{if}(\ needsCompressed\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00215}00215\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ memToAlloc\ +=\ 1024;\ \textcolor{comment}{//\ For\ the\ indices}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *pucData\ =\ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_af456c02d491ca57bff16c104d386bcf8}{newIndicesAndData}}\ +\ 1024;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ usDataOffset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ *newIndices\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ *)\ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_af456c02d491ca57bff16c104d386bcf8}{newIndicesAndData}};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00220}00220\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Now\ pass\ through\ again\ actually\ making\ the\ final\ compressed\ data}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 512;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ indexTypeNew\ =\ \_blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ \&\ INDEX\_TYPE\_MASK;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ indexTypeOld\ =\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ \&\ INDEX\_TYPE\_MASK;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ newIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ indexTypeNew;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00227}00227\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Is\ the\ type\ unmodifed?\ Then\ can\ just\ copy\ over}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ done\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ indexTypeOld\ ==\ indexTypeNew\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *packed\_data;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ indexTypeOld\ ==\ INDEX\_TYPE\_0\_OR\_8\_BIT\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ \&\ INDEX\_TYPE\_0\_BIT\_FLAG\ )\ ==\ (\ \_blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ \&\ INDEX\_TYPE\_0\_BIT\_FLAG\ )\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ \&\ INDEX\_TYPE\_0\_BIT\_FLAG\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ packed\_data\ =\ data\ +\ (\ (\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ >>\ INDEX\_OFFSET\_SHIFT\ )\ \&\ INDEX\_OFFSET\_MASK);}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ usDataOffset\ =\ (usDataOffset\ +\ 3\ )\ \&\ 0xfffc;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(\ pucData\ +\ usDataOffset,\ packed\_data,\ 64\ );}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ |=\ (\ usDataOffset\ \&\ INDEX\_OFFSET\_MASK)\ <<\ INDEX\_OFFSET\_SHIFT;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ usDataOffset\ +=\ 64;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ done\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ packed\_data\ =\ data\ +\ (\ (\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ >>\ INDEX\_OFFSET\_SHIFT\ )\ \&\ INDEX\_OFFSET\_MASK);}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dataSize\ =\ 8\ <<\ indexTypeOld;\ \ \ \ \ \ \ \textcolor{comment}{//\ 8,\ 16\ or\ 32\ bytes\ of\ per-\/tile\ storage}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dataSize\ +=\ 1\ <<\ (\ 1\ <<\ indexTypeOld\ );\ \textcolor{comment}{//\ 2,\ 4\ or\ 16\ bytes\ to\ store\ each\ tile\ type}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ |=\ (\ usDataOffset\ \&\ INDEX\_OFFSET\_MASK)\ <<\ INDEX\_OFFSET\_SHIFT;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(\ pucData\ +\ usDataOffset,\ packed\_data,\ dataSize\ );}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ usDataOffset\ +=\ dataSize;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ done\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00264}00264\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00265}00265\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ we're\ not\ done,\ then\ we\ actually\ need\ to\ recompress\ this\ block.\ First\ of\ all\ decompress\ from\ its\ current\ format.}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !done\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *unpacked\_data\ =\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *tile\_types\ =\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *packed\_data\ =\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ indexTypeOld\ ==\ INDEX\_TYPE\_0\_OR\_8\_BIT\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ \&\ INDEX\_TYPE\_0\_BIT\_FLAG\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ unpacked\_data\ \ =\ tempdata;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ value\ =\ (\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ >>\ INDEX\_TILE\_SHIFT\ )\ \&\ INDEX\_TILE\_MASK;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memset(\ tempdata,\ value,\ 64\ );}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ unpacked\_data\ =\ data\ +\ (\ (\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ >>\ INDEX\_OFFSET\_SHIFT\ )\ \&\ INDEX\_OFFSET\_MASK\ );}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00284}00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00286}00286\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bitspertile\ =\ 1\ <<\ indexTypeOld;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ will\ be\ 1,\ 2\ or\ 4\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00288}00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tiletypecount\ =\ 1\ <<\ bitspertile;\ \ \ \ \ \ \ \textcolor{comment}{//\ will\ be\ 2,\ 4\ or\ 16}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tiletypemask\ =\ tiletypecount\ -\/\ 1;\ \ \ \ \ \ \ \textcolor{comment}{//\ will\ be\ 1,\ 3\ or\ 15}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ indexshift\ =\ 3\ -\/\ indexTypeOld;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ will\ be\ 3,\ 2\ or\ 1\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ indexmask\_bits\ =\ 7\ >>\ indexTypeOld;\ \ \ \ \ \textcolor{comment}{//\ will\ be\ 7,\ 3\ or\ 1\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ indexmask\_bytes\ =\ 62\ >>\ indexshift;\ \ \ \ \ \textcolor{comment}{//\ will\ be\ 7,\ 15\ or\ 31\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00293}00293\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ unpacked\_data\ =\ tempdata;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tile\_types\ =\ data\ +\ (\ (\ blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ >>\ INDEX\_OFFSET\_SHIFT\ )\ \&\ INDEX\_OFFSET\_MASK\ );}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ packed\_data\ =\ tile\_types\ +\ tiletypecount;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 64;\ j++\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ idx\ =\ (\ j\ >>\ indexshift\ )\ \&\ indexmask\_bytes;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bit\ =\ (\ j\ \&\ indexmask\_bits\ )\ *\ bitspertile;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00301}00301\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ unpacked\_data[j]\ =\ tile\_types[(packed\_data[idx]\ >>\ bit)\ \&\ tiletypemask];}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ And\ finally\ repack}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ ucMappings[256]\ =\ \{0\};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 256;\ j++\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ucMappings[j]\ =\ 255;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00312}00312\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *repacked\ =\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00314}00314\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ indexTypeNew\ ==\ INDEX\_TYPE\_0\_OR\_8\_BIT\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \_blockIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ \&\ INDEX\_TYPE\_0\_BIT\_FLAG\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ INDEX\_TYPE\_0\_OR\_8\_BIT\ |\ INDEX\_TYPE\_0\_BIT\_FLAG\ |\ (((\textcolor{keywordtype}{unsigned}\ short)unpacked\_data[0])\ <<\ INDEX\_TILE\_SHIFT);}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ usDataOffset\ =\ (usDataOffset\ +\ 3\ )\ \&\ 0xfffc;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Make\ sure\ offset\ is\ 4\ byte\ aligned}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(\ pucData\ +\ usDataOffset,\ unpacked\_data,\ 64\ );}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ |=\ (\ usDataOffset\ \&\ INDEX\_OFFSET\_MASK)\ <<\ INDEX\_OFFSET\_SHIFT;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ usDataOffset\ +=\ 64;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bitspertile\ =\ 1\ <<\ indexTypeNew;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ will\ be\ 1,\ 2\ or\ 4\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tiletypecount\ =\ 1\ <<\ bitspertile;\ \ \ \ \ \ \ \textcolor{comment}{//\ will\ be\ 2,\ 4\ or\ 16\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tiletypemask\ =\ tiletypecount\ -\/\ 1;\ \ \ \ \ \ \ \textcolor{comment}{//\ will\ be\ 1,\ 3\ or\ 15\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tiledatasize\ =\ 8\ <<\ indexTypeNew;\ \ \ \ \ \ \ \textcolor{comment}{//\ will\ be\ 8,\ 16\ or\ 32\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ indexshift\ =\ 3\ -\/\ indexTypeNew;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ will\ be\ 3,\ 2\ or\ 1\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ indexmask\_bits\ =\ 7\ >>\ indexTypeNew;\ \ \ \ \ \textcolor{comment}{//\ will\ be\ 7,\ 3\ or\ 1\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ indexmask\_bytes\ =\ 62\ >>\ indexshift;\ \textcolor{comment}{//\ will\ be\ 7,\ 15\ or\ 31\ (from\ index\ values\ of\ 0,\ 1,\ 2)}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00338}00338\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tile\_types\ =\ pucData\ +\ usDataOffset;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ repacked\ =\ tile\_types\ +\ tiletypecount;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memset(tile\_types,\ 255,\ tiletypecount);}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memset(repacked,\ 0,tiledatasize);}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newIndices[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ |=\ (\ usDataOffset\ \&\ INDEX\_OFFSET\_MASK)\ <<\ INDEX\_OFFSET\_SHIFT;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ usDataOffset\ +=\ tiletypecount\ +\ tiledatasize;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ 64;\ j++\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tile\ =\ unpacked\_data[j];}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ ucMappings[tile]\ ==\ 255\ )}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ucMappings[tile]\ =\ count;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tile\_types[count++]\ =\ tile;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ idx\ =\ (j\ >>\ indexshift)\ \&\ indexmask\_bytes;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bit\ =\ (\ j\ \&\ indexmask\_bits\ )\ *\ bitspertile;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ repacked[idx]\ |=\ ucMappings[tile]\ <<\ bit;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00361}00361\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_aa222ce16ce735cc3280a622bc937c02f}{newAllocatedSize}}\ =\ memToAlloc;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00363}00363\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00364}00364\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_dma_data___s_p_u_a7857a22b3871edd93cd9ee5e24f120fa}{DmaData\_SPU::putAndWait}}(\&\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_af456c02d491ca57bff16c104d386bcf8}{newIndicesAndData}},\ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_aff076d3f6a7b582e90c556c8e0c10296}{newIndicesPPU}},\ \doxymbox{\hyperlink{class_dma_data___s_p_u_a1c56ed60711fe7ad0b0ed25567c86e30}{DmaData\_SPU::roundUpDMASize}}(\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_aa222ce16ce735cc3280a622bc937c02f}{newAllocatedSize}}));}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00366}00366\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00367}00367\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00368}00368\ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00369}00369\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00371}00371\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00372}00372\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00373}\doxymbox{\hyperlink{_compressed_tile_storage__compress_8cpp_a3f174bec6854ffe9e8b1e7bb4aafc9f6}{00373}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_compressed_tile_storage__compress_8cpp_a3f174bec6854ffe9e8b1e7bb4aafc9f6}{cellSpursJobQueueMain}}(CellSpursJobContext2\ *pContext,\ CellSpursJob256\ *pJob)}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00374}00374\ \{}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00375}00375\ \textcolor{comment}{//\ \ CellSpursTaskId\ idTask\ =\ cellSpursGetTaskId();}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00376}00376\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ idSpu\ =\ cellSpursGetCurrentSpuId();}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00377}00377\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00378}00378\ \ \ \ \ \textcolor{keywordflow}{if}(sc\_verbose)}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00379}00379\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{spu__assert_8h_ab76445a0b56d3f47e494565f40a3f43f}{spu\_print}}(\textcolor{stringliteral}{"{}CompressedTileStorage\_compress\ [SPU\#\%u]\ start\(\backslash\)n"{}},\ idSpu);}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00380}00380\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00381}00381\ \ \ \ \ \doxymbox{\hyperlink{task_8cpp_a306b5fcc0cae50a7195b460bb38e364a}{g\_pSpursJobContext}}\ =\ pContext;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00383}00383\ \ \ \ \ uint32\_t\ eaDataIn\ =\ pJob-\/>workArea.userData[0];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00384}00384\ \ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00385}00385\ \ \ \ \ \doxymbox{\hyperlink{class_compressed_tile_storage__compress__data_in}{CompressedTileStorage\_compress\_dataIn}}\ compressDataIn;}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00386}00386\ \ \ \ \ \doxymbox{\hyperlink{class_dma_data___s_p_u_a554786827d16a48f76f0d06f2112bbb4}{DmaData\_SPU::getAndWait}}(\&compressDataIn,\ eaDataIn,\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{class_compressed_tile_storage__compress__data_in}{CompressedTileStorage\_compress\_dataIn}}));}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00387}00387\ \ \ \ \ \doxymbox{\hyperlink{class_c_compressed_tile_storage__compress}{CCompressedTileStorage\_compress}}\ c(compressDataIn);}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00388}00388\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00389}00389\ \ \ \ \ compressDataIn.\doxymbox{\hyperlink{class_compressed_tile_storage__compress__data_in_aedfc3caf7c3bad9ad0ee1d4f201cc3e9}{neededCompressed}}\ =\ c.\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_af21078740aeb04429991ef7e7f8f11b4}{compress}}(compressDataIn.\doxymbox{\hyperlink{class_compressed_tile_storage__compress__data_in_a7e056648dd48e77f44c5479293da7a41}{upgradeBlock}});}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00390}00390\ \ \ \ \ compressDataIn.\doxymbox{\hyperlink{class_compressed_tile_storage__compress__data_in_acee67f0c93ee0aae95d5de9a2ea676aa}{newAllocatedSize}}\ =\ c.\doxymbox{\hyperlink{class_c_compressed_tile_storage__compress_aa222ce16ce735cc3280a622bc937c02f}{newAllocatedSize}};}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00391}00391\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00392}00392\ \ \ \ \ \doxymbox{\hyperlink{class_dma_data___s_p_u_a7857a22b3871edd93cd9ee5e24f120fa}{DmaData\_SPU::putAndWait}}(\&compressDataIn,\ eaDataIn,\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{class_compressed_tile_storage__compress__data_in}{CompressedTileStorage\_compress\_dataIn}}));}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00393}00393\ }
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00394}00394\ \ \ \ \ \textcolor{keywordflow}{if}(sc\_verbose)}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{spu__assert_8h_ab76445a0b56d3f47e494565f40a3f43f}{spu\_print}}(\textcolor{stringliteral}{"{}CompressedTileStorage\_compress\ [SPU\#\%u]\ exit\(\backslash\)n"{}},\ idSpu);}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00396}00396\ \}}
+\DoxyCodeLine{\Hypertarget{_compressed_tile_storage__compress_8cpp_source_l00397}00397\ }
+
+\end{DoxyCode}

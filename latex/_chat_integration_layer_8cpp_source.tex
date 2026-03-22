@@ -1,0 +1,803 @@
+\doxysection{Chat\+Integration\+Layer.\+cpp}
+\hypertarget{_chat_integration_layer_8cpp_source}{}\label{_chat_integration_layer_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Durango/Network/ChatIntegrationLayer.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Durango/Network/ChatIntegrationLayer.cpp}}
+\doxymbox{\hyperlink{_chat_integration_layer_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_chat_integration_layer_8h}{ChatIntegrationLayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_d_q_r_network_manager_8h}{DQRNetworkManager.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ <robuffer.h>}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00012}00012\ \textcolor{keyword}{using\ namespace\ }Windows::Foundation;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00013}00013\ \textcolor{keyword}{using\ namespace\ }Windows::Xbox::System;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00015}00015\ \textcolor{comment}{//\ To\ integrate\ the\ Chat\ DLL\ in\ your\ game,\ you\ can\ use\ this\ ChatIntegrationLayer\ class\ with\ modifications,\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00016}00016\ \textcolor{comment}{//\ or\ create\ your\ own\ design\ your\ own\ class\ using\ the\ code\ in\ this\ file\ a\ guide.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00017}\doxymbox{\hyperlink{_chat_integration_layer_8cpp_a82f43e64fdb99bc27a2b1c2385bf5826}{00017}}\ std::shared\_ptr<ChatIntegrationLayer>\ \doxymbox{\hyperlink{_chat_integration_layer_8cpp_a82f43e64fdb99bc27a2b1c2385bf5826}{GetChatIntegrationLayer}}()}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00018}00018\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00019}00019\ \ \ \ \ \textcolor{keyword}{static}\ std::shared\_ptr<ChatIntegrationLayer>\ chatIntegrationLayerInstance;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00020}00020\ \ \ \ \ \textcolor{keywordflow}{if}\ (chatIntegrationLayerInstance\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00021}00021\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00022}00022\ \ \ \ \ \ \ \ \ chatIntegrationLayerInstance.reset(\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_chat_integration_layer}{ChatIntegrationLayer}}()\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00023}00023\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00025}00025\ \ \ \ \ \textcolor{keywordflow}{return}\ chatIntegrationLayerInstance;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00026}00026\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00028}\doxymbox{\hyperlink{class_chat_integration_layer_a58159a6359a372ffaa23d90f24459604}{00028}}\ \doxymbox{\hyperlink{class_chat_integration_layer_a58159a6359a372ffaa23d90f24459604}{ChatIntegrationLayer::ChatIntegrationLayer}}()\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00029}00029\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00030}00030\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a1078089d09549c80df3d4320d5798d24}{ZeroMemory}}(\ m\_chatVoicePacketsStatistic,\ \textcolor{keyword}{sizeof}(m\_chatVoicePacketsStatistic)\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00031}00031\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00033}\doxymbox{\hyperlink{class_chat_integration_layer_a937d776eacdf7c0449e500e602869a1d}{00033}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_a937d776eacdf7c0449e500e602869a1d}{ChatIntegrationLayer::InitializeChatManager}}(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00034}00034\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ \textcolor{keywordtype}{bool}\ combineCaptureBuffersIntoSinglePacket,}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00035}00035\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ \textcolor{keywordtype}{bool}\ useKinectAsCaptureSource,}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00036}00036\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ \textcolor{keywordtype}{bool}\ applySoundEffectsToCapturedAudio,}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00037}00037\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ \textcolor{keywordtype}{bool}\ applySoundEffectsToChatRenderedAudio,}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00038}00038\ \ \ \ \ \doxymbox{\hyperlink{class_d_q_r_network_manager}{DQRNetworkManager}}\ *pDQRNet}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00039}00039\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00040}00040\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00041}00041\ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_a93becc22e2fc2966410d06deaa3bfa8a}{m\_pDQRNet}}\ =\ pDQRNet;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00042}00042\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ Concurrency::critical\_section::scoped\_lock\ lock(m\_chatPacketStatsLock);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a1078089d09549c80df3d4320d5798d24}{ZeroMemory}}(\ m\_chatVoicePacketsStatistic,\ \textcolor{keyword}{sizeof}(m\_chatVoicePacketsStatistic)\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00045}00045\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00047}00047\ \ \ \ \ m\_chatManager\ =\ ref\ \textcolor{keyword}{new}\ Microsoft::Xbox::GameChat::ChatManager();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00048}00048\ \ \ \ \ m\_chatManager-\/>ChatSettings-\/>DiagnosticsTraceLevel\ =\ Microsoft::Xbox::GameChat::GameChatDiagnosticsTraceLevel::Verbose;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00050}00050\ \ \ \ \ \textcolor{comment}{//\ Optionally,\ change\ the\ default\ settings\ below\ as\ desired\ by\ commenting\ out\ and\ editing\ any\ of\ the\ following\ lines}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00051}00051\ \ \ \ \ \textcolor{comment}{//\ Otherwise\ these\ defaults\ are\ used.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00053}00053\ \ \ \ \ \textcolor{comment}{//\ m\_chatManager\ =\ ref\ new\ Microsoft::Xbox::GameChat::ChatManager(\ ChatSessionPeriod::ChatPeriodOf40Milliseconds\ );}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00054}00054\ \ \ \ \ \textcolor{comment}{//\ m\_chatManager-\/>ChatSettings-\/>AudioThreadPeriodInMilliseconds\ =\ 40;}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00055}00055\ \ \ \ \ \textcolor{comment}{//\ m\_chatManager-\/>ChatSettings-\/>AudioThreadAffinityMask\ =\ XAUDIO2\_DEFAULT\_PROCESSOR;\ //\ <-\/\ this\ means\ is\ core\ 5,\ same\ as\ the\ default\ XAudio2\ core}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00056}00056\ \ \ \ \ \textcolor{comment}{//\ m\_chatManager-\/>ChatSettings-\/>AudioThreadPriority\ =\ THREAD\_PRIORITY\_TIME\_CRITICAL;}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00057}00057\ \ \ \ \ \textcolor{comment}{//\ m\_chatManager-\/>ChatSettings-\/>AudioEncodingQuality\ =\ Windows::Xbox::Chat::EncodingQuality::Normal;}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00058}00058\ \ \ \ \ \textcolor{comment}{//\ m\_chatManager-\/>ChatSettings-\/>DiagnosticsTraceLevel\ =\ Microsoft::Xbox::GameChat::GameChatDiagnosticsTraceLevel::Verbose;}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00059}00059\ \ \ \ \ m\_chatManager-\/>ChatSettings-\/>CombineCaptureBuffersIntoSinglePacket\ =\ combineCaptureBuffersIntoSinglePacket;\ \textcolor{comment}{//\ if\ unset,\ it\ defaults\ to\ TRUE}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00060}00060\ \ \ \ \ m\_chatManager-\/>ChatSettings-\/>UseKinectAsCaptureSource\ =\ useKinectAsCaptureSource;\ \textcolor{comment}{//\ if\ unset,\ it\ defaults\ to\ FALSE}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00061}00061\ \ \ \ \ m\_chatManager-\/>ChatSettings-\/>PreEncodeCallbackEnabled\ =\ applySoundEffectsToCapturedAudio;\ \textcolor{comment}{//\ if\ unset,\ it\ defaults\ to\ FALSE}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00062}00062\ \ \ \ \ m\_chatManager-\/>ChatSettings-\/>PostDecodeCallbackEnabled\ =\ applySoundEffectsToChatRenderedAudio;\ \textcolor{comment}{//\ if\ unset,\ it\ defaults\ to\ FALSE}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00064}00064\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_af41f87535f6c7854166e69f18e0c123a}{InitializeCriticalSection}}(\&\doxymbox{\hyperlink{class_chat_integration_layer_a1da02e0f99ca92e1076a3daf2c81577b}{m\_csAddedUsers}});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00066}00066\ \ \ \ \ std::weak\_ptr<ChatIntegrationLayer>\ weakPtrToThis\ =\ shared\_from\_this();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00068}00068\ \textcolor{preprocessor}{\#ifdef\ PROFILE}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00069}00069\ \ \ \ \ m\_chatManager-\/>ChatSettings-\/>PerformanceCountersEnabled\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00070}00070\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00072}00072\ \ \ \ \ \textcolor{comment}{//\ Upon\ enter\ constrained\ mode,\ mute\ everyone.\ \ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00073}00073\ \ \ \ \ \textcolor{comment}{//\ Upon\ leaving\ constrained\ mode,\ unmute\ everyone\ who\ was\ previously\ muted.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00074}00074\ \ \ \ \ m\_tokenResourceAvailabilityChanged\ =\ Windows::ApplicationModel::Core::CoreApplication::ResourceAvailabilityChanged\ +=\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ ref\ \textcolor{keyword}{new}\ EventHandler<\ Platform::Object\string^\ >(\ [weakPtrToThis]\ (Platform::Object\string^,\ Platform::Object\string^\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00076}00076\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Using\ a\ std::weak\_ptr\ instead\ of\ 'this'\ to\ avoid\ dangling\ pointer\ if\ caller\ class\ is\ released.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Simply\ unregistering\ the\ callback\ in\ the\ destructor\ isn't\ enough\ to\ prevent\ a\ dangling\ pointer}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ std::shared\_ptr<ChatIntegrationLayer>\ sharedPtrToThis(weakPtrToThis.lock());}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sharedPtrToThis\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Windows::ApplicationModel::Core::CoreApplication::ResourceAvailability\ ==\ Windows::ApplicationModel::Core::ResourceAvailability::Constrained)}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sharedPtrToThis-\/>m\_chatManager\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sharedPtrToThis-\/>m\_chatManager-\/>MuteAllUsersFromAllChannels();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(Windows::ApplicationModel::Core::CoreApplication::ResourceAvailability\ ==\ Windows::ApplicationModel::Core::ResourceAvailability::Full)}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sharedPtrToThis-\/>m\_chatManager\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sharedPtrToThis-\/>m\_chatManager-\/>UnmuteAllUsersFromAllChannels();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ title\ should\ remember\ who\ was\ muted\ so\ when\ the\ Resume\ even\ occurs}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ to\ avoid\ unmuting\ users\ who\ has\ been\ previously\ muted.\ \ Simply\ re-\/mute\ them\ here}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00100}00100\ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00102}00102\ \ \ \ \ m\_tokenOnDebugMessage\ =\ m\_chatManager-\/>OnDebugMessage\ +=\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ ref\ \textcolor{keyword}{new}\ Windows::Foundation::EventHandler<Microsoft::Xbox::GameChat::DebugMessageEventArgs\string^>(}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ [weakPtrToThis]\ (\ Platform::Object\string^,\ Microsoft::Xbox::GameChat::DebugMessageEventArgs\string^\ args\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00105}00105\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Using\ a\ std::weak\_ptr\ instead\ of\ 'this'\ to\ avoid\ dangling\ pointer\ if\ caller\ class\ is\ released.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Simply\ unregistering\ the\ callback\ in\ the\ destructor\ isn't\ enough\ to\ prevent\ a\ dangling\ pointer}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ std::shared\_ptr<ChatIntegrationLayer>\ sharedPtrToThis(weakPtrToThis.lock());}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sharedPtrToThis\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ sharedPtrToThis-\/>OnDebugMessageReceived(args);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00113}00113\ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00115}00115\ \ \ \ \ m\_tokenOnOutgoingChatPacketReady\ =\ m\_chatManager-\/>OnOutgoingChatPacketReady\ +=\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ ref\ \textcolor{keyword}{new}\ Windows::Foundation::EventHandler<Microsoft::Xbox::GameChat::ChatPacketEventArgs\string^>(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ [weakPtrToThis]\ (\ Platform::Object\string^,\ Microsoft::Xbox::GameChat::ChatPacketEventArgs\string^\ args\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00118}00118\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Using\ a\ std::weak\_ptr\ instead\ of\ 'this'\ to\ avoid\ dangling\ pointer\ if\ caller\ class\ is\ released.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Simply\ unregistering\ the\ callback\ in\ the\ destructor\ isn't\ enough\ to\ prevent\ a\ dangling\ pointer}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ std::shared\_ptr<ChatIntegrationLayer>\ sharedPtrToThis(weakPtrToThis.lock());}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sharedPtrToThis\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ sharedPtrToThis-\/>OnOutgoingChatPacketReady(args);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00126}00126\ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00128}00128\ \ \ \ \ m\_tokenOnCompareUniqueConsoleIdentifiers\ =\ m\_chatManager-\/>OnCompareUniqueConsoleIdentifiers\ +=\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ ref\ \textcolor{keyword}{new}\ Microsoft::Xbox::GameChat::CompareUniqueConsoleIdentifiersHandler(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ [weakPtrToThis]\ (\ Platform::Object\string^\ obj1,\ Platform::Object\string^\ obj2\ )\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00131}00131\ \ \ \ \ \{\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Using\ a\ std::weak\_ptr\ instead\ of\ 'this'\ to\ avoid\ dangling\ pointer\ if\ caller\ class\ is\ released.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Simply\ unregistering\ the\ callback\ in\ the\ destructor\ isn't\ enough\ to\ prevent\ a\ dangling\ pointer}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ std::shared\_ptr<ChatIntegrationLayer>\ sharedPtrToThis(weakPtrToThis.lock());}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sharedPtrToThis\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sharedPtrToThis-\/>CompareUniqueConsoleIdentifiers(obj1,\ obj2);\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00143}00143\ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00145}00145\ \ \ \ \ m\_tokenUserAudioDeviceAdded\ =\ WXS::User::AudioDeviceAdded\ +=\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ ref\ \textcolor{keyword}{new}\ Windows::Foundation::EventHandler<WXS::AudioDeviceAddedEventArgs\string^>(}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ [weakPtrToThis]\ (\ Platform::Object\string^,\ WXS::AudioDeviceAddedEventArgs\string^\ value\ )\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00148}00148\ \ \ \ \ \{\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ std::shared\_ptr<ChatIntegrationLayer>\ sharedPtrToThis(weakPtrToThis.lock());}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sharedPtrToThis\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ sharedPtrToThis-\/>EvaluateDevicesForUser(value-\/>User);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00154}00154\ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00156}00156\ \ \ \ \ m\_tokenUserAudioDeviceRemoved\ =\ WXS::User::AudioDeviceRemoved\ +=\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ ref\ \textcolor{keyword}{new}\ Windows::Foundation::EventHandler<WXS::AudioDeviceRemovedEventArgs\string^>(}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ [weakPtrToThis]\ (\ Platform::Object\string^,\ WXS::AudioDeviceRemovedEventArgs\string^\ value\ )\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00159}00159\ \ \ \ \ \{\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ std::shared\_ptr<ChatIntegrationLayer>\ sharedPtrToThis(weakPtrToThis.lock());}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sharedPtrToThis\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ sharedPtrToThis-\/>EvaluateDevicesForUser(value-\/>User);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00165}00165\ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00167}00167\ \ \ \ \ m\_tokenUserAudioDeviceChanged\ =\ WXS::User::AudioDeviceChanged\ +=\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ ref\ \textcolor{keyword}{new}\ Windows::Foundation::EventHandler<WXS::AudioDeviceChangedEventArgs\string^>(}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ [weakPtrToThis]\ (\ Platform::Object\string^,\ WXS::AudioDeviceChangedEventArgs\string^\ value\ )\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00170}00170\ \ \ \ \ \{\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ std::shared\_ptr<ChatIntegrationLayer>\ sharedPtrToThis(weakPtrToThis.lock());}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sharedPtrToThis\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ sharedPtrToThis-\/>EvaluateDevicesForUser(value-\/>User);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00176}00176\ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00178}00178\ \ \ \ \ \textcolor{comment}{//m\_tokenSuspending\ =\ Windows::ApplicationModel::Core::CoreApplication::Suspending\ +=\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00179}00179\ \ \ \ \ \textcolor{comment}{//\ \ \ \ ref\ new\ EventHandler<\ Windows::ApplicationModel::SuspendingEventArgs\string^\ >(\ [weakPtrToThis]\ (Platform::Object\string^,\ Windows::ApplicationModel::SuspendingEventArgs\string^\ args)}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00180}00180\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00181}00181\ \ \ \ \ \textcolor{comment}{//\ \ \ \ //\ Upon\ Suspending,\ nothing\ needs\ to\ be\ done\ \ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00182}00182\ \ \ \ \ \textcolor{comment}{//\});}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00184}00184\ \ \ \ \ \textcolor{comment}{//m\_tokenResuming\ =\ Windows::ApplicationModel::Core::CoreApplication::Resuming\ +=\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00185}00185\ \ \ \ \ \textcolor{comment}{//\ \ \ \ ref\ new\ EventHandler<\ Platform::Object\string^\ >(\ [weakPtrToThis]\ (Platform::Object\string^,\ Windows::ApplicationModel::SuspendingEventArgs\string^\ args)}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00186}00186\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00187}00187\ \ \ \ \ \textcolor{comment}{//\ \ \ \ //\ Upon\ Resuming,\ re-\/initialize\ the\ network,\ and\ reinitialize\ the\ chat\ session\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00188}00188\ \ \ \ \ \textcolor{comment}{//\});}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00189}00189\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00190}00190\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00192}\doxymbox{\hyperlink{class_chat_integration_layer_aee189abf2f4424ca127e031022d277d6}{00192}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_aee189abf2f4424ca127e031022d277d6}{ChatIntegrationLayer::Shutdown}}()}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00193}00193\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00194}00194\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_chatManager\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00195}00195\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ m\_chatManager-\/>OnDebugMessage\ -\/=\ m\_tokenOnDebugMessage;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ m\_chatManager-\/>OnOutgoingChatPacketReady\ -\/=\ m\_tokenOnOutgoingChatPacketReady;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ m\_chatManager-\/>OnCompareUniqueConsoleIdentifiers\ -\/=\ m\_tokenOnCompareUniqueConsoleIdentifiers;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ Windows::ApplicationModel::Core::CoreApplication::ResourceAvailabilityChanged\ -\/=\ m\_tokenResourceAvailabilityChanged;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_chatManager-\/>ChatSettings-\/>PreEncodeCallbackEnabled\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ m\_chatManager-\/>OnPreEncodeAudioBuffer\ -\/=\ m\_tokenOnPreEncodeAudioBuffer;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_chatManager-\/>ChatSettings-\/>PostDecodeCallbackEnabled\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ m\_chatManager-\/>OnPostDecodeAudioBuffer\ -\/=\ m\_tokenOnPostDecodeAudioBuffer;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ WXS::User::AudioDeviceAdded\ -\/=\ m\_tokenUserAudioDeviceAdded;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ WXS::User::AudioDeviceRemoved\ -\/=\ m\_tokenUserAudioDeviceRemoved;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ WXS::User::AudioDeviceChanged\ -\/=\ m\_tokenUserAudioDeviceChanged;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a1ce29d01fb8469678871cdf418f1e432}{DeleteCriticalSection}}(\&\doxymbox{\hyperlink{class_chat_integration_layer_a1da02e0f99ca92e1076a3daf2c81577b}{m\_csAddedUsers}});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ m\_chatManager\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00215}00215\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00216}00216\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00218}\doxymbox{\hyperlink{class_chat_integration_layer_af996311e41e8b93cf1277efe2315dc13}{00218}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_af996311e41e8b93cf1277efe2315dc13}{ChatIntegrationLayer::OnDebugMessageReceived}}(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00219}00219\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Microsoft::Xbox::GameChat::DebugMessageEventArgs\string^\ args\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00220}00220\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00221}00221\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00222}00222\ \ \ \ \ \textcolor{comment}{//\ To\ integrate\ the\ Chat\ DLL\ in\ your\ game,\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00223}00223\ \ \ \ \ \textcolor{comment}{//\ change\ this\ to\ false\ and\ remove\ the\ LogComment\ calls,\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00224}00224\ \ \ \ \ \textcolor{comment}{//\ or\ integrate\ with\ your\ game's\ own\ UI/debug\ message\ logging\ system}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00225}00225\ \ \ \ \ \textcolor{keywordtype}{bool}\ outputToUI\ =\ \textcolor{keyword}{false};\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00227}00227\ \ \ \ \ \textcolor{keywordflow}{if}(\ outputToUI\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00228}00228\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (args-\/>ErrorCode\ ==\ \doxymbox{\hyperlink{_orbis_stubs_8h_a14bc2dfa42241600d567369cd25ddc70}{S\_OK}}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_a93becc22e2fc2966410d06deaa3bfa8a}{m\_pDQRNet}}-\/>LogComment(L\textcolor{stringliteral}{"{}GameChat:\ "{}}\ +\ args-\/>Message);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_a93becc22e2fc2966410d06deaa3bfa8a}{m\_pDQRNet}}-\/>LogCommentWithError(L\textcolor{stringliteral}{"{}GameChat:\ "{}}\ +\ args-\/>Message,\ args-\/>ErrorCode);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00237}00237\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00238}00238\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00239}00239\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00240}00240\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ string\ appear\ in\ the\ Visual\ Studio\ Output\ window\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00241}00241\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00242}00242\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a06ebe735c3d198ebb4f9a119f06f597b}{OutputDebugString}}(\ args-\/>Message-\/>Data()\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00243}00243\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00244}00244\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00245}00245\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00247}00247\ \textcolor{keywordtype}{void}\ ChatIntegrationLayer::GameUI\_RecordPacketStatistic(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00248}00248\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Microsoft::Xbox::GameChat::ChatMessageType\ messageType,}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00249}00249\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ \doxymbox{\hyperlink{_chat_integration_layer_8h_af0f3cb9c367443121f12cd8c9b74385d}{ChatPacketType}}\ chatPacketType}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00250}00250\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00251}00251\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00252}00252\ \ \ \ \ \doxymbox{\hyperlink{stb__vorbis_8h_a1134b580f8da4de94ca6b1de4d37975e}{uint32}}\ messageTypeInt\ =\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{stb__vorbis_8h_a1134b580f8da4de94ca6b1de4d37975e}{uint32}}\textcolor{keyword}{>}(messageType);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00253}00253\ \ \ \ \ \textcolor{keywordflow}{if}(\ messageType\ >\ Microsoft::Xbox::GameChat::ChatMessageType::InvalidMessage\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00254}00254\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00256}00256\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00258}00258\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ Concurrency::critical\_section::scoped\_lock\ lock(m\_chatPacketStatsLock);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ m\_chatVoicePacketsStatistic[\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(chatPacketType)][messageTypeInt]++;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00261}00261\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00262}00262\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00263}00263\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00264}\doxymbox{\hyperlink{class_chat_integration_layer_a92162af3f69a542dbb8b1576187b7db4}{00264}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_chat_integration_layer_a92162af3f69a542dbb8b1576187b7db4}{ChatIntegrationLayer::GameUI\_GetPacketStatistic}}(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00265}00265\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Microsoft::Xbox::GameChat::ChatMessageType\ messageType,}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00266}00266\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ \doxymbox{\hyperlink{_chat_integration_layer_8h_af0f3cb9c367443121f12cd8c9b74385d}{ChatPacketType}}\ chatPacketType}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00267}00267\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00268}00268\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00269}00269\ \ \ \ \ \doxymbox{\hyperlink{stb__vorbis_8h_a1134b580f8da4de94ca6b1de4d37975e}{uint32}}\ messageTypeInt\ =\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{stb__vorbis_8h_a1134b580f8da4de94ca6b1de4d37975e}{uint32}}\textcolor{keyword}{>}(messageType);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00270}00270\ \ \ \ \ \textcolor{keywordflow}{if}(\ messageType\ >\ Microsoft::Xbox::GameChat::ChatMessageType::InvalidMessage\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00271}00271\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00273}00273\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00274}00274\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00275}00275\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ Concurrency::critical\_section::scoped\_lock\ lock(m\_chatPacketStatsLock);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_chatVoicePacketsStatistic[\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(chatPacketType)][messageTypeInt];}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00278}00278\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00279}00279\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00280}00280\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00281}\doxymbox{\hyperlink{class_chat_integration_layer_af612b0502f58294787c96cf9d5039c0e}{00281}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_af612b0502f58294787c96cf9d5039c0e}{ChatIntegrationLayer::OnOutgoingChatPacketReady}}(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00282}00282\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Microsoft::Xbox::GameChat::ChatPacketEventArgs\string^\ args\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00283}00283\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00284}00284\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00285}00285\ \ \ \ \ \textcolor{keywordtype}{byte}\ *bytes;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00286}00286\ \ \ \ \ \textcolor{keywordtype}{int}\ byteCount;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00287}00287\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00288}00288\ \ \ \ \ GetBufferBytes(args-\/>PacketBuffer,\ \&bytes);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00289}00289\ \ \ \ \ byteCount\ =\ args-\/>PacketBuffer-\/>Length;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00290}00290\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ address\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00291}00291\ \ \ \ \ \textcolor{keywordflow}{if}(\ !args-\/>SendPacketToAllConnectedConsoles\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00292}00292\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00293}00293\ \ \ \ \ \ \ \ \ address\ =\ safe\_cast<unsigned\ int>(args-\/>UniqueTargetConsoleIdentifier);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00294}00294\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00295}00295\ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_a93becc22e2fc2966410d06deaa3bfa8a}{m\_pDQRNet}}-\/>SendBytesChat(address,\ bytes,\ byteCount,\ args-\/>SendReliable,\ args-\/>SendInOrder,\ args-\/>SendPacketToAllConnectedConsoles);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00297}00297\ \ \ \ \ GameUI\_RecordPacketStatistic(\ args-\/>ChatMessageType,\ \doxymbox{\hyperlink{_chat_integration_layer_8h_af0f3cb9c367443121f12cd8c9b74385da10de355ff85366fd1f4989556940f08b}{ChatPacketType::OutgoingPacket}}\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00298}00298\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00299}00299\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00301}\doxymbox{\hyperlink{class_chat_integration_layer_a1b7aa0f1eba3c83a8905874a12bd80b4}{00301}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_a1b7aa0f1eba3c83a8905874a12bd80b4}{ChatIntegrationLayer::OnIncomingChatMessage}}(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00302}00302\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ sessionAddress,}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00303}00303\ \ \ \ \ Platform::Array<byte>\string^\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00304}00304\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00305}00305\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00306}00306\ \ \ \ \ \textcolor{comment}{//\ To\ integrate\ the\ Chat\ DLL\ in\ your\ game,\ change\ the\ following\ code\ to\ use\ your\ game's\ network\ layer.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00307}00307\ \ \ \ \ \textcolor{comment}{//\ Ignore\ the\ OnChatMessageReceived\ event\ as\ that\ is\ specific\ to\ this\ sample's\ simple\ network\ layer.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00308}00308\ \ \ \ \ \textcolor{comment}{//\ Instead\ your\ title\ should\ upon\ receiving\ a\ packet,\ extract\ the\ chat\ message\ from\ it,\ and\ then\ call\ m\_chatManager-\/>ProcessIncomingChatMessage\ as\ shown\ below}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00309}00309\ \ \ \ \ \textcolor{comment}{//\ You\ will\ need\ to\ isolate\ chat\ messages\ to\ be\ unique\ from\ the\ rest\ of\ you\ game's\ other\ message\ types.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00310}00310\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00311}00311\ \ \ \ \ \textcolor{comment}{//\ uniqueRemoteConsoleIdentifier\ is\ a\ Platform::Object\string^\ and\ can\ be\ cast\ or\ unboxed\ to\ most\ types.\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00312}00312\ \ \ \ \ \textcolor{comment}{//\ What\ exactly\ you\ use\ doesn't\ matter,\ but\ optimally\ it\ would\ be\ something\ that\ uniquely\ identifies\ a\ console\ on\ in\ the\ session.\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00313}00313\ \ \ \ \ \textcolor{comment}{//\ A\ Windows::Xbox::Networking::SecureDeviceAssociation\string^\ is\ perfect\ to\ use\ if\ you\ have\ access\ to\ it.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00314}00314\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00315}00315\ \ \ \ \ \textcolor{comment}{//\ This\ is\ how\ you\ would\ convert\ from\ byte\ array\ to\ a\ IBuffer\string^}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00316}00316\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00317}00317\ \ \ \ \ \textcolor{comment}{//\ \ \ \ Windows::Storage::Streams::IBuffer\string^\ destBuffer\ =\ ref\ new\ Windows::Storage::Streams::Buffer(\ sourceByteBufferSize\ );}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00318}00318\ \ \ \ \ \textcolor{comment}{//\ \ \ \ byte*\ destBufferBytes\ =\ nullptr;}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00319}00319\ \ \ \ \ \textcolor{comment}{//\ \ \ \ GetBufferBytes(\ destBuffer,\ \&destBufferBytes\ );}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00320}00320\ \ \ \ \ \textcolor{comment}{//\ \ \ \ errno\_t\ err\ =\ memcpy\_s(\ destBufferBytes,\ destBuffer-\/>Capacity,\ sourceByteBuffer,\ sourceByteBufferSize\ );}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00321}00321\ \ \ \ \ \textcolor{comment}{//\ \ \ \ THROW\_HR\_IF(err\ !=\ 0,\ E\_FAIL);}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00322}00322\ \ \ \ \ \textcolor{comment}{//\ \ \ \ destBuffer-\/>Length\ =\ sourceByteBufferSize;}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00323}00323\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00324}00324\ \ \ \ \ \textcolor{comment}{//\ This\ is\ how\ you\ would\ convert\ from\ an\ int\ to\ a\ Platform::Object\string^}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00325}00325\ \ \ \ \ \textcolor{comment}{//\ Platform::Object\ obj\ =\ IntToPlatformObject(5);}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00326}00326\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00327}00327\ \ \ \ \ Windows::Storage::Streams::IBuffer\string^\ chatMessage\ =\ ArrayToBuffer(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00328}00328\ \ \ \ \ Platform::Object\string^\ uniqueRemoteConsoleIdentifier\ =\ (Platform::Object\string^)sessionAddress;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00329}00329\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00330}00330\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_chatManager\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00331}00331\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ Microsoft::Xbox::GameChat::ChatMessageType\ chatMessageType\ =\ m\_chatManager-\/>ProcessIncomingChatMessage(chatMessage,\ uniqueRemoteConsoleIdentifier);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00333}00333\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ GameUI\_RecordPacketStatistic(\ chatMessageType,\ \doxymbox{\hyperlink{_chat_integration_layer_8h_af0f3cb9c367443121f12cd8c9b74385da2becd19b6099a5ccd681aaa5adb54173}{ChatPacketType::IncomingPacket}}\ );\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00335}00335\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00336}00336\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00337}00337\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00338}00338\ \textcolor{comment}{//\ Only\ add\ people\ who\ intend\ to\ play.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00339}\doxymbox{\hyperlink{class_chat_integration_layer_a9d5da18e958d49364b677fe4d0777e5f}{00339}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_a9d5da18e958d49364b677fe4d0777e5f}{ChatIntegrationLayer::AddAllLocallySignedInUsersToChatClient}}(}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00340}00340\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ \doxymbox{\hyperlink{stb__vorbis_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}}\ channelIndex,}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00341}00341\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Windows::Foundation::Collections::IVectorView<Windows::Xbox::System::User\string^>\string^\ locallySignedInUsers}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00342}00342\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00343}00343\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00344}00344\ \ \ \ \ \textcolor{comment}{//\ To\ integrate\ the\ Chat\ DLL\ in\ your\ game,\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00345}00345\ \ \ \ \ \textcolor{comment}{//\ add\ all\ locally\ signed\ in\ users\ to\ the\ chat\ client}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00346}00346\ \ \ \ \ \textcolor{keywordflow}{for\ each}(\ Windows::Xbox::System::User\string^\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}\ \textcolor{keywordflow}{in}\ locallySignedInUsers\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00347}00347\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00350}00350\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ LogComment(L"{}Adding\ Local\ User\ to\ Chat\ Client"{});}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ AddLocalUserToChatChannel(\ channelIndex,\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00353}00353\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00354}00354\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00355}00355\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00356}\doxymbox{\hyperlink{class_chat_integration_layer_1_1_added_user_aa42aef6826b2ec3c69ace7ac5f871f89}{00356}}\ \doxymbox{\hyperlink{class_chat_integration_layer_1_1_added_user_aa42aef6826b2ec3c69ace7ac5f871f89}{ChatIntegrationLayer::AddedUser::AddedUser}}(Windows::Xbox::System::IUser\string^\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}},\ \textcolor{keywordtype}{bool}\ canCaptureAudio)}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00357}00357\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00358}00358\ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_1_1_added_user_a969a1dd3ef7b214905d9b80a9e814a92}{m\_user}}\ =\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00359}00359\ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_1_1_added_user_a3ff81d54536426edb252fc0170af1205}{m\_canCaptureAudio}}\ =\ canCaptureAudio;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00360}00360\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00361}00361\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00362}00362\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00363}\doxymbox{\hyperlink{class_chat_integration_layer_a207490b42e0db8961ad113d7d2ae2702}{00363}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_a207490b42e0db8961ad113d7d2ae2702}{ChatIntegrationLayer::AddLocalUser}}(\ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Windows::Xbox::System::IUser\string^\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00364}00364\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00365}00365\ \ \ \ \ \textcolor{comment}{//\ Check\ we\ haven't\ added\ already}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00366}00366\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_chat_integration_layer_a09056e225da9d59540ff9cd447ed950b}{m\_addedUsers}}.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00367}00367\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{class_chat_integration_layer_a09056e225da9d59540ff9cd447ed950b}{m\_addedUsers}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>m\_user-\/>XboxUserId\ ==\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}-\/>XboxUserId\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00372}00372\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00373}00373\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00374}00374\ \ \ \ \ \textcolor{keywordtype}{bool}\ kinectAvailable\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00375}00375\ \ \ \ \ Windows::Kinect::KinectSensor\string^\ sensor\ =\ Windows::Kinect::KinectSensor::GetDefault();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00376}00376\ \ \ \ \ \textcolor{keywordflow}{if}(\ sensor\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00377}00377\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00378}00378\ \ \ \ \ \ \ \ \ sensor-\/>Open();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00379}00379\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sensor-\/>IsAvailable\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ kinectAvailable\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_a93becc22e2fc2966410d06deaa3bfa8a}{m\_pDQRNet}}-\/>LogComment(L\textcolor{stringliteral}{"{}Evaluated\ that\ kinect\ is\ available\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00383}00383\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00384}00384\ \ \ \ \ \ \ \ \ sensor-\/>Close();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00385}00385\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00386}00386\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00387}00387\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&\doxymbox{\hyperlink{class_chat_integration_layer_a1da02e0f99ca92e1076a3daf2c81577b}{m\_csAddedUsers}});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00388}00388\ \ \ \ \ \textcolor{comment}{//\ First\ establish\ whether\ we\ have\ an\ appropriate\ audio\ device\ at\ this\ time}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00389}00389\ \ \ \ \ \textcolor{keywordtype}{bool}\ canCaptureAudio\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00390}00390\ \ \ \ \ \textcolor{keywordflow}{for\ each}(\ WXS::IAudioDeviceInfo\string^\ audioDevice\ \textcolor{keywordflow}{in}\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}-\/>AudioDevices\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00391}00391\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00392}00392\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_a93becc22e2fc2966410d06deaa3bfa8a}{m\_pDQRNet}}-\/>LogComment(L\textcolor{stringliteral}{"{}Evaluating\ device\ "{}}\ +\ audioDevice-\/>DeviceCategory.ToString()\ +\ L\textcolor{stringliteral}{"{}\ "{}}\ +}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00393}00393\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ audioDevice-\/>DeviceType.ToString()\ +\ \ L\textcolor{stringliteral}{"{}\ "{}}\ +}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ audioDevice-\/>Id\ +\ \ L\textcolor{stringliteral}{"{}\ "{}}\ +}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ audioDevice-\/>Sharing.ToString()\ +\ \ L\textcolor{stringliteral}{"{}\ "{}}\ +}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ audioDevice-\/>IsMicrophoneMuted.ToString()\ +\ L\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00397}00397\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00398}00398\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Consider\ shared\ devices\ only\ if\ kinect\ is\ actually\ available\ -\/\ every\ machine\ seems\ to\ claim\ a\ shared\ device\ whether\ kinect\ is\ attached\ or\ not}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00399}00399\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ audioDevice-\/>DeviceType\ ==\ WXS::AudioDeviceType::Capture\ )\ \&\&\ (\ kinectAvailable\ \ ||\ (\ audioDevice-\/>Sharing\ !=\ WXS::AudioDeviceSharing::Shared)\ )\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00400}00400\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ canCaptureAudio\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00403}00403\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00405}00405\ \ \ \ \ \textcolor{comment}{//\ If\ we\ can\ capture\ audio\ initially,\ then\ register\ with\ the\ chat\ session.\ Otherwise\ we'll\ reevaluate\ this\ situation\ when\ audio\ devices\ change}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00406}00406\ \ \ \ \ \textcolor{keywordflow}{if}(\ canCaptureAudio\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00407}00407\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00408}00408\ \ \ \ \ \ \ \ \ AddLocalUserToChatChannel(\ 0\ ,\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00409}00409\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00410}00410\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00411}00411\ \ \ \ \ \textcolor{comment}{//\ Add\ to\ vector\ of\ users\ that\ we\ are\ tracking\ in\ the\ chat\ system}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00412}00412\ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_a09056e225da9d59540ff9cd447ed950b}{m\_addedUsers}}.push\_back(\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_chat_integration_layer_1_1_added_user}{AddedUser}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}},\ canCaptureAudio));}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00413}00413\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&\doxymbox{\hyperlink{class_chat_integration_layer_a1da02e0f99ca92e1076a3daf2c81577b}{m\_csAddedUsers}});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00414}00414\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00415}00415\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00416}00416\ \textcolor{comment}{//\ Remove\ from\ our\ list\ of\ tracked\ users,\ if\ the\ user\ is\ already\ there}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00417}\doxymbox{\hyperlink{class_chat_integration_layer_a2929d6bfdbcda60b95ecb2fc4044101f}{00417}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_a2929d6bfdbcda60b95ecb2fc4044101f}{ChatIntegrationLayer::RemoveLocalUser}}(\ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Windows::Xbox::System::IUser\string^\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00418}00418\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00419}00419\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&\doxymbox{\hyperlink{class_chat_integration_layer_a1da02e0f99ca92e1076a3daf2c81577b}{m\_csAddedUsers}});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00420}00420\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keyword}{auto}\ it\ =\ \doxymbox{\hyperlink{class_chat_integration_layer_a09056e225da9d59540ff9cd447ed950b}{m\_addedUsers}}.begin();\ it\ !=\ \doxymbox{\hyperlink{class_chat_integration_layer_a09056e225da9d59540ff9cd447ed950b}{m\_addedUsers}}.end();\ it++\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00421}00421\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00422}00422\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (*it)-\/>m\_user-\/>XboxUserId\ ==\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}-\/>XboxUserId\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00423}00423\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00424}00424\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ (*it);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00425}00425\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_a09056e225da9d59540ff9cd447ed950b}{m\_addedUsers}}.erase(it);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00426}00426\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&\doxymbox{\hyperlink{class_chat_integration_layer_a1da02e0f99ca92e1076a3daf2c81577b}{m\_csAddedUsers}});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00427}00427\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00428}00428\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00429}00429\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00430}00430\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&\doxymbox{\hyperlink{class_chat_integration_layer_a1da02e0f99ca92e1076a3daf2c81577b}{m\_csAddedUsers}});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00431}00431\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00432}00432\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00433}00433\ \textcolor{comment}{//\ This\ is\ called\ when\ the\ audio\ devices\ for\ a\ user\ change\ in\ any\ way,\ and\ establishes\ whether\ we\ can\ now\ capture\ audio.\ Any\ change\ in\ this\ status\ from\ before\ will\ cause\ the\ user\ to\ be\ added/removed\ from\ the\ chat\ session.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00434}\doxymbox{\hyperlink{class_chat_integration_layer_af741ee72c63f94a7d5e532660c0eb9e4}{00434}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_af741ee72c63f94a7d5e532660c0eb9e4}{ChatIntegrationLayer::EvaluateDevicesForUser}}(\doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Windows::Xbox::System::IUser\string^\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00435}00435\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00436}00436\ \ \ \ \ \textcolor{keywordtype}{bool}\ kinectAvailable\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00437}00437\ \ \ \ \ Windows::Kinect::KinectSensor\string^\ sensor\ =\ Windows::Kinect::KinectSensor::GetDefault();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00438}00438\ \ \ \ \ \textcolor{keywordflow}{if}(\ sensor\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00439}00439\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00440}00440\ \ \ \ \ \ \ \ \ sensor-\/>Open();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00441}00441\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sensor-\/>IsAvailable\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00442}00442\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00443}00443\ \ \ \ \ \ \ \ \ \ \ \ \ kinectAvailable\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00444}00444\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_a93becc22e2fc2966410d06deaa3bfa8a}{m\_pDQRNet}}-\/>LogComment(L\textcolor{stringliteral}{"{}Evaluated\ that\ kinect\ is\ available\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00445}00445\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00446}00446\ \ \ \ \ \ \ \ \ sensor-\/>Close();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00447}00447\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00448}00448\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00449}00449\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&\doxymbox{\hyperlink{class_chat_integration_layer_a1da02e0f99ca92e1076a3daf2c81577b}{m\_csAddedUsers}});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00450}00450\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_chat_integration_layer_a09056e225da9d59540ff9cd447ed950b}{m\_addedUsers}}.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00451}00451\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00452}00452\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_1_1_added_user}{AddedUser}}\ *addedUser\ =\ \doxymbox{\hyperlink{class_chat_integration_layer_a09056e225da9d59540ff9cd447ed950b}{m\_addedUsers}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00453}00453\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ addedUser-\/>\doxymbox{\hyperlink{class_chat_integration_layer_1_1_added_user_a969a1dd3ef7b214905d9b80a9e814a92}{m\_user}}-\/>XboxUserId\ ==\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}-\/>XboxUserId\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00454}00454\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00455}00455\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ canCaptureAudio\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00456}00456\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for\ each}(\ WXS::IAudioDeviceInfo\string^\ audioDevice\ \textcolor{keywordflow}{in}\ addedUser-\/>\doxymbox{\hyperlink{class_chat_integration_layer_1_1_added_user_a969a1dd3ef7b214905d9b80a9e814a92}{m\_user}}-\/>AudioDevices\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00457}00457\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00458}00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Consider\ shared\ devices\ only\ if\ kinect\ is\ actually\ available\ -\/\ every\ machine\ seems\ to\ claim\ a\ shared\ device\ whether\ kinect\ is\ attached\ or\ not}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00459}00459\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ audioDevice-\/>DeviceType\ ==\ WXS::AudioDeviceType::Capture\ )\ \&\&\ (\ kinectAvailable\ \ ||\ (\ audioDevice-\/>Sharing\ !=\ WXS::AudioDeviceSharing::Shared)\ )\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00460}00460\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ canCaptureAudio\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00462}00462\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00463}00463\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00464}00464\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ canCaptureAudio\ !=\ addedUser-\/>\doxymbox{\hyperlink{class_chat_integration_layer_1_1_added_user_a3ff81d54536426edb252fc0170af1205}{m\_canCaptureAudio}}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00466}00466\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00467}00467\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ canCaptureAudio\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00468}00468\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00469}00469\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ AddLocalUserToChatChannel(0,\ addedUser-\/>\doxymbox{\hyperlink{class_chat_integration_layer_1_1_added_user_a969a1dd3ef7b214905d9b80a9e814a92}{m\_user}}\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00470}00470\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00471}00471\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ RemoveUserFromChatChannel(0,\ addedUser-\/>\doxymbox{\hyperlink{class_chat_integration_layer_1_1_added_user_a969a1dd3ef7b214905d9b80a9e814a92}{m\_user}}\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00474}00474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00475}00475\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ addedUser-\/>\doxymbox{\hyperlink{class_chat_integration_layer_1_1_added_user_a3ff81d54536426edb252fc0170af1205}{m\_canCaptureAudio}}\ =\ canCaptureAudio;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&\doxymbox{\hyperlink{class_chat_integration_layer_a1da02e0f99ca92e1076a3daf2c81577b}{m\_csAddedUsers}});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00479}00479\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00480}00480\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00481}00481\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&\doxymbox{\hyperlink{class_chat_integration_layer_a1da02e0f99ca92e1076a3daf2c81577b}{m\_csAddedUsers}});}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00482}00482\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00483}00483\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00484}00484\ \textcolor{keywordtype}{void}\ ChatIntegrationLayer::AddLocalUserToChatChannel(}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00485}00485\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ \doxymbox{\hyperlink{stb__vorbis_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}}\ channelIndex,}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00486}00486\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Windows::Xbox::System::IUser\string^\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00487}00487\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00488}00488\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00489}00489\ \ \ \ \ \textcolor{comment}{//\ Adds\ a\ local\ user\ to\ a\ specific\ channel.\ \ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00490}00490\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00491}00491\ \ \ \ \ \textcolor{comment}{//\ This\ is\ helper\ function\ waits\ for\ the\ task\ to\ cm\_chatManageromplete\ so\ shouldn't\ be\ called\ from\ the\ UI\ thread\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00492}00492\ \ \ \ \ \textcolor{comment}{//\ Remove\ the\ .wait()\ and\ return\ the\ result\ of\ concurrency::create\_task()\ if\ you\ want\ to\ call\ it\ from\ the\ UI\ thread\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00493}00493\ \ \ \ \ \textcolor{comment}{//\ and\ chain\ PPL\ tasks\ together}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00494}00494\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00495}00495\ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_a93becc22e2fc2966410d06deaa3bfa8a}{m\_pDQRNet}}-\/>LogComment(\ L\textcolor{stringliteral}{"{}>>>>>>>>>>>>>\ AddLocalUserToChatChannel"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00496}00496\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_chatManager\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00497}00497\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00498}00498\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ asyncOp\ =\ m\_chatManager-\/>AddLocalUserToChatChannelAsync(\ channelIndex,\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00499}00499\ \ \ \ \ \ \ \ \ concurrency::create\_task(\ asyncOp\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00500}00500\ \ \ \ \ \ \ \ \ .then(\ [\textcolor{keyword}{this}]\ (\ concurrency::task<void>\ t\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00501}00501\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00502}00502\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Error\ handling}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00503}00503\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00504}00504\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00505}00505\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ t.get();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00506}00506\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00507}00507\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (\ Platform::Exception\string^\ ex\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00508}00508\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00509}00509\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_a93becc22e2fc2966410d06deaa3bfa8a}{m\_pDQRNet}}-\/>LogCommentWithError(\ L\textcolor{stringliteral}{"{}AddLocalUserToChatChannelAsync\ failed"{}},\ ex-\/>HResult\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00510}00510\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00511}00511\ \ \ \ \ \ \ \ \ \})}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00512}00512\ \ \ \ \ \ \ \ \ .wait();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00513}00513\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00514}00514\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00515}00515\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00516}\doxymbox{\hyperlink{class_chat_integration_layer_ae7dd5998492c0cb287ae6cb2d0f05403}{00516}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_ae7dd5998492c0cb287ae6cb2d0f05403}{ChatIntegrationLayer::RemoveRemoteConsole}}(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00517}00517\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ address}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00518}00518\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00519}00519\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00520}00520\ \ \ \ \ \textcolor{comment}{//\ uniqueConsoleIdentifier\ is\ a\ Platform::Object\string^\ and\ can\ be\ cast\ or\ unboxed\ to\ most\ types.\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00521}00521\ \ \ \ \ \textcolor{comment}{//\ What\ exactly\ you\ use\ doesn't\ matter,\ but\ optimally\ it\ would\ be\ something\ that\ uniquely\ identifies\ a\ console\ on\ in\ the\ session.\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00522}00522\ \ \ \ \ \textcolor{comment}{//\ A\ Windows::Xbox::Networking::SecureDeviceAssociation\string^\ is\ perfect\ to\ use\ if\ you\ have\ access\ to\ it.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00523}00523\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00524}00524\ \ \ \ \ \textcolor{comment}{//\ This\ is\ how\ you\ would\ convert\ from\ an\ int\ to\ a\ Platform::Object\string^}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00525}00525\ \ \ \ \ \textcolor{comment}{//\ Platform::Object\ obj\ =\ IntToPlatformObject(5);}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00526}00526\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00527}00527\ \ \ \ \ \textcolor{comment}{//\ This\ is\ helper\ function\ waits\ for\ the\ task\ to\ complete\ so\ shouldn't\ be\ called\ from\ the\ UI\ thread\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00528}00528\ \ \ \ \ \textcolor{comment}{//\ Remove\ the\ .wait()\ and\ return\ the\ result\ of\ concurrency::create\_task()\ if\ you\ want\ to\ call\ it\ from\ the\ UI\ thread\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00529}00529\ \ \ \ \ \textcolor{comment}{//\ and\ chain\ PPL\ tasks\ together}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00530}00530\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00531}00531\ \ \ \ \ Platform::Object\string^\ uniqueRemoteConsoleIdentifier\ =\ (Platform::Object\string^)address;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00532}00532\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00533}00533\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_chatManager\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00534}00534\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00535}00535\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ asyncOp\ =\ m\_chatManager-\/>RemoveRemoteConsoleAsync(\ uniqueRemoteConsoleIdentifier\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00536}00536\ \ \ \ \ \ \ \ \ concurrency::create\_task(\ asyncOp\ ).then(\ [\textcolor{keyword}{this}]\ (\ concurrency::task<void>\ t\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00537}00537\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00538}00538\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Error\ handling}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00539}00539\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00540}00540\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00541}00541\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ t.get();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00542}00542\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00543}00543\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (\ Platform::Exception\string^\ ex\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00544}00544\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00545}00545\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_a93becc22e2fc2966410d06deaa3bfa8a}{m\_pDQRNet}}-\/>LogCommentWithError(\ L\textcolor{stringliteral}{"{}RemoveRemoteConsoleAsync\ failed"{}},\ ex-\/>HResult\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00546}00546\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00547}00547\ \ \ \ \ \ \ \ \ \})}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00548}00548\ \ \ \ \ \ \ \ \ .wait();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00549}00549\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00550}00550\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00551}00551\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00552}00552\ \textcolor{keywordtype}{void}\ ChatIntegrationLayer::RemoveUserFromChatChannel(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00553}00553\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ \doxymbox{\hyperlink{stb__vorbis_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}}\ channelIndex,}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00554}00554\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Windows::Xbox::System::IUser\string^\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00555}00555\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00556}00556\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00557}00557\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_chatManager\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00558}00558\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00559}00559\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ is\ helper\ function\ waits\ for\ the\ task\ to\ complete\ so\ shouldn't\ be\ called\ from\ the\ UI\ thread\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00560}00560\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Remove\ the\ .wait()\ and\ return\ the\ result\ of\ concurrency::create\_task()\ if\ you\ want\ to\ call\ it\ from\ the\ UI\ thread\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00561}00561\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ and\ chain\ PPL\ tasks\ together}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00562}00562\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00563}00563\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ asyncOp\ =\ m\_chatManager-\/>RemoveLocalUserFromChatChannelAsync(\ channelIndex,\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00564}00564\ \ \ \ \ \ \ \ \ concurrency::create\_task(\ asyncOp\ ).then(\ [\textcolor{keyword}{this}]\ (\ concurrency::task<void>\ t\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00565}00565\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00566}00566\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Error\ handling}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00567}00567\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00568}00568\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00569}00569\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ t.get();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00570}00570\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00571}00571\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (\ Platform::Exception\string^\ ex\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00572}00572\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00573}00573\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_a93becc22e2fc2966410d06deaa3bfa8a}{m\_pDQRNet}}-\/>LogCommentWithError(\ L\textcolor{stringliteral}{"{}RemoveLocalUserFromChatChannelAsync\ failed"{}},\ ex-\/>HResult\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00574}00574\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00575}00575\ \ \ \ \ \ \ \ \ \})}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00576}00576\ \ \ \ \ \ \ \ \ .wait();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00577}00577\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00578}00578\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00579}00579\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00580}\doxymbox{\hyperlink{class_chat_integration_layer_a3f739730a0885868e1c80163703b7f07}{00580}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_a3f739730a0885868e1c80163703b7f07}{ChatIntegrationLayer::OnNewSessionAddressAdded}}(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00581}00581\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ address}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00582}00582\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00583}00583\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00584}00584\ \ \ \ \ \doxymbox{\hyperlink{class_chat_integration_layer_a93becc22e2fc2966410d06deaa3bfa8a}{m\_pDQRNet}}-\/>LogCommentFormat(\ L\textcolor{stringliteral}{"{}>>>>>>>>>>>>>\ OnNewSessionAddressAdded\ (\%d)"{}},address\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00585}00585\ \ \ \ \ Platform::Object\string^\ uniqueConsoleIdentifier\ =\ (Platform::Object\string^)address;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00588}00588\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_chatManager\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00589}00589\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00590}00590\ \ \ \ \ \ \ \ \ m\_chatManager-\/>HandleNewRemoteConsole(uniqueConsoleIdentifier\ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00591}00591\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00592}00592\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00593}00593\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00594}\doxymbox{\hyperlink{class_chat_integration_layer_af0825eabe2d0e65044d23b7239ac57a4}{00594}}\ Windows::Foundation::Collections::IVectorView<Microsoft::Xbox::GameChat::ChatUser\string^>\string^\ \doxymbox{\hyperlink{class_chat_integration_layer_af0825eabe2d0e65044d23b7239ac57a4}{ChatIntegrationLayer::GetChatUsers}}()}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00595}00595\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00596}00596\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_chatManager\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00597}00597\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00598}00598\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_chatManager-\/>GetChatUsers();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00599}00599\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00600}00600\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00601}00601\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00602}00602\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00603}00603\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00604}\doxymbox{\hyperlink{class_chat_integration_layer_a7f2d3e49cdc365d95f57db3c39a3f6d8}{00604}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_chat_integration_layer_a7f2d3e49cdc365d95f57db3c39a3f6d8}{ChatIntegrationLayer::HasMicFocus}}()}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00605}00605\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00606}00606\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_chatManager\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00607}00607\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00608}00608\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_chatManager-\/>HasMicFocus;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00609}00609\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00610}00610\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00611}00611\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00612}00612\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00613}00613\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00614}\doxymbox{\hyperlink{class_chat_integration_layer_ad8b0dae36645dc7f54e805e78ec916c9}{00614}}\ Platform::Object\string^\ \doxymbox{\hyperlink{class_chat_integration_layer_ad8b0dae36645dc7f54e805e78ec916c9}{ChatIntegrationLayer::IntToPlatformObject}}(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00615}00615\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ \textcolor{keywordtype}{int}\ val\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00616}00616\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00617}00617\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00618}00618\ \ \ \ \ \textcolor{keywordflow}{return}\ (Platform::Object\string^)val;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00619}00619\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00620}00620\ \ \ \ \ \textcolor{comment}{//\ You\ can\ also\ do\ the\ same\ using\ a\ PropertyValue.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00621}00621\ \ \ \ \ \textcolor{comment}{//return\ Windows::Foundation::PropertyValue::CreateInt32(val);}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00622}00622\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00623}00623\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00624}\doxymbox{\hyperlink{class_chat_integration_layer_a072bdec40d56036439e181ebfd010c3b}{00624}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_chat_integration_layer_a072bdec40d56036439e181ebfd010c3b}{ChatIntegrationLayer::PlatformObjectToInt}}(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00625}00625\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Platform::Object\string^\ uniqueRemoteConsoleIdentifier\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00626}00626\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00627}00627\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00628}00628\ \ \ \ \ \textcolor{keywordflow}{return}\ safe\_cast<int>(\ uniqueRemoteConsoleIdentifier\ );\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00629}00629\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00630}00630\ \ \ \ \ \textcolor{comment}{//\ You\ can\ also\ do\ the\ same\ using\ a\ PropertyValue.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00631}00631\ \ \ \ \ \textcolor{comment}{//return\ safe\_cast<Windows::Foundation::IPropertyValue\string^>(uniqueRemoteConsoleIdentifier)-\/>GetInt32();}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00632}00632\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00633}00633\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00634}\doxymbox{\hyperlink{class_chat_integration_layer_a5ff75253a4bfcdcd28f4d166150623b9}{00634}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_a5ff75253a4bfcdcd28f4d166150623b9}{ChatIntegrationLayer::HandleChatChannelChanged}}(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00635}00635\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ \doxymbox{\hyperlink{stb__vorbis_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}}\ oldChatChannelIndex,\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00636}00636\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ \doxymbox{\hyperlink{stb__vorbis_8h_adde6aaee8457bee49c2a92621fe22b79}{uint8}}\ newChatChannelIndex,\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00637}00637\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Microsoft::Xbox::GameChat::ChatUser\string^\ chatUser\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00638}00638\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00639}00639\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00640}00640\ \ \ \ \ \textcolor{comment}{//\ We\ remember\ if\ the\ local\ user\ was\ currently\ muted\ from\ all\ channels.\ And\ when\ we\ switch\ channels,\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00641}00641\ \ \ \ \ \textcolor{comment}{//\ we\ ensure\ that\ the\ state\ persists.\ For\ remote\ users,\ title\ should\ implement\ this\ themselves}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00642}00642\ \ \ \ \ \textcolor{comment}{//\ based\ on\ title\ game\ design\ if\ they\ want\ to\ persist\ the\ muting\ state.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00643}00643\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00644}00644\ \ \ \ \ \textcolor{keywordtype}{bool}\ wasUserMuted\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00645}00645\ \ \ \ \ IUser\string^\ userBeingRemoved\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00646}00646\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00647}00647\ \ \ \ \ \textcolor{keywordflow}{if}\ (chatUser\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ chatUser-\/>IsLocal)}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00648}00648\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00649}00649\ \ \ \ \ \ \ \ \ wasUserMuted\ =\ chatUser-\/>IsMuted;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00650}00650\ \ \ \ \ \ \ \ \ userBeingRemoved\ =\ chatUser-\/>User;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00651}00651\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (userBeingRemoved\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00652}00652\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00653}00653\ \ \ \ \ \ \ \ \ \ \ \ \ RemoveUserFromChatChannel(oldChatChannelIndex,\ userBeingRemoved);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00654}00654\ \ \ \ \ \ \ \ \ \ \ \ \ AddLocalUserToChatChannel(newChatChannelIndex,\ userBeingRemoved);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00655}00655\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00656}00656\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00657}00657\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00658}00658\ \ \ \ \ \textcolor{comment}{//\ If\ the\ local\ user\ was\ muted\ earlier,\ get\ the\ latest\ chat\ users\ and\ mute\ him\ again\ on\ the\ newly\ added\ channel.}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00659}00659\ \ \ \ \ \textcolor{keywordflow}{if}\ (wasUserMuted\ \&\&\ userBeingRemoved\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00660}00660\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00661}00661\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ chatUsers\ =\ \doxymbox{\hyperlink{class_chat_integration_layer_af0825eabe2d0e65044d23b7239ac57a4}{GetChatUsers}}();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00662}00662\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (chatUsers\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00663}00663\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00664}00664\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\doxymbox{\hyperlink{_orbis_types_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}}\ chatUserIndex\ =\ 0;\ chatUserIndex\ <\ chatUsers-\/>Size;\ chatUserIndex++)}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00665}00665\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00666}00666\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Microsoft::Xbox::GameChat::ChatUser\string^\ chatUser\ =\ chatUsers-\/>GetAt(chatUserIndex);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00667}00667\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ chatUser\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ (chatUser-\/>XboxUserId\ ==\ userBeingRemoved-\/>XboxUserId)\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00668}00668\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00669}00669\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_chatManager-\/>MuteUserFromAllChannels(chatUser);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00670}00670\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00671}00671\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00672}00672\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00673}00673\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00674}00674\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00675}00675\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00676}00676\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00677}\doxymbox{\hyperlink{class_chat_integration_layer_a21bf572ac3da5d9df11fbed9b0cb860a}{00677}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_a21bf572ac3da5d9df11fbed9b0cb860a}{ChatIntegrationLayer::ChangeChatUserMuteState}}(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00678}00678\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Microsoft::Xbox::GameChat::ChatUser\string^\ chatUser\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00679}00679\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00680}00680\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00682}00682\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_chatManager\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ chatUser\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00683}00683\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00684}00684\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (chatUser-\/>IsMuted)}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00685}00685\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00686}00686\ \ \ \ \ \ \ \ \ \ \ \ \ m\_chatManager-\/>UnmuteUserFromAllChannels(chatUser);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00687}00687\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00688}00688\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00689}00689\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00690}00690\ \ \ \ \ \ \ \ \ \ \ \ \ m\_chatManager-\/>MuteUserFromAllChannels(chatUser);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00691}00691\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00692}00692\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00693}00693\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00694}00694\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00695}\doxymbox{\hyperlink{class_chat_integration_layer_a726057a2af7f821a67a7cdecb0a25713}{00695}}\ Microsoft::Xbox::GameChat::ChatUser\string^\ \doxymbox{\hyperlink{class_chat_integration_layer_a726057a2af7f821a67a7cdecb0a25713}{ChatIntegrationLayer::GetChatUserByXboxUserId}}(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00696}00696\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Platform::String\string^\ xboxUserId\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00697}00697\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00698}00698\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00699}00699\ \ \ \ \ Windows::Foundation::Collections::IVectorView<Microsoft::Xbox::GameChat::ChatUser\string^>\string^\ chatUsers\ =\ \doxymbox{\hyperlink{class_chat_integration_layer_af0825eabe2d0e65044d23b7239ac57a4}{GetChatUsers}}();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00700}00700\ \ \ \ \ \textcolor{keywordflow}{for\ each}\ (Microsoft::Xbox::GameChat::ChatUser\string^\ chatUser\ \textcolor{keywordflow}{in}\ chatUsers)}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00701}00701\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00702}00702\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (chatUser\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ (\ chatUser-\/>XboxUserId\ ==\ xboxUserId\ )\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00703}00703\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00704}00704\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ chatUser;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00705}00705\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00706}00706\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00707}00707\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00708}00708\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00709}00709\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00710}00710\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00711}00711\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00712}\doxymbox{\hyperlink{class_chat_integration_layer_acece7bd17e84af8f4c181fcbddf3d57d}{00712}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_chat_integration_layer_acece7bd17e84af8f4c181fcbddf3d57d}{ChatIntegrationLayer::CompareUniqueConsoleIdentifiers}}(\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00713}00713\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Platform::Object\string^\ uniqueRemoteConsoleIdentifier1,\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00714}00714\ \ \ \ \ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Platform::Object\string^\ uniqueRemoteConsoleIdentifier2\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00715}00715\ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00716}00716\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00717}00717\ \ \ \ \ \textcolor{keywordflow}{if}\ (uniqueRemoteConsoleIdentifier1\ ==\ \textcolor{keyword}{nullptr}\ ||\ uniqueRemoteConsoleIdentifier2\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00718}00718\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00719}00719\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00720}00720\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00721}00721\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00722}00722\ \ \ \ \ \textcolor{comment}{//\ uniqueRemoteConsoleIdentifier\ is\ a\ Platform::Object\string^\ and\ can\ be\ cast\ or\ unboxed\ to\ most\ types.\ }}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00723}00723\ \ \ \ \ \textcolor{comment}{//\ We're\ using\ XRNS\ addresses,\ which\ are\ unsigned\ ints}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00724}00724\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ address1\ =\ safe\_cast<unsigned\ int>(uniqueRemoteConsoleIdentifier1);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00725}00725\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ address2\ =\ safe\_cast<unsigned\ int>(uniqueRemoteConsoleIdentifier2);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00726}00726\ \ \ \ \ \textcolor{keywordflow}{return}\ address1\ ==\ address2;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00727}00727\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00728}00728\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00729}\doxymbox{\hyperlink{class_chat_integration_layer_a8fa3e3504cc69417cf3ad0f7359dc23d}{00729}}\ Microsoft::Xbox::GameChat::ChatPerformanceCounters\string^\ \doxymbox{\hyperlink{class_chat_integration_layer_a8fa3e3504cc69417cf3ad0f7359dc23d}{ChatIntegrationLayer::GetChatPerformanceCounters}}()}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00730}00730\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00731}00731\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_chatManager\ !=\ \textcolor{keyword}{nullptr}\ \&\&}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00732}00732\ \ \ \ \ \ \ \ \ m\_chatManager-\/>ChatSettings\ !=\ \textcolor{keyword}{nullptr}\ \&\&}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00733}00733\ \ \ \ \ \ \ \ \ m\_chatManager-\/>ChatSettings-\/>PerformanceCountersEnabled\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00734}00734\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00735}00735\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_chatManager-\/>ChatPerformanceCounters;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00736}00736\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00737}00737\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00738}00738\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00739}00739\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00740}00740\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00741}\doxymbox{\hyperlink{class_chat_integration_layer_a6993ca7222a29a505f699d539a3a2c1f}{00741}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_a6993ca7222a29a505f699d539a3a2c1f}{ChatIntegrationLayer::OnControllerPairingChanged}}(\ Windows::Xbox::Input::ControllerPairingChangedEventArgs\string^\ args\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00742}00742\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00743}00743\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00744}00744\ \ \ \ \ \textcolor{keyword}{auto}\ controller\ =\ args-\/>Controller;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00745}00745\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ controller\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00746}00746\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00747}00747\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ controller-\/>Type\ ==\ L\textcolor{stringliteral}{"{}Windows.Xbox.Input.Gamepad"{}}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00748}00748\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00749}00749\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Either\ add\ the\ user\ or\ sign\ one\ in}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00750}00750\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_user}{User}}\string^\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}\ =\ args-\/>User;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00751}00751\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00752}00752\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00753}00753\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\_sampleInstance-\/>GetLoggingUI()-\/>LogCommentToUI(\textcolor{stringliteral}{"{}OnControllerPairingChanged:\ "{}}\ +\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}-\/>DisplayInfo-\/>Gamertag);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00754}00754\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ AddLocalUserToChatChannel(}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00755}00755\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\_sampleInstance-\/>GetUISelectionChatChannelIndex(),}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00756}00756\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00757}00757\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00758}00758\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00759}00759\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00760}00760\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00761}00761\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00762}00762\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00763}00763\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00764}\doxymbox{\hyperlink{class_chat_integration_layer_af30f384c8bafdbe10867b9664909176c}{00764}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_chat_integration_layer_af30f384c8bafdbe10867b9664909176c}{ChatIntegrationLayer::ToggleRenderTargetVolume}}()}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00765}00765\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00766}00766\ \ \ \ \ \textcolor{comment}{//\ Simple\ toggle\ logic\ to\ just\ show\ usage\ of\ LocalRenderTargetVolume\ property}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00767}00767\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ makeRenderTargetVolumeQuiet\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00768}00768\ \ \ \ \ makeRenderTargetVolumeQuiet\ =\ !makeRenderTargetVolumeQuiet;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00769}00769\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00770}00770\ \ \ \ \ \textcolor{keyword}{auto}\ chatUsers\ =\ \doxymbox{\hyperlink{class_chat_integration_layer_af0825eabe2d0e65044d23b7239ac57a4}{GetChatUsers}}();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00771}00771\ \ \ \ \ \textcolor{keywordflow}{if}\ (chatUsers\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00772}00772\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00773}00773\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\doxymbox{\hyperlink{_orbis_types_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}}\ chatUserIndex\ =\ 0;\ chatUserIndex\ <\ chatUsers-\/>Size;\ chatUserIndex++)}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00774}00774\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00775}00775\ \ \ \ \ \ \ \ \ \ \ \ \ Microsoft::Xbox::GameChat::ChatUser\string^\ chatUser\ =\ chatUsers-\/>GetAt(chatUserIndex);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00776}00776\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ chatUser\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ chatUser-\/>IsLocal\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00777}00777\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00778}00778\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chatUser-\/>LocalRenderTargetVolume\ =\ (\ makeRenderTargetVolumeQuiet\ )\ ?\ 0.1f\ :\ 1.0f;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00779}00779\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00780}00780\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00781}00781\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00782}00782\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00783}00783\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00784}00784\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00785}00785\ \textcolor{keywordtype}{void}\ ChatIntegrationLayer::GetBufferBytes(\ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Windows::Storage::Streams::IBuffer\string^\ buffer,\ \doxymbox{\hyperlink{sal_8h_abb4c3c1135aab6c47cff22e7c16efb74}{\_\_out}}\ \textcolor{keywordtype}{byte}**\ ppOut\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00786}00786\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00787}00787\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ ppOut\ ==\ \textcolor{keyword}{nullptr}\ ||\ buffer\ ==\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00788}00788\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00789}00789\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ ref\ \textcolor{keyword}{new}\ Platform::InvalidArgumentException();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00790}00790\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00791}00791\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00792}00792\ \ \ \ \ *ppOut\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00793}00793\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00794}00794\ \ \ \ \ Microsoft::WRL::ComPtr<IInspectable>\ srcBufferInspectable(\textcolor{keyword}{reinterpret\_cast<}IInspectable*\textcolor{keyword}{>}(\ buffer\ ));}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00795}00795\ \ \ \ \ Microsoft::WRL::ComPtr<Windows::Storage::Streams::IBufferByteAccess>\ srcBufferByteAccess;}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00796}00796\ \ \ \ \ srcBufferInspectable.As(\&srcBufferByteAccess);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00797}00797\ \ \ \ \ srcBufferByteAccess-\/>Buffer(ppOut);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00798}00798\ \}}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00799}00799\ }
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00800}00800\ Windows::Storage::Streams::IBuffer\string^\ ChatIntegrationLayer::ArrayToBuffer(\ \doxymbox{\hyperlink{sal_8h_a3f6b8655e1aa9dfc15a9029f0343009e}{\_\_in}}\ Platform::Array<byte>\string^\ array\ )}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00801}00801\ \{}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00802}00802\ \ \ \ \ Windows::Storage::Streams::DataWriter\string^\ writer\ =\ ref\ \textcolor{keyword}{new}\ Windows::Storage::Streams::DataWriter();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00803}00803\ \ \ \ \ writer-\/>WriteBytes(array);}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00804}00804\ \ \ \ \ \textcolor{keywordflow}{return}\ writer-\/>DetachBuffer();}
+\DoxyCodeLine{\Hypertarget{_chat_integration_layer_8cpp_source_l00805}00805\ \}}
+
+\end{DoxyCode}

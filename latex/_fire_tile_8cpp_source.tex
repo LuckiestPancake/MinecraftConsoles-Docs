@@ -1,0 +1,420 @@
+\doxysection{Fire\+Tile.\+cpp}
+\hypertarget{_fire_tile_8cpp_source}{}\label{_fire_tile_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/FireTile.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/FireTile.cpp}}
+\doxymbox{\hyperlink{_fire_tile_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8h}{net.minecraft.world.level.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8dimension_8h}{net.minecraft.world.level.dimension.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8h}{net.minecraft.world.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8tile_8h}{net.minecraft.world.level.tile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_fire_tile_8h}{FireTile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_sound_types_8h}{SoundTypes.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_server_8h}{..\(\backslash\)Minecraft.Client\(\backslash\)MinecraftServer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_player_list_8h}{..\(\backslash\)Minecraft.Client\(\backslash\)PlayerList.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00011}00011\ \textcolor{comment}{//\ AP\ -\/\ added\ for\ Vita\ to\ set\ Alpha\ Cut\ out}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_int_buffer_8h}{IntBuffer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_tesselator_8h}{..\(\backslash\)Minecraft.Client\(\backslash\)Tesselator.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00016}00016\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_fire_tile_a5edc35c2ac206761b9bb0fd37c2723b8}{FireTile::TEXTURE\_FIRST}}\ =\ L\textcolor{stringliteral}{"{}fire\_0"{}};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00017}00017\ \textcolor{keyword}{const}\ wstring\ \doxymbox{\hyperlink{class_fire_tile_a1daed1bb3495bd0dc382c9c3e19014de}{FireTile::TEXTURE\_SECOND}}\ =\ L\textcolor{stringliteral}{"{}fire\_1"{}};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00019}\doxymbox{\hyperlink{class_fire_tile_ad496b71923a9bf9d2b3085204cc6b711}{00019}}\ \doxymbox{\hyperlink{class_fire_tile_ad496b71923a9bf9d2b3085204cc6b711}{FireTile::FireTile}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id})\ :\ \doxymbox{\hyperlink{class_fire_tile_a8a6c6f6de547e6f39d3212d1f4d49a65}{Tile}}(\doxymbox{\hyperlink{class_tile_a32d00999ec6ae098a2db62bf4c2c5e7c}{id}},\ \doxymbox{\hyperlink{class_material}{Material}}::\doxymbox{\hyperlink{class_tile_aa16fe93c94ae369a147157d7bc9793d3}{fire}},\doxymbox{\hyperlink{class_fire_tile_a97ce3f0dabc722091e7e0b1afab22a9a}{isSolidRender}}())}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00020}00020\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00021}00021\ \ \ \ \ flameOdds\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{int}[256];}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00022}00022\ \ \ \ \ memset(\ flameOdds,0,\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})*256);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00024}00024\ \ \ \ \ burnOdds\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{int}[256];}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00025}00025\ \ \ \ \ memset(\ burnOdds,0,\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})*256);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00027}00027\ \ \ \ \ icons\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00029}00029\ \ \ \ \ \doxymbox{\hyperlink{class_tile_a56464d8f3563b94b1d37dd59b804ec4a}{setTicking}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00030}00030\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00032}\doxymbox{\hyperlink{class_fire_tile_a7811b069eefd98ba18afef82a0f56513}{00032}}\ \doxymbox{\hyperlink{class_fire_tile_a7811b069eefd98ba18afef82a0f56513}{FireTile::\string~FireTile}}()}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00033}00033\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00034}00034\ \ \ \ \ \textcolor{keyword}{delete}\ []\ flameOdds;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00035}00035\ \ \ \ \ \textcolor{keyword}{delete}\ []\ burnOdds;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00036}00036\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00038}\doxymbox{\hyperlink{class_fire_tile_a2d6031ac9be13e594773b9f4b799be6a}{00038}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_fire_tile_a2d6031ac9be13e594773b9f4b799be6a}{FireTile::init}}()}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00039}00039\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00040}00040\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_adca4e447b2e6386793974e3a0beb1b93}{Tile::wood\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a35c7ae27b24bdcdd7f8ccb5f6f2dc3c1}{FLAME\_HARD}},\ \doxymbox{\hyperlink{class_fire_tile_a8ece308c5808f5242e2166df260dcc0e}{BURN\_MEDIUM}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00041}00041\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_a5c0d988ebb4c075834d2575f73e5e164}{Tile::woodSlab\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a35c7ae27b24bdcdd7f8ccb5f6f2dc3c1}{FLAME\_HARD}},\ \doxymbox{\hyperlink{class_fire_tile_a8ece308c5808f5242e2166df260dcc0e}{BURN\_MEDIUM}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00042}00042\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_aad7168226a132ba6edd537cc97ef22e0}{Tile::woodSlabHalf\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a35c7ae27b24bdcdd7f8ccb5f6f2dc3c1}{FLAME\_HARD}},\ \doxymbox{\hyperlink{class_fire_tile_a8ece308c5808f5242e2166df260dcc0e}{BURN\_MEDIUM}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00043}00043\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_a390d734a84da249b89003b9e970f926f}{Tile::fence\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a35c7ae27b24bdcdd7f8ccb5f6f2dc3c1}{FLAME\_HARD}},\ \doxymbox{\hyperlink{class_fire_tile_a8ece308c5808f5242e2166df260dcc0e}{BURN\_MEDIUM}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00044}00044\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_ae4e015c8c354d5681014760f01046b50}{Tile::stairs\_wood\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a35c7ae27b24bdcdd7f8ccb5f6f2dc3c1}{FLAME\_HARD}},\ \doxymbox{\hyperlink{class_fire_tile_a8ece308c5808f5242e2166df260dcc0e}{BURN\_MEDIUM}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00045}00045\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_ae738f90a978fda60b70f271eaa0f05b4}{Tile::stairs\_birchwood\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a35c7ae27b24bdcdd7f8ccb5f6f2dc3c1}{FLAME\_HARD}},\ \doxymbox{\hyperlink{class_fire_tile_a8ece308c5808f5242e2166df260dcc0e}{BURN\_MEDIUM}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00046}00046\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_aba1956637b0243568161c2036cd7d01d}{Tile::stairs\_sprucewood\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a35c7ae27b24bdcdd7f8ccb5f6f2dc3c1}{FLAME\_HARD}},\ \doxymbox{\hyperlink{class_fire_tile_a8ece308c5808f5242e2166df260dcc0e}{BURN\_MEDIUM}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00047}00047\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_a8e99e8258ca1ba10cbed21e3c9467dbb}{Tile::stairs\_junglewood\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a35c7ae27b24bdcdd7f8ccb5f6f2dc3c1}{FLAME\_HARD}},\ \doxymbox{\hyperlink{class_fire_tile_a8ece308c5808f5242e2166df260dcc0e}{BURN\_MEDIUM}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00048}00048\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_a641499d03ecf41e5eb3e16475e93abc8}{Tile::treeTrunk\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a35c7ae27b24bdcdd7f8ccb5f6f2dc3c1}{FLAME\_HARD}},\ \doxymbox{\hyperlink{class_fire_tile_a929a37b08145d4fb958d3ec2abc361ec}{BURN\_HARD}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00049}00049\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_a6ecbe96a181f693a4d285e145d300eae}{Tile::leaves\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a63fb365419a6c5ce5d8e041ea07dd60e}{FLAME\_EASY}},\ \doxymbox{\hyperlink{class_fire_tile_a7cc29a1ab4329d12f92e4d63585dcac6}{BURN\_EASY}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00050}00050\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_a4f91bad6f283fede873de297c570a365}{Tile::bookshelf\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a63fb365419a6c5ce5d8e041ea07dd60e}{FLAME\_EASY}},\ \doxymbox{\hyperlink{class_fire_tile_a8ece308c5808f5242e2166df260dcc0e}{BURN\_MEDIUM}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00051}00051\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_afd9365e5e18fe0633854bbb66d425db4}{Tile::tnt\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a09e8282240a9dd68785784124a586d6d}{FLAME\_MEDIUM}},\ \doxymbox{\hyperlink{class_fire_tile_a003849b3121c74f6301d745f1502c3df}{BURN\_INSTANT}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00052}00052\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_a0eddad4ea2588b12c0d7da55dca7cd62}{Tile::tallgrass\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a2ab7ec04d76435b279a4c7c2987fafcd}{FLAME\_INSTANT}},\ \doxymbox{\hyperlink{class_fire_tile_a003849b3121c74f6301d745f1502c3df}{BURN\_INSTANT}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00053}00053\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_a555c12411ab257649e7423f4e6227ad4}{Tile::wool\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a63fb365419a6c5ce5d8e041ea07dd60e}{FLAME\_EASY}},\ \doxymbox{\hyperlink{class_fire_tile_a7cc29a1ab4329d12f92e4d63585dcac6}{BURN\_EASY}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00054}00054\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_ac3604bb5be9fff9897f5c0bea7e9979c}{Tile::vine\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a09e8282240a9dd68785784124a586d6d}{FLAME\_MEDIUM}},\ \doxymbox{\hyperlink{class_fire_tile_a003849b3121c74f6301d745f1502c3df}{BURN\_INSTANT}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00055}00055\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_ad57f4103f68d32d37e46b1255a33e99c}{Tile::coalBlock\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a35c7ae27b24bdcdd7f8ccb5f6f2dc3c1}{FLAME\_HARD}},\ \doxymbox{\hyperlink{class_fire_tile_a929a37b08145d4fb958d3ec2abc361ec}{BURN\_HARD}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00056}00056\ \ \ \ \ setFlammable(\doxymbox{\hyperlink{class_tile_adbb3f40ce98060260c147de28657a2cf}{Tile::hayBlock\_Id}},\ \doxymbox{\hyperlink{class_fire_tile_a2ab7ec04d76435b279a4c7c2987fafcd}{FLAME\_INSTANT}},\ \doxymbox{\hyperlink{class_fire_tile_a8ece308c5808f5242e2166df260dcc0e}{BURN\_MEDIUM}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00057}00057\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00059}00059\ \textcolor{keywordtype}{void}\ FireTile::setFlammable(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \textcolor{keywordtype}{int}\ flame,\ \textcolor{keywordtype}{int}\ burn)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00060}00060\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00061}00061\ \ \ \ \ flameOdds[\doxymbox{\hyperlink{class_tile_a32d00999ec6ae098a2db62bf4c2c5e7c}{id}}]\ =\ flame;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00062}00062\ \ \ \ \ burnOdds[\doxymbox{\hyperlink{class_tile_a32d00999ec6ae098a2db62bf4c2c5e7c}{id}}]\ =\ burn;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00063}00063\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00065}\doxymbox{\hyperlink{class_fire_tile_ace6ca3145c721184f8f0fc08f0328077}{00065}}\ \doxymbox{\hyperlink{class_a_a_b_b}{AABB}}\ *\doxymbox{\hyperlink{class_fire_tile_ace6ca3145c721184f8f0fc08f0328077}{FireTile::getAABB}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00066}00066\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00067}00067\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00068}00068\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00070}\doxymbox{\hyperlink{class_fire_tile_adc262fcfc8512a60beb3a8f0af49589b}{00070}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_fire_tile_adc262fcfc8512a60beb3a8f0af49589b}{FireTile::blocksLight}}()}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00071}00071\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00072}00072\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00073}00073\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00075}\doxymbox{\hyperlink{class_fire_tile_a97ce3f0dabc722091e7e0b1afab22a9a}{00075}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_fire_tile_a97ce3f0dabc722091e7e0b1afab22a9a}{FireTile::isSolidRender}}(\textcolor{keywordtype}{bool}\ isServerLevel)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00076}00076\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00078}00078\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00080}\doxymbox{\hyperlink{class_fire_tile_ad2be4d376ca81006530776d16077a97c}{00080}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_fire_tile_ad2be4d376ca81006530776d16077a97c}{FireTile::isCubeShaped}}()}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00081}00081\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00082}00082\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00083}00083\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00085}\doxymbox{\hyperlink{class_fire_tile_a5fd5f26157a6c8883ea721b7e7db2e92}{00085}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_fire_tile_a5fd5f26157a6c8883ea721b7e7db2e92}{FireTile::getRenderShape}}()}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00086}00086\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00087}00087\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_tile_a4532291e7cdf591199d3dc4c835610d4}{Tile::SHAPE\_FIRE}};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00088}00088\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00090}\doxymbox{\hyperlink{class_fire_tile_a355c92ecbfd03881e39e76d50dc2727c}{00090}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_fire_tile_a355c92ecbfd03881e39e76d50dc2727c}{FireTile::getResourceCount}}(\doxymbox{\hyperlink{class_random}{Random}}\ *random)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00091}00091\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00092}00092\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00093}00093\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00095}\doxymbox{\hyperlink{class_fire_tile_a71f33e21147c32dd2bbd6cd2076db35d}{00095}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_fire_tile_a71f33e21147c32dd2bbd6cd2076db35d}{FireTile::getTickDelay}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00096}00096\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00097}00097\ \ \ \ \ \textcolor{keywordflow}{return}\ 30;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00098}00098\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00100}\doxymbox{\hyperlink{class_fire_tile_a251cc65da76205162e8cb73a7a7e6365}{00100}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_fire_tile_a251cc65da76205162e8cb73a7a7e6365}{FireTile::tick}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \doxymbox{\hyperlink{class_random}{Random}}\ *random)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00101}00101\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00102}00102\ \ \ \ \ \textcolor{keywordflow}{if}\ (!level-\/>\doxymbox{\hyperlink{class_level_ad6a335aacb42b0930d0fec0049748ba6}{getGameRules}}()-\/>\doxymbox{\hyperlink{class_game_rules_a55b1b075f7ed6bac962f1db0bc04ad25}{getBoolean}}(\doxymbox{\hyperlink{class_game_rules_ab393c3da3d9359cdf6ad4ca10c0bf786}{GameRules::RULE\_DOFIRETICK}}))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00103}00103\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00105}00105\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00107}00107\ \ \ \ \ \textcolor{comment}{//\ 4J\ added\ -\/\ we\ don't\ want\ fire\ to\ do\ anything\ that\ might\ create\ new\ fire,\ or\ destroy\ this\ fire,\ if\ we\ aren't\ actually\ tracking\ (for\ network)\ the\ chunk\ this\ is\ in\ in\ the\ player}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00108}00108\ \ \ \ \ \textcolor{comment}{//\ chunk\ map.\ If\ we\ did\ change\ something\ in\ that\ case,\ then\ the\ change\ wouldn't\ get\ sent\ to\ any\ player\ that\ had\ already\ received\ that\ full\ chunk,\ and\ so\ we'd\ just\ become\ desynchronised.}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00109}00109\ \ \ \ \ \textcolor{comment}{//\ Seems\ safest\ just\ to\ do\ an\ addToTickNextTick\ here\ instead\ with\ a\ decent\ delay,\ to\ make\ sure\ that\ we\ will\ get\ ticked\ again\ in\ the\ future,\ when\ we\ might\ again\ be\ in\ a\ chunk}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00110}00110\ \ \ \ \ \textcolor{comment}{//\ that\ is\ being\ tracked.}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00111}00111\ \ \ \ \ \textcolor{keywordflow}{if}(\ !level-\/>\doxymbox{\hyperlink{class_level_a409c712a59fc5dd08bef3f50944feedc}{isClientSide}}\ )\ \ \ \ \ \ \textcolor{comment}{//\ Note\ -\/\ should\ only\ be\ being\ ticked\ on\ the\ server}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00112}00112\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !\doxymbox{\hyperlink{class_minecraft_server_ae8aa61b7338ea3b5616d347b47e29d53}{MinecraftServer::getInstance}}()-\/>getPlayers()-\/>isTrackingTile(x,\ y,\ z,\ level-\/>\doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}-\/>\doxymbox{\hyperlink{class_dimension_ab2a8a3e455fe5b4bcc3bdd93920352b0}{id}})\ )}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_adbcb5d95e6dddfe89d74f3bacb9d9b8c}{addToTickNextTick}}(x,\ y,\ z,\ \textcolor{keywordtype}{id},\ \doxymbox{\hyperlink{class_fire_tile_a71f33e21147c32dd2bbd6cd2076db35d}{getTickDelay}}(level)\ *\ 5);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00118}00118\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00121}00121\ \ \ \ \ \textcolor{keywordtype}{bool}\ infiniBurn\ =\ level-\/>\doxymbox{\hyperlink{class_level_af6c291e6d410b3b40ae101dbf1f41fac}{getTile}}(x,\ y\ -\/\ 1,\ z)\ ==\ \doxymbox{\hyperlink{class_tile_a8450b5eee468307deae945936c3d8af0}{Tile::netherRack\_Id}};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00122}00122\ \ \ \ \ \textcolor{keywordflow}{if}\ (level-\/>\doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}-\/>\doxymbox{\hyperlink{class_dimension_ab2a8a3e455fe5b4bcc3bdd93920352b0}{id}}\ ==\ 1)\ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ was\ ==\ instanceof\ TheEndDimension}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00123}00123\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (level-\/>\doxymbox{\hyperlink{class_level_af6c291e6d410b3b40ae101dbf1f41fac}{getTile}}(x,\ y\ -\/\ 1,\ z)\ ==\ \doxymbox{\hyperlink{class_tile_a0c8ab9592ed11b534125cae3396fad43}{Tile::unbreakable\_Id}})\ infiniBurn\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00125}00125\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00127}00127\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_fire_tile_aa557dd2a19a078746325565a6ce5ca2e}{mayPlace}}(level,\ x,\ y,\ z))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00128}00128\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a0f55b96d60f7a3e6a44e4e1754f734b4}{removeTile}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00130}00130\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00132}00132\ \ \ \ \ \textcolor{keywordflow}{if}\ (!infiniBurn\ \&\&\ level-\/>\doxymbox{\hyperlink{class_level_a8960f24bae4c196561fcc977e1b7753f}{isRaining}}())}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00133}00133\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (level-\/>\doxymbox{\hyperlink{class_level_ad009d2cdc24fd872a88f2d4d92caf75b}{isRainingAt}}(x,\ y,\ z)\ ||\ level-\/>\doxymbox{\hyperlink{class_level_ad009d2cdc24fd872a88f2d4d92caf75b}{isRainingAt}}(x\ -\/\ 1,\ y,\ z)\ ||\ level-\/>\doxymbox{\hyperlink{class_level_ad009d2cdc24fd872a88f2d4d92caf75b}{isRainingAt}}(x\ +\ 1,\ y,\ z)\ ||\ level-\/>\doxymbox{\hyperlink{class_level_ad009d2cdc24fd872a88f2d4d92caf75b}{isRainingAt}}(x,\ y,\ z\ -\/\ 1)\ ||\ level-\/>\doxymbox{\hyperlink{class_level_ad009d2cdc24fd872a88f2d4d92caf75b}{isRainingAt}}(x,\ y,\ z\ +\ 1))\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a0f55b96d60f7a3e6a44e4e1754f734b4}{removeTile}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00139}00139\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00140}00140\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00141}00141\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}}\ =\ level-\/>\doxymbox{\hyperlink{class_level_af9e4edf3d6817cf582e4bec75232445c}{getData}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00142}00142\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}}\ <\ 15)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00143}00143\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a044de16bc9197a45da77406d3d10fc2d}{setData}}(x,\ y,\ z,\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}}\ +\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(3)\ /\ 2,\ \doxymbox{\hyperlink{class_tile_aa2c8cf46c169f7f062d8d7ad8c4be43d}{Tile::UPDATE\_NONE}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00145}00145\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00146}00146\ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_adbcb5d95e6dddfe89d74f3bacb9d9b8c}{addToTickNextTick}}(x,\ y,\ z,\ \textcolor{keywordtype}{id},\ \doxymbox{\hyperlink{class_fire_tile_a71f33e21147c32dd2bbd6cd2076db35d}{getTickDelay}}(level)\ +\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(10));}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00148}00148\ \ \ \ \ \textcolor{keywordflow}{if}\ (!infiniBurn\ \&\&\ !isValidFireLocation(level,\ x,\ y,\ z))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00149}00149\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!level-\/>\doxymbox{\hyperlink{class_level_abbf18478c4b79d72a87abd635afd553f}{isTopSolidBlocking}}(x,\ y\ -\/\ 1,\ z)\ ||\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}}\ >\ 3)\ level-\/>\doxymbox{\hyperlink{class_level_a0f55b96d60f7a3e6a44e4e1754f734b4}{removeTile}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00152}00152\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00153}00153\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00154}00154\ \ \ \ \ \textcolor{keywordflow}{if}\ (!infiniBurn\ \&\&\ !\doxymbox{\hyperlink{class_fire_tile_aece19606fa7e470fa794a6a4e8ec8bc3}{canBurn}}(level,\ x,\ y\ -\/\ 1,\ z))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00155}00155\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}}\ ==\ 15\ \&\&\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(4)\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a0f55b96d60f7a3e6a44e4e1754f734b4}{removeTile}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00161}00161\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00163}00163\ \ \ \ \ \textcolor{keywordtype}{bool}\ isHumid\ =\ level-\/>\doxymbox{\hyperlink{class_level_a83ec319abdd8403b34b74f2f05a5273a}{isHumidAt}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00164}00164\ \ \ \ \ \textcolor{keywordtype}{int}\ extra\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00165}00165\ \ \ \ \ \textcolor{keywordflow}{if}\ (isHumid)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00166}00166\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ extra\ =\ -\/50;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00168}00168\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00169}00169\ \ \ \ \ checkBurnOut(level,\ x\ +\ 1,\ y,\ z,\ 300\ +\ extra,\ random,\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00170}00170\ \ \ \ \ checkBurnOut(level,\ x\ -\/\ 1,\ y,\ z,\ 300\ +\ extra,\ random,\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00171}00171\ \ \ \ \ checkBurnOut(level,\ x,\ y\ -\/\ 1,\ z,\ 250\ +\ extra,\ random,\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00172}00172\ \ \ \ \ checkBurnOut(level,\ x,\ y\ +\ 1,\ z,\ 250\ +\ extra,\ random,\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00173}00173\ \ \ \ \ checkBurnOut(level,\ x,\ y,\ z\ -\/\ 1,\ 300\ +\ extra,\ random,\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00174}00174\ \ \ \ \ checkBurnOut(level,\ x,\ y,\ z\ +\ 1,\ 300\ +\ extra,\ random,\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00175}00175\ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetGameHostOption(\doxymbox{\hyperlink{_app__enums_8h_a3039f4892c1f252d62bfbc8aeab1fb7aaad2e4f995c84eea9a6521d85bcb27024}{eGameHostOption\_FireSpreads}})\ )}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00176}00176\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ xx\ =\ x\ -\/\ 1;\ xx\ <=\ x\ +\ 1;\ xx++)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ zz\ =\ z\ -\/\ 1;\ zz\ <=\ z\ +\ 1;\ zz++)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ yy\ =\ y\ -\/\ 1;\ yy\ <=\ y\ +\ 4;\ yy++)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (xx\ ==\ x\ \&\&\ yy\ ==\ y\ \&\&\ zz\ ==\ z)\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00184}00184\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rate\ =\ 100;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (yy\ >\ y\ +\ 1)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rate\ +=\ ((yy\ -\/\ (y\ +\ 1))\ *\ 100);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00190}00190\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ fodds\ =\ getFireOdds(level,\ xx,\ yy,\ zz);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (fodds\ >\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ odds\ =\ (fodds\ +\ 40\ +\ (level-\/>\doxymbox{\hyperlink{class_level_a8a7f4ffd54fb0becda51b525c1ea4035}{difficulty}}\ *\ 7))\ /\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}}\ +\ 30);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isHumid)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ odds\ /=\ 2;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (odds\ >\ 0\ \&\&\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(rate)\ <=\ odds)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!(level-\/>\doxymbox{\hyperlink{class_level_a8960f24bae4c196561fcc977e1b7753f}{isRaining}}()\ \&\&\ level-\/>\doxymbox{\hyperlink{class_level_ad009d2cdc24fd872a88f2d4d92caf75b}{isRainingAt}}(xx,\ yy,\ zz)\ ||\ level-\/>\doxymbox{\hyperlink{class_level_ad009d2cdc24fd872a88f2d4d92caf75b}{isRainingAt}}(xx\ -\/\ 1,\ yy,\ z)\ ||\ level-\/>\doxymbox{\hyperlink{class_level_ad009d2cdc24fd872a88f2d4d92caf75b}{isRainingAt}}(xx\ +\ 1,\ yy,\ zz)\ ||\ level-\/>\doxymbox{\hyperlink{class_level_ad009d2cdc24fd872a88f2d4d92caf75b}{isRainingAt}}(xx,\ yy,\ zz\ -\/\ 1)\ ||\ level-\/>\doxymbox{\hyperlink{class_level_ad009d2cdc24fd872a88f2d4d92caf75b}{isRainingAt}}(xx,\ yy,\ zz\ +\ 1)))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tAge\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}}\ +\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(5)\ /\ 4;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tAge\ >\ 15)\ tAge\ =\ 15;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a50b42e045b5d452879fe929138c735aa}{setTileAndData}}(xx,\ yy,\ zz,\ \textcolor{keywordtype}{id},\ tAge,\ \doxymbox{\hyperlink{class_tile_af81188801a54262811196c375aeaaa21}{Tile::UPDATE\_ALL}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00211}00211\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00212}00212\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00214}\doxymbox{\hyperlink{class_fire_tile_aa8002dba8482e9e3044e56ee78340678}{00214}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_fire_tile_aa8002dba8482e9e3044e56ee78340678}{FireTile::canInstantlyTick}}()}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00215}00215\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00216}00216\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00217}00217\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00218}00218\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00219}00219\ \textcolor{keywordtype}{void}\ FireTile::checkBurnOut(\doxymbox{\hyperlink{class_level}{Level}}\ *level,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ chance,\ \doxymbox{\hyperlink{class_random}{Random}}\ *random,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}})}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00220}00220\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00221}00221\ \ \ \ \ \textcolor{keywordtype}{int}\ odds\ =\ burnOdds[level-\/>\doxymbox{\hyperlink{class_level_af6c291e6d410b3b40ae101dbf1f41fac}{getTile}}(x,\ y,\ z)];}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00222}00222\ \ \ \ \ \textcolor{keywordflow}{if}\ (random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(chance)\ <\ odds)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00223}00223\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ wasTnt\ =\ level-\/>\doxymbox{\hyperlink{class_level_af6c291e6d410b3b40ae101dbf1f41fac}{getTile}}(x,\ y,\ z)\ ==\ \doxymbox{\hyperlink{class_tile_afd9365e5e18fe0633854bbb66d425db4}{Tile::tnt\_Id}};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}}\ +\ 10)\ <\ 5\ \&\&\ !level-\/>\doxymbox{\hyperlink{class_level_ad009d2cdc24fd872a88f2d4d92caf75b}{isRainingAt}}(x,\ y,\ z)\ \&\&\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetGameHostOption(\doxymbox{\hyperlink{_app__enums_8h_a3039f4892c1f252d62bfbc8aeab1fb7aaad2e4f995c84eea9a6521d85bcb27024}{eGameHostOption\_FireSpreads}}))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ tAge\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a77d3be7085b3b9cbd5e473a69faaf15e}{age}}\ +\ random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(5)\ /\ 4;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tAge\ >\ 15)\ tAge\ =\ 15;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a50b42e045b5d452879fe929138c735aa}{setTileAndData}}(x,\ y,\ z,\ \textcolor{keywordtype}{id},\ tAge,\ \doxymbox{\hyperlink{class_tile_af81188801a54262811196c375aeaaa21}{Tile::UPDATE\_ALL}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a0f55b96d60f7a3e6a44e4e1754f734b4}{removeTile}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (wasTnt)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tile_ad127d4b90943dff7b6bc4a995c68998a}{Tile::tnt}}-\/>\doxymbox{\hyperlink{class_tile_af95852a68d09d1c9c84a615523315dcd}{destroy}}(level,\ x,\ y,\ z,\ \doxymbox{\hyperlink{class_tnt_tile_a6e5b4d7faa642cf5fc88ffa26ac8dfd9}{TntTile::EXPLODE\_BIT}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00237}00237\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00238}00238\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00239}00239\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00241}00241\ \textcolor{keywordtype}{bool}\ FireTile::isValidFireLocation(\doxymbox{\hyperlink{class_level}{Level}}\ *level,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00242}00242\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00243}00243\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_fire_tile_aece19606fa7e470fa794a6a4e8ec8bc3}{canBurn}}(level,\ x\ +\ 1,\ y,\ z))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00244}00244\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_fire_tile_aece19606fa7e470fa794a6a4e8ec8bc3}{canBurn}}(level,\ x\ -\/\ 1,\ y,\ z))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00245}00245\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_fire_tile_aece19606fa7e470fa794a6a4e8ec8bc3}{canBurn}}(level,\ x,\ y\ -\/\ 1,\ z))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00246}00246\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_fire_tile_aece19606fa7e470fa794a6a4e8ec8bc3}{canBurn}}(level,\ x,\ y\ +\ 1,\ z))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00247}00247\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_fire_tile_aece19606fa7e470fa794a6a4e8ec8bc3}{canBurn}}(level,\ x,\ y,\ z\ -\/\ 1))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00248}00248\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_fire_tile_aece19606fa7e470fa794a6a4e8ec8bc3}{canBurn}}(level,\ x,\ y,\ z\ +\ 1))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00249}00249\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00250}00250\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00251}00251\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00252}00252\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00253}00253\ \textcolor{keywordtype}{int}\ FireTile::getFireOdds(\doxymbox{\hyperlink{class_level}{Level}}\ *level,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00254}00254\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00255}00255\ \ \ \ \ \textcolor{keywordtype}{int}\ odds\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00256}00256\ \ \ \ \ \textcolor{keywordflow}{if}\ (!level-\/>\doxymbox{\hyperlink{class_level_a43f416abe5f2b4282ea22db7b959e0f3}{isEmptyTile}}(x,\ y,\ z))\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00258}00258\ \ \ \ \ odds\ =\ \doxymbox{\hyperlink{class_fire_tile_a7b96dfed484b79695141327c7ca21f2c}{getFlammability}}(level,\ x\ +\ 1,\ y,\ z,\ odds);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00259}00259\ \ \ \ \ odds\ =\ \doxymbox{\hyperlink{class_fire_tile_a7b96dfed484b79695141327c7ca21f2c}{getFlammability}}(level,\ x\ -\/\ 1,\ y,\ z,\ odds);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00260}00260\ \ \ \ \ odds\ =\ \doxymbox{\hyperlink{class_fire_tile_a7b96dfed484b79695141327c7ca21f2c}{getFlammability}}(level,\ x,\ y\ -\/\ 1,\ z,\ odds);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00261}00261\ \ \ \ \ odds\ =\ \doxymbox{\hyperlink{class_fire_tile_a7b96dfed484b79695141327c7ca21f2c}{getFlammability}}(level,\ x,\ y\ +\ 1,\ z,\ odds);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00262}00262\ \ \ \ \ odds\ =\ \doxymbox{\hyperlink{class_fire_tile_a7b96dfed484b79695141327c7ca21f2c}{getFlammability}}(level,\ x,\ y,\ z\ -\/\ 1,\ odds);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00263}00263\ \ \ \ \ odds\ =\ \doxymbox{\hyperlink{class_fire_tile_a7b96dfed484b79695141327c7ca21f2c}{getFlammability}}(level,\ x,\ y,\ z\ +\ 1,\ odds);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00264}00264\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00265}00265\ \ \ \ \ \textcolor{keywordflow}{return}\ odds;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00266}00266\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00267}00267\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00268}\doxymbox{\hyperlink{class_fire_tile_acce913eb6fc8b33afd253692ae5bfe93}{00268}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_fire_tile_acce913eb6fc8b33afd253692ae5bfe93}{FireTile::mayPick}}()}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00269}00269\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00270}00270\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00271}00271\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00273}\doxymbox{\hyperlink{class_fire_tile_aece19606fa7e470fa794a6a4e8ec8bc3}{00273}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_fire_tile_aece19606fa7e470fa794a6a4e8ec8bc3}{FireTile::canBurn}}(\doxymbox{\hyperlink{class_level_source}{LevelSource}}\ *level,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00274}00274\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00275}00275\ \ \ \ \ \textcolor{keywordflow}{return}\ flameOdds[level-\/>\doxymbox{\hyperlink{class_level_source_abbd5c2d53db7748b7484ffaf10bdc48d}{getTile}}(x,\ y,\ z)]\ >\ 0;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00276}00276\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00278}\doxymbox{\hyperlink{class_fire_tile_a7b96dfed484b79695141327c7ca21f2c}{00278}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_fire_tile_a7b96dfed484b79695141327c7ca21f2c}{FireTile::getFlammability}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ odds)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00279}00279\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00280}00280\ \ \ \ \ \textcolor{keywordtype}{int}\ f\ =\ flameOdds[level-\/>\doxymbox{\hyperlink{class_level_af6c291e6d410b3b40ae101dbf1f41fac}{getTile}}(x,\ y,\ z)];}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00281}00281\ \ \ \ \ \textcolor{keywordflow}{if}\ (f\ >\ odds)\ \textcolor{keywordflow}{return}\ f;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00282}00282\ \ \ \ \ \textcolor{keywordflow}{return}\ odds;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00283}00283\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00284}00284\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00285}\doxymbox{\hyperlink{class_fire_tile_aa557dd2a19a078746325565a6ce5ca2e}{00285}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_fire_tile_aa557dd2a19a078746325565a6ce5ca2e}{FireTile::mayPlace}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00286}00286\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00287}00287\ \ \ \ \ \textcolor{keywordflow}{return}\ level-\/>\doxymbox{\hyperlink{class_level_abbf18478c4b79d72a87abd635afd553f}{isTopSolidBlocking}}(x,\ y\ -\/\ 1,\ z)\ ||\ isValidFireLocation(level,\ x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00288}00288\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00289}00289\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00290}\doxymbox{\hyperlink{class_fire_tile_acf0b9741260cce62384d14df1b11706d}{00290}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_fire_tile_acf0b9741260cce62384d14df1b11706d}{FireTile::neighborChanged}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ type)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00291}00291\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00292}00292\ \ \ \ \ \textcolor{keywordflow}{if}\ (!level-\/>\doxymbox{\hyperlink{class_level_abbf18478c4b79d72a87abd635afd553f}{isTopSolidBlocking}}(x,\ y\ -\/\ 1,\ z)\ \&\&\ !isValidFireLocation(level,\ x,\ y,\ z))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00293}00293\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a0f55b96d60f7a3e6a44e4e1754f734b4}{removeTile}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00296}00296\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00297}00297\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00298}00298\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00299}\doxymbox{\hyperlink{class_fire_tile_aa5d69bc37de7d8339d2e1a7913b5b892}{00299}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_fire_tile_aa5d69bc37de7d8339d2e1a7913b5b892}{FireTile::onPlace}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00300}00300\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00301}00301\ \ \ \ \ \textcolor{keywordflow}{if}\ (level-\/>\doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}-\/>\doxymbox{\hyperlink{class_dimension_ab2a8a3e455fe5b4bcc3bdd93920352b0}{id}}\ <=\ 0\ \&\&\ level-\/>\doxymbox{\hyperlink{class_level_af6c291e6d410b3b40ae101dbf1f41fac}{getTile}}(x,\ y\ -\/\ 1,\ z)\ ==\ \doxymbox{\hyperlink{class_tile_a64f6fe51f964494760aa04d55166601f}{Tile::obsidian\_Id}})}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00302}00302\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tile_aa1d57e543e97b50910b77324317719c0}{Tile::portalTile}}-\/>trySpawnPortal(level,\ x,\ y,\ z,\ \textcolor{keyword}{true}))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00304}00304\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00307}00307\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00308}00308\ \ \ \ \ \textcolor{keywordflow}{if}\ (!level-\/>\doxymbox{\hyperlink{class_level_abbf18478c4b79d72a87abd635afd553f}{isTopSolidBlocking}}(x,\ y\ -\/\ 1,\ z)\ \&\&\ !isValidFireLocation(level,\ x,\ y,\ z))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00309}00309\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a0f55b96d60f7a3e6a44e4e1754f734b4}{removeTile}}(x,\ y,\ z);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00312}00312\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00313}00313\ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_adbcb5d95e6dddfe89d74f3bacb9d9b8c}{addToTickNextTick}}(x,\ y,\ z,\ \textcolor{keywordtype}{id},\ \doxymbox{\hyperlink{class_fire_tile_a71f33e21147c32dd2bbd6cd2076db35d}{getTickDelay}}(level)\ +\ level-\/>\doxymbox{\hyperlink{class_level_a54318e3b478e93b68bc3aaa32172f334}{random}}-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(10));}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00314}00314\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00315}00315\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00316}\doxymbox{\hyperlink{class_fire_tile_a64ed9e57742f8241cb0172a09fad8617}{00316}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_fire_tile_a64ed9e57742f8241cb0172a09fad8617}{FireTile::isFlammable}}(\textcolor{keywordtype}{int}\ tile)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00317}00317\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00318}00318\ \ \ \ \ \textcolor{keywordflow}{return}\ flameOdds[tile]\ >\ 0;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00319}00319\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00320}00320\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00321}\doxymbox{\hyperlink{class_fire_tile_aa6149688dfa4abe95b5f04c7ae76eb2c}{00321}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_fire_tile_aa6149688dfa4abe95b5f04c7ae76eb2c}{FireTile::animateTick}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z,\ \doxymbox{\hyperlink{class_random}{Random}}\ *random)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00322}00322\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00323}00323\ \ \ \ \ \textcolor{keywordflow}{if}\ (random-\/>\doxymbox{\hyperlink{class_random_a9bfcc0f42641d00b19223b6606b222a9}{nextInt}}(24)\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00324}00324\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a01ed46dfd46a13c0f7d0be073b24b01c}{playLocalSound}}(x\ +\ 0.5f,\ y\ +\ 0.5f,\ z\ +\ 0.5f,\doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87a9a35cfe03d866963ee92f50fca287dfd}{eSoundType\_FIRE\_FIRE}},\ 1\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}(),\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}()\ *\ 0.7f\ +\ 0.3f,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00326}00326\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00327}00327\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00328}00328\ \ \ \ \ \textcolor{keywordflow}{if}\ (level-\/>\doxymbox{\hyperlink{class_level_abbf18478c4b79d72a87abd635afd553f}{isTopSolidBlocking}}(x,\ y\ -\/\ 1,\ z)\ ||\ \doxymbox{\hyperlink{class_tile_aa16fe93c94ae369a147157d7bc9793d3}{Tile::fire}}-\/>canBurn(level,\ x,\ y\ -\/\ 1,\ z))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00329}00329\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 3;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xx\ =\ x\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}();}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yy\ =\ y\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}()\ *\ 0.5f\ +\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ zz\ =\ z\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}();}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a6ff30e7e597ed15e0959b4ee29f9311e}{addParticle}}(\doxymbox{\hyperlink{_particle_types_8h_a837667734b04ac1e75501a7107342843ad76a03f6f63c52c01b2eb07b9dc1154f}{eParticleType\_largesmoke}},\ xx,\ yy,\ zz,\ 0,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00336}00336\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00337}00337\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00338}00338\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00339}00339\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tile_aa16fe93c94ae369a147157d7bc9793d3}{Tile::fire}}-\/>\doxymbox{\hyperlink{class_fire_tile_aece19606fa7e470fa794a6a4e8ec8bc3}{canBurn}}(level,\ x\ -\/\ 1,\ y,\ z))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 2;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xx\ =\ x\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}()\ *\ 0.1f;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yy\ =\ y\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}();}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ zz\ =\ z\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}();}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a6ff30e7e597ed15e0959b4ee29f9311e}{addParticle}}(\doxymbox{\hyperlink{_particle_types_8h_a837667734b04ac1e75501a7107342843ad76a03f6f63c52c01b2eb07b9dc1154f}{eParticleType\_largesmoke}},\ xx,\ yy,\ zz,\ 0,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tile_aa16fe93c94ae369a147157d7bc9793d3}{Tile::fire}}-\/>\doxymbox{\hyperlink{class_fire_tile_aece19606fa7e470fa794a6a4e8ec8bc3}{canBurn}}(level,\ x\ +\ 1,\ y,\ z))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 2;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xx\ =\ x\ +\ 1\ -\/\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}()\ *\ 0.1f;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yy\ =\ y\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}();}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ zz\ =\ z\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}();}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a6ff30e7e597ed15e0959b4ee29f9311e}{addParticle}}(\doxymbox{\hyperlink{_particle_types_8h_a837667734b04ac1e75501a7107342843ad76a03f6f63c52c01b2eb07b9dc1154f}{eParticleType\_largesmoke}},\ xx,\ yy,\ zz,\ 0,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tile_aa16fe93c94ae369a147157d7bc9793d3}{Tile::fire}}-\/>\doxymbox{\hyperlink{class_fire_tile_aece19606fa7e470fa794a6a4e8ec8bc3}{canBurn}}(level,\ x,\ y,\ z\ -\/\ 1))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00361}00361\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 2;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xx\ =\ x\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}();}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yy\ =\ y\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}();}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ zz\ =\ z\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}()\ *\ 0.1f;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a6ff30e7e597ed15e0959b4ee29f9311e}{addParticle}}(\doxymbox{\hyperlink{_particle_types_8h_a837667734b04ac1e75501a7107342843ad76a03f6f63c52c01b2eb07b9dc1154f}{eParticleType\_largesmoke}},\ xx,\ yy,\ zz,\ 0,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tile_aa16fe93c94ae369a147157d7bc9793d3}{Tile::fire}}-\/>\doxymbox{\hyperlink{class_fire_tile_aece19606fa7e470fa794a6a4e8ec8bc3}{canBurn}}(level,\ x,\ y,\ z\ +\ 1))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 2;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xx\ =\ x\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}();}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yy\ =\ y\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}();}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ zz\ =\ z\ +\ 1\ -\/\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}()\ *\ 0.1f;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a6ff30e7e597ed15e0959b4ee29f9311e}{addParticle}}(\doxymbox{\hyperlink{_particle_types_8h_a837667734b04ac1e75501a7107342843ad76a03f6f63c52c01b2eb07b9dc1154f}{eParticleType\_largesmoke}},\ xx,\ yy,\ zz,\ 0,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00378}00378\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00379}00379\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_tile_aa16fe93c94ae369a147157d7bc9793d3}{Tile::fire}}-\/>\doxymbox{\hyperlink{class_fire_tile_aece19606fa7e470fa794a6a4e8ec8bc3}{canBurn}}(level,\ x,\ y\ +\ 1,\ z))}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 2;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xx\ =\ x\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}();}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yy\ =\ y\ +\ 1\ -\/\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}()\ *\ 0.1f;}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ zz\ =\ z\ +\ random-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}();}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>\doxymbox{\hyperlink{class_level_a6ff30e7e597ed15e0959b4ee29f9311e}{addParticle}}(\doxymbox{\hyperlink{_particle_types_8h_a837667734b04ac1e75501a7107342843ad76a03f6f63c52c01b2eb07b9dc1154f}{eParticleType\_largesmoke}},\ xx,\ yy,\ zz,\ 0,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00390}00390\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00391}00391\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00392}00392\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00393}\doxymbox{\hyperlink{class_fire_tile_ab815080be19e874e9110ce9faba1fbdd}{00393}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_fire_tile_ab815080be19e874e9110ce9faba1fbdd}{FireTile::registerIcons}}(\doxymbox{\hyperlink{class_icon_register}{IconRegister}}\ *iconRegister)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00394}00394\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00395}00395\ \ \ \ \ icons\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_icon}{Icon}}*[2];}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00396}00396\ \ \ \ \ icons[0]\ =\ iconRegister-\/>\doxymbox{\hyperlink{class_icon_register_acc284ad54135d1fee0a8a8548fbfc0c8}{registerIcon}}(\doxymbox{\hyperlink{class_fire_tile_a5edc35c2ac206761b9bb0fd37c2723b8}{TEXTURE\_FIRST}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00397}00397\ \ \ \ \ icons[1]\ =\ iconRegister-\/>\doxymbox{\hyperlink{class_icon_register_acc284ad54135d1fee0a8a8548fbfc0c8}{registerIcon}}(\doxymbox{\hyperlink{class_fire_tile_a1daed1bb3495bd0dc382c9c3e19014de}{TEXTURE\_SECOND}});}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00398}00398\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00399}00399\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00400}\doxymbox{\hyperlink{class_fire_tile_ace89884b1604f962a9b21032fa04aaa6}{00400}}\ \doxymbox{\hyperlink{class_icon}{Icon}}\ *\doxymbox{\hyperlink{class_fire_tile_ace89884b1604f962a9b21032fa04aaa6}{FireTile::getTextureLayer}}(\textcolor{keywordtype}{int}\ layer)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00401}00401\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00402}00402\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00403}00403\ \ \ \ \ \textcolor{comment}{//\ AP\ -\/\ alpha\ cut\ out\ is\ expensive\ on\ vita.\ Set\ the\ Alpha\ Cut\ out\ flag}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00404}00404\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator}{Tesselator}}*\ t\ =\ \doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{Tesselator::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00405}00405\ \ \ \ \ t-\/>setAlphaCutOut(\ \textcolor{keyword}{true}\ );}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00406}00406\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00407}00407\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00408}00408\ \ \ \ \ \textcolor{keywordflow}{return}\ icons[layer];}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00409}00409\ \}}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00410}00410\ }
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00411}\doxymbox{\hyperlink{class_fire_tile_a991eee2137067416eee678b64bb8088d}{00411}}\ \doxymbox{\hyperlink{class_icon}{Icon}}\ *\doxymbox{\hyperlink{class_fire_tile_a991eee2137067416eee678b64bb8088d}{FireTile::getTexture}}(\textcolor{keywordtype}{int}\ face,\ \textcolor{keywordtype}{int}\ data)}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00412}00412\ \{}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00413}00413\ \ \ \ \ \textcolor{keywordflow}{return}\ icons[0];}
+\DoxyCodeLine{\Hypertarget{_fire_tile_8cpp_source_l00414}00414\ \}}
+
+\end{DoxyCode}

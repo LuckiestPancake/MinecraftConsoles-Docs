@@ -1,0 +1,504 @@
+\doxysection{Region\+File.\+cpp}
+\hypertarget{_region_file_8cpp_source}{}\label{_region_file_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/RegionFile.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/RegionFile.cpp}}
+\doxymbox{\hyperlink{_region_file_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_system_8h}{System.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_input_output_stream_8h}{InputOutputStream.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_file_8h}{File.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_region_file_8h}{RegionFile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_console_save_file_8h}{ConsoleSaveFile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00009}00009\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ RegionFile::emptySector(SECTOR\_BYTES);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00011}\doxymbox{\hyperlink{class_region_file_a9d1d5bb5dbff7214b4e0c83f46bfb466}{00011}}\ \doxymbox{\hyperlink{class_region_file_a9d1d5bb5dbff7214b4e0c83f46bfb466}{RegionFile::RegionFile}}(\doxymbox{\hyperlink{class_console_save_file}{ConsoleSaveFile}}\ *saveFile,\ \doxymbox{\hyperlink{class_file}{File}}\ *path)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00012}00012\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00013}00013\ \ \ \ \ \_lastModified\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00015}00015\ \ \ \ \ m\_saveFile\ =\ saveFile;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00017}00017\ \ \ \ \ offsets\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{int}[SECTOR\_INTS];}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00018}00018\ \ \ \ \ memset(offsets,0,SECTOR\_BYTES);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00019}00019\ \ \ \ \ chunkTimestamps\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{int}[SECTOR\_INTS];}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00020}00020\ \ \ \ \ memset(chunkTimestamps,0,SECTOR\_BYTES);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00022}00022\ \ \ \ \ \textcolor{comment}{/*\ \ 4J\ Jev,\ using\ files\ instead\ of\ strings:}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00023}00023\ \textcolor{comment}{\ \ \ \ strncpy(fileName,path,MAX\_PATH\_SIZE);\ */}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00025}00025\ \ \ \ \ fileName\ =\ path;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00027}00027\ \textcolor{comment}{//\ \ \ \ debugln("{}REGION\ LOAD\ "{}\ +\ fileName);}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00029}00029\ \ \ \ \ sizeDelta\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00031}00031\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ removed\ try/catch}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00032}00032\ \textcolor{comment}{//\ \ \ \ try\ \{}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00034}00034\ \ \ \ \ \textcolor{comment}{/*\ 4J\ -\/\ Removed\ as\ \_lastModifed\ not\ used\ and\ this\ is\ always\ failing\ as\ checking\ wrong\ thing}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00035}00035\ \textcolor{comment}{\ \ \ \ if(\ \ path-\/>exists()\ )}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00036}00036\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00037}00037\ \textcolor{comment}{\ \ \ \ \ \ \ \ \_lastModified\ =\ path-\/>lastModified();}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00038}00038\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00039}00039\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00041}00041\ \ \ \ \ fileEntry\ =\ m\_saveFile-\/>createFile(\ fileName-\/>getName()\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00042}00042\ \ \ \ \ m\_saveFile-\/>setFilePointer(\ fileEntry,\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a1f36ce1882fa7f063018087a226e4867}{FILE\_END}}\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00044}00044\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ fileEntry-\/>getFileSize()\ <\ SECTOR\_BYTES)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00045}00045\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00046}00046\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ altered\ -\/\ the\ original\ code\ used\ to\ write\ out\ 2\ empty\ sectors\ here,\ which\ we\ don't\ want\ to\ do\ as\ we\ might\ be\ at\ a\ point\ where\ we\ shouldn't\ be\ touching\ the\ save\ file.}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00047}00047\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ now\ happens\ in\ insertInitialSectors\ when\ we\ do\ a\ first\ write\ to\ the\ region}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00048}00048\ \ \ \ \ \ \ \ \ m\_bIsEmpty\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ sizeDelta\ +=\ SECTOR\_BYTES\ *\ 2;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00051}00051\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00053}00053\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ m\_bIsEmpty\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00055}00055\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00057}00057\ \ \ \ \ \textcolor{comment}{//if\ ((GetFileSize(file,nullptr)\ \&\ 0xfff)\ !=\ 0)}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00058}00058\ \ \ \ \ \textcolor{keywordflow}{if}\ ((fileEntry-\/>getFileSize()\ \&\ 0xfff)\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00059}00059\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \textcolor{comment}{//byte\ zero\ =\ 0;}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00061}00061\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ numberOfBytesWritten\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ bytesToWrite\ =\ 0x1000\ -\/\ (fileEntry-\/>getFileSize()\ \&\ 0xfff);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{byte}\ *zeroBytes\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{byte}[\ bytesToWrite\ ];}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a1078089d09549c80df3d4320d5798d24}{ZeroMemory}}(zeroBytes,\ bytesToWrite);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ the\ file\ size\ is\ not\ a\ multiple\ of\ 4KB,\ grow\ it\ */}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ m\_saveFile-\/>writeFile(fileEntry,zeroBytes,bytesToWrite,\&numberOfBytesWritten);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ []\ zeroBytes;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00070}00070\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00072}00072\ \ \ \ \ \textcolor{comment}{/*\ set\ up\ the\ available\ sector\ map\ */}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00074}00074\ \ \ \ \ \textcolor{keywordtype}{int}\ nSectors;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00075}00075\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_bIsEmpty\ )\ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ added\ this\ case\ for\ our\ empty\ files\ that\ we\ now\ don't\ create}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00076}00076\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ nSectors\ =\ 2;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00078}00078\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00079}00079\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00080}00080\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ nSectors\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(fileEntry-\/>getFileSize())\ /\ SECTOR\_BYTES;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00082}00082\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00083}00083\ \ \ \ \ sectorFree\ =\ \textcolor{keyword}{new}\ vector<bool>;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00084}00084\ \ \ \ \ sectorFree-\/>reserve(nSectors);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00086}00086\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ nSectors;\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00087}00087\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ sectorFree-\/>push\_back(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00089}00089\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00091}00091\ \ \ \ \ sectorFree-\/>at(0)\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ chunk\ offset\ table}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00092}00092\ \ \ \ \ sectorFree-\/>at(1)\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ for\ the\ last\ modified\ info}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00094}00094\ \ \ \ \ m\_saveFile-\/>setFilePointer(\ fileEntry,\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a1b6a16ca70fb99d4c13aeae1e7283680}{FILE\_BEGIN}}\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00095}00095\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ SECTOR\_INTS;\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00096}00096\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ numberOfBytesRead\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_bIsEmpty\ )\ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ added\ condition,\ don't\ read\ back\ if\ we've\ just\ created\ an\ empty\ file\ as\ we\ don't\ immediately\ write\ this\ anymore}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ m\_saveFile-\/>readFile(fileEntry,\ \&\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}},\ 4,\ \&numberOfBytesRead);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(saveFile-\/>\doxymbox{\hyperlink{class_console_save_file_abf5b2cc2ffd1ca5e1f5c284d17121667}{isSaveEndianDifferent}}())\ System::ReverseULONG(\&\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}});}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ offsets[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ !=\ 0\ \&\&\ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ >>\ 8)\ +\ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ \&\ 0xFF)\ <=\ sectorFree-\/>size())}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ sectorNum\ =\ 0;\ sectorNum\ <\ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ \&\ 0xFF);\ ++sectorNum)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sectorFree-\/>at((\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ >>\ 8)\ +\ sectorNum)\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00114}00114\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00115}00115\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ SECTOR\_INTS;\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00116}00116\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ lastModValue\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ numberOfBytesRead\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_bIsEmpty\ )\ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ added\ condition,\ don't\ read\ back\ if\ we've\ just\ created\ an\ empty\ file\ as\ we\ don't\ immediately\ write\ this\ anymore}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ m\_saveFile-\/>readFile(fileEntry,\ \&lastModValue,\ 4,\ \&numberOfBytesRead);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(saveFile-\/>\doxymbox{\hyperlink{class_console_save_file_abf5b2cc2ffd1ca5e1f5c284d17121667}{isSaveEndianDifferent}}())\ System::ReverseINT(\&lastModValue);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ chunkTimestamps[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ lastModValue;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00126}00126\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00129}00129\ \textcolor{comment}{//\ \ \ \ \}\ catch\ (IOException\ e)\ \{}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00130}00130\ \textcolor{comment}{//\ \ \ \ \ \ \ \ e.printStackTrace();}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00131}00131\ \textcolor{comment}{//\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00132}00132\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00133}00133\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00134}\doxymbox{\hyperlink{class_region_file_a2ea7ae69b131f1b1fb1761e6631e2cdf}{00134}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_region_file_a2ea7ae69b131f1b1fb1761e6631e2cdf}{RegionFile::writeAllOffsets}}()\ \textcolor{comment}{//\ used\ for\ the\ file\ ConsoleSaveFile\ conversion\ between\ platforms}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00135}00135\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00136}00136\ \ \ \ \ \textcolor{keywordflow}{if}(m\_bIsEmpty\ ==\ \textcolor{keyword}{false})}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00137}00137\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ save\ all\ the\ offsets\ and\ timestamps}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ m\_saveFile-\/>LockSaveAccess();}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00140}00140\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ numberOfBytesWritten\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ m\_saveFile-\/>setFilePointer(\ fileEntry,\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a1b6a16ca70fb99d4c13aeae1e7283680}{FILE\_BEGIN}}\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ m\_saveFile-\/>writeFile(fileEntry,offsets,\ SECTOR\_BYTES\ ,\&numberOfBytesWritten);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ numberOfBytesWritten\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ m\_saveFile-\/>setFilePointer(\ fileEntry,\ SECTOR\_BYTES,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a1b6a16ca70fb99d4c13aeae1e7283680}{FILE\_BEGIN}}\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ m\_saveFile-\/>writeFile(fileEntry,\ chunkTimestamps,\ SECTOR\_BYTES,\ \&numberOfBytesWritten);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ m\_saveFile-\/>ReleaseSaveAccess();}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00150}00150\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00152}00152\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00153}\doxymbox{\hyperlink{class_region_file_abf132bf3d6aaf26f0cda399011d460c5}{00153}}\ \doxymbox{\hyperlink{class_region_file_abf132bf3d6aaf26f0cda399011d460c5}{RegionFile::\string~RegionFile}}()}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00154}00154\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00155}00155\ \ \ \ \ \textcolor{keyword}{delete}[]\ offsets;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00156}00156\ \ \ \ \ \textcolor{keyword}{delete}[]\ chunkTimestamps;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00157}00157\ \ \ \ \ \textcolor{keyword}{delete}\ sectorFree;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00158}00158\ \ \ \ \ m\_saveFile-\/>closeHandle(\ fileEntry\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00159}00159\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00161}\doxymbox{\hyperlink{class_region_file_a75c566d8b1999c049f512a69868e17a3}{00161}}\ int64\_t\ \doxymbox{\hyperlink{class_region_file_a75c566d8b1999c049f512a69868e17a3}{RegionFile::lastModified}}()}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00162}00162\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00163}00163\ \ \ \ \ \textcolor{keywordflow}{return}\ \_lastModified;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00164}00164\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00166}\doxymbox{\hyperlink{class_region_file_a4d775cd49523010055c327976fa3bb63}{00166}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_region_file_a4d775cd49523010055c327976fa3bb63}{RegionFile::getSizeDelta}}()\ \ \ \textcolor{comment}{//\ TODO\ -\/\ was\ synchronized}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00167}00167\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00168}00168\ \ \ \ \ \textcolor{keywordtype}{int}\ ret\ =\ sizeDelta;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00169}00169\ \ \ \ \ sizeDelta\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00170}00170\ \ \ \ \ \textcolor{keywordflow}{return}\ ret;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00171}00171\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00173}\doxymbox{\hyperlink{class_region_file_ab2c39b42645ca027671596bfb772df7f}{00173}}\ \doxymbox{\hyperlink{class_data_input_stream}{DataInputStream}}\ *\doxymbox{\hyperlink{class_region_file_ab2c39b42645ca027671596bfb772df7f}{RegionFile::getChunkDataInputStream}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)\ \textcolor{comment}{//\ TODO\ -\/\ was\ synchronized}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00174}00174\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00175}00175\ \ \ \ \ \textcolor{keywordflow}{if}\ (outOfBounds(x,\ z))}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00176}00176\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00177}00177\ \textcolor{comment}{//\ \ \ \ \ \ \ \ debugln("{}READ"{},\ x,\ z,\ "{}out\ of\ bounds"{});}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00179}00179\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00181}00181\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ removed\ try/catch}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00182}00182\ \textcolor{comment}{//\ \ \ \ try\ \{}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00183}00183\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ =\ getOffset(x,\ z);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00184}00184\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00185}00185\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ debugln("{}READ"{},\ x,\ z,\ "{}miss"{});}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00188}00188\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00190}00190\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ sectorNumber\ =\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ >>\ 8;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00191}00191\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ numSectors\ =\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ \&\ 0xFF;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00193}00193\ \ \ \ \ \textcolor{keywordflow}{if}\ (sectorNumber\ +\ numSectors\ >\ sectorFree-\/>size())}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00194}00194\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00195}00195\ \textcolor{comment}{//\ \ \ \ \ \ \ \ debugln("{}READ"{},\ x,\ z,\ "{}invalid\ sector"{});}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00197}00197\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00199}00199\ \ \ \ \ m\_saveFile-\/>LockSaveAccess();}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00201}00201\ \ \ \ \ \textcolor{comment}{//SetFilePointer(file,sectorNumber\ *\ SECTOR\_BYTES,0,FILE\_BEGIN);}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00202}00202\ \ \ \ \ m\_saveFile-\/>setFilePointer(\ fileEntry,\ sectorNumber\ *\ SECTOR\_BYTES,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a1b6a16ca70fb99d4c13aeae1e7283680}{FILE\_BEGIN}});}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00203}00203\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00204}00204\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ length;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00205}00205\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ decompLength;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00206}00206\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ readDecompLength;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00207}00207\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00208}00208\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ numberOfBytesRead\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00210}00210\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ this\ differs\ a\ bit\ from\ the\ java\ file\ format.\ Java\ has\ length\ stored\ as\ an\ int,\ then\ a\ type\ as\ a\ byte,\ then\ length-\/1\ bytes\ of\ data}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00211}00211\ \ \ \ \ \textcolor{comment}{//\ We\ store\ length\ and\ decompression\ length\ as\ ints,\ then\ length\ bytes\ of\ xbox\ LZX\ compressed\ data}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00212}00212\ \ \ \ \ m\_saveFile-\/>readFile(fileEntry,\&length,4,\&numberOfBytesRead);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00214}00214\ \ \ \ \ \textcolor{keywordflow}{if}(m\_saveFile-\/>isSaveEndianDifferent())\ System::ReverseULONG(\&length);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00215}00215\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00216}00216\ \ \ \ \ \textcolor{comment}{//\ Using\ to\ bit\ of\ length\ to\ signify\ that\ this\ data\ was\ compressed\ with\ RLE\ method}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00217}00217\ \ \ \ \ \textcolor{keywordtype}{bool}\ useRLE\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00218}00218\ \ \ \ \ \textcolor{keywordflow}{if}(\ length\ \&\ 0x80000000\ )}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00219}00219\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ useRLE\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ length\ \&=\ 0x7fffffff;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00222}00222\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00223}00223\ \ \ \ \ m\_saveFile-\/>readFile(fileEntry,\&decompLength,4,\&numberOfBytesRead);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00224}00224\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00225}00225\ \ \ \ \ \textcolor{keywordflow}{if}(m\_saveFile-\/>isSaveEndianDifferent())\ System::ReverseULONG(\&decompLength);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00227}00227\ \ \ \ \ \textcolor{keywordflow}{if}\ (length\ >\ SECTOR\_BYTES\ *\ numSectors)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00228}00228\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00229}00229\ \textcolor{comment}{//\ \ \ \ \ \ \ \ debugln("{}READ"{},\ x,\ z,\ "{}invalid\ length:\ "{}\ +\ length\ +\ "{}\ >\ 4096\ *\ "{}\ +\ numSectors);}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ m\_saveFile-\/>ReleaseSaveAccess();}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00233}00233\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00234}00234\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00235}00235\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(50);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00236}00236\ \ \ \ \ \textcolor{keywordtype}{byte}\ *data\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{byte}[length];}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00237}00237\ \ \ \ \ \textcolor{keywordtype}{byte}\ *decomp\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{byte}[decompLength];}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00238}00238\ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00239}00239\ \ \ \ \ readDecompLength\ =\ decompLength;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00240}00240\ \ \ \ \ m\_saveFile-\/>readFile(fileEntry,data,length,\&numberOfBytesRead);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00242}00242\ \ \ \ \ m\_saveFile-\/>ReleaseSaveAccess();}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00244}00244\ \ \ \ \ \doxymbox{\hyperlink{class_compression_af6097d4899c0d4d82bc10d14af4a583c}{Compression::getCompression}}()-\/>\doxymbox{\hyperlink{class_compression_aea67881984fddff0b25ab00c8f88f6e2}{SetDecompressionType}}(m\_saveFile-\/>getSavePlatform());\ \textcolor{comment}{//\ if\ this\ save\ is\ from\ another\ platform,\ set\ the\ correct\ decompression\ type}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00245}00245\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00246}00246\ \ \ \ \ \textcolor{keywordflow}{if}(\ useRLE\ )}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00247}00247\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_compression_af6097d4899c0d4d82bc10d14af4a583c}{Compression::getCompression}}()-\/>\doxymbox{\hyperlink{class_compression_a5f39dc6e40f9782f6a0fe1089968c8b7}{DecompressLZXRLE}}(decomp,\ \&readDecompLength,\ data,\ length\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00249}00249\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00250}00250\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00251}00251\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00252}00252\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_compression_af6097d4899c0d4d82bc10d14af4a583c}{Compression::getCompression}}()-\/>\doxymbox{\hyperlink{class_compression_a0c391dcfa84c4cb37cfcb69e9c6d458f}{Decompress}}(decomp,\ \&readDecompLength,\ data,\ length\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00253}00253\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00255}00255\ \ \ \ \ \doxymbox{\hyperlink{class_compression_af6097d4899c0d4d82bc10d14af4a583c}{Compression::getCompression}}()-\/>\doxymbox{\hyperlink{class_compression_aea67881984fddff0b25ab00c8f88f6e2}{SetDecompressionType}}(SAVE\_FILE\_PLATFORM\_LOCAL);\ \textcolor{comment}{//\ and\ then\ set\ the\ decompression\ back\ to\ the\ local\ machine's\ standard\ type}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00256}00256\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00257}00257\ \ \ \ \ \textcolor{keyword}{delete}\ []\ data;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00258}00258\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00259}00259\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ was\ InflaterInputStream\ in\ here\ too,\ but\ we've\ already\ decompressed}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00260}00260\ \ \ \ \ \doxymbox{\hyperlink{class_data_input_stream}{DataInputStream}}\ *ret\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_data_input_stream}{DataInputStream}}(\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_byte_array_input_stream}{ByteArrayInputStream}}(\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}(\ decomp,\ readDecompLength)\ ));}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00261}00261\ \ \ \ \ \textcolor{keywordflow}{return}\ ret;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00262}00262\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00263}00263\ \textcolor{comment}{//\ \ \ \ \}\ catch\ (IOException\ e)\ \{}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00264}00264\ \textcolor{comment}{//\ \ \ \ \ \ \ \ debugln("{}READ"{},\ x,\ z,\ "{}exception"{});}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00265}00265\ \textcolor{comment}{//\ \ \ \ \ \ \ \ return\ null;}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00266}00266\ \textcolor{comment}{//\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00267}00267\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00268}00268\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00269}\doxymbox{\hyperlink{class_region_file_addf50b3ea6765f5ff9c231672fbed29d}{00269}}\ \doxymbox{\hyperlink{class_data_output_stream}{DataOutputStream}}\ *\doxymbox{\hyperlink{class_region_file_addf50b3ea6765f5ff9c231672fbed29d}{RegionFile::getChunkDataOutputStream}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00270}00270\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00271}00271\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ was\ DeflatorOutputStream\ in\ here\ too,\ but\ we've\ already\ compressed}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00272}00272\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_data_output_stream}{DataOutputStream}}(\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_region_file_1_1_chunk_buffer}{ChunkBuffer}}(\textcolor{keyword}{this},\ x,\ z));}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00273}00273\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00274}00274\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00275}00275\ \textcolor{comment}{/*\ write\ a\ chunk\ at\ (x,z)\ with\ length\ bytes\ of\ data\ to\ disk\ */}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00276}\doxymbox{\hyperlink{class_region_file_a1cd901698688bf40074c15a7f8ba4aaa}{00276}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_region_file_a1cd901698688bf40074c15a7f8ba4aaa}{RegionFile::write}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{byte}\ *data,\ \textcolor{keywordtype}{int}\ length)\ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ -\/\ was\ synchronized}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00277}00277\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00278}00278\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Do\ the\ compression\ here\ so\ that\ we\ know\ how\ much\ space\ we\ need\ to\ store\ the\ compressed\ data}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00279}00279\ \ \ \ \ \textcolor{keywordtype}{byte}\ *compData\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{byte}[length\ +\ 2048];\ \ \ \textcolor{comment}{//\ presuming\ compression\ is\ going\ to\ make\ this\ smaller...\ \ \ UPDATE\ -\/\ for\ some\ really\ small\ things\ this\ isn't\ the\ case.\ Added\ 2K\ on\ here\ to\ cover\ those.}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00280}00280\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ compLength\ =\ length;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00281}00281\ \ \ \ \ \doxymbox{\hyperlink{class_compression_af6097d4899c0d4d82bc10d14af4a583c}{Compression::getCompression}}()-\/>\doxymbox{\hyperlink{class_compression_a490db89d2dd1f98a5894c45d6a4bd6e5}{CompressLZXRLE}}(compData,\&compLength,data,length);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00283}00283\ \ \ \ \ \textcolor{keywordtype}{int}\ sectorsNeeded\ =\ (compLength\ +\ CHUNK\_HEADER\_SIZE)\ /\ SECTOR\_BYTES\ +\ 1;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00284}00284\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00285}00285\ \textcolor{comment}{//\ \ app.DebugPrintf("{}>>>>>>>>>>>>>>\ writing\ compressed\ data\ for\ 0x\%.8x,\ \%d\ \%d\(\backslash\)n"{},fileEntry-\/>data.regionIndex,x,z);}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00287}00287\ \ \ \ \ \textcolor{comment}{//\ maximum\ chunk\ size\ is\ 1MB}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00288}00288\ \ \ \ \ \textcolor{keywordflow}{if}\ (sectorsNeeded\ >=\ 256)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00289}00289\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00290}00290\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00291}00291\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00292}00292\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00293}00293\ \ \ \ \ m\_saveFile-\/>LockSaveAccess();}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00294}00294\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ =\ getOffset(x,\ z);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00296}00296\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ sectorNumber\ =\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ >>\ 8;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ sectorsAllocated\ =\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}}\ \&\ 0xFF;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00298}00298\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00299}00299\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sectorNumber\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a836a58a917bc9dcc3256ceecb2717746}{\_\_debugbreak}}();}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00304}00304\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (sectorNumber\ !=\ 0\ \&\&\ sectorsAllocated\ ==\ sectorsNeeded)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ we\ can\ simply\ overwrite\ the\ old\ sectors\ */}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00309}00309\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ debug("{}SAVE"{},\ x,\ z,\ length,\ "{}rewrite"{});}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00310}00310\ \textcolor{preprocessor}{\ \ \ \ \#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//wprintf(L"{}Writing\ chunk\ (\%d,\%d)\ in\ \%ls\ from\ current\ sector\ \%d\ to\ \%d\(\backslash\)n"{},\ x,z,\ fileEntry-\/>data.filename,\ sectorNumber,\ sectorNumber\ +\ sectorsNeeded\ -\/\ 1);}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00312}00312\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_region_file_a1cd901698688bf40074c15a7f8ba4aaa}{write}}(sectorNumber,\ compData,\ length,\ compLength);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00314}00314\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ we\ need\ to\ allocate\ new\ sectors\ */}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00318}00318\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ mark\ the\ sectors\ previously\ used\ for\ this\ chunk\ as\ free\ */}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ sectorsAllocated;\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sectorFree-\/>at(sectorNumber\ +\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ added\ -\/\ zero\ this\ now\ unused\ region\ of\ the\ file,\ so\ it\ can\ be\ better\ compressed\ until\ it\ is\ reused}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ zero(sectorNumber,\ SECTOR\_BYTES\ *\ sectorsAllocated);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00326}00326\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}Scanning\ for\ free\ space\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ scan\ for\ a\ free\ space\ large\ enough\ to\ store\ this\ chunk\ */}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ runStart\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(find(sectorFree-\/>begin(),\ sectorFree-\/>end(),\ \textcolor{keyword}{true})\ -\/\ sectorFree-\/>begin());\ \ \textcolor{comment}{//\ 4J\ -\/\ was\ sectorFree.indexOf(true)}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ runLength\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (runStart\ !=\ -\/1)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ runStart;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ sectorFree-\/>size();\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (runLength\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (sectorFree-\/>at(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}))\ runLength++;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00338}00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ runLength\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (sectorFree-\/>at(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}))}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runStart\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ runLength\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (runLength\ >=\ sectorsNeeded)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00351}00351\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (runLength\ >=\ sectorsNeeded)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ we\ found\ a\ free\ space\ large\ enough\ */}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00355}00355\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ debug("{}SAVE"{},\ x,\ z,\ length,\ "{}reuse"{});}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sectorNumber\ =\ runStart;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ setOffset(x,\ z,\ (sectorNumber\ <<\ 8)\ |\ sectorsNeeded);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00358}00358\ \textcolor{preprocessor}{\ \ \ \ \#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//wprintf(L"{}Writing\ chunk\ (\%d,\%d)\ in\ \%ls\ from\ old\ sector\ \%d\ to\ \%d\(\backslash\)n"{},\ x,z,\ fileEntry-\/>data.filename,\ sectorNumber,\ sectorNumber\ +\ sectorsNeeded\ -\/\ 1);}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00360}00360\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ sectorsNeeded;\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sectorFree-\/>at(sectorNumber\ +\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_region_file_a1cd901698688bf40074c15a7f8ba4aaa}{write}}(sectorNumber,\ compData,\ length,\ compLength);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}Expanding\ storage\ for\ \%d\ sectors\(\backslash\)n"{}},\ sectorsNeeded);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00371}00371\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ no\ free\ space\ large\ enough\ found\ -\/-\/\ we\ need\ to\ grow\ the}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00372}00372\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ file}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00373}00373\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00374}00374\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ debug("{}SAVE"{},\ x,\ z,\ length,\ "{}grow"{});}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//SetFilePointer(file,0,0,FILE\_END);}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_saveFile-\/>setFilePointer(\ fileEntry,\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a1f36ce1882fa7f063018087a226e4867}{FILE\_END}}\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00377}00377\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00378}00378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sectorNumber\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(sectorFree-\/>size());}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00379}00379\ \textcolor{preprocessor}{\ \ \ \ \#ifndef\ \_CONTENT\_PACAKGE}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//wprintf(L"{}Writing\ chunk\ (\%d,\%d)\ in\ \%ls\ from\ new\ sector\ \%d\ to\ \%d\(\backslash\)n"{},\ x,z,\ fileEntry-\/>data.filename,\ sectorNumber,\ sectorNumber\ +\ sectorsNeeded\ -\/\ 1);}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00381}00381\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ numberOfBytesWritten\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ sectorsNeeded;\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//WriteFile(file,emptySector.data,SECTOR\_BYTES,\&numberOfBytesWritten,nullptr);}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_saveFile-\/>writeFile(fileEntry,emptySector.data,SECTOR\_BYTES,\&numberOfBytesWritten);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sectorFree-\/>push\_back(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sizeDelta\ +=\ SECTOR\_BYTES\ *\ sectorsNeeded;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00390}00390\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_region_file_a1cd901698688bf40074c15a7f8ba4aaa}{write}}(sectorNumber,\ compData,\ length,\ compLength);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ setOffset(x,\ z,\ (sectorNumber\ <<\ 8)\ |\ sectorsNeeded);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00393}00393\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00396}00396\ \ \ \ \ \ \ \ \ setTimestamp(x,\ z,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(System::currentTimeMillis()\ /\ 1000L));}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00397}00397\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00398}00398\ \ \ \ \ m\_saveFile-\/>ReleaseSaveAccess();}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00399}00399\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00400}00400\ \textcolor{comment}{//\ \ \ \ \}\ catch\ (IOException\ e)\ \{}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00401}00401\ \textcolor{comment}{//\ \ \ \ \ \ \ \ e.printStackTrace();}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00402}00402\ \textcolor{comment}{//\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00403}00403\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00405}00405\ \textcolor{comment}{/*\ write\ a\ chunk\ data\ to\ the\ region\ file\ at\ specified\ sector\ number\ */}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00406}00406\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_region_file_a1cd901698688bf40074c15a7f8ba4aaa}{RegionFile::write}}(\textcolor{keywordtype}{int}\ sectorNumber,\ \textcolor{keywordtype}{byte}\ *data,\ \textcolor{keywordtype}{int}\ length,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ compLength)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00407}00407\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00408}00408\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ numberOfBytesWritten\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00409}00409\ \ \ \ \ \textcolor{comment}{//SetFilePointer(file,sectorNumber\ *\ SECTOR\_BYTES,0,FILE\_BEGIN);}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00410}00410\ \ \ \ \ m\_saveFile-\/>\doxymbox{\hyperlink{class_console_save_file_a9dad16dee899a8a409012e832f019722}{setFilePointer}}(\ fileEntry,\ sectorNumber\ *\ SECTOR\_BYTES,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a1b6a16ca70fb99d4c13aeae1e7283680}{FILE\_BEGIN}}\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00411}00411\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00412}00412\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ this\ differs\ a\ bit\ from\ the\ java\ file\ format.\ Java\ has\ length\ stored\ as\ an\ int,\ then\ a\ type\ as\ a\ byte,\ then\ length-\/1\ bytes\ of\ data}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00413}00413\ \ \ \ \ \textcolor{comment}{//\ We\ store\ length\ and\ decompression\ length\ as\ ints,\ then\ length\ bytes\ of\ xbox\ LZX\ compressed\ data}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00414}00414\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00415}00415\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ We\ need\ to\ do\ the\ compression\ at\ a\ level\ above\ this,\ where\ it\ is\ checking\ for\ free\ space}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00416}00416\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00417}00417\ \ \ \ \ compLength\ |=\ 0x80000000;\ \ \ \textcolor{comment}{//\ 4J\ -\/\ signify\ that\ this\ has\ been\ encoded\ with\ RLE\ method\ (\ see\ code\ in\ getChunkDataInputStream()\ for\ matching\ detection\ of\ this)}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00418}00418\ \ \ \ \ m\_saveFile-\/>\doxymbox{\hyperlink{class_console_save_file_a417eca694e61fa907bf0ccddbfa425d0}{writeFile}}(fileEntry,\&compLength,4,\&numberOfBytesWritten);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00419}00419\ \ \ \ \ compLength\ \&=\ 0x7fffffff;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00420}00420\ \ \ \ \ m\_saveFile-\/>\doxymbox{\hyperlink{class_console_save_file_a417eca694e61fa907bf0ccddbfa425d0}{writeFile}}(fileEntry,\&length,4,\&numberOfBytesWritten);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00421}00421\ \ \ \ \ m\_saveFile-\/>\doxymbox{\hyperlink{class_console_save_file_a417eca694e61fa907bf0ccddbfa425d0}{writeFile}}(fileEntry,data,compLength,\&numberOfBytesWritten);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00422}00422\ \ \ \ \ \textcolor{keyword}{delete}[]\ data;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00423}00423\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00424}00424\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00425}00425\ \textcolor{keywordtype}{void}\ RegionFile::zero(\textcolor{keywordtype}{int}\ sectorNumber,\ \textcolor{keywordtype}{int}\ length)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00426}00426\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00427}00427\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ numberOfBytesWritten\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00428}00428\ \ \ \ \ \textcolor{comment}{//SetFilePointer(file,sectorNumber\ *\ SECTOR\_BYTES,0,FILE\_BEGIN);}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00429}00429\ \ \ \ \ m\_saveFile-\/>setFilePointer(\ fileEntry,\ sectorNumber\ *\ SECTOR\_BYTES,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a1b6a16ca70fb99d4c13aeae1e7283680}{FILE\_BEGIN}}\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00430}00430\ \ \ \ \ m\_saveFile-\/>zeroFile(\ fileEntry,\ length,\ \&numberOfBytesWritten\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00431}00431\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00432}00432\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00433}00433\ \textcolor{comment}{/*\ is\ this\ an\ invalid\ chunk\ coordinate?\ */}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00434}00434\ \textcolor{keywordtype}{bool}\ RegionFile::outOfBounds(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00435}00435\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00436}00436\ \ \ \ \ \textcolor{keywordflow}{return}\ x\ <\ 0\ ||\ x\ >=\ 32\ ||\ z\ <\ 0\ ||\ z\ >=\ 32;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00437}00437\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00438}00438\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00439}00439\ \textcolor{keywordtype}{int}\ RegionFile::getOffset(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00440}00440\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00441}00441\ \ \ \ \ \textcolor{keywordflow}{return}\ offsets[x\ +\ z\ *\ 32];}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00442}00442\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00443}00443\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00444}\doxymbox{\hyperlink{class_region_file_a3a7d0a930352f751ceca0184c383d19a}{00444}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_region_file_a3a7d0a930352f751ceca0184c383d19a}{RegionFile::hasChunk}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00445}00445\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00446}00446\ \ \ \ \ \textcolor{keywordflow}{return}\ getOffset(x,\ z)\ !=\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00447}00447\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00448}00448\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00449}00449\ \textcolor{comment}{//\ 4J\ added\ -\/\ write\ the\ initial\ two\ sectors\ that\ used\ to\ be\ written\ in\ the\ ctor\ when\ the\ file\ was\ empty}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00450}00450\ \textcolor{keywordtype}{void}\ RegionFile::insertInitialSectors()}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00451}00451\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00452}00452\ \ \ \ \ m\_saveFile-\/>\doxymbox{\hyperlink{class_console_save_file_a9dad16dee899a8a409012e832f019722}{setFilePointer}}(\ fileEntry,\ 0,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a1b6a16ca70fb99d4c13aeae1e7283680}{FILE\_BEGIN}}\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00453}00453\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ numberOfBytesWritten\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00454}00454\ \ \ \ \ \textcolor{keywordtype}{byte}\ zeroBytes[\ SECTOR\_BYTES\ ];}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00455}00455\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a1078089d09549c80df3d4320d5798d24}{ZeroMemory}}(zeroBytes,\ SECTOR\_BYTES);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00456}00456\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00457}00457\ \ \ \ \ \textcolor{comment}{/*\ we\ need\ to\ write\ the\ chunk\ offset\ table\ */}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00458}00458\ \ \ \ \ m\_saveFile-\/>\doxymbox{\hyperlink{class_console_save_file_a417eca694e61fa907bf0ccddbfa425d0}{writeFile}}(fileEntry,zeroBytes,SECTOR\_BYTES,\&numberOfBytesWritten);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00459}00459\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00460}00460\ \ \ \ \ \textcolor{comment}{//\ write\ another\ sector\ for\ the\ timestamp\ info}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00461}00461\ \ \ \ \ m\_saveFile-\/>\doxymbox{\hyperlink{class_console_save_file_a417eca694e61fa907bf0ccddbfa425d0}{writeFile}}(fileEntry,zeroBytes,SECTOR\_BYTES,\&numberOfBytesWritten);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00462}00462\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00463}00463\ \ \ \ \ m\_bIsEmpty\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00464}00464\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00465}00465\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00466}00466\ \textcolor{keywordtype}{void}\ RegionFile::setOffset(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}})}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00467}00467\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00468}00468\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_bIsEmpty\ )}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00469}00469\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00470}00470\ \ \ \ \ \ \ \ \ insertInitialSectors();\ \ \ \ \ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00471}00471\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00472}00472\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00473}00473\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ numberOfBytesWritten\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00474}00474\ \ \ \ \ offsets[x\ +\ z\ *\ 32]\ =\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00475}00475\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00476}00476\ \ \ \ \ m\_saveFile-\/>setFilePointer(\ fileEntry,\ (x\ +\ z\ *\ 32)\ *\ 4,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a1b6a16ca70fb99d4c13aeae1e7283680}{FILE\_BEGIN}}\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00477}00477\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00478}00478\ \ \ \ \ m\_saveFile-\/>writeFile(fileEntry,\&\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a599399b014b26ce0293ec5ce00cfccc9}{offset}},4,\&numberOfBytesWritten);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00479}00479\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00480}00480\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00481}00481\ \textcolor{keywordtype}{void}\ RegionFile::setTimestamp(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z,\ \textcolor{keywordtype}{int}\ value)}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00482}00482\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00483}00483\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_bIsEmpty\ )}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00484}00484\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00485}00485\ \ \ \ \ \ \ \ \ insertInitialSectors();\ \ \ \ \ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00486}00486\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00487}00487\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00488}00488\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ numberOfBytesWritten\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00489}00489\ \ \ \ \ chunkTimestamps[x\ +\ z\ *\ 32]\ =\ \doxymbox{\hyperlink{namespace_sentient_a6e9353b7ebb5caa365b8a1452b5ab231}{value}};}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00490}00490\ \ \ \ \ m\_saveFile-\/>setFilePointer(\ fileEntry,\ SECTOR\_BYTES\ +\ (x\ +\ z\ *\ 32)\ *\ 4,\ \textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{_orbis_stubs_8h_a1b6a16ca70fb99d4c13aeae1e7283680}{FILE\_BEGIN}}\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00491}00491\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00492}00492\ \ \ \ \ m\_saveFile-\/>writeFile(fileEntry,\&value,4,\&numberOfBytesWritten);}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00493}00493\ \}}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00494}00494\ }
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00495}\doxymbox{\hyperlink{class_region_file_ac9943d5c4cd9c5823a8c48033639a8ce}{00495}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_region_file_ac9943d5c4cd9c5823a8c48033639a8ce}{RegionFile::close}}()}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00496}00496\ \{}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00497}00497\ \ \ \ \ m\_saveFile-\/>closeHandle(\ fileEntry\ );}
+\DoxyCodeLine{\Hypertarget{_region_file_8cpp_source_l00498}00498\ \}}
+
+\end{DoxyCode}

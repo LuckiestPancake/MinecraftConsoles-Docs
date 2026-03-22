@@ -1,0 +1,27 @@
+var class_add_player_packet =
+[
+    [ "AddPlayerPacket", "class_add_player_packet.html#a9c641f6d39dca557011dc01eedece95f", null ],
+    [ "~AddPlayerPacket", "class_add_player_packet.html#aa08b9f5761cf4985310c2679b66f6cac", null ],
+    [ "AddPlayerPacket", "class_add_player_packet.html#a0aabc29e608b99253643213fc75432c3", null ],
+    [ "getEstimatedSize", "class_add_player_packet.html#ab1f730e07970e504195d6af455258abb", null ],
+    [ "getId", "class_add_player_packet.html#a963f273374d074d9a3842fa4997da48b", null ],
+    [ "getUnpackedData", "class_add_player_packet.html#a3c7356bf16957ba654ad5a6407b07df7", null ],
+    [ "handle", "class_add_player_packet.html#a531bfd879cdfaa74546d08e30bcb7705", null ],
+    [ "read", "class_add_player_packet.html#a5dd57a35a75af04daf3c8e29b1c9c505", null ],
+    [ "write", "class_add_player_packet.html#af5faf23b0afce31f4e6343483dc7183e", null ],
+    [ "carriedItem", "class_add_player_packet.html#ab8d127ccb744927b1602dc8f6a26577f", null ],
+    [ "id", "class_add_player_packet.html#abc3db45a15d6b52bbbc36b250ed8febe", null ],
+    [ "m_capeId", "class_add_player_packet.html#ae92eeb1260c68a57b90d623acfb206f2", null ],
+    [ "m_playerIndex", "class_add_player_packet.html#a5e044ddbcdb41b294b3fdbabd58c2645", null ],
+    [ "m_skinId", "class_add_player_packet.html#adcee7f5133953306a0844a71919e5a7e", null ],
+    [ "m_uiGamePrivileges", "class_add_player_packet.html#adfbc32e138bef7d132ad689d1458ee1d", null ],
+    [ "name", "class_add_player_packet.html#a63999861af54e64d68133cc4ee33585a", null ],
+    [ "OnlineXuid", "class_add_player_packet.html#aee1870f6dd1244a4c86c935c981884ea", null ],
+    [ "x", "class_add_player_packet.html#a8f28c72e3aca26460c625876561e62fe", null ],
+    [ "xRot", "class_add_player_packet.html#a42b2b34656026218e2493c5f5d545d4b", null ],
+    [ "xuid", "class_add_player_packet.html#a49e2dda9ef5b2d066687fb27a6d32079", null ],
+    [ "y", "class_add_player_packet.html#a3a930f88a496adb1a82945008af4719e", null ],
+    [ "yHeadRot", "class_add_player_packet.html#aa1afd2d8153503311bdb7b74b8da872c", null ],
+    [ "yRot", "class_add_player_packet.html#ac241f2ff8a57b56bdec062a9cf9f5e91", null ],
+    [ "z", "class_add_player_packet.html#aa0cea7b8a0f81548b78432ca8dff29a6", null ]
+];

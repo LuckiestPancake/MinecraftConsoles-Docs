@@ -1,0 +1,385 @@
+\doxysection{Pathfinder\+Mob.\+cpp}
+\hypertarget{_pathfinder_mob_8cpp_source}{}\label{_pathfinder_mob_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/PathfinderMob.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/PathfinderMob.cpp}}
+\doxymbox{\hyperlink{_pathfinder_mob_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8h}{net.minecraft.world.entity.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8animal_8h}{net.minecraft.world.entity.animal.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8attributes_8h}{net.minecraft.world.entity.ai.attributes.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8goal_8h}{net.minecraft.world.entity.ai.goal.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8navigation_8h}{net.minecraft.world.entity.ai.navigation.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8monster_8h}{net.minecraft.world.entity.monster.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8h}{net.minecraft.world.level.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8pathfinder_8h}{net.minecraft.world.level.pathfinder.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8phys_8h}{net.minecraft.world.phys.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_shared_constants_8h}{SharedConstants.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_pathfinder_mob_8h}{PathfinderMob.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00014}00014\ \doxymbox{\hyperlink{class_attribute_modifier}{AttributeModifier}}\ *\doxymbox{\hyperlink{class_pathfinder_mob_a546dd5b30ee329ba7678213d31368659}{PathfinderMob::SPEED\_MODIFIER\_FLEEING}}\ =\ (\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_attribute_modifier}{AttributeModifier}}(\doxymbox{\hyperlink{_attribute_modifier_8h_abcdf175a92329a30b78d127985a525cca4d878ee3cc4159c6c9cf9421334594bb}{eModifierId\_MOB\_FLEEING}},\ 2.0f,\ \doxymbox{\hyperlink{class_attribute_modifier_a4a62e76d2b6fe28ccb9111641ed5a799}{AttributeModifier::OPERATION\_MULTIPLY\_TOTAL}}))-\/>setSerialize(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00016}\doxymbox{\hyperlink{class_pathfinder_mob_a47ab7d335e3ec331e455fa6b95d61d45}{00016}}\ \doxymbox{\hyperlink{class_pathfinder_mob_a47ab7d335e3ec331e455fa6b95d61d45}{PathfinderMob::PathfinderMob}}(\doxymbox{\hyperlink{class_level}{Level}}\ *\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}})\ :\ \doxymbox{\hyperlink{class_mob_a0db1f4c225b412fdcda234d8ab410ca3}{Mob}}(\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}\ )}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00017}00017\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00018}00018\ \ \ \ \ path\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00019}00019\ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00020}00020\ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_a3d55b29e8a842388a50370ec8324d78d}{holdGround}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00021}00021\ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_ac0088d93b196cf77803cfcb8b8056511}{fleeTime}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00023}00023\ \ \ \ \ restrictRadius\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00024}00024\ \ \ \ \ restrictCenter\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{deflate_8h_a80a8610ae675eaeead82013bacde10a1}{Pos}}(0,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00025}00025\ \ \ \ \ addedLeashRestrictionGoal\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00026}00026\ \ \ \ \ leashRestrictionGoal\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_move_towards_restriction_goal}{MoveTowardsRestrictionGoal}}(\textcolor{keyword}{this},\ 1.0f);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00027}00027\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00029}\doxymbox{\hyperlink{class_pathfinder_mob_a133697d988981f2b92120c65e41d1242}{00029}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_pathfinder_mob_a133697d988981f2b92120c65e41d1242}{PathfinderMob::shouldHoldGround}}()}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00030}00030\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00031}00031\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00032}00032\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00034}\doxymbox{\hyperlink{class_pathfinder_mob_a6247d6f31d0e814cfce51fa9e98deb52}{00034}}\ \doxymbox{\hyperlink{class_pathfinder_mob_a6247d6f31d0e814cfce51fa9e98deb52}{PathfinderMob::\string~PathfinderMob}}()}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00035}00035\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00036}00036\ \ \ \ \ \textcolor{keyword}{delete}\ path;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00037}00037\ \ \ \ \ \textcolor{keyword}{delete}\ restrictCenter;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00038}00038\ \ \ \ \ \textcolor{keyword}{delete}\ leashRestrictionGoal;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00039}00039\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00041}\doxymbox{\hyperlink{class_pathfinder_mob_a79a4962bd326dc73ce54150e19351fe8}{00041}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pathfinder_mob_a79a4962bd326dc73ce54150e19351fe8}{PathfinderMob::serverAiStep}}()}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00042}00042\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00043}00043\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_pathfinder_mob_ac0088d93b196cf77803cfcb8b8056511}{fleeTime}}\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00044}00044\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (-\/-\/\doxymbox{\hyperlink{class_pathfinder_mob_ac0088d93b196cf77803cfcb8b8056511}{fleeTime}}\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00046}00046\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_attribute_instance}{AttributeInstance}}\ *speed\ =\ \doxymbox{\hyperlink{class_living_entity_a1fea8534cdafa00c00991a8e18227c0c}{getAttribute}}(\doxymbox{\hyperlink{class_shared_monster_attributes_afd4af9b46e905a33709cd182d3b1a60d}{SharedMonsterAttributes::MOVEMENT\_SPEED}});}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ speed-\/>removeModifier(\doxymbox{\hyperlink{class_pathfinder_mob_a546dd5b30ee329ba7678213d31368659}{SPEED\_MODIFIER\_FLEEING}});}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00049}00049\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00050}00050\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00051}00051\ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_a3d55b29e8a842388a50370ec8324d78d}{holdGround}}\ =\ \doxymbox{\hyperlink{class_pathfinder_mob_a133697d988981f2b92120c65e41d1242}{shouldHoldGround}}();}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{keywordtype}{float}\ maxDist\ =\ 16;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00054}00054\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}}\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00055}00055\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}}\ =\ \doxymbox{\hyperlink{class_pathfinder_mob_addc9795b311751718b0ee62186a9448d}{findAttackTarget}}();}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}}\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00058}00058\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_a0c9033924d7152fdc7edd6b8d5ca8155}{setPath}}(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>findPath(shared\_from\_this(),\ \doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}},\ maxDist,\ \textcolor{keyword}{true},\ \textcolor{keyword}{false},\ \textcolor{keyword}{false},\ \textcolor{keyword}{true}));\ \textcolor{comment}{//\ 4J\ -\/\ changed\ to\ setPath\ from\ path\ =}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00061}00061\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00062}00062\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00063}00063\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}}-\/>isAlive())}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00065}00065\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ d\ =\ \doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}}-\/>distanceTo(shared\_from\_this());}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_living_entity_af8818a3c6186f470eb2d6c2acb38533f}{canSee}}(\doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}}))}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_a8501e456013e786cbb65b513fd16756a}{checkHurtTarget}}(\doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}},\ d);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00076}00076\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00078}00078\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00079}00079\ \textcolor{comment}{\ \ \ \ *\ if\ (holdGround)\ \{\ xxa\ =\ 0;\ yya\ =\ 0;\ jumping\ =\ false;\ return;\ \}}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00080}00080\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00082}00082\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ a\ few\ changes\ here\ so\ that\ we\ can\ call\ findRandomStrollLocation\ for\ a\ sub-\/set\ of\ things\ that\ it\ normally\ wouldn't\ be\ in\ the\ java\ game.}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00083}00083\ \ \ \ \ \textcolor{comment}{//\ This\ is\ so\ that\ we\ can\ have\ entities\ wander\ around\ a\ little,\ in\ order\ that\ we\ can\ measure\ how\ far\ they\ wander\ and\ then\ determine\ (if\ they\ wander\ too\ far)\ that}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00084}00084\ \ \ \ \ \textcolor{comment}{//\ they\ aren't\ enclosed.\ We\ don't\ want\ the\ extra\ network\ overhead\ of\ just\ having\ Everything\ wandering\ round\ all\ the\ time,\ so\ have\ put\ a\ management\ system\ in\ place}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00085}00085\ \ \ \ \ \textcolor{comment}{//\ that\ selects\ a\ subset\ of\ entities\ which\ have\ had\ their\ flag\ set\ through\ the\ considerForExtraWandering\ method\ so\ that\ these\ can\ keep\ doing\ random\ strolling.}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00087}00087\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_pathfinder_mob_a3d55b29e8a842388a50370ec8324d78d}{holdGround}}\ \&\&\ (\doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}}\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ (path\ ==\ \textcolor{keyword}{nullptr}\ ||\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(20)\ ==\ 0)))}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00088}00088\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_a0c9033924d7152fdc7edd6b8d5ca8155}{setPath}}(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>findPath(shared\_from\_this(),\ \doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}},\ maxDist,\ \textcolor{keyword}{true},\ \textcolor{keyword}{false},\ \textcolor{keyword}{false},\ \textcolor{keyword}{true}));\textcolor{comment}{//\ 4J\ -\/\ changed\ to\ setPath\ from\ path\ =}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00090}00090\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00091}00091\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_pathfinder_mob_a3d55b29e8a842388a50370ec8324d78d}{holdGround}}\ \&\&\ ((path\ ==\ \textcolor{keyword}{nullptr}\ \&\&\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(180)\ ==\ 0)\ ||\ \doxymbox{\hyperlink{class_pathfinder_mob_ac0088d93b196cf77803cfcb8b8056511}{fleeTime}}\ >\ 0)\ ||\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(120)\ ==\ 0\ ||\ \doxymbox{\hyperlink{class_pathfinder_mob_ac0088d93b196cf77803cfcb8b8056511}{fleeTime}}\ >\ 0)))}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00092}00092\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_living_entity_a866db1702401da64633d336b401928cd}{noActionTime}}\ <\ \doxymbox{\hyperlink{class_shared_constants_a170b00572bc783af06c9f0cda11f24c2}{SharedConstants::TICKS\_PER\_SECOND}}\ *\ 5)\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_a3c1a7988f7603f18e8278485957e1a09}{findRandomStrollLocation}}();}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00097}00097\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_pathfinder_mob_a3d55b29e8a842388a50370ec8324d78d}{holdGround}}\ \&\&\ (path\ ==\ \textcolor{keyword}{nullptr}\ )\ )}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00099}00099\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ \doxymbox{\hyperlink{class_living_entity_a866db1702401da64633d336b401928cd}{noActionTime}}\ >=\ \doxymbox{\hyperlink{class_shared_constants_a170b00572bc783af06c9f0cda11f24c2}{SharedConstants::TICKS\_PER\_SECOND}}\ *\ 5\ )\ \&\&\ \doxymbox{\hyperlink{class_entity_a9e94d6bb05100cf44079ec9a6804d704}{isExtraWanderingEnabled}}()\ )}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ entity\ wouldn't\ normally\ be\ randomly\ strolling.\ However,\ if\ our\ management\ system\ says\ that\ it\ should\ do,\ then\ do.\ Don't}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ bother\ waiting\ for\ random\ conditions\ to\ be\ met\ before\ picking\ a\ direction\ though\ as\ the\ point\ here\ is\ to\ see\ if\ it\ is\ possible\ to}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ stroll\ out\ of\ a\ given\ area\ and\ so\ waiting\ around\ is\ just\ wasting\ time}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_a3c1a7988f7603f18e8278485957e1a09}{findRandomStrollLocation}}(\doxymbox{\hyperlink{class_entity_a433aa97e2d388adf4a1623c7c625de5e}{getWanderingQuadrant}}());}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00107}00107\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00109}00109\ \ \ \ \ \textcolor{comment}{//\ Consider\ this\ for\ extra\ strolling\ if\ it\ is\ protected\ against\ despawning.\ We\ aren't\ interested\ in\ ones\ that\ aren't\ protected\ as\ the\ whole\ point\ of\ this}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00110}00110\ \ \ \ \ \textcolor{comment}{//\ extra\ wandering\ is\ to\ potentially\ transition\ from\ protected\ to\ not\ protected.}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00111}00111\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aab8779b8d44b7e3aca6d1b4536b0891e}{considerForExtraWandering}}(\ \doxymbox{\hyperlink{class_entity_a9e2895a81e2657de261832f24839780f}{isDespawnProtected}}()\ );}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00113}00113\ \ \ \ \ \textcolor{keywordtype}{int}\ yFloor\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>y0\ +\ 0.5f);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00115}00115\ \ \ \ \ \textcolor{keywordtype}{bool}\ inWater\ =\ \doxymbox{\hyperlink{class_entity_a4bbb8f63a3753d23c8a80587f1cdc962}{isInWater}}();}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00116}00116\ \ \ \ \ \textcolor{keywordtype}{bool}\ inLava\ =\ \doxymbox{\hyperlink{class_entity_aebe81c4ce400bed492f5e613b01d3b76}{isInLava}}();}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00117}00117\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa4831e48a29ca9b5c2cc319c4fd45153}{xRot}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00118}00118\ \ \ \ \ \textcolor{keywordflow}{if}\ (path\ ==\ \textcolor{keyword}{nullptr}\ ||\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(100)\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00119}00119\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ this-\/>\doxymbox{\hyperlink{class_mob_ae0f6b6a2495b8ffe8744f5311c686c07}{Mob::serverAiStep}}();}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_a0c9033924d7152fdc7edd6b8d5ca8155}{setPath}}(\textcolor{keyword}{nullptr});\textcolor{comment}{//\ 4J\ -\/\ changed\ to\ setPath\ from\ path\ =}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00123}00123\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00125}00125\ \ \ \ \ \doxymbox{\hyperlink{class_vec3}{Vec3}}\ *target\ =\ path-\/>currentPos(shared\_from\_this());}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00126}00126\ \ \ \ \ \textcolor{keywordtype}{double}\ r\ =\ \doxymbox{\hyperlink{class_entity_ac236e702a850201c2c4246cc3e6f4df2}{bbWidth}}\ *\ 2;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00127}00127\ \ \ \ \ \textcolor{keywordflow}{while}\ (target\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ target-\/>distanceToSqr(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ target-\/>y,\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}})\ <\ r\ *\ r)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00128}00128\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ path-\/>next();}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (path-\/>isDone())}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ target\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_a0c9033924d7152fdc7edd6b8d5ca8155}{setPath}}(\textcolor{keyword}{nullptr});\ \textcolor{comment}{//\ 4J\ -\/\ changed\ to\ setPath\ from\ path\ =}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ target\ =\ path-\/>currentPos(shared\_from\_this());}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00136}00136\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00138}00138\ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_a9b26c9f21e502b67b82a3d5dc7c522f5}{jumping}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00139}00139\ \ \ \ \ \textcolor{keywordflow}{if}\ (target\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00140}00140\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ =\ target-\/>x\ -\/\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ =\ target-\/>z\ -\/\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ =\ target-\/>y\ -\/\ yFloor;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yRotD\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(atan2(\doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}},\ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}})\ *\ 180\ /\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}})\ -\/\ 90;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ rotDiff\ =\ \doxymbox{\hyperlink{class_mth_a0f480bf28fa5b25abdf268df18dd5917}{Mth::wrapDegrees}}(yRotD\ -\/\ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}});}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_acc03b53b5a1e709389e06eb9c940eaa4}{yya}}\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_living_entity_a1fea8534cdafa00c00991a8e18227c0c}{getAttribute}}(\doxymbox{\hyperlink{class_shared_monster_attributes_afd4af9b46e905a33709cd182d3b1a60d}{SharedMonsterAttributes::MOVEMENT\_SPEED}})-\/>\doxymbox{\hyperlink{class_attribute_instance_a2bde42f852f655bbc260d79964f7c103}{getValue}}());}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rotDiff\ >\ MAX\_TURN)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ rotDiff\ =\ MAX\_TURN;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rotDiff\ <\ -\/MAX\_TURN)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ rotDiff\ =\ -\/MAX\_TURN;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ +=\ rotDiff;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_pathfinder_mob_a3d55b29e8a842388a50370ec8324d78d}{holdGround}})}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}}\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xd2\ =\ \doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}}-\/>x\ -\/\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ zd2\ =\ \doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}}-\/>z\ -\/\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ oldyRot\ =\ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}}\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(atan2(zd2,\ xd2)\ *\ 180\ /\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}})\ -\/\ 90;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotDiff\ =\ ((oldyRot\ -\/\ \doxymbox{\hyperlink{class_entity_ab05e9bf3222f69b4a20dd717f17ba92b}{yRot}})\ +\ 90)\ *\ \doxymbox{\hyperlink{_definitions_8h_a598a3330b3c21701223ee0ca14316eca}{PI}}\ /\ 180;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_ab4d86eeb5e5d5f126dd8449a9619025f}{xxa}}\ =\ -\/\doxymbox{\hyperlink{class_mth_a504719e86988c740047029e16d73f79b}{Mth::sin}}(rotDiff)\ *\ \doxymbox{\hyperlink{class_living_entity_acc03b53b5a1e709389e06eb9c940eaa4}{yya}}\ *\ 1.0f;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_acc03b53b5a1e709389e06eb9c940eaa4}{yya}}\ =\ \doxymbox{\hyperlink{class_mth_a0375fc62984b40bd91df0ce8d7b179ae}{Mth::cos}}(rotDiff)\ *\ \doxymbox{\hyperlink{class_living_entity_acc03b53b5a1e709389e06eb9c940eaa4}{yya}}\ *\ 1.0f;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_a9b26c9f21e502b67b82a3d5dc7c522f5}{jumping}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00176}00176\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00178}00178\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}}\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00179}00179\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_mob_add8b6fbe96de6d143d2caa76b13a0494}{lookAt}}(\doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}},\ 30,\ 30);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00181}00181\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00183}00183\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_af57ae2c2933e4e237b4c9b3273bf0144}{horizontalCollision}}\ \&\&\ !\doxymbox{\hyperlink{class_pathfinder_mob_aef2a5b579f2781f9c6f1aca98f38042b}{isPathFinding}}())\ \doxymbox{\hyperlink{class_living_entity_a9b26c9f21e502b67b82a3d5dc7c522f5}{jumping}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00184}00184\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ <\ 0.8f\ \&\&\ (inWater\ ||\ inLava))\ \doxymbox{\hyperlink{class_living_entity_a9b26c9f21e502b67b82a3d5dc7c522f5}{jumping}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00185}00185\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00187}\doxymbox{\hyperlink{class_pathfinder_mob_a3c1a7988f7603f18e8278485957e1a09}{00187}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pathfinder_mob_a3c1a7988f7603f18e8278485957e1a09}{PathfinderMob::findRandomStrollLocation}}(\textcolor{keywordtype}{int}\ quadrant\textcolor{comment}{/*=-\/1*/})\ \ \ \textcolor{comment}{//\ 4J\ -\/\ added\ quadrant}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00188}00188\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00189}00189\ \ \ \ \ \textcolor{keywordtype}{bool}\ hasBest\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00190}00190\ \ \ \ \ \textcolor{keywordtype}{int}\ xBest\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00191}00191\ \ \ \ \ \textcolor{keywordtype}{int}\ yBest\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00192}00192\ \ \ \ \ \textcolor{keywordtype}{int}\ zBest\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00193}00193\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a5b999eec981ed1fde5bf488e8057d358}{best}}\ =\ -\/99999;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00194}00194\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 10;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00195}00195\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ added\ quadrant\ parameter\ to\ this\ method\ so\ that\ the\ caller\ can\ request\ that\ only\ stroll\ locations\ in\ one\ quadrant\ be\ found.\ If\ -\/1\ is\ passed\ then}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ behaviour\ is\ the\ same\ as\ the\ java\ game}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ xt,\ zt;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ yt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(7)\ -\/\ 3);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ quadrant\ ==\ -\/1\ )}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ xt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(13)\ -\/\ 6);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ zt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(13)\ -\/\ 6);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ sx\ =\ (\ (\ quadrant\ \&\ 1\ )\ ?\ -\/1\ :\ 1\ );}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ sz\ =\ (\ (\ quadrant\ \&\ 2\ )\ ?\ -\/1\ :\ 1\ );}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ xt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(7)\ *\ sx);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ zt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(7)\ *\ sz);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ value\ =\ \doxymbox{\hyperlink{class_pathfinder_mob_a936d06285533dc8dafd4f56722ab33cd}{getWalkTargetValue}}(xt,\ yt,\ zt);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (value\ >\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a5b999eec981ed1fde5bf488e8057d358}{best}})}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a5b999eec981ed1fde5bf488e8057d358}{best}}\ =\ value;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ xBest\ =\ xt;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ yBest\ =\ yt;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ zBest\ =\ zt;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ hasBest\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00221}00221\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00222}00222\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasBest)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00223}00223\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_a0c9033924d7152fdc7edd6b8d5ca8155}{setPath}}(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>findPath(shared\_from\_this(),\ xBest,\ yBest,\ zBest,\ 10,\ \textcolor{keyword}{true},\ \textcolor{keyword}{false},\ \textcolor{keyword}{false},\ \textcolor{keyword}{true}));\ \textcolor{comment}{//\ 4J\ -\/\ changed\ to\ setPath\ from\ path\ =}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00225}00225\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00226}00226\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00227}00227\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00228}\doxymbox{\hyperlink{class_pathfinder_mob_a8501e456013e786cbb65b513fd16756a}{00228}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pathfinder_mob_a8501e456013e786cbb65b513fd16756a}{PathfinderMob::checkHurtTarget}}(shared\_ptr<Entity>\ target,\ \textcolor{keywordtype}{float}\ d)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00229}00229\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00230}00230\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00231}00231\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00232}\doxymbox{\hyperlink{class_pathfinder_mob_a936d06285533dc8dafd4f56722ab33cd}{00232}}\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_pathfinder_mob_a936d06285533dc8dafd4f56722ab33cd}{PathfinderMob::getWalkTargetValue}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}})}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00233}00233\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00234}00234\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00235}00235\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00236}00236\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00237}\doxymbox{\hyperlink{class_pathfinder_mob_addc9795b311751718b0ee62186a9448d}{00237}}\ shared\_ptr<Entity>\ \doxymbox{\hyperlink{class_pathfinder_mob_addc9795b311751718b0ee62186a9448d}{PathfinderMob::findAttackTarget}}()}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00238}00238\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00239}00239\ \ \ \ \ \textcolor{keywordflow}{return}\ shared\_ptr<Entity>();}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00240}00240\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00243}\doxymbox{\hyperlink{class_pathfinder_mob_ad1d6918a1471f5d6f9dfef10546f1bb9}{00243}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_pathfinder_mob_ad1d6918a1471f5d6f9dfef10546f1bb9}{PathfinderMob::canSpawn}}()}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00244}00244\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00245}00245\ \ \ \ \ \textcolor{keywordtype}{int}\ xt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}});}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00246}00246\ \ \ \ \ \textcolor{keywordtype}{int}\ yt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a5fcab90e266e0678905cb153e58dd9c0}{bb}}-\/>y0);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00247}00247\ \ \ \ \ \textcolor{keywordtype}{int}\ zt\ =\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00248}00248\ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>\doxymbox{\hyperlink{class_mob_a4540f3f32534c3f8e17dc969f2e089ac}{Mob::canSpawn}}()\ \&\&\ \doxymbox{\hyperlink{class_pathfinder_mob_a936d06285533dc8dafd4f56722ab33cd}{getWalkTargetValue}}(xt,\ yt,\ zt)\ >=\ 0;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00249}00249\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00251}\doxymbox{\hyperlink{class_pathfinder_mob_aef2a5b579f2781f9c6f1aca98f38042b}{00251}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_pathfinder_mob_aef2a5b579f2781f9c6f1aca98f38042b}{PathfinderMob::isPathFinding}}()}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00252}00252\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00253}00253\ \ \ \ \ \textcolor{keywordflow}{return}\ path\ !=\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00254}00254\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00256}\doxymbox{\hyperlink{class_pathfinder_mob_a0c9033924d7152fdc7edd6b8d5ca8155}{00256}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pathfinder_mob_a0c9033924d7152fdc7edd6b8d5ca8155}{PathfinderMob::setPath}}(\doxymbox{\hyperlink{class_path}{Path}}\ *path)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00257}00257\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00258}00258\ \ \ \ \ \textcolor{keyword}{delete}\ this-\/>path;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00259}00259\ \ \ \ \ this-\/>path\ =\ path;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00260}00260\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00262}\doxymbox{\hyperlink{class_pathfinder_mob_a8165a78f08be745cff06293d626b7667}{00262}}\ shared\_ptr<Entity>\ \doxymbox{\hyperlink{class_pathfinder_mob_a8165a78f08be745cff06293d626b7667}{PathfinderMob::getAttackTarget}}()}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00263}00263\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00264}00264\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00265}00265\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00267}\doxymbox{\hyperlink{class_pathfinder_mob_af51978e4442047a67de014314cc01518}{00267}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pathfinder_mob_af51978e4442047a67de014314cc01518}{PathfinderMob::setAttackTarget}}(shared\_ptr<Entity>\ attacker)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00268}00268\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00269}00269\ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_ae65f6d1dd7dfe305ef9819c0124ff5c1}{attackTarget}}\ =\ attacker;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00270}00270\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00271}00271\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00272}00272\ \textcolor{comment}{//\ might\ move\ to\ navigation,\ might\ make\ area}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00273}\doxymbox{\hyperlink{class_pathfinder_mob_a5ecb7500892a9c04b90ec051e8e58d2c}{00273}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_pathfinder_mob_a5ecb7500892a9c04b90ec051e8e58d2c}{PathfinderMob::isWithinRestriction}}()}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00274}00274\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00275}00275\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_pathfinder_mob_a5ecb7500892a9c04b90ec051e8e58d2c}{isWithinRestriction}}(\doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}),\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}),\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}));}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00276}00276\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00278}\doxymbox{\hyperlink{class_pathfinder_mob_a1aed615c7acc33aefdc555a3d5c485f4}{00278}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_pathfinder_mob_a5ecb7500892a9c04b90ec051e8e58d2c}{PathfinderMob::isWithinRestriction}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}})}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00279}00279\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00280}00280\ \ \ \ \ \textcolor{keywordflow}{if}\ (restrictRadius\ ==\ -\/1)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00281}00281\ \ \ \ \ \textcolor{keywordflow}{return}\ restrictCenter-\/>distSqr(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}})\ <\ restrictRadius\ *\ restrictRadius;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00282}00282\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00284}\doxymbox{\hyperlink{class_pathfinder_mob_ab8f22222f3706b4fe12bb42bdd7fa22d}{00284}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pathfinder_mob_ab8f22222f3706b4fe12bb42bdd7fa22d}{PathfinderMob::restrictTo}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}},\ \textcolor{keywordtype}{int}\ radius)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00285}00285\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00286}00286\ \ \ \ \ restrictCenter-\/>set(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}});}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00287}00287\ \ \ \ \ restrictRadius\ =\ radius;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00288}00288\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00289}00289\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00290}\doxymbox{\hyperlink{class_pathfinder_mob_a6adbd643b9015e5e30b736bdf2154698}{00290}}\ \doxymbox{\hyperlink{class_pos}{Pos}}\ *\doxymbox{\hyperlink{class_pathfinder_mob_a6adbd643b9015e5e30b736bdf2154698}{PathfinderMob::getRestrictCenter}}()}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00291}00291\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00292}00292\ \ \ \ \ \textcolor{keywordflow}{return}\ restrictCenter;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00293}00293\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00294}00294\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00295}\doxymbox{\hyperlink{class_pathfinder_mob_af73508ce3d30f40fd3fd98fc1a148047}{00295}}\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_pathfinder_mob_af73508ce3d30f40fd3fd98fc1a148047}{PathfinderMob::getRestrictRadius}}()}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00296}00296\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00297}00297\ \ \ \ \ \textcolor{keywordflow}{return}\ restrictRadius;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00298}00298\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00299}00299\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00300}\doxymbox{\hyperlink{class_pathfinder_mob_a1fe1667d069fd74cc0db230b06126ed4}{00300}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pathfinder_mob_a1fe1667d069fd74cc0db230b06126ed4}{PathfinderMob::clearRestriction}}()}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00301}00301\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00302}00302\ \ \ \ \ restrictRadius\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00303}00303\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00304}00304\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00305}\doxymbox{\hyperlink{class_pathfinder_mob_ab34f1e95595e88c00ffa6f755ebd293a}{00305}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_pathfinder_mob_ab34f1e95595e88c00ffa6f755ebd293a}{PathfinderMob::hasRestriction}}()}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00306}00306\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00307}00307\ \ \ \ \ \textcolor{keywordflow}{return}\ restrictRadius\ !=\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00308}00308\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00309}00309\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00310}\doxymbox{\hyperlink{class_pathfinder_mob_a8e5f1574de96571f2f51e5de508d4af3}{00310}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pathfinder_mob_a8e5f1574de96571f2f51e5de508d4af3}{PathfinderMob::tickLeash}}()}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00311}00311\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00312}00312\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a499b89d63c14fb5aa6f20894dd7a48a5}{Mob::tickLeash}}();}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00314}00314\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_mob_a129b2046dcfca4e7e48811f5aaeb53c6}{isLeashed}}()\ \&\&\ \doxymbox{\hyperlink{class_mob_a9266614b9765819e76d81795596f1f65}{getLeashHolder}}()\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{class_mob_a9266614b9765819e76d81795596f1f65}{getLeashHolder}}()-\/>\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}\ ==\ this-\/>\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}})}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00315}00315\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ soft\ restriction}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ shared\_ptr<Entity>\ leashHolder\ =\ \doxymbox{\hyperlink{class_mob_a9266614b9765819e76d81795596f1f65}{getLeashHolder}}();}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_ab8f22222f3706b4fe12bb42bdd7fa22d}{restrictTo}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(leashHolder-\/>x),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(leashHolder-\/>y),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(leashHolder-\/>z),\ 5);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00319}00319\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \_distanceTo\ =\ \doxymbox{\hyperlink{class_entity_ae991a89c4194d48f39b93040498f2707}{distanceTo}}(leashHolder);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ shared\_ptr<TamableAnimal>\ tamabaleAnimal\ =\ shared\_from\_this()-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a4620707085271585394a226a2815df02}{eTYPE\_TAMABLE\_ANIMAL}})\ ?\ dynamic\_pointer\_cast<TamableAnimal>(shared\_from\_this())\ :\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00323}00323\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ (tamabaleAnimal\ !=\ \textcolor{keyword}{nullptr})\ \&\&\ tamabaleAnimal-\/>isSitting()\ )}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_distanceTo\ >\ 10)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_mob_a14f08a99bdd56dcbc6dbe8eb4bd89182}{dropLeash}}(\textcolor{keyword}{true},\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00331}00331\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!addedLeashRestrictionGoal)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(2,\ leashRestrictionGoal,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_mob_ad588b0b4b705647e885e9affa1911533}{getNavigation}}()-\/>\doxymbox{\hyperlink{class_path_navigation_a7bac2f5f74000a16d7db28066b68203d}{setAvoidWater}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ addedLeashRestrictionGoal\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00338}00338\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_a0ae24e7f26e7593fbc5c9e53f87a9cd1}{onLeashDistance}}(\_distanceTo);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00340}00340\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_distanceTo\ >\ 4)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ harder\ restriction}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_mob_ad588b0b4b705647e885e9affa1911533}{getNavigation}}()-\/>\doxymbox{\hyperlink{class_path_navigation_a940715b8a5d1e81df95304a83af84260}{moveTo}}(leashHolder,\ 1.0);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_distanceTo\ >\ 6)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ hardest\ restriction}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dx\ =\ (leashHolder-\/>x\ -\/\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}})\ /\ \_distanceTo;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dy\ =\ (leashHolder-\/>y\ -\/\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}})\ /\ \_distanceTo;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dz\ =\ (leashHolder-\/>z\ -\/\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}})\ /\ \_distanceTo;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00352}00352\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a55dd60ba582ea566d4dc671f703ecd98}{xd}}\ +=\ dx\ *\ abs(dx)\ *\ .4;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_aa38a8cb79a05ef1c6c9e71dbf798126a}{yd}}\ +=\ dy\ *\ abs(dy)\ *\ .4;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a6fb203995915af6b4b094d9c95b83273}{zd}}\ +=\ dz\ *\ abs(dz)\ *\ .4;}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_distanceTo\ >\ 10)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_mob_a14f08a99bdd56dcbc6dbe8eb4bd89182}{dropLeash}}(\textcolor{keyword}{true},\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00361}00361\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00362}00362\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00363}00363\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_mob_a129b2046dcfca4e7e48811f5aaeb53c6}{isLeashed}}()\ \&\&\ addedLeashRestrictionGoal)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00364}00364\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ addedLeashRestrictionGoal\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.removeGoal(leashRestrictionGoal);}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_mob_ad588b0b4b705647e885e9affa1911533}{getNavigation}}()-\/>\doxymbox{\hyperlink{class_path_navigation_a7bac2f5f74000a16d7db28066b68203d}{setAvoidWater}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_a1fe1667d069fd74cc0db230b06126ed4}{clearRestriction}}();}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00369}00369\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00370}00370\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00371}00371\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00372}\doxymbox{\hyperlink{class_pathfinder_mob_a0ae24e7f26e7593fbc5c9e53f87a9cd1}{00372}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pathfinder_mob_a0ae24e7f26e7593fbc5c9e53f87a9cd1}{PathfinderMob::onLeashDistance}}(\textcolor{keywordtype}{float}\ distanceToLeashHolder)}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00373}00373\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00374}00374\ \}}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00375}00375\ }
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00376}\doxymbox{\hyperlink{class_pathfinder_mob_ac19268aba293e9ba094b66c5ad260913}{00376}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_pathfinder_mob_ac19268aba293e9ba094b66c5ad260913}{PathfinderMob::couldWander}}()}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00377}00377\ \{}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00378}00378\ \ \ \ \ \textcolor{keywordflow}{return}\ (\doxymbox{\hyperlink{class_living_entity_a866db1702401da64633d336b401928cd}{noActionTime}}\ <\ \doxymbox{\hyperlink{class_shared_constants_a170b00572bc783af06c9f0cda11f24c2}{SharedConstants::TICKS\_PER\_SECOND}}\ *\ 5)\ ||\ (\ \doxymbox{\hyperlink{class_entity_a9e94d6bb05100cf44079ec9a6804d704}{isExtraWanderingEnabled}}()\ );}
+\DoxyCodeLine{\Hypertarget{_pathfinder_mob_8cpp_source_l00379}00379\ \}}
+
+\end{DoxyCode}

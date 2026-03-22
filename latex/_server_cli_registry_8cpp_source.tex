@@ -1,0 +1,105 @@
+\doxysection{Server\+Cli\+Registry.\+cpp}
+\hypertarget{_server_cli_registry_8cpp_source}{}\label{_server_cli_registry_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/Console/ServerCliRegistry.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/Console/ServerCliRegistry.cpp}}
+\doxymbox{\hyperlink{_server_cli_registry_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_cli_registry_8h}{ServerCliRegistry.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_i_server_cli_command_8h}{commands\(\backslash\)IServerCliCommand.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_utils_8h}{..\(\backslash\)Common\(\backslash\)StringUtils.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00008}00008\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_server_runtime}{ServerRuntime}}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00009}00009\ \{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00010}\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_registry_a6a6f6acbeba8e7fb192d28d593daaa91}{00010}}\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_registry_a6a6f6acbeba8e7fb192d28d593daaa91}{ServerCliRegistry::Register}}(std::unique\_ptr<IServerCliCommand>\ command)}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00011}00011\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00012}00012\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!command)}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00013}00013\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00014}00014\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00015}00015\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00017}00017\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_server_runtime_1_1_i_server_cli_command}{IServerCliCommand}}\ *raw\ =\ command.get();}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00018}00018\ \ \ \ \ \ \ \ \ std::string\ baseName\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a5659674ecf09348686afcee671932cce}{StringUtils::ToLowerAscii}}(raw-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_i_server_cli_command_a8db74c6fafe24a68116d44873d6ec6d5}{Name}}());}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reject\ empty/duplicate\ primary\ command\ names.}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00020}00020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (baseName.empty()\ ||\ m\_lookup.find(baseName)\ !=\ m\_lookup.end())}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00021}00021\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00022}00022\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00023}00023\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00024}00024\ \ \ \ \ \ \ \ \ std::vector<std::string>\ aliases\ =\ raw-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_i_server_cli_command_aa488a7b9700f7e1d4d40050d70a1c38a}{Aliases}}();}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00025}00025\ \ \ \ \ \ \ \ \ std::vector<std::string>\ normalizedAliases;}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00026}00026\ \ \ \ \ \ \ \ \ normalizedAliases.reserve(aliases.size());}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00027}00027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ aliases.size();\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00028}00028\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ alias\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a5659674ecf09348686afcee671932cce}{StringUtils::ToLowerAscii}}(aliases[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]);}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00030}00030\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Alias\ must\ also\ be\ unique\ across\ all\ names\ and\ aliases.}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (alias.empty()\ ||\ m\_lookup.find(alias)\ !=\ m\_lookup.end())}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ normalizedAliases.push\_back(alias);}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00036}00036\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ m\_lookup[baseName]\ =\ raw;}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ normalizedAliases.size();\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ m\_lookup[normalizedAliases[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]]\ =\ raw;}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Command\ objects\ are\ owned\ here;\ lookup\ stores\ non-\/owning\ pointers.}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ m\_commands.push\_back(std::move(command));}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00046}00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00047}00047\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00049}\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_registry_a08a0b54a3c5a77d2c88951e1eb585f27}{00049}}\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_server_runtime_1_1_i_server_cli_command}{IServerCliCommand}}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_registry_a08a0b54a3c5a77d2c88951e1eb585f27}{ServerCliRegistry::Find}}(\textcolor{keyword}{const}\ std::string\ \&name)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00050}00050\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00051}00051\ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}}\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a5659674ecf09348686afcee671932cce}{StringUtils::ToLowerAscii}}(name);}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ m\_lookup.find(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}});}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ ==\ m\_lookup.end())}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00058}00058\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00060}\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_registry_a222aa488aba4d8de6ce3dfe30d0a3895}{00060}}\ \ \ \ \ \doxymbox{\hyperlink{class_server_runtime_1_1_i_server_cli_command}{IServerCliCommand}}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_registry_a222aa488aba4d8de6ce3dfe30d0a3895}{ServerCliRegistry::FindMutable}}(\textcolor{keyword}{const}\ std::string\ \&name)}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00061}00061\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}}\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a5659674ecf09348686afcee671932cce}{StringUtils::ToLowerAscii}}(name);}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ m\_lookup.find(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}});}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ ==\ m\_lookup.end())}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00065}00065\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}};}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it-\/>second;}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00069}00069\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00071}\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_registry_abc772a394a2885bb3fb2194acda47e60}{00071}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_registry_abc772a394a2885bb3fb2194acda47e60}{ServerCliRegistry::SuggestCommandNames}}(\textcolor{keyword}{const}\ std::string\ \&prefix,\ \textcolor{keyword}{const}\ std::string\ \&linePrefix,\ std::vector<std::string>\ *out)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00072}00072\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_commands.size();\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_server_runtime_1_1_i_server_cli_command}{IServerCliCommand}}\ *command\ =\ m\_commands[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].get();}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ name\ =\ command-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_i_server_cli_command_a8db74c6fafe24a68116d44873d6ec6d5}{Name}}();}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a84f912b74a6297e89374bb71b850f5ae}{StringUtils::StartsWithIgnoreCase}}(name,\ prefix))}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out-\/>push\_back(linePrefix\ +\ name);}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Include\ aliases\ so\ users\ can\ discover\ shorthand\ commands.}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::string>\ aliases\ =\ command-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_i_server_cli_command_aa488a7b9700f7e1d4d40050d70a1c38a}{Aliases}}();}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ aliasIndex\ =\ 0;\ aliasIndex\ <\ aliases.size();\ ++aliasIndex)}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a84f912b74a6297e89374bb71b850f5ae}{StringUtils::StartsWithIgnoreCase}}(aliases[aliasIndex],\ prefix))}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out-\/>push\_back(linePrefix\ +\ aliases[aliasIndex]);}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00092}00092\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00094}\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_registry_a03d25d8aadc876a6d101d4591eff9b42}{00094}}\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::unique\_ptr<IServerCliCommand>>\ \&\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_registry_a03d25d8aadc876a6d101d4591eff9b42}{ServerCliRegistry::Commands}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00095}00095\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_commands;}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00097}00097\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00098}00098\ \}}
+\DoxyCodeLine{\Hypertarget{_server_cli_registry_8cpp_source_l00099}00099\ }
+
+\end{DoxyCode}

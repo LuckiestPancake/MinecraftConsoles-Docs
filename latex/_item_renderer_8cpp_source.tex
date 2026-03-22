@@ -1,0 +1,770 @@
+\doxysection{Item\+Renderer.\+cpp}
+\hypertarget{_item_renderer_8cpp_source}{}\label{_item_renderer_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/ItemRenderer.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/ItemRenderer.cpp}}
+\doxymbox{\hyperlink{_item_renderer_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_client_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_item_renderer_8h}{ItemRenderer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_tile_renderer_8h}{TileRenderer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_entity_render_dispatcher_8h}{entityRenderDispatcher.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_java_math_8h}{..\(\backslash\)Minecraft.World\(\backslash\)JavaMath.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8item_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.entity.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8alchemy_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.item.alchemy.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8tile_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.tile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_helpers_8h}{..\(\backslash\)Minecraft.World\(\backslash\)StringHelpers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_options_8h}{Options.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_texture_atlas_8h}{TextureAtlas.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00016}00016\ \textcolor{keyword}{extern}\ IDirect3DDevice9\ *\doxymbox{\hyperlink{_x_u_i___font_8cpp_a53012bc1717f7d20de38c5815da40ea5}{g\_pD3DDevice}};}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00017}00017\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00019}\doxymbox{\hyperlink{class_item_renderer_ab4020cfad3216441f4bdcee11c7ec89b}{00019}}\ \doxymbox{\hyperlink{class_item_renderer_ab4020cfad3216441f4bdcee11c7ec89b}{ItemRenderer::ItemRenderer}}()\ :\ \doxymbox{\hyperlink{class_entity_renderer_a443dd53e40ee0ba00fd8cea3a09f2f59}{EntityRenderer}}()}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00020}00020\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00021}00021\ \ \ \ \ random\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_random}{Random}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00022}00022\ \ \ \ \ \doxymbox{\hyperlink{class_item_renderer_a82d0908993a00ef1004fa71ef9d48d1e}{setColor}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00023}00023\ \ \ \ \ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00025}00025\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a030ad782f62d873d4c7cdef5726e2480}{shadowRadius}}\ =\ 0.15f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00026}00026\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_abf0ec7601e62044d5de39d39f8e0cb28}{shadowStrength}}\ =\ 0.75f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00028}00028\ \ \ \ \ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00029}00029\ \ \ \ \ m\_bItemFrame=\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00030}00030\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00032}\doxymbox{\hyperlink{class_item_renderer_a370c68b920cfe3cdc5c7949cc5335c65}{00032}}\ \doxymbox{\hyperlink{class_item_renderer_a370c68b920cfe3cdc5c7949cc5335c65}{ItemRenderer::\string~ItemRenderer}}()}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00033}00033\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00034}00034\ \ \ \ \ \textcolor{keyword}{delete}\ random;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00035}00035\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00037}\doxymbox{\hyperlink{class_item_renderer_a01eb51284dc3b5c5c6ffae29245edf58}{00037}}\ \doxymbox{\hyperlink{class_resource_location}{ResourceLocation}}\ *\doxymbox{\hyperlink{class_item_renderer_a01eb51284dc3b5c5c6ffae29245edf58}{ItemRenderer::getTextureLocation}}(shared\_ptr<Entity>\ entity)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00038}00038\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00039}00039\ \ \ \ \ shared\_ptr<ItemEntity>\ itemEntity\ =\ dynamic\_pointer\_cast<ItemEntity>(entity);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00040}00040\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_item_renderer_a01eb51284dc3b5c5c6ffae29245edf58}{getTextureLocation}}(itemEntity-\/>getItem()-\/>getIconType());}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00041}00041\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00043}\doxymbox{\hyperlink{class_item_renderer_af90dfb6f6200580f18b3b57db8da2159}{00043}}\ \doxymbox{\hyperlink{class_resource_location}{ResourceLocation}}\ *\doxymbox{\hyperlink{class_item_renderer_a01eb51284dc3b5c5c6ffae29245edf58}{ItemRenderer::getTextureLocation}}(\textcolor{keywordtype}{int}\ iconType)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00044}00044\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00045}00045\ \ \ \ \ \textcolor{keywordflow}{if}\ (iconType\ ==\ \doxymbox{\hyperlink{class_icon_a19f4e655c958b5de8178d6c353cc145f}{Icon::TYPE\_TERRAIN}})}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00046}00046\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00047}00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \&\doxymbox{\hyperlink{class_texture_atlas_a91499250ed84551a2b98e418ed917e80}{TextureAtlas::LOCATION\_BLOCKS}};\textcolor{comment}{//L"{}/terrain.png"{}));}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00048}00048\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00049}00049\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00050}00050\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00051}00051\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ make\ sure\ we've\ got\ linear\ sampling\ on\ minification\ here\ as\ non-\/mipmapped\ things\ like\ this\ currently}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ default\ to\ having\ point\ sampling,\ which\ makes\ very\ small\ icons\ render\ rather\ badly}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_x_u_i___font_8cpp_a53012bc1717f7d20de38c5815da40ea5}{g\_pD3DDevice}}-\/>SetSamplerState(\ 0,\ D3DSAMP\_MINFILTER,\ D3DTEXF\_LINEAR\ );}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00055}00055\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \&\doxymbox{\hyperlink{class_texture_atlas_a755d3e9a6c6f271c5de4cf863424ab5b}{TextureAtlas::LOCATION\_ITEMS}};\textcolor{comment}{//L"{}/gui/items.png"{}));}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00057}00057\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00058}00058\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00060}\doxymbox{\hyperlink{class_item_renderer_a8b08e1e31c862d4fe093743722ce7cfe}{00060}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_item_renderer_a8b08e1e31c862d4fe093743722ce7cfe}{ItemRenderer::render}}(shared\_ptr<Entity>\ \_itemEntity,\ \textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y,\ \textcolor{keywordtype}{double}\ z,\ \textcolor{keywordtype}{float}\ rot,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00061}00061\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00062}00062\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ dynamic\ cast\ required\ because\ we\ aren't\ using\ templates/generics\ in\ our\ version}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00063}00063\ \ \ \ \ shared\_ptr<ItemEntity>\ itemEntity\ =\ dynamic\_pointer\_cast<ItemEntity>(\_itemEntity);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00064}00064\ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a64eb08d2a511d6442d8dbff67d9125a7}{bindTexture}}(itemEntity);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00066}00066\ \ \ \ \ random-\/>setSeed(187);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00067}00067\ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ itemEntity-\/>getItem();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00068}00068\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getItem()\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00070}00070\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00071}00071\ \ \ \ \ \textcolor{keywordtype}{float}\ bob\ =\ \doxymbox{\hyperlink{class_mth_a504719e86988c740047029e16d73f79b}{Mth::sin}}((itemEntity-\/>age\ +\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})\ /\ 10.0f\ +\ itemEntity-\/>bobOffs)\ *\ 0.1f\ +\ 0.1f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00072}00072\ \ \ \ \ \textcolor{keywordtype}{float}\ spin\ =\ ((itemEntity-\/>age\ +\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})\ /\ 20.0f\ +\ itemEntity-\/>bobOffs)\ *\ \doxymbox{\hyperlink{class_mth_af9e6dc3dffdfb9b122d8b540cc692886}{Mth::RADDEG}};}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00074}00074\ \ \ \ \ \textcolor{keywordtype}{int}\ count\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00075}00075\ \ \ \ \ \textcolor{keywordflow}{if}\ (itemEntity-\/>getItem()-\/>count\ >\ 1)\ count\ =\ 2;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00076}00076\ \ \ \ \ \textcolor{keywordflow}{if}\ (itemEntity-\/>getItem()-\/>count\ >\ 5)\ count\ =\ 3;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{if}\ (itemEntity-\/>getItem()-\/>count\ >\ 20)\ count\ =\ 4;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00078}00078\ \ \ \ \ \textcolor{keywordflow}{if}\ (itemEntity-\/>getItem()-\/>count\ >\ 40)\ count\ =\ 5;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00080}00080\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(x),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(y)\ +\ bob,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(z));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00081}00081\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{stubs___s_p_u_8h_afff3f5203e2cc8b27527142484b6dc7b}{GL\_RESCALE\_NORMAL}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00083}00083\ \ \ \ \ \doxymbox{\hyperlink{class_tile}{Tile}}\ *tile\ =\ \doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id];}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00085}00085\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getIconType()\ ==\ \doxymbox{\hyperlink{class_icon_a19f4e655c958b5de8178d6c353cc145f}{Icon::TYPE\_TERRAIN}}\ \&\&\ tile\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{class_tile_renderer_aced3926549b06661d380bac06f0b2d1b}{TileRenderer::canRender}}(tile-\/>\doxymbox{\hyperlink{class_tile_aef91ba290f93d77e741d208506c28c1a}{getRenderShape}}()))}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00086}00086\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(spin,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bItemFrame)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(1.25f,\ 1.25f,\ 1.25f);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(0,\ 0.05f,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(-\/90,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ s\ =\ 1\ /\ 4.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ shape\ =\ tile-\/>\doxymbox{\hyperlink{class_tile_aef91ba290f93d77e741d208506c28c1a}{getRenderShape}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (shape\ ==\ \doxymbox{\hyperlink{class_tile_a72d2ca782b0a61d4f09c6f9feb238942}{Tile::SHAPE\_CROSS\_TEXTURE}}\ ||\ shape\ ==\ \doxymbox{\hyperlink{class_tile_a5002178fdda38185364be4f9a5110fa4}{Tile::SHAPE\_STEM}}\ ||\ shape\ ==\ \doxymbox{\hyperlink{class_tile_ad36f21be65b345afb92daf51aaa6b934}{Tile::SHAPE\_LEVER}}\ ||\ shape\ ==\ \doxymbox{\hyperlink{class_tile_a905ed2e9a8641413ba9988bd13182bd4}{Tile::SHAPE\_TORCH}}\ )}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ s\ =\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(s,\ s,\ s);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ count;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ xo\ =\ (random-\/>nextFloat()\ *\ 2\ -\/\ 1)\ *\ 0.2f\ /\ s;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ yo\ =\ (random-\/>nextFloat()\ *\ 2\ -\/\ 1)\ *\ 0.2f\ /\ s;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ zo\ =\ (random-\/>nextFloat()\ *\ 2\ -\/\ 1)\ *\ 0.2f\ /\ s;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(xo,\ yo,\ zo);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ change\ brought\ forward\ from\ 1.8.2}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ br\ =\ \doxymbox{\hyperlink{class_shared_constants_a64311123b800f4ae1c6e92968b4eb7b9}{SharedConstants::TEXTURE\_LIGHTING}}\ ?\ 1.0f\ :\ itemEntity-\/>getBrightness(\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>renderTile(tile,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getAuxValue(),\ br);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00119}00119\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00120}00120\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getIconType()\ ==\ \doxymbox{\hyperlink{class_icon_a03416a764b538323bdfe9e1e31ee381a}{Icon::TYPE\_ITEM}}\ \&\&\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getItem()-\/>hasMultipleSpriteLayers())}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00121}00121\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bItemFrame)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(1\ /\ 1.95f,\ 1\ /\ 1.95f,\ 1\ /\ 1.95f);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(0,\ -\/0.05f,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(1\ /\ 2.0f,\ 1\ /\ 2.0f,\ 1\ /\ 2.0f);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a64eb08d2a511d6442d8dbff67d9125a7}{bindTexture}}(\&\doxymbox{\hyperlink{class_texture_atlas_a755d3e9a6c6f271c5de4cf863424ab5b}{TextureAtlas::LOCATION\_ITEMS}});\ \textcolor{comment}{//\ 4J\ was\ "{}/gui/items.png"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ layer\ =\ 0;\ layer\ <=\ 1;\ layer++)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ random-\/>setSeed(187);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_icon}{Icon}}\ *icon\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getItem()-\/>getLayerIcon(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getAuxValue(),\ layer);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ brightness\ =\ \doxymbox{\hyperlink{class_shared_constants_a64311123b800f4ae1c6e92968b4eb7b9}{SharedConstants::TEXTURE\_LIGHTING}}\ ?\ 1\ :\ itemEntity-\/>getBrightness(\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_item_renderer_a82d0908993a00ef1004fa71ef9d48d1e}{setColor}})}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ col\ =\ \doxymbox{\hyperlink{class_item_a8aa5718011a032c9b93d15dfcbc362f7}{Item::items}}[\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id]-\/>getColor(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ layer);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ red\ =\ ((col\ >>\ 16)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ g\ =\ ((col\ >>\ 8)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ ((col)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}(red\ *\ brightness,\ g\ *\ brightness,\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ *\ brightness,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ renderItemBillboard(itemEntity,\ icon,\ count,\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}},\ red\ *\ brightness,\ g\ *\ brightness,\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ *\ brightness);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ renderItemBillboard(itemEntity,\ icon,\ count,\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}},\ 1,\ 1,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00155}00155\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00156}00156\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00157}00157\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bItemFrame)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(1\ /\ 1.95f,\ 1\ /\ 1.95f,\ 1\ /\ 1.95f);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(0,\ -\/0.05f,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(1\ /\ 2.0f,\ 1\ /\ 2.0f,\ 1\ /\ 2.0f);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ For\ rendering\ the\ static\ compass,\ we\ give\ it\ a\ non-\/zero\ aux\ value}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id\ ==\ \doxymbox{\hyperlink{class_item_ad7c6e7203844709cc5ccd47c57ccb809}{Item::compass\_Id}})\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>setAuxValue(255);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id\ ==\ \doxymbox{\hyperlink{class_item_ad7c6e7203844709cc5ccd47c57ccb809}{Item::compass\_Id}})\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>setAuxValue(0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_icon}{Icon}}\ *icon\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getIcon();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_item_renderer_a82d0908993a00ef1004fa71ef9d48d1e}{setColor}})}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ col\ =\ \doxymbox{\hyperlink{class_item_a8aa5718011a032c9b93d15dfcbc362f7}{Item::items}}[\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id]-\/>getColor(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ red\ =\ ((col\ >>\ 16)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ g\ =\ ((col\ >>\ 8)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ ((col)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ brightness\ =\ \doxymbox{\hyperlink{class_shared_constants_a64311123b800f4ae1c6e92968b4eb7b9}{SharedConstants::TEXTURE\_LIGHTING}}\ ?\ 1\ :\ itemEntity-\/>getBrightness(\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}(red\ *\ brightness,\ g\ *\ brightness,\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ *\ brightness,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ renderItemBillboard(itemEntity,\ icon,\ count,\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}},\ red\ *\ brightness,\ g\ *\ brightness,\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ *\ brightness);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ renderItemBillboard(itemEntity,\ icon,\ count,\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}},\ 1,\ 1,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00190}00190\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00191}00191\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{stubs___s_p_u_8h_afff3f5203e2cc8b27527142484b6dc7b}{GL\_RESCALE\_NORMAL}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00192}00192\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00193}00193\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_bItemFrame\ )}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00194}00194\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00196}00196\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00197}00197\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00199}00199\ \textcolor{keywordtype}{void}\ ItemRenderer::renderItemBillboard(shared\_ptr<ItemEntity>\ entity,\ \doxymbox{\hyperlink{class_icon}{Icon}}\ *icon,\ \textcolor{keywordtype}{int}\ count,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}},\ \textcolor{keywordtype}{float}\ red,\ \textcolor{keywordtype}{float}\ green,\ \textcolor{keywordtype}{float}\ blue)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00200}00200\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00201}00201\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator}{Tesselator}}\ *t\ =\ \doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{Tesselator::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00203}00203\ \ \ \ \ \textcolor{keywordflow}{if}\ (icon\ ==\ \textcolor{keyword}{nullptr})\ icon\ =\ \doxymbox{\hyperlink{class_entity_renderer_ae8cfa0d99ad1efd53d0de0100e256606}{entityRenderDispatcher}}-\/>\doxymbox{\hyperlink{class_entity_render_dispatcher_afcbb9a28fe06016cf2369d832ec7ecf3}{textures}}-\/>\doxymbox{\hyperlink{class_textures_a3d0ce065645586c646e0f63f2ae6824e}{getMissingIcon}}(entity-\/>getItem()-\/>getIconType());}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00204}00204\ \ \ \ \ \textcolor{keywordtype}{float}\ u0\ =\ icon-\/>\doxymbox{\hyperlink{class_icon_a10662000cba286666436f553e9cf0236}{getU0}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00205}00205\ \ \ \ \ \textcolor{keywordtype}{float}\ u1\ =\ icon-\/>\doxymbox{\hyperlink{class_icon_aa204701a58918aa5c471ad8d05a5b80b}{getU1}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00206}00206\ \ \ \ \ \textcolor{keywordtype}{float}\ v0\ =\ icon-\/>\doxymbox{\hyperlink{class_icon_ab5947f663244fa97f90ceed00611e4eb}{getV0}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00207}00207\ \ \ \ \ \textcolor{keywordtype}{float}\ v1\ =\ icon-\/>\doxymbox{\hyperlink{class_icon_af672f86be7451c65a01541dd83d6f854}{getV1}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00209}00209\ \ \ \ \ \textcolor{keywordtype}{float}\ r\ =\ 1.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00210}00210\ \ \ \ \ \textcolor{keywordtype}{float}\ xo\ =\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00211}00211\ \ \ \ \ \textcolor{keywordtype}{float}\ yo\ =\ 0.25f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00213}00213\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_renderer_ae8cfa0d99ad1efd53d0de0100e256606}{entityRenderDispatcher}}-\/>\doxymbox{\hyperlink{class_entity_render_dispatcher_aa1cc4928c7ab3cd5fd23596c3ec028ae}{options}}-\/>\doxymbox{\hyperlink{class_options_a7122099740d41eec473a6a097fe85a2b}{fancyGraphics}})}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00214}00214\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Consider\ forcing\ the\ mipmap\ LOD\ level\ to\ use,\ if\ this\ is\ to\ be\ rendered\ from\ a\ larger\ than\ standard\ source\ texture.}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ iconWidth\ =\ icon-\/>\doxymbox{\hyperlink{class_icon_a2fb0a3ce95ee2315a8b506625d18b7ad}{getWidth}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ LOD\ =\ -\/1;\ \ \ \textcolor{comment}{//\ Default\ to\ not\ doing\ anything\ special\ with\ LOD\ forcing}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ iconWidth\ ==\ 32\ )}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ LOD\ =\ 1;\ \ \ \ \textcolor{comment}{//\ Force\ LOD\ level\ 1\ to\ achieve\ texture\ reads\ from\ 256x256\ map}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ iconWidth\ ==\ 64\ )}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ LOD\ =\ 2;\ \ \ \ \textcolor{comment}{//\ Force\ LOD\ level\ 2\ to\ achieve\ texture\ reads\ from\ 256x256\ map}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.\doxymbox{\hyperlink{class_c4_j_render_aed625489ffee84ed51b7573eab8a1ac4}{StateSetForceLOD}}(LOD);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00227}00227\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_bItemFrame)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(180,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(((entity-\/>age\ +\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}})\ /\ 20.0f\ +\ entity-\/>bobOffs)\ *\ \doxymbox{\hyperlink{class_mth_af9e6dc3dffdfb9b122d8b540cc692886}{Mth::RADDEG}},\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ width\ =\ 1\ /\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00239}00239\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ margin\ =\ 0.35f\ /\ 16.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00240}00240\ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ entity-\/>getItem();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00241}00241\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ items\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00243}00243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (items\ <\ 2)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00244}00244\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \ \ \ \ count\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (items\ <\ 16)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ count\ =\ 2;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00250}00250\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00251}00251\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (items\ <\ 32)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00252}00252\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ count\ =\ 3;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00254}00254\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00256}00256\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ count\ =\ 4;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00259}00259\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(-\/xo,\ -\/yo,\ -\/((width\ +\ margin)\ *\ count\ /\ 2));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00262}00262\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ count;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00263}00263\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(0,\ 0,\ width\ +\ margin);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00265}00265\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ bIsTerrain\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getIconType()\ ==\ \doxymbox{\hyperlink{class_icon_a19f4e655c958b5de8178d6c353cc145f}{Icon::TYPE\_TERRAIN}}\ \&\&\ \doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id]\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bIsTerrain\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a64eb08d2a511d6442d8dbff67d9125a7}{bindTexture}}(\&\doxymbox{\hyperlink{class_texture_atlas_a91499250ed84551a2b98e418ed917e80}{TextureAtlas::LOCATION\_BLOCKS}});\ \textcolor{comment}{//\ TODO:\ Do\ this\ sanely\ by\ Icon}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a64eb08d2a511d6442d8dbff67d9125a7}{bindTexture}}(\&\doxymbox{\hyperlink{class_texture_atlas_a755d3e9a6c6f271c5de4cf863424ab5b}{TextureAtlas::LOCATION\_ITEMS}});\ \textcolor{comment}{//\ TODO:\ Do\ this\ sanely\ by\ Icon}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00276}00276\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}(red,\ green,\ blue,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ u\ coords\ were\ swapped\ in\ Java}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//ItemInHandRenderer::renderItem3D(t,\ u1,\ v0,\ u0,\ v1,\ icon-\/>getSourceWidth(),\ icon-\/>getSourceHeight(),\ width,\ false);}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item_in_hand_renderer_a6378d7e13a7c00eb9cb60e1a7230fa8b}{ItemInHandRenderer::renderItem3D}}(t,\ u0,\ v0,\ u1,\ v1,\ icon-\/>\doxymbox{\hyperlink{class_icon_aae1f7f5279d7c27900c1ae49170c0494}{getSourceWidth}}(),\ icon-\/>\doxymbox{\hyperlink{class_icon_afff30f20d7a01df0e4e5746d76e06e5d}{getSourceHeight}}(),\ width,\ \textcolor{keyword}{false},\ bIsTerrain);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00281}00281\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>isFoil())}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00284}00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aab812806a5cc9f74c1dd9bca3cbe9882}{glDepthFunc}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a6f145591b391272cf44d59ad5411c403}{GL\_EQUAL}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00286}00286\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_ae8cfa0d99ad1efd53d0de0100e256606}{entityRenderDispatcher}}-\/>textures-\/>bindTexture(\&\doxymbox{\hyperlink{class_item_in_hand_renderer_aaf6f21efa2155705826aa9bd3b66ee7c}{ItemInHandRenderer::ENCHANT\_GLINT\_LOCATION}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a83a31fb2bff21972c45e737ab22ca7c7}{GL\_BLEND}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00288}00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ab1bdb0ffac837fbff1930ab41f146829}{glBlendFunc}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_aac0f0b0cd1bc460a513f8bffc25a8a3a}{GL\_SRC\_COLOR}},\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a3fecd4af71ce9a34f968322cd13fb379}{GL\_ONE}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ br\ =\ 0.76f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}(0.5f\ *\ br,\ 0.25f\ *\ br,\ 0.8f\ *\ br,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac9cbfcaacab3fde368976bd32c810e73}{glMatrixMode}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a7a790802c96711b354abe31f4051d771}{GL\_TEXTURE}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ ss\ =\ 1\ /\ 8.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(ss,\ ss,\ ss);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ sx\ =\ \doxymbox{\hyperlink{class_minecraft_a6ff263ca119a8fd40ea208ecb34e01ba}{Minecraft::currentTimeMillis}}()\ \%\ (3000)\ /\ (3000.0f)\ *\ 8;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(sx,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(-\/50,\ 0,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00298}00298\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item_in_hand_renderer_a6378d7e13a7c00eb9cb60e1a7230fa8b}{ItemInHandRenderer::renderItem3D}}(t,\ 0,\ 0,\ 1,\ 1,\ 255,\ 255,\ width,\ \textcolor{keyword}{true},\ bIsTerrain);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(ss,\ ss,\ ss);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sx\ =\ \doxymbox{\hyperlink{class_minecraft_a6ff263ca119a8fd40ea208ecb34e01ba}{Minecraft::currentTimeMillis}}()\ \%\ (3000\ +\ 1873)\ /\ (3000\ +\ 1873.0f)\ *\ 8;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(-\/sx,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(10,\ 0,\ 0,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item_in_hand_renderer_a6378d7e13a7c00eb9cb60e1a7230fa8b}{ItemInHandRenderer::renderItem3D}}(t,\ 0,\ 0,\ 1,\ 1,\ 255,\ 255,\ width,\ \textcolor{keyword}{true},\ bIsTerrain);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac9cbfcaacab3fde368976bd32c810e73}{glMatrixMode}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a274fc570aa6fd31ce996f04708de92d3}{GL\_MODELVIEW}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a83a31fb2bff21972c45e737ab22ca7c7}{GL\_BLEND}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aab812806a5cc9f74c1dd9bca3cbe9882}{glDepthFunc}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a4fbfca4eb265795c507b48d575884849}{GL\_LEQUAL}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00314}00314\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00316}00316\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.\doxymbox{\hyperlink{class_c4_j_render_aed625489ffee84ed51b7573eab8a1ac4}{StateSetForceLOD}}(-\/1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00318}00318\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00319}00319\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00320}00320\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ count;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \_xo\ =\ (random-\/>nextFloat()\ *\ 2\ -\/\ 1)\ *\ 0.3f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \_yo\ =\ (random-\/>nextFloat()\ *\ 2\ -\/\ 1)\ *\ 0.3f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \_zo\ =\ (random-\/>nextFloat()\ *\ 2\ -\/\ 1)\ *\ 0.3f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(\_xo,\ \_yo,\ \_zo);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_bItemFrame)\ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(180\ -\/\ \doxymbox{\hyperlink{class_entity_renderer_ae8cfa0d99ad1efd53d0de0100e256606}{entityRenderDispatcher}}-\/>playerRotY,\ 0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}(red,\ green,\ blue,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a079cc2047d3be4f57e26c62b7b9c4104}{normal}}(0,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}((\textcolor{keywordtype}{float})(0\ -\/\ xo),\ (\textcolor{keywordtype}{float})(\ 0\ -\/\ yo),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0),\ (\textcolor{keywordtype}{float})(\ u0),\ (\textcolor{keywordtype}{float})(\ v1));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}((\textcolor{keywordtype}{float})(r\ -\/\ xo),\ (\textcolor{keywordtype}{float})(\ 0\ -\/\ yo),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0),\ (\textcolor{keywordtype}{float})(\ u1),\ (\textcolor{keywordtype}{float})(\ v1));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}((\textcolor{keywordtype}{float})(r\ -\/\ xo),\ (\textcolor{keywordtype}{float})(\ 1\ -\/\ yo),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0),\ (\textcolor{keywordtype}{float})(\ u1),\ (\textcolor{keywordtype}{float})(\ v0));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00338}00338\ \ \ \ \ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}((\textcolor{keywordtype}{float})(0\ -\/\ xo),\ (\textcolor{keywordtype}{float})(\ 1\ -\/\ yo),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0),\ (\textcolor{keywordtype}{float})(\ u0),\ (\textcolor{keywordtype}{float})(\ v0));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00340}00340\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00343}00343\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00344}00344\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00345}00345\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00346}\doxymbox{\hyperlink{class_item_renderer_a877e477d66c414d7c946028e05d6fdd7}{00346}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_item_renderer_accb80225badab2ecb95cf63ed32122fd}{ItemRenderer::renderGuiItem}}(\doxymbox{\hyperlink{class_font}{Font}}\ *font,\ \doxymbox{\hyperlink{class_textures}{Textures}}\ *textures,\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ fScale,\ \textcolor{keywordtype}{float}\ fAlpha)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00347}00347\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00348}00348\ \ \ \ \ \doxymbox{\hyperlink{class_item_renderer_accb80225badab2ecb95cf63ed32122fd}{renderGuiItem}}(font,textures,\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},x,y,fScale,fScale,fAlpha,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00349}00349\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00350}00350\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00351}00351\ \textcolor{comment}{//\ 4J\ -\/\ this\ used\ to\ take\ x\ and\ y\ as\ ints,\ and\ no\ scale\ and\ alpha\ -\/\ but\ this\ interface\ is\ now\ implemented\ as\ a\ wrapper\ round\ this\ more\ fully\ featured\ one}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00352}\doxymbox{\hyperlink{class_item_renderer_aeb48eac0f127dfb4ec94b97b5f777109}{00352}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_item_renderer_accb80225badab2ecb95cf63ed32122fd}{ItemRenderer::renderGuiItem}}(\doxymbox{\hyperlink{class_font}{Font}}\ *font,\ \doxymbox{\hyperlink{class_textures}{Textures}}\ *textures,\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ fScaleX,\textcolor{keywordtype}{float}\ fScaleY,\ \textcolor{keywordtype}{float}\ fAlpha,\ \textcolor{keywordtype}{bool}\ useCompiled)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00353}00353\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00354}00354\ \ \ \ \ \textcolor{keywordtype}{int}\ itemId\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00355}00355\ \ \ \ \ \textcolor{keywordtype}{int}\ itemAuxValue\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getAuxValue();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00356}00356\ \ \ \ \ \doxymbox{\hyperlink{class_icon}{Icon}}\ *itemIcon\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getIcon();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00357}00357\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00358}00358\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getIconType()\ ==\ \doxymbox{\hyperlink{class_icon_a19f4e655c958b5de8178d6c353cc145f}{Icon::TYPE\_TERRAIN}}\ \&\&\ \doxymbox{\hyperlink{class_tile_renderer_aced3926549b06661d380bac06f0b2d1b}{TileRenderer::canRender}}(\doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[itemId]-\/>getRenderShape()))}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00359}00359\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}3D\ gui\ item\ render\ \%d\(\backslash\)n"{}},itemId);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00361}00361\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(31);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ textures-\/>\doxymbox{\hyperlink{class_textures_afa6c13e1853cf96eb38fc9a3d7712515}{bindTexture}}(\&\doxymbox{\hyperlink{class_texture_atlas_a91499250ed84551a2b98e418ed917e80}{TextureAtlas::LOCATION\_BLOCKS}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00364}00364\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tile}{Tile}}\ *tile\ =\ \doxymbox{\hyperlink{class_tile_a398c15dfc5df8d2e64f2a5c6650cf1c1}{Tile::tiles}}[itemId];}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a7138cc4fe1c13d376a0449e17db126f7}{glPushMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ original\ code\ left\ here\ for\ reference}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00368}00368\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}((\textcolor{keywordtype}{float})(x),\ (\textcolor{keywordtype}{float})(y),\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(fScale,\ fScale,\ fScale);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(-\/2.0f,3.0f,\ -\/3.0f\ +\ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(10.0f,\ 10.0f,\ 10.0f);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00373}00373\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(1.0f,\ 0.5f,\ 8.0f);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00374}00374\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(1.0f,\ 1.0f,\ -\/1.0f);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00375}00375\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(180.0f\ +\ 30.0f,\ 1.0f,\ 0.0f,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00376}00376\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(45.0f,\ 0.0f,\ 1.0f,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00377}00377\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00378}00378\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(x,\ y,\ 0.0f);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Translate\ to\ screen\ coords}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00379}00379\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(16.0f*fScaleX,\ 16.0f*fScaleY,\ 1.0f);\ \ \ \ \ \ \ \textcolor{comment}{//\ Scale\ to\ 0\ to\ 16*scale\ range}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aafb2ea43c8cb3f56d291cbd9c4927141}{glTranslatef}}(0.5f,0.5f,0.0f);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Translate\ to\ 0\ to\ 1\ range}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad7fb18366ec81078b69d8b2751efb2b9}{glScalef}}(0.55f,0.55f,\ -\/1.0f);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Scale\ to\ occupy\ full\ -\/0.5\ to\ 0.5\ bounding\ region\ (just\ touching\ top\ \&\ bottom)}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 0.55\ comes\ from\ 1/(1+sqrt(2)/sqrt(3))\ which\ is\ determined\ by\ the\ angles\ that\ the\ cube\ is\ rotated\ in\ an\ orthographic\ projection}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00383}00383\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(180.0f\ +\ 30.0f,\ 1.0f,\ 0.0f,\ 0.0f);\ \ \ \ \textcolor{comment}{//\ Rotate\ round\ x\ axis\ (centre\ at\ origin)}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00384}00384\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(45.0f,\ 0.0f,\ 1.0f,\ 0.0f);\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Rotate\ round\ y\ axis\ (centre\ at\ origin)}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00385}00385\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ pass\ the\ alpha\ value\ in\ -\/\ the\ grass\ block\ render\ has\ the\ top\ surface\ coloured\ differently\ to\ the\ rest\ of\ the\ block}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a9c68f825c85f2acb9c780eb9d04b2def}{glRotatef}}(-\/90.0f,\ 0.0f,\ 1.0f,\ 0.0f);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_renderer_a1a28357403283ef071a16d2267736d09}{tileRenderer}}-\/>renderTile(tile,\ itemAuxValue,\ 1,\ fAlpha,\ useCompiled);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00389}00389\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a3982608951f7aa6299f6218f1f3f12e1}{glPopMatrix}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00391}00391\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00392}00392\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00393}00393\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_item_a8aa5718011a032c9b93d15dfcbc362f7}{Item::items}}[itemId]-\/>hasMultipleSpriteLayers())}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00394}00394\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}Potion\ gui\ item\ render\ \%d\(\backslash\)n"{}},itemIcon);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00396}00396\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ special\ double-\/layered}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00397}00397\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00398}00398\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00399}00399\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_resource_location}{ResourceLocation}}\ *location\ =\ \doxymbox{\hyperlink{class_item_renderer_a01eb51284dc3b5c5c6ffae29245edf58}{getTextureLocation}}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getIconType());}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00400}00400\ \ \ \ \ \ \ \ \ textures-\/>\doxymbox{\hyperlink{class_textures_afa6c13e1853cf96eb38fc9a3d7712515}{bindTexture}}(location);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00401}00401\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ layer\ =\ 0;\ layer\ <=\ 1;\ layer++)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00403}00403\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00404}00404\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_icon}{Icon}}\ *fillingIcon\ =\ \doxymbox{\hyperlink{class_item_a8aa5718011a032c9b93d15dfcbc362f7}{Item::items}}[itemId]-\/>getLayerIcon(itemAuxValue,\ layer);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00405}00405\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00406}00406\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ col\ =\ \doxymbox{\hyperlink{class_item_a8aa5718011a032c9b93d15dfcbc362f7}{Item::items}}[itemId]-\/>getColor(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ layer);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00407}00407\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ r\ =\ ((col\ >>\ 16)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00408}00408\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ g\ =\ ((col\ >>\ 8)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00409}00409\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ ((col)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00410}00410\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00411}00411\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_item_renderer_a82d0908993a00ef1004fa71ef9d48d1e}{setColor}})\ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}(r,\ g,\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}},\ fAlpha);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00412}00412\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ scale\ the\ x\ and\ y\ by\ the\ scale\ factor}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00413}00413\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((fScaleX!=1.0f)\ ||(fScaleY!=1.0f))}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item_renderer_af76fbadf7eab541de4352fae3f09e9cd}{blit}}(x,\ y,\ fillingIcon,\ 16\ *\ fScaleX,\ 16\ *\ fScaleY);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00416}00416\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00417}00417\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00418}00418\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item_renderer_af76fbadf7eab541de4352fae3f09e9cd}{blit}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(x),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(y),\ fillingIcon,\ 16,\ 16);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00420}00420\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00421}00421\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00422}00422\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00423}00423\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00424}00424\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00425}00425\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00426}00426\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00427}00427\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}2D\ gui\ item\ render\ \%d\(\backslash\)n"{}},itemIcon);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00428}00428\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00429}00429\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(31);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00430}00430\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getIconType()\ ==\ \doxymbox{\hyperlink{class_icon_a19f4e655c958b5de8178d6c353cc145f}{Icon::TYPE\_TERRAIN}})}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00431}00431\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00432}00432\ \ \ \ \ \ \ \ \ \ \ \ \ textures-\/>\doxymbox{\hyperlink{class_textures_afa6c13e1853cf96eb38fc9a3d7712515}{bindTexture}}(\&\doxymbox{\hyperlink{class_texture_atlas_a91499250ed84551a2b98e418ed917e80}{TextureAtlas::LOCATION\_BLOCKS}});\textcolor{comment}{//L"{}/terrain.png"{}));}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00433}00433\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00434}00434\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00435}00435\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00436}00436\ \ \ \ \ \ \ \ \ \ \ \ \ textures-\/>\doxymbox{\hyperlink{class_textures_afa6c13e1853cf96eb38fc9a3d7712515}{bindTexture}}(\&\doxymbox{\hyperlink{class_texture_atlas_a755d3e9a6c6f271c5de4cf863424ab5b}{TextureAtlas::LOCATION\_ITEMS}});\textcolor{comment}{//L"{}/gui/items.png"{}));}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00437}00437\ \textcolor{preprocessor}{\#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ make\ sure\ we've\ got\ linear\ sampling\ on\ minification\ here\ as\ non-\/mipmapped\ things\ like\ this\ currently}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ default\ to\ having\ point\ sampling,\ which\ makes\ very\ small\ icons\ render\ rather\ badly}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_x_u_i___font_8cpp_a53012bc1717f7d20de38c5815da40ea5}{g\_pD3DDevice}}-\/>SetSamplerState(\ 0,\ D3DSAMP\_MINFILTER,\ D3DTEXF\_LINEAR\ );}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00441}00441\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00442}00442\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00443}00443\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00444}00444\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00445}00445\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00446}00446\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (itemIcon\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00447}00447\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00448}00448\ \ \ \ \ \ \ \ \ \ \ \ \ itemIcon\ =\ textures-\/>\doxymbox{\hyperlink{class_textures_a3d0ce065645586c646e0f63f2ae6824e}{getMissingIcon}}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getIconType());}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00449}00449\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00450}00450\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00451}00451\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ col\ =\ \doxymbox{\hyperlink{class_item_a8aa5718011a032c9b93d15dfcbc362f7}{Item::items}}[itemId]-\/>getColor(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00452}00452\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ r\ =\ ((col\ >>\ 16)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00453}00453\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ g\ =\ ((col\ >>\ 8)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00454}00454\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ =\ ((col)\ \&\ 0xff)\ /\ 255.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00455}00455\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00456}00456\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_item_renderer_a82d0908993a00ef1004fa71ef9d48d1e}{setColor}})\ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}(r,\ g,\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}},\ fAlpha);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00457}00457\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00458}00458\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ scale\ the\ x\ and\ y\ by\ the\ scale\ factor}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00459}00459\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((fScaleX!=1.0f)\ ||(fScaleY!=1.0f))}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00460}00460\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item_renderer_af76fbadf7eab541de4352fae3f09e9cd}{blit}}(x,\ y,\ itemIcon,\ 16\ *\ fScaleX,\ 16\ *\ fScaleY);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00462}00462\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00463}00463\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00464}00464\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item_renderer_af76fbadf7eab541de4352fae3f09e9cd}{blit}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(x),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(y),\ itemIcon,\ 16,\ 16);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00466}00466\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00467}00467\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00468}00468\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00469}00469\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00470}00470\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00471}00471\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_aa37c503c545e3bf0c82e62ee9007e803}{GL\_CULL\_FACE}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00472}00472\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00473}00473\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00474}00474\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00475}00475\ \textcolor{comment}{//\ 4J\ -\/\ original\ interface,\ now\ just\ a\ wrapper\ for\ preceding\ overload}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00476}\doxymbox{\hyperlink{class_item_renderer_accb80225badab2ecb95cf63ed32122fd}{00476}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_item_renderer_accb80225badab2ecb95cf63ed32122fd}{ItemRenderer::renderGuiItem}}(\doxymbox{\hyperlink{class_font}{Font}}\ *font,\ \doxymbox{\hyperlink{class_textures}{Textures}}\ *textures,\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00477}00477\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00478}00478\ \ \ \ \ \doxymbox{\hyperlink{class_item_renderer_accb80225badab2ecb95cf63ed32122fd}{renderGuiItem}}(font,\ textures,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(x),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(y),\ 1.0f,\ 1.0f\ );}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00479}00479\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00480}00480\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00481}00481\ \textcolor{comment}{//\ 4J\ -\/\ this\ used\ to\ take\ x\ and\ y\ as\ ints,\ and\ no\ scale,\ alpha\ or\ foil\ -\/\ but\ this\ interface\ is\ now\ implemented\ as\ a\ wrapper\ round\ this\ more\ fully\ featured\ one}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00482}\doxymbox{\hyperlink{class_item_renderer_a6ae92535a9ea4a7c76fb7e06795ca419}{00482}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_item_renderer_aaa92131cacab526dd06fb0efdf26a672}{ItemRenderer::renderAndDecorateItem}}(\doxymbox{\hyperlink{class_font}{Font}}\ *font,\ \doxymbox{\hyperlink{class_textures}{Textures}}\ *textures,\ \textcolor{keyword}{const}\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\textcolor{keywordtype}{float}\ fScale,\textcolor{keywordtype}{float}\ fAlpha,\ \textcolor{keywordtype}{bool}\ isFoil)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00483}00483\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00484}00484\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}==\textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00485}00485\ \ \ \ \ \doxymbox{\hyperlink{class_item_renderer_aaa92131cacab526dd06fb0efdf26a672}{renderAndDecorateItem}}(font,\ textures,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ x,\ y,fScale,\ fScale,\ fAlpha,\ isFoil,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00486}00486\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00487}00487\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00488}00488\ \textcolor{comment}{//\ 4J\ -\/\ added\ isConstantBlended\ and\ blendFactor\ parameters.\ This\ is\ true\ if\ the\ gui\ item\ is\ being\ rendered\ from\ a\ context\ where\ it\ already\ has\ blending\ enabled\ to\ do\ general\ interface\ fading}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00489}00489\ \textcolor{comment}{//\ (ie\ from\ the\ gui\ rather\ than\ xui).\ In\ this\ case\ we\ dno't\ want\ to\ enable/disable\ blending,\ and\ do\ need\ to\ restore\ the\ blend\ state\ when\ we\ are\ done.}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00490}\doxymbox{\hyperlink{class_item_renderer_af7e1ceb3e520642c9aa109ab0afaa8ab}{00490}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_item_renderer_aaa92131cacab526dd06fb0efdf26a672}{ItemRenderer::renderAndDecorateItem}}(\doxymbox{\hyperlink{class_font}{Font}}\ *font,\ \doxymbox{\hyperlink{class_textures}{Textures}}\ *textures,\ \textcolor{keyword}{const}\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\textcolor{keywordtype}{float}\ fScaleX,\ \textcolor{keywordtype}{float}\ fScaleY,\textcolor{keywordtype}{float}\ fAlpha,\ \textcolor{keywordtype}{bool}\ isFoil,\ \textcolor{keywordtype}{bool}\ isConstantBlended,\ \textcolor{keywordtype}{bool}\ useCompiled)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00491}00491\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00492}00492\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00493}00493\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00494}00494\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00495}00495\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00496}00496\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00497}00497\ \ \ \ \ \doxymbox{\hyperlink{class_item_renderer_accb80225badab2ecb95cf63ed32122fd}{renderGuiItem}}(font,\ textures,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ x,\ y,fScaleX,fScaleY,fAlpha,\ useCompiled);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00498}00498\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00499}00499\ \ \ \ \ \textcolor{keywordflow}{if}\ (isFoil\ ||\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>isFoil())}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00500}00500\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00501}00501\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aab812806a5cc9f74c1dd9bca3cbe9882}{glDepthFunc}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a2c2881d5e5ec641de27d95e0b26c4eb6}{GL\_GREATER}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00502}00502\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00503}00503\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad609d64a6e0a7c8f756e0edc25eebd58}{glDepthMask}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00504}00504\ \ \ \ \ \ \ \ \ textures-\/>\doxymbox{\hyperlink{class_textures_afa6c13e1853cf96eb38fc9a3d7712515}{bindTexture}}(\&\doxymbox{\hyperlink{class_item_in_hand_renderer_aaf6f21efa2155705826aa9bd3b66ee7c}{ItemInHandRenderer::ENCHANT\_GLINT\_LOCATION}});\ \textcolor{comment}{//\ 4J\ was\ "{}\%blur\%/misc/glint.png"{}}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00505}00505\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}}\ -\/=\ 50;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00506}00506\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !isConstantBlended\ )\ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a83a31fb2bff21972c45e737ab22ca7c7}{GL\_BLEND}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00507}00507\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00508}00508\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ab1bdb0ffac837fbff1930ab41f146829}{glBlendFunc}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_aa42c63678196f33758524478f51b125c}{GL\_DST\_COLOR}},\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a3fecd4af71ce9a34f968322cd13fb379}{GL\_ONE}});\ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ changed\ blend\ equation\ from\ GL\_DST\_COLOR,\ GL\_DST\_COLOR\ so\ we\ can\ fade\ this\ out}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00509}00509\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00510}00510\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ blendFactor\ =\ isConstantBlended\ ?\ \doxymbox{\hyperlink{class_gui_a23e1901bee30eff4f8b00413027965f9}{Gui::currentGuiBlendFactor}}\ :\ 1.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00511}00511\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00512}00512\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}(0.5f\ *\ blendFactor,\ 0.25f\ *\ blendFactor,\ 0.8f\ *\ blendFactor,\ 1);\ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ scale\ back\ colourisation\ with\ blendFactor}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00513}00513\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ scale\ the\ x\ and\ y\ by\ the\ scale\ factor}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00514}00514\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((fScaleX!=1.0f)\ ||(fScaleY!=1.0f))}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00515}00515\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00516}00516\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Scales\ were\ multiples\ of\ 20,\ making\ 16\ to\ not\ overlap\ in\ xui\ scenes}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00517}00517\ \ \ \ \ \ \ \ \ \ \ \ \ blitGlint(x\ *\ 431278612\ +\ y\ *\ 32178161,\ x\ -\/\ 2,\ y\ -\/\ 2,\ 16\ *\ fScaleX,\ 16\ *\ fScaleY);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00518}00518\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00519}00519\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00520}00520\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00521}00521\ \ \ \ \ \ \ \ \ \ \ \ \ blitGlint(x\ *\ 431278612\ +\ y\ *\ 32178161,\ x\ -\/\ 2,\ y\ -\/\ 2,\ 20,\ 20);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00522}00522\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00523}00523\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}(1.0f,\ 1.0f,\ 1.0f,\ 1);\ \textcolor{comment}{//\ 4J\ added}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00524}00524\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !isConstantBlended\ )\ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a83a31fb2bff21972c45e737ab22ca7c7}{GL\_BLEND}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00525}00525\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00526}00526\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ad609d64a6e0a7c8f756e0edc25eebd58}{glDepthMask}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00527}00527\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}}\ +=\ 50;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00528}00528\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00529}00529\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_aab812806a5cc9f74c1dd9bca3cbe9882}{glDepthFunc}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a4fbfca4eb265795c507b48d575884849}{GL\_LEQUAL}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00530}00530\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00531}00531\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ isConstantBlended\ )\ \doxymbox{\hyperlink{gl_wrapper_8cpp_ab1bdb0ffac837fbff1930ab41f146829}{glBlendFunc}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_af925941c078b83fac92a44fb5de310a4}{GL\_CONSTANT\_ALPHA}},\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a5e1cbc03bb131acee3987b5bd408785b}{GL\_ONE\_MINUS\_CONSTANT\_ALPHA}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00532}00532\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00533}00533\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00534}00534\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00535}00535\ \textcolor{comment}{//\ 4J\ -\/\ original\ interface,\ now\ just\ a\ wrapper\ for\ preceding\ overload}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00536}\doxymbox{\hyperlink{class_item_renderer_aaa92131cacab526dd06fb0efdf26a672}{00536}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_item_renderer_aaa92131cacab526dd06fb0efdf26a672}{ItemRenderer::renderAndDecorateItem}}(\doxymbox{\hyperlink{class_font}{Font}}\ *font,\ \doxymbox{\hyperlink{class_textures}{Textures}}\ *textures,\ \textcolor{keyword}{const}\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00537}00537\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00538}00538\ \ \ \ \ \doxymbox{\hyperlink{class_item_renderer_aaa92131cacab526dd06fb0efdf26a672}{renderAndDecorateItem}}(\ font,\ textures,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(x),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(y),\ 1.0f,\ 1.0f,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>isFoil()\ );}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00539}00539\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00540}00540\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00541}00541\ \textcolor{comment}{//\ 4J\ -\/\ a\ few\ changes\ here\ to\ get\ x,\ y,\ w,\ h\ in\ as\ floats\ (for\ xui\ rendering\ accuracy),\ and\ to\ align}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00542}00542\ \textcolor{comment}{//\ final\ pixels\ to\ the\ final\ screen\ resolution}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00543}00543\ \textcolor{keywordtype}{void}\ ItemRenderer::blitGlint(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ w,\ \textcolor{keywordtype}{float}\ h)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00544}00544\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00545}00545\ \ \ \ \ \textcolor{keywordtype}{float}\ us\ =\ 1.0f\ /\ 64.0f\ /\ 4;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00546}00546\ \ \ \ \ \textcolor{keywordtype}{float}\ vs\ =\ 1.0f\ /\ 64.0f\ /\ 4;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00547}00547\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00548}00548\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ calculate\ what\ the\ pixel\ coordinates\ will\ be\ in\ final\ screen\ coordinates}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00549}00549\ \ \ \ \ \textcolor{keywordtype}{float}\ sfx\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_a0886a0bf60a247a640a3e2a28d628a37}{width}})\ /\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>width\_phys);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00550}00550\ \ \ \ \ \textcolor{keywordtype}{float}\ sfy\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_a8e2ef581916345bf7b874bbba65e34b6}{height}})\ /\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>height\_phys);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00551}00551\ \ \ \ \ \textcolor{keywordtype}{float}\ xx0\ =\ x\ *\ sfx;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00552}00552\ \ \ \ \ \textcolor{keywordtype}{float}\ xx1\ =\ (\ x\ +\ w\ )\ *\ sfx;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00553}00553\ \ \ \ \ \textcolor{keywordtype}{float}\ yy0\ =\ y\ *\ sfy;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00554}00554\ \ \ \ \ \textcolor{keywordtype}{float}\ yy1\ =\ (\ y\ +\ h\ )\ *\ sfy;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00555}00555\ \ \ \ \ \textcolor{comment}{//\ Round\ to\ whole\ pixels\ -\/\ rounding\ inwards\ so\ that\ we\ don't\ overlap\ any\ surrounding\ graphics}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00556}00556\ \ \ \ \ xx0\ =\ ceilf(xx0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00557}00557\ \ \ \ \ xx1\ =\ floorf(xx1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00558}00558\ \ \ \ \ yy0\ =\ ceilf(yy0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00559}00559\ \ \ \ \ yy1\ =\ floorf(yy1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00560}00560\ \ \ \ \ \textcolor{comment}{//\ Offset\ by\ half\ to\ get\ actual\ centre\ of\ pixel\ -\/\ again\ moving\ inwards\ to\ avoid\ overlap\ with\ surrounding\ graphics}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00561}00561\ \ \ \ \ xx0\ +=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00562}00562\ \ \ \ \ xx1\ -\/=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00563}00563\ \ \ \ \ yy0\ +=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00564}00564\ \ \ \ \ yy1\ -\/=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00565}00565\ \ \ \ \ \textcolor{comment}{//\ Convert\ back\ to\ game\ coordinate\ space}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00566}00566\ \ \ \ \ \textcolor{keywordtype}{float}\ xx0f\ =\ xx0\ /\ sfx;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00567}00567\ \ \ \ \ \textcolor{keywordtype}{float}\ xx1f\ =\ xx1\ /\ sfx;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00568}00568\ \ \ \ \ \textcolor{keywordtype}{float}\ yy0f\ =\ yy0\ /\ sfy;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00569}00569\ \ \ \ \ \textcolor{keywordtype}{float}\ yy1f\ =\ yy1\ /\ sfy;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00570}00570\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00571}00571\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 2;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00572}00572\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00573}00573\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ ==\ 0)\ \doxymbox{\hyperlink{gl_wrapper_8cpp_ab1bdb0ffac837fbff1930ab41f146829}{glBlendFunc}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_aac0f0b0cd1bc460a513f8bffc25a8a3a}{GL\_SRC\_COLOR}},\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a3fecd4af71ce9a34f968322cd13fb379}{GL\_ONE}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00574}00574\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ ==\ 1)\ \doxymbox{\hyperlink{gl_wrapper_8cpp_ab1bdb0ffac837fbff1930ab41f146829}{glBlendFunc}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_aac0f0b0cd1bc460a513f8bffc25a8a3a}{GL\_SRC\_COLOR}},\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a3fecd4af71ce9a34f968322cd13fb379}{GL\_ONE}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00575}00575\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ sx\ =\ \doxymbox{\hyperlink{class_minecraft_a6ff263ca119a8fd40ea208ecb34e01ba}{Minecraft::currentTimeMillis}}()\ \%\ (3000\ +\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ *\ 1873)\ /\ (3000.0f\ +\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ *\ 1873)\ *\ 256;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00576}00576\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ sy\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00577}00577\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator}{Tesselator}}\ *t\ =\ \doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{Tesselator::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00578}00578\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ vv\ =\ 4;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00579}00579\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ ==\ 1)\ vv\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00580}00580\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00581}00581\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(xx0f,\ yy1f,\ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}},\ (sx\ +\ h\ *\ vv)\ *\ us,\ (sy\ +\ h)\ *\ vs);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00582}00582\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(xx1f,\ yy1f,\ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}},\ (sx\ +\ w\ +\ h\ *\ vv)\ *\ us,\ (sy\ +\ h)\ *\ vs);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00583}00583\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(xx1f,\ yy0f,\ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}},\ (sx\ +\ w)\ *\ us,\ (sy\ +\ 0)\ *\ vs);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00584}00584\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(xx0f,\ yy0f,\ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}},\ (sx\ +\ 0)\ *\ us,\ (sy\ +\ 0)\ *\ vs);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00585}00585\ \ \ \ \ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00586}00586\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00587}00587\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00588}00588\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00589}\doxymbox{\hyperlink{class_item_renderer_ace47ef05a46a73bc5d284c1e0376385e}{00589}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_item_renderer_ace47ef05a46a73bc5d284c1e0376385e}{ItemRenderer::renderGuiItemDecorations}}(\doxymbox{\hyperlink{class_font}{Font}}\ *font,\ \doxymbox{\hyperlink{class_textures}{Textures}}\ *textures,\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{float}\ fAlpha)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00590}00590\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00591}00591\ \ \ \ \ \doxymbox{\hyperlink{class_item_renderer_ace47ef05a46a73bc5d284c1e0376385e}{renderGuiItemDecorations}}(font,\ textures,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ x,\ y,\ L\textcolor{stringliteral}{"{}"{}},\ fAlpha);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00592}00592\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00593}00593\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00594}\doxymbox{\hyperlink{class_item_renderer_a84b384af7152dc3415570c4f81d9229a}{00594}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_item_renderer_ace47ef05a46a73bc5d284c1e0376385e}{ItemRenderer::renderGuiItemDecorations}}(\doxymbox{\hyperlink{class_font}{Font}}\ *font,\ \doxymbox{\hyperlink{class_textures}{Textures}}\ *textures,\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keyword}{const}\ wstring\ \&countText,\ \textcolor{keywordtype}{float}\ fAlpha)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00595}00595\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00596}00596\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00597}00597\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00598}00598\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00599}00599\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00600}00600\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00601}00601\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count\ >\ 1\ ||\ !countText.empty()\ ||\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>GetForceNumberDisplay())}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00602}00602\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00603}00603\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(31);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00604}00604\ \ \ \ \ \ \ \ \ wstring\ amount\ =\ countText;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00605}00605\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(amount.empty())}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00606}00606\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ count\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00608}00608\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(count\ >\ 64)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00609}00609\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00610}00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amount\ =\ L\textcolor{stringliteral}{"{}64+"{}};}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00611}00611\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00612}00612\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00613}00613\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00614}00614\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amount\ =\ std::to\_wstring(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00615}00615\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00616}00616\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00617}00617\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___minecraft_8cpp_a2ccf4b040d2b29c75c9c87acc9fdb8d3}{MemSect}}(0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00618}00618\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00619}00619\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a1bddfc7ca4919c4308c762f4a18e60d5}{GL\_DEPTH\_TEST}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00620}00620\ \ \ \ \ \ \ \ \ font-\/>\doxymbox{\hyperlink{class_font_af733947f3a16e052538bc5e238100d3f}{drawShadow}}(amount,\ x\ +\ 19\ -\/\ 2\ -\/\ font-\/>\doxymbox{\hyperlink{class_font_af1e995f75efb4f3ecf7dc940deb434b0}{width}}(amount),\ y\ +\ 6\ +\ 3,\ 0xffffff\ |(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\textcolor{keyword}{>}(fAlpha\ *\ 0xff)<<24));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00621}00621\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00622}00622\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a1bddfc7ca4919c4308c762f4a18e60d5}{GL\_DEPTH\_TEST}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00623}00623\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00624}00624\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00625}00625\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>isDamaged())}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00626}00626\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00627}00627\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ p\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_math_a32a2f80111211a00b2e80c847b484054}{Math::round}}(13.0\ -\/\ (\textcolor{keywordtype}{double})\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getDamageValue()\ *\ 13.0\ /\ (\textcolor{keywordtype}{double})\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getMaxDamage()));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00628}00628\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ cc\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_math_a32a2f80111211a00b2e80c847b484054}{Math::round}}(255.0\ -\/\ (\textcolor{keywordtype}{double})\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getDamageValue()\ *\ 255.0\ /\ (\textcolor{keywordtype}{double})\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getMaxDamage()));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00629}00629\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00630}00630\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a1bddfc7ca4919c4308c762f4a18e60d5}{GL\_DEPTH\_TEST}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00631}00631\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_afbebef4b261b4a80484b5ac02a402aa2}{GL\_TEXTURE\_2D}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00632}00632\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00633}00633\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator}{Tesselator}}\ *t\ =\ \doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{Tesselator::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00634}00634\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00635}00635\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ca\ =\ (255\ -\/\ cc)\ <<\ 16\ |\ (cc)\ <<\ 8;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00636}00636\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ cb\ =\ ((255\ -\/\ cc)\ /\ 4)\ <<\ 16\ |\ (255\ /\ 4)\ <<\ 8;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00637}00637\ \ \ \ \ \ \ \ \ fillRect(t,\ x\ +\ 2,\ y\ +\ 13,\ 13,\ 2,\ 0x000000);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00638}00638\ \ \ \ \ \ \ \ \ fillRect(t,\ x\ +\ 2,\ y\ +\ 13,\ 12,\ 1,\ cb);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00639}00639\ \ \ \ \ \ \ \ \ fillRect(t,\ x\ +\ 2,\ y\ +\ 13,\ p,\ 1,\ ca);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00640}00640\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00641}00641\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_afbebef4b261b4a80484b5ac02a402aa2}{GL\_TEXTURE\_2D}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00642}00642\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00643}00643\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a1bddfc7ca4919c4308c762f4a18e60d5}{GL\_DEPTH\_TEST}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00644}00644\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}(1,\ 1,\ 1,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00645}00645\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00646}00646\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>hasPotionStrengthBar())}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00647}00647\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00648}00648\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00649}00649\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a1bddfc7ca4919c4308c762f4a18e60d5}{GL\_DEPTH\_TEST}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00650}00650\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_afbebef4b261b4a80484b5ac02a402aa2}{GL\_TEXTURE\_2D}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00651}00651\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00652}00652\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_tesselator}{Tesselator}}\ *t\ =\ \doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{Tesselator::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00653}00653\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00654}00654\ \ \ \ \ \ \ \ \ fillRect(t,\ x\ +\ 3,\ y\ +\ 13,\ 11,\ 2,\ 0x000000);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00655}00655\ \ \ \ \ \ \ \ \ \textcolor{comment}{//fillRect(t,\ x\ +\ 2,\ y\ +\ 13,\ 13,\ 1,\ 0x1dabc0);}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00656}00656\ \ \ \ \ \ \ \ \ fillRect(t,\ x\ +\ 3,\ y\ +\ 13,\ \doxymbox{\hyperlink{class_item_renderer_abc6a671f433f1995258fd52af176f912}{m\_iPotionStrengthBarWidth}}[\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>GetPotionStrength()],\ 2,\ 0x00e1eb);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00657}00657\ \ \ \ \ \ \ \ \ fillRect(t,\ x\ +\ 2\ +\ 3,\ y\ +\ 13,\ 1,\ 2,\ 0x000000);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00658}00658\ \ \ \ \ \ \ \ \ fillRect(t,\ x\ +\ 2\ +\ 3+3,\ y\ +\ 13,\ 1,\ 2,\ 0x000000);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00659}00659\ \ \ \ \ \ \ \ \ fillRect(t,\ x\ +\ 2\ +\ 3+3+3,\ y\ +\ 13,\ 1,\ 2,\ 0x000000);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00660}00660\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00661}00661\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00662}00662\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_afbebef4b261b4a80484b5ac02a402aa2}{GL\_TEXTURE\_2D}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00663}00663\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a17e73a89842d60059bacc03acb1621df}{GL\_LIGHTING}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00664}00664\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_ac6e8f516e46eb91e0ff9c2746c611ae7}{glEnable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a1bddfc7ca4919c4308c762f4a18e60d5}{GL\_DEPTH\_TEST}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00665}00665\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_a65ef877e62fe11b874fd8e31d28dfc40}{glColor4f}}(1,\ 1,\ 1,\ 1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00666}00666\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00667}00667\ \ \ \ \ \doxymbox{\hyperlink{gl_wrapper_8cpp_add51339fe3e6f54d5719bae360e82d45}{glDisable}}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a83a31fb2bff21972c45e737ab22ca7c7}{GL\_BLEND}});}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00668}00668\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00669}00669\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00670}00670\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_item_renderer_abc6a671f433f1995258fd52af176f912}{ItemRenderer::m\_iPotionStrengthBarWidth}}[]=}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00671}00671\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00672}00672\ \ \ \ \ 3,6,9,11}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00673}00673\ \};}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00674}00674\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00675}00675\ \textcolor{keywordtype}{void}\ ItemRenderer::fillRect(\doxymbox{\hyperlink{class_tesselator}{Tesselator}}\ *t,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ h,\ \textcolor{keywordtype}{int}\ c)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00676}00676\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00677}00677\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00678}00678\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_afa9e821ce3a9aa2b5a8a38090e6f0369}{color}}(c);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00679}00679\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(x\ +\ 0),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(y\ +\ 0),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00680}00680\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(x\ +\ 0),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(y\ +\ h),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00681}00681\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(x\ +\ w),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(y\ +\ h),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00682}00682\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_af1a873fb6e3f51700184e98697182445}{vertex}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(x\ +\ w),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(y\ +\ 0),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(0));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00683}00683\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00684}00684\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00685}00685\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00686}00686\ \textcolor{comment}{//\ 4J\ -\/\ a\ few\ changes\ here\ to\ get\ x,\ y,\ w,\ h\ in\ as\ floats\ (for\ xui\ rendering\ accuracy),\ and\ to\ align}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00687}00687\ \textcolor{comment}{//\ final\ pixels\ to\ the\ final\ screen\ resolution}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00688}\doxymbox{\hyperlink{class_item_renderer_af76fbadf7eab541de4352fae3f09e9cd}{00688}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_item_renderer_af76fbadf7eab541de4352fae3f09e9cd}{ItemRenderer::blit}}(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{int}\ sx,\ \textcolor{keywordtype}{int}\ sy,\ \textcolor{keywordtype}{float}\ w,\ \textcolor{keywordtype}{float}\ h)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00689}00689\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00690}00690\ \ \ \ \ \textcolor{keywordtype}{float}\ us\ =\ 1\ /\ 256.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00691}00691\ \ \ \ \ \textcolor{keywordtype}{float}\ vs\ =\ 1\ /\ 256.0f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00692}00692\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator}{Tesselator}}\ *t\ =\ \doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{Tesselator::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00693}00693\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00694}00694\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00695}00695\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ calculate\ what\ the\ pixel\ coordinates\ will\ be\ in\ final\ screen\ coordinates}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00696}00696\ \ \ \ \ \textcolor{keywordtype}{float}\ sfx\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_a0886a0bf60a247a640a3e2a28d628a37}{width}})\ /\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>width\_phys);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00697}00697\ \ \ \ \ \textcolor{keywordtype}{float}\ sfy\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_a8e2ef581916345bf7b874bbba65e34b6}{height}})\ /\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>height\_phys);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00698}00698\ \ \ \ \ \textcolor{keywordtype}{float}\ xx0\ =\ x\ *\ sfx;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00699}00699\ \ \ \ \ \textcolor{keywordtype}{float}\ xx1\ =\ (\ x\ +\ w\ )\ *\ sfx;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00700}00700\ \ \ \ \ \textcolor{keywordtype}{float}\ yy0\ =\ y\ *\ sfy;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00701}00701\ \ \ \ \ \textcolor{keywordtype}{float}\ yy1\ =\ (\ y\ +\ h\ )\ *\ sfy;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00702}00702\ \ \ \ \ \textcolor{comment}{//\ Round\ to\ whole\ pixels\ -\/\ rounding\ inwards\ so\ that\ we\ don't\ overlap\ any\ surrounding\ graphics}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00703}00703\ \ \ \ \ xx0\ =\ ceilf(xx0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00704}00704\ \ \ \ \ xx1\ =\ floorf(xx1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00705}00705\ \ \ \ \ yy0\ =\ ceilf(yy0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00706}00706\ \ \ \ \ yy1\ =\ floorf(yy1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00707}00707\ \ \ \ \ \textcolor{comment}{//\ Offset\ by\ half\ to\ get\ actual\ centre\ of\ pixel\ -\/\ again\ moving\ inwards\ to\ avoid\ overlap\ with\ surrounding\ graphics}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00708}00708\ \ \ \ \ xx0\ +=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00709}00709\ \ \ \ \ xx1\ -\/=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00710}00710\ \ \ \ \ yy0\ +=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00711}00711\ \ \ \ \ yy1\ -\/=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00712}00712\ \ \ \ \ \textcolor{comment}{//\ Convert\ back\ to\ game\ coordinate\ space}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00713}00713\ \ \ \ \ \textcolor{keywordtype}{float}\ xx0f\ =\ xx0\ /\ sfx;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00714}00714\ \ \ \ \ \textcolor{keywordtype}{float}\ xx1f\ =\ xx1\ /\ sfx;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00715}00715\ \ \ \ \ \textcolor{keywordtype}{float}\ yy0f\ =\ yy0\ /\ sfy;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00716}00716\ \ \ \ \ \textcolor{keywordtype}{float}\ yy1f\ =\ yy1\ /\ sfy;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00717}00717\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00718}00718\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ subtracting\ 0.5f\ (actual\ screen\ pixels,\ so\ need\ to\ compensate\ for\ physical\ \&\ game\ width)\ from\ each\ x\ \&\ y\ coordinate\ to\ compensate\ for\ centre\ of\ pixels\ in\ directx\ vs\ openGL}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00719}00719\ \ \ \ \ \textcolor{keywordtype}{float}\ f\ =\ (\ 0.5f\ *\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_a0886a0bf60a247a640a3e2a28d628a37}{width}})\ )\ /\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>width\_phys);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00720}00720\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00721}00721\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(xx0f,\ yy1f,\ (\textcolor{keywordtype}{float})(\ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}}),\ (\textcolor{keywordtype}{float})(\ (sx\ +\ 0)\ *\ us),\ (\textcolor{keywordtype}{float})(\ (sy\ +\ 16)\ *\ vs));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00722}00722\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(xx1f,\ yy1f,\ (\textcolor{keywordtype}{float})(\ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}}),\ (\textcolor{keywordtype}{float})(\ (sx\ +\ 16)\ *\ us),\ (\textcolor{keywordtype}{float})(\ (sy\ +\ 16)\ *\ vs));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00723}00723\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(xx1f,\ yy0f,\ (\textcolor{keywordtype}{float})(\ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}}),\ (\textcolor{keywordtype}{float})(\ (sx\ +\ 16)\ *\ us),\ (\textcolor{keywordtype}{float})(\ (sy\ +\ 0)\ *\ vs));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00724}00724\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(xx0f,\ yy0f,\ (\textcolor{keywordtype}{float})(\ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}}),\ (\textcolor{keywordtype}{float})(\ (sx\ +\ 0)\ *\ us),\ (\textcolor{keywordtype}{float})(\ (sy\ +\ 0)\ *\ vs));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00725}00725\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00726}00726\ \}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00727}00727\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00728}\doxymbox{\hyperlink{class_item_renderer_aaee101df2aeed5e6de57cb95280ce6cf}{00728}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_item_renderer_af76fbadf7eab541de4352fae3f09e9cd}{ItemRenderer::blit}}(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \doxymbox{\hyperlink{class_icon}{Icon}}\ *tex,\ \textcolor{keywordtype}{float}\ w,\ \textcolor{keywordtype}{float}\ h)}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00729}00729\ \{}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00730}00730\ \ \ \ \ \doxymbox{\hyperlink{class_tesselator}{Tesselator}}\ *t\ =\ \doxymbox{\hyperlink{class_tesselator_adbd93096c13580a071ca5e60a4ce0e28}{Tesselator::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00731}00731\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_ae56b750b505a8d98f2203266f8837800}{begin}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00732}00732\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00733}00733\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ calculate\ what\ the\ pixel\ coordinates\ will\ be\ in\ final\ screen\ coordinates}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00734}00734\ \ \ \ \ \textcolor{keywordtype}{float}\ sfx\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_a0886a0bf60a247a640a3e2a28d628a37}{width}})\ /\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>width\_phys);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00735}00735\ \ \ \ \ \textcolor{keywordtype}{float}\ sfy\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_a8e2ef581916345bf7b874bbba65e34b6}{height}})\ /\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>height\_phys);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00736}00736\ \ \ \ \ \textcolor{keywordtype}{float}\ xx0\ =\ x\ *\ sfx;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00737}00737\ \ \ \ \ \textcolor{keywordtype}{float}\ xx1\ =\ (\ x\ +\ w\ )\ *\ sfx;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00738}00738\ \ \ \ \ \textcolor{keywordtype}{float}\ yy0\ =\ y\ *\ sfy;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00739}00739\ \ \ \ \ \textcolor{keywordtype}{float}\ yy1\ =\ (\ y\ +\ h\ )\ *\ sfy;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00740}00740\ \ \ \ \ \textcolor{comment}{//\ Round\ to\ whole\ pixels\ -\/\ rounding\ inwards\ so\ that\ we\ don't\ overlap\ any\ surrounding\ graphics}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00741}00741\ \ \ \ \ xx0\ =\ ceilf(xx0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00742}00742\ \ \ \ \ xx1\ =\ floorf(xx1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00743}00743\ \ \ \ \ yy0\ =\ ceilf(yy0);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00744}00744\ \ \ \ \ yy1\ =\ floorf(yy1);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00745}00745\ \ \ \ \ \textcolor{comment}{//\ Offset\ by\ half\ to\ get\ actual\ centre\ of\ pixel\ -\/\ again\ moving\ inwards\ to\ avoid\ overlap\ with\ surrounding\ graphics}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00746}00746\ \ \ \ \ xx0\ +=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00747}00747\ \ \ \ \ xx1\ -\/=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00748}00748\ \ \ \ \ yy0\ +=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00749}00749\ \ \ \ \ yy1\ -\/=\ 0.5f;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00750}00750\ \ \ \ \ \textcolor{comment}{//\ Convert\ back\ to\ game\ coordinate\ space}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00751}00751\ \ \ \ \ \textcolor{keywordtype}{float}\ xx0f\ =\ xx0\ /\ sfx;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00752}00752\ \ \ \ \ \textcolor{keywordtype}{float}\ xx1f\ =\ xx1\ /\ sfx;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00753}00753\ \ \ \ \ \textcolor{keywordtype}{float}\ yy0f\ =\ yy0\ /\ sfy;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00754}00754\ \ \ \ \ \textcolor{keywordtype}{float}\ yy1f\ =\ yy1\ /\ sfy;}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00755}00755\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00756}00756\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ subtracting\ 0.5f\ (actual\ screen\ pixels,\ so\ need\ to\ compensate\ for\ physical\ \&\ game\ width)\ from\ each\ x\ \&\ y\ coordinate\ to\ compensate\ for\ centre\ of\ pixels\ in\ directx\ vs\ openGL}}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00757}00757\ \ \ \ \ \textcolor{keywordtype}{float}\ f\ =\ (\ 0.5f\ *\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_a0886a0bf60a247a640a3e2a28d628a37}{width}})\ )\ /\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}()-\/>width\_phys);}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00758}00758\ }
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00759}00759\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(xx0f,\ yy1f,\ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}},\ tex-\/>\doxymbox{\hyperlink{class_icon_a10662000cba286666436f553e9cf0236}{getU0}}(\textcolor{keyword}{true}),\ tex-\/>\doxymbox{\hyperlink{class_icon_af672f86be7451c65a01541dd83d6f854}{getV1}}(\textcolor{keyword}{true}));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00760}00760\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(xx1f,\ yy1f,\ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}},\ tex-\/>\doxymbox{\hyperlink{class_icon_aa204701a58918aa5c471ad8d05a5b80b}{getU1}}(\textcolor{keyword}{true}),\ tex-\/>\doxymbox{\hyperlink{class_icon_af672f86be7451c65a01541dd83d6f854}{getV1}}(\textcolor{keyword}{true}));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00761}00761\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(xx1f,\ yy0f,\ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}},\ tex-\/>\doxymbox{\hyperlink{class_icon_aa204701a58918aa5c471ad8d05a5b80b}{getU1}}(\textcolor{keyword}{true}),\ tex-\/>\doxymbox{\hyperlink{class_icon_ab5947f663244fa97f90ceed00611e4eb}{getV0}}(\textcolor{keyword}{true}));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00762}00762\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_a9eea4fc9c32b4607a6b0d393ecd462f6}{vertexUV}}(xx0f,\ yy0f,\ \doxymbox{\hyperlink{class_item_renderer_a14dd178f428dcea416684db17f828ee8}{blitOffset}},\ tex-\/>\doxymbox{\hyperlink{class_icon_a10662000cba286666436f553e9cf0236}{getU0}}(\textcolor{keyword}{true}),\ tex-\/>\doxymbox{\hyperlink{class_icon_ab5947f663244fa97f90ceed00611e4eb}{getV0}}(\textcolor{keyword}{true}));}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00763}00763\ \ \ \ \ t-\/>\doxymbox{\hyperlink{class_tesselator_aaf2e9728c16fff192d1481bdee9ca03b}{end}}();}
+\DoxyCodeLine{\Hypertarget{_item_renderer_8cpp_source_l00764}00764\ \}}
+
+\end{DoxyCode}

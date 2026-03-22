@@ -1,0 +1,28 @@
+var class_item_entity =
+[
+    [ "ItemEntity", "class_item_entity.html#ad24c4a647b64a328cb9f5b319bd60526", null ],
+    [ "ItemEntity", "class_item_entity.html#ad68facc774b10cb05589ce354a6ca9e8", null ],
+    [ "ItemEntity", "class_item_entity.html#a675fc15049e477479b43048bb031abd6", null ],
+    [ "addAdditonalSaveData", "class_item_entity.html#a19d71c522a8646f5e47f3b12e7c9d320", null ],
+    [ "burn", "class_item_entity.html#a9641cfbf56f46bffbf6504cefc687ffb", null ],
+    [ "changeDimension", "class_item_entity.html#a57d816ea80f41ce23cd6c3cec1f5982d", null ],
+    [ "defineSynchedData", "class_item_entity.html#a35d22139e6d69c0ad69618704c7c4bc8", null ],
+    [ "getAName", "class_item_entity.html#aa8a4eb636ebaf8291d35e598f63153d5", null ],
+    [ "getItem", "class_item_entity.html#a6c7bae585ab492b9c025667bf7e07725", null ],
+    [ "getThrower", "class_item_entity.html#a1c3a192a4af2c23530e31dcaa5131270", null ],
+    [ "GetType", "class_item_entity.html#ac6665eeb42c619cd4eb228645406be96", null ],
+    [ "hurt", "class_item_entity.html#a0c4f85540f30a5a09402370b0c868c4c", null ],
+    [ "isAttackable", "class_item_entity.html#a860d4db08218bdbf99a3fb5f025b039e", null ],
+    [ "makeStepSound", "class_item_entity.html#aed8c81e66157ffb1102ae83fc35f6331", null ],
+    [ "merge", "class_item_entity.html#a0f9bc9191dca8a7c521ab0eca39c6dcb", null ],
+    [ "playerTouch", "class_item_entity.html#a29a5e69187abb6926deb677f2ea9773c", null ],
+    [ "readAdditionalSaveData", "class_item_entity.html#a9143441bc67c5228cf7f0dd876d25195", null ],
+    [ "setItem", "class_item_entity.html#a124e43eaafcabd7023f139143b63475b", null ],
+    [ "setShortLifeTime", "class_item_entity.html#aa6fd3287a5ee560c0afd920e26124fe5", null ],
+    [ "setThrower", "class_item_entity.html#a6001ef8405ff1773b213fde3c4cadfe0", null ],
+    [ "tick", "class_item_entity.html#a9c8bc30921f5d38b27a6982100e15f32", null ],
+    [ "updateInWaterState", "class_item_entity.html#abc68c0283c50f7c195d28aef181c3c93", null ],
+    [ "age", "class_item_entity.html#a4751508470b8d919b5030c8b68097e9a", null ],
+    [ "bobOffs", "class_item_entity.html#a39f8c36ecfce698896e6ca86489e30a0", null ],
+    [ "throwTime", "class_item_entity.html#a2d33d62622b73656fe6634a10f11e59f", null ]
+];

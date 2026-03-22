@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['a_20new_20cli_20command_0',['5.1 Add a New CLI Command',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205.html#autotoc_md25',1,'']]],
+  ['a_20server_20properties_20key_1',['5.2 Add or Change a &lt;span class=&quot;tt&quot;&gt;server.properties&lt;/span&gt; Key',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205.html#autotoc_md26',1,'']]],
+  ['about_20server_20properties_2',['About &lt;span class=&quot;tt&quot;&gt;server.properties&lt;/span&gt;',['../dir_95643541ceba6d72e00b2ee88e295218.html#autotoc_md67',1,'']]],
+  ['access_20behavior_3',['5.3 Change Ban / Access Behavior',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205.html#autotoc_md27',1,'']]],
+  ['access_20control_20ban_20and_20whitelist_20storage_4',['Access Control, Ban, and Whitelist Storage',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205.html#autotoc_md16',1,'']]],
+  ['add_20a_20new_20cli_20command_5',['5.1 Add a New CLI Command',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205.html#autotoc_md25',1,'']]],
+  ['add_20logging_20for_20new_20feature_20work_6',['5.5 Add Logging for New Feature Work',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205.html#autotoc_md29',1,'']]],
+  ['add_20or_20change_20a_20server_20properties_20key_7',['5.2 Add or Change a &lt;span class=&quot;tt&quot;&gt;server.properties&lt;/span&gt; Key',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205.html#autotoc_md26',1,'']]],
+  ['ai_20and_20llms_8',['Use of AI and LLMs',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md8',1,'']]],
+  ['and_20connection_20audit_9',['Logging and Connection Audit',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205.html#autotoc_md17',1,'']]],
+  ['and_20llms_10',['Use of AI and LLMs',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_c_o_n_t_r_i_b_u_t_i_n_g.html#autotoc_md8',1,'']]],
+  ['and_20run_11',['6. Build and Run',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205.html#autotoc_md30',1,'']]],
+  ['and_20runtime_12',['Startup and Runtime',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205.html#autotoc_md13',1,'']]],
+  ['and_20save_20load_13',['World Selection and Save Load',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205.html#autotoc_md14',1,'']]],
+  ['and_20whitelist_20storage_14',['Access Control, Ban, and Whitelist Storage',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205.html#autotoc_md16',1,'']]],
+  ['arguments_15',['Arguments',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205.html#autotoc_md21',1,'4.1 Launch Arguments'],['../dir_95643541ceba6d72e00b2ee88e295218.html#autotoc_md64',1,'Client Launch Arguments']]],
+  ['arguments_16',['arguments',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_c_o_m_p_i_l_e.html#autotoc_md2',1,'Dedicated server debug arguments'],['../dir_95643541ceba6d72e00b2ee88e295218.html#autotoc_md68',1,'Dedicated Server launch arguments']]],
+  ['audit_17',['Logging and Connection Audit',['../md__c_1_2_users_2_administrator_2_documents_2_git_hub_2_minecraft_consoles_2_minecraft_8_server_21e77ccb9dc81339e9134109d9b7c205.html#autotoc_md17',1,'']]]
+];

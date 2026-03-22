@@ -1,0 +1,802 @@
+\doxysection{Inventory.\+cpp}
+\hypertarget{_inventory_8cpp_source}{}\label{_inventory_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/Inventory.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/Inventory.cpp}}
+\doxymbox{\hyperlink{_inventory_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{com_8mojang_8nbt_8h}{com.mojang.nbt.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8player_8h}{net.minecraft.world.entity.player.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8h}{net.minecraft.world.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8tile_8h}{net.minecraft.world.level.tile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8stats_8h}{net.minecraft.stats.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_material_8h}{Material.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_inventory_8h}{Inventory.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00010}00010\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_inventory_ae45e24d53fc2ab06c077a76f552b1b29}{Inventory::POP\_TIME\_DURATION}}\ =\ 5;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00011}00011\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_inventory_a895ab61828c2eb2e10f2b38bd54ff0f6}{Inventory::MAX\_INVENTORY\_STACK\_SIZE}}\ =\ 64;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00013}00013\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ Inventory::INVENTORY\_SIZE\ =\ 4\ *\ 9;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00014}00014\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ Inventory::SELECTION\_SIZE\ =\ 9;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00016}00016\ \textcolor{comment}{//\ 4J\ Stu\ -\/\ The\ Pllayer\ is\ managed\ by\ shared\_ptrs\ elsewhere,\ but\ it\ owns\ us\ so\ we\ don't\ want\ to\ also}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00017}00017\ \textcolor{comment}{//\ keep\ a\ shared\_ptr\ of\ it.\ If\ we\ pass\ it\ on\ we\ should\ use\ shared\_from\_this()\ though}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00018}\doxymbox{\hyperlink{class_inventory_acb16aac154228bd77d2f2af46af60ba6}{00018}}\ \doxymbox{\hyperlink{class_inventory_acb16aac154228bd77d2f2af46af60ba6}{Inventory::Inventory}}(\doxymbox{\hyperlink{class_player}{Player}}\ *\doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00019}00019\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00020}00020\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a599ae9fd83bc1129a54be8b5b66d0ef0}{ItemInstanceArray}}(\ INVENTORY\_SIZE\ );}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00021}00021\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a599ae9fd83bc1129a54be8b5b66d0ef0}{ItemInstanceArray}}(\ 4\ );}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00023}00023\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00025}00025\ \ \ \ \ carried\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00027}00027\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a06ef6e4b81892eec262d46cc60936a89}{changed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00029}00029\ \ \ \ \ this-\/>player\ =\ \doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00030}00030\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00032}\doxymbox{\hyperlink{class_inventory_a6c6dfcb6d977c74a7abf46809e892e3d}{00032}}\ \doxymbox{\hyperlink{class_inventory_a6c6dfcb6d977c74a7abf46809e892e3d}{Inventory::\string~Inventory}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00033}00033\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00034}00034\ \ \ \ \ \textcolor{keyword}{delete}\ []\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.data;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00035}00035\ \ \ \ \ \textcolor{keyword}{delete}\ []\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}.data;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00036}00036\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00038}\doxymbox{\hyperlink{class_inventory_ae9481e2a756947f05fa98932d0aa2db3}{00038}}\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{class_inventory_ae9481e2a756947f05fa98932d0aa2db3}{Inventory::getSelected}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00039}00039\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00040}00040\ \ \ \ \ \textcolor{comment}{//\ sanity\ checking\ to\ prevent\ exploits}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00041}00041\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected\ <\ SELECTION\_SIZE\ \&\&\ selected\ >}}=\ 0)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00042}00042\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}];}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00044}00044\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00045}00045\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00046}00046\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00048}00048\ \textcolor{comment}{//\ 4J-\/PB\ -\/\ Added\ for\ the\ in-\/game\ tooltips}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00049}\doxymbox{\hyperlink{class_inventory_a926a68319b6e8f00329afd614bb4ee9b}{00049}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_inventory_a926a68319b6e8f00329afd614bb4ee9b}{Inventory::IsHeldItem}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00050}00050\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00051}00051\ \ \ \ \ \textcolor{comment}{//\ sanity\ checking\ to\ prevent\ exploits}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected\ <\ SELECTION\_SIZE\ \&\&\ selected\ >}}=\ 0)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00053}00053\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}])}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00055}00055\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00058}00058\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00059}00059\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00060}00060\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00062}\doxymbox{\hyperlink{class_inventory_a4b48e8cba0c79300ef8ce5f8db3ba34f}{00062}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_inventory_a4b48e8cba0c79300ef8ce5f8db3ba34f}{Inventory::getSelectionSize}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00063}00063\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00064}00064\ \ \ \ \ \textcolor{keywordflow}{return}\ SELECTION\_SIZE;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00065}00065\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00068}00068\ \textcolor{keywordtype}{int}\ Inventory::getSlot(\textcolor{keywordtype}{int}\ tileId)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00069}00069\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}};\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00071}00071\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>\textcolor{keywordtype}{id}\ ==\ tileId)\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00073}00073\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00074}00074\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00075}00075\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00077}00077\ \textcolor{keywordtype}{int}\ Inventory::getSlot(\textcolor{keywordtype}{int}\ tileId,\ \textcolor{keywordtype}{int}\ data)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00078}00078\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00079}00079\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00080}00080\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>\textcolor{keywordtype}{id}\ ==\ tileId\ \&\&\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>getAuxValue()\ ==\ data)\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00082}00082\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00083}00083\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00084}00084\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00086}00086\ \textcolor{keywordtype}{int}\ Inventory::getSlotWithRemainingSpace(shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00087}00087\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00088}00088\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00089}00089\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>\textcolor{keywordtype}{id}\ ==\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id\ \&\&\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>isStackable()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \&\&\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>count\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>getMaxStackSize()\ \&\&\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>count\ <\ \doxymbox{\hyperlink{class_inventory_aa69fa7e303f6bc9c8a8d1cabde4c549d}{getMaxStackSize}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \&\&\ (!\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>isStackedByData()\ ||\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>getAuxValue()\ ==\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getAuxValue())}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \&\&\ \doxymbox{\hyperlink{class_item_instance_a58ff33b81ac1017fa4f8376c40cc8edc}{ItemInstance::tagMatches}}(\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}],\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}))}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00097}00097\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00099}00099\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00101}\doxymbox{\hyperlink{class_inventory_a551a26a7c1f660b2c6f41e47fc004bc1}{00101}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_inventory_a551a26a7c1f660b2c6f41e47fc004bc1}{Inventory::getFreeSlot}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00102}00102\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00103}00103\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00104}00104\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00106}00106\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00107}00107\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00108}00108\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00111}\doxymbox{\hyperlink{class_inventory_ad39091e7dd40de0c23fac36dd127e5d7}{00111}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_ad39091e7dd40de0c23fac36dd127e5d7}{Inventory::grabTexture}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \textcolor{keywordtype}{int}\ data,\ \textcolor{keywordtype}{bool}\ checkData,\ \textcolor{keywordtype}{bool}\ mayReplace)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00112}00112\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00113}00113\ \ \ \ \ \textcolor{keywordtype}{int}\ slot\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00114}00114\ \ \ \ \ heldItem\ =\ \doxymbox{\hyperlink{class_inventory_ae9481e2a756947f05fa98932d0aa2db3}{getSelected}}();}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00115}00115\ \ \ \ \ \textcolor{keywordflow}{if}\ (checkData)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00116}00116\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ slot\ =\ getSlot(\textcolor{keywordtype}{id},\ data);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00118}00118\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00119}00119\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00120}00120\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ slot\ =\ getSlot(\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00122}00122\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00123}00123\ \ \ \ \ \textcolor{keywordflow}{if}\ (slot\ >=\ 0\ \&\&\ slot\ <\ 9)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00124}00124\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}\ =\ slot;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00127}00127\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00129}00129\ \ \ \ \ \textcolor{keywordflow}{if}\ (mayReplace)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00130}00130\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keywordtype}{id}\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ firstEmpty\ =\ \doxymbox{\hyperlink{class_inventory_a551a26a7c1f660b2c6f41e47fc004bc1}{getFreeSlot}}();}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (firstEmpty\ >=\ 0\ \&\&\ firstEmpty\ <\ 9)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}\ =\ firstEmpty;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a4fcd20917cf59732904437ba40a699df}{replaceSlot}}(\doxymbox{\hyperlink{class_item_a8aa5718011a032c9b93d15dfcbc362f7}{Item::items}}[\textcolor{keywordtype}{id}],\ data);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00141}00141\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00142}00142\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00144}\doxymbox{\hyperlink{class_inventory_a44836ead5c7330c0cf0da95bd53dc97b}{00144}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_a44836ead5c7330c0cf0da95bd53dc97b}{Inventory::swapPaint}}(\textcolor{keywordtype}{int}\ wheel)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00145}00145\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00146}00146\ \ \ \ \ \textcolor{keywordflow}{if}\ (wheel\ >\ 0)\ wheel\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00147}00147\ \ \ \ \ \textcolor{keywordflow}{if}\ (wheel\ <\ 0)\ wheel\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00149}00149\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}\ -\/=\ wheel;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00151}00151\ \ \ \ \ \textcolor{keywordflow}{while}\ (\doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}\ +=\ 9;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00153}00153\ \ \ \ \ \textcolor{keywordflow}{while}\ (\doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}\ >=\ 9)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}\ -\/=\ 9;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00155}00155\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00157}\doxymbox{\hyperlink{class_inventory_a6275f962cd8a17962251a0f342f01de2}{00157}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_inventory_a6275f962cd8a17962251a0f342f01de2}{Inventory::clearInventory}}(\textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id},\ \textcolor{keywordtype}{int}\ data)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00158}00158\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00159}00159\ \ \ \ \ \textcolor{keywordtype}{int}\ count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00160}00160\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00161}00161\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keywordtype}{id}\ >\ -\/1\ \&\&\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id\ !=\ \textcolor{keywordtype}{id})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (data\ >\ -\/1\ \&\&\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getAuxValue()\ !=\ data)\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ count\ +=\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00169}00169\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00170}00170\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00171}00171\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keywordtype}{id}\ >\ -\/1\ \&\&\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id\ !=\ \textcolor{keywordtype}{id})\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (data\ >\ -\/1\ \&\&\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getAuxValue()\ !=\ data)\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00176}00176\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ count\ +=\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00179}00179\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00181}00181\ \ \ \ \ \textcolor{keywordflow}{if}\ (carried\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00182}00182\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keywordtype}{id}\ >\ -\/1\ \&\&\ carried-\/>id\ !=\ \textcolor{keywordtype}{id})\ \textcolor{keywordflow}{return}\ count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (data\ >\ -\/1\ \&\&\ carried-\/>getAuxValue()\ !=\ data)\ \textcolor{keywordflow}{return}\ count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ count\ +=\ carried-\/>count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8bc83a8ed54e62ae03cad02431a63483}{setCarried}}(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00188}00188\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00190}00190\ \ \ \ \ \textcolor{keywordflow}{return}\ count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00191}00191\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00193}\doxymbox{\hyperlink{class_inventory_a4fcd20917cf59732904437ba40a699df}{00193}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_a4fcd20917cf59732904437ba40a699df}{Inventory::replaceSlot}}(\doxymbox{\hyperlink{class_item}{Item}}\ *\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}},\ \textcolor{keywordtype}{int}\ data)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00194}00194\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00195}00195\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00196}00196\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ It's\ too\ easy\ to\ accidentally\ pick\ block\ and\ lose\ enchanted\ items.}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (heldItem\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ heldItem-\/>isEnchantable()\ \&\&\ getSlot(heldItem-\/>id,\ heldItem-\/>getDamageValue())\ ==\ \doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ oldSlot\ =\ getSlot(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id,\ data);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (oldSlot\ >=\ 0)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ oldSlotCount\ =\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[oldSlot]-\/>count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[oldSlot]\ =\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}];}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}]\ =\ std::make\_shared<ItemInstance>(\doxymbox{\hyperlink{class_item_a8aa5718011a032c9b93d15dfcbc362f7}{Item::items}}[\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id],\ oldSlotCount,\ data);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}]\ =\ std::make\_shared<ItemInstance>(\doxymbox{\hyperlink{class_item_a8aa5718011a032c9b93d15dfcbc362f7}{Item::items}}[\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id],\ 1,\ data);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00214}00214\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00215}00215\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00218}00218\ \textcolor{keywordtype}{int}\ Inventory::addResource(shared\_ptr<ItemInstance>\ itemInstance)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00219}00219\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00220}00220\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00221}00221\ \ \ \ \ \textcolor{keywordtype}{int}\ type\ =\ itemInstance-\/>id;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00222}00222\ \ \ \ \ \textcolor{keywordtype}{int}\ count\ =\ itemInstance-\/>count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00223}00223\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00224}00224\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Brought\ forward\ from\ 1.2}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00225}00225\ \ \ \ \ \textcolor{keywordflow}{if}\ (itemInstance-\/>getMaxStackSize()\ ==\ 1)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00226}00226\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ slot\ =\ \doxymbox{\hyperlink{class_inventory_a551a26a7c1f660b2c6f41e47fc004bc1}{getFreeSlot}}();}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (slot\ <\ 0)\ \textcolor{keywordflow}{return}\ count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]\ =\ \doxymbox{\hyperlink{class_item_instance_ac18f6ad4b67fc70520ebdb177b1298f6}{ItemInstance::clone}}(itemInstance);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>\doxymbox{\hyperlink{class_player_a4f9207327a51f663a2b7559952082a64}{handleCollectItem}}(itemInstance);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00235}00235\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00236}00236\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00237}00237\ \ \ \ \ \textcolor{keywordtype}{int}\ slot\ =\ getSlotWithRemainingSpace(itemInstance);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00238}00238\ \ \ \ \ \textcolor{keywordflow}{if}\ (slot\ <\ 0)\ slot\ =\ \doxymbox{\hyperlink{class_inventory_a551a26a7c1f660b2c6f41e47fc004bc1}{getFreeSlot}}();}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00239}00239\ \ \ \ \ \textcolor{keywordflow}{if}\ (slot\ <\ 0)\ \textcolor{keywordflow}{return}\ count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00240}00240\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00241}00241\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00242}00242\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]\ =\ std::make\_shared<ItemInstance>(type,\ 0,\ itemInstance-\/>getAuxValue());}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00243}00243\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Brought\ forward\ from\ 1.2}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00244}00244\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (itemInstance-\/>hasTag())}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]-\/>setTag(\textcolor{keyword}{static\_cast<}CompoundTag\ *\textcolor{keyword}{>}(itemInstance-\/>getTag()-\/>copy()));}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>handleCollectItem(itemInstance);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00249}00249\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00251}00251\ \ \ \ \ \textcolor{keywordtype}{int}\ toAdd\ =\ count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00252}00252\ \ \ \ \ \textcolor{keywordflow}{if}\ (toAdd\ >\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]-\/>\doxymbox{\hyperlink{class_inventory_aa69fa7e303f6bc9c8a8d1cabde4c549d}{getMaxStackSize}}()\ -\/\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]-\/>count)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00253}00253\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00254}00254\ \ \ \ \ \ \ \ \ toAdd\ =\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]-\/>getMaxStackSize()\ -\/\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]-\/>count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00255}00255\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00256}00256\ \ \ \ \ \textcolor{keywordflow}{if}\ (toAdd\ >\ \doxymbox{\hyperlink{class_inventory_aa69fa7e303f6bc9c8a8d1cabde4c549d}{getMaxStackSize}}()\ -\/\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]-\/>count)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00257}00257\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ toAdd\ =\ \doxymbox{\hyperlink{class_inventory_aa69fa7e303f6bc9c8a8d1cabde4c549d}{getMaxStackSize}}()\ -\/\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]-\/>count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00259}00259\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00260}00260\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00261}00261\ \ \ \ \ \textcolor{keywordflow}{if}\ (toAdd\ ==\ 0)\ \textcolor{keywordflow}{return}\ count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00262}00262\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00263}00263\ \ \ \ \ count\ -\/=\ toAdd;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00264}00264\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]-\/>count\ +=\ toAdd;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00265}00265\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]-\/>popTime\ =\ \doxymbox{\hyperlink{class_inventory_ae45e24d53fc2ab06c077a76f552b1b29}{POP\_TIME\_DURATION}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00267}00267\ \ \ \ \ \textcolor{keywordflow}{return}\ count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00268}00268\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00269}00269\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00270}00270\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00271}\doxymbox{\hyperlink{class_inventory_a73adf624356be62d2b6b9ea01f621b2a}{00271}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_a73adf624356be62d2b6b9ea01f621b2a}{Inventory::tick}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00272}00272\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00273}00273\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00274}00274\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00275}00275\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>inventoryTick(\doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>level,\ \doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>shared\_from\_this(),\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}},\ \doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}\ ==\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00279}00279\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00280}00280\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00281}00281\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00282}\doxymbox{\hyperlink{class_inventory_af24b439d80cdc7549cd04ccd88207280}{00282}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_inventory_af24b439d80cdc7549cd04ccd88207280}{Inventory::removeResource}}(\textcolor{keywordtype}{int}\ type)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00283}00283\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00284}00284\ \ \ \ \ \textcolor{keywordtype}{int}\ slot\ =\ getSlot(type);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00285}00285\ \ \ \ \ \textcolor{keywordflow}{if}\ (slot\ <\ 0)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00286}00286\ \ \ \ \ \textcolor{keywordflow}{if}\ (-\/-\/\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]-\/>count\ <=\ 0)\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00287}00287\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00288}00288\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00289}00289\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00290}00290\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00291}\doxymbox{\hyperlink{class_inventory_aedab540e497fbb53a881befdd3ff42ba}{00291}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_inventory_af24b439d80cdc7549cd04ccd88207280}{Inventory::removeResource}}(\textcolor{keywordtype}{int}\ type,\textcolor{keywordtype}{int}\ iAuxVal)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00292}00292\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00293}00293\ \ \ \ \ \textcolor{keywordtype}{int}\ slot\ =\ getSlot(type,iAuxVal);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00294}00294\ \ \ \ \ \textcolor{keywordflow}{if}\ (slot\ <\ 0)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00295}00295\ \ \ \ \ \textcolor{keywordflow}{if}\ (-\/-\/\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]-\/>count\ <=\ 0)\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00297}00297\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00298}00298\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00299}00299\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00300}\doxymbox{\hyperlink{class_inventory_afc22645a451b532ca188e403fcf0a42c}{00300}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_afc22645a451b532ca188e403fcf0a42c}{Inventory::removeResources}}(shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00301}00301\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00302}00302\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00303}00303\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00304}00304\ \ \ \ \ \textcolor{keywordtype}{int}\ countToRemove\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00305}00305\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00306}00306\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>sameItemWithTags(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}))}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ slotCount\ =\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>count\ -\/=\ countToRemove;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(slotCount\ <\ countToRemove)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ countToRemove\ -\/=\ slotCount;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ countToRemove\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>count\ <=\ 0)\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00321}00321\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00322}00322\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00323}00323\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00324}\doxymbox{\hyperlink{class_inventory_a22734a4bea4e838cc35801f38d4297ec}{00324}}\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{class_inventory_a22734a4bea4e838cc35801f38d4297ec}{Inventory::getResourceItem}}(\textcolor{keywordtype}{int}\ type)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00325}00325\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00326}00326\ \ \ \ \ \textcolor{keywordtype}{int}\ slot\ =\ getSlot(type);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00327}00327\ \ \ \ \ \textcolor{keywordflow}{if}\ (slot\ <\ 0)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00328}00328\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_inventory_af21f4514b901c8b3daff3bfbea30e7e7}{getItem}}(\ slot\ );}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00329}00329\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00330}00330\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00331}\doxymbox{\hyperlink{class_inventory_acc0124dfde95461a090c291386b313b9}{00331}}\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{class_inventory_a22734a4bea4e838cc35801f38d4297ec}{Inventory::getResourceItem}}(\textcolor{keywordtype}{int}\ type,\textcolor{keywordtype}{int}\ iAuxVal)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00332}00332\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00333}00333\ \ \ \ \ \textcolor{keywordtype}{int}\ slot\ =\ getSlot(type,iAuxVal);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00334}00334\ \ \ \ \ \textcolor{keywordflow}{if}\ (slot\ <\ 0)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00335}00335\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_inventory_af21f4514b901c8b3daff3bfbea30e7e7}{getItem}}(\ slot\ );}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00336}00336\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00337}00337\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00338}\doxymbox{\hyperlink{class_inventory_aced47e91899a58eda717a336febba8aa}{00338}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_inventory_aced47e91899a58eda717a336febba8aa}{Inventory::hasResource}}(\textcolor{keywordtype}{int}\ type)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00339}00339\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00340}00340\ \ \ \ \ \textcolor{keywordtype}{int}\ slot\ =\ getSlot(type);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00341}00341\ \ \ \ \ \textcolor{keywordflow}{if}\ (slot\ <\ 0)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00342}00342\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00343}00343\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00344}00344\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00345}00345\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00346}\doxymbox{\hyperlink{class_inventory_a2aa2aa82dcbacb97b2f35138d0f0e085}{00346}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_inventory_a2aa2aa82dcbacb97b2f35138d0f0e085}{Inventory::countResource}}(\textcolor{keywordtype}{int}\ type,\ \textcolor{keywordtype}{int}\ auxVal)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00347}00347\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00348}00348\ \ \ \ \ \textcolor{keywordtype}{int}\ count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00349}00349\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00350}00350\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>\textcolor{keywordtype}{id}\ ==\ type\ \&\&}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ (auxVal\ ==\ -\/1\ ||\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>getAuxValue()\ ==\ auxVal))}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ count\ +=\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00354}00354\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00355}00355\ \ \ \ \ \textcolor{keywordflow}{return}\ count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00356}00356\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00357}00357\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00358}\doxymbox{\hyperlink{class_inventory_a52b6546bc75b32382958abafb501bc3d}{00358}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_a52b6546bc75b32382958abafb501bc3d}{Inventory::swapSlots}}(\textcolor{keywordtype}{int}\ from,\ \textcolor{keywordtype}{int}\ to)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00359}00359\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00360}00360\ \ \ \ \ shared\_ptr<ItemInstance>\ tmp\ =\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[to];}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00361}00361\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[to]\ =\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[from];}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00362}00362\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[from]\ =\ tmp;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00363}00363\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00364}00364\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00365}\doxymbox{\hyperlink{class_inventory_a1fff09f8610de7664ab6faf6df6eb9c5}{00365}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_inventory_a1fff09f8610de7664ab6faf6df6eb9c5}{Inventory::add}}(shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00366}00366\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00367}00367\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00368}00368\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count\ ==\ 0)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00369}00369\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00370}00370\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>isDamaged())}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00371}00371\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ lastSize;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00373}00373\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ count\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00374}00374\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00375}00375\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ lastSize\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count\ =\ addResource(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}});}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00378}00378\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count\ >\ 0\ \&\&\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count\ <\ lastSize);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00379}00379\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count\ ==\ lastSize\ \&\&\ \doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>abilities.instabuild)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ silently\ destroy\ the\ item\ when\ having\ a\ full\ inventory}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00384}00384\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count\ <\ lastSize\ )}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>awardStat(}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_generic_stats_afe13d238c2c70b5ccb1b8213135a5b25}{GenericStats::itemsCollected}}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getAuxValue()),}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_generic_stats_acc1f9cfac38c2092df8b4f449acdc6dd}{GenericStats::param\_itemsCollected}}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getAuxValue(),\ count)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00392}00392\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00393}00393\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00395}00395\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00396}00396\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00397}00397\ \ \ \ \ \textcolor{keywordtype}{int}\ slot\ =\ \doxymbox{\hyperlink{class_inventory_a551a26a7c1f660b2c6f41e47fc004bc1}{getFreeSlot}}();}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00398}00398\ \ \ \ \ \textcolor{keywordflow}{if}\ (slot\ >=\ 0)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00399}00399\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00400}00400\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>handleCollectItem(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}});}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00401}00401\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>awardStat(}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00403}00403\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_generic_stats_afe13d238c2c70b5ccb1b8213135a5b25}{GenericStats::itemsCollected}}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getAuxValue()),}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00404}00404\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_generic_stats_acc1f9cfac38c2092df8b4f449acdc6dd}{GenericStats::param\_itemsCollected}}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id,\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getAuxValue(),\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>GetCount()));}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00405}00405\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00406}00406\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]\ =\ \doxymbox{\hyperlink{class_item_instance_ac18f6ad4b67fc70520ebdb177b1298f6}{ItemInstance::clone}}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}});}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00407}00407\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]-\/>popTime\ =\ \doxymbox{\hyperlink{class_inventory_ae45e24d53fc2ab06c077a76f552b1b29}{POP\_TIME\_DURATION}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00408}00408\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00409}00409\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00410}00410\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00411}00411\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>abilities.instabuild)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00412}00412\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00413}00413\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ silently\ destroy\ the\ item\ when\ having\ a\ full\ inventory}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00414}00414\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00415}00415\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00416}00416\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00417}00417\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00418}00418\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00419}00419\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00420}\doxymbox{\hyperlink{class_inventory_a5f74c06f060067d8f9961c7f7c513ca4}{00420}}\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{class_inventory_a5f74c06f060067d8f9961c7f7c513ca4}{Inventory::removeItem}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ slot,\ \textcolor{keywordtype}{int}\ count)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00421}00421\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00422}00422\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00423}00423\ \ \ \ \ \doxymbox{\hyperlink{_array_with_length_8h_a599ae9fd83bc1129a54be8b5b66d0ef0}{ItemInstanceArray}}\ pile\ =\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00424}00424\ \ \ \ \ \textcolor{keywordflow}{if}\ (slot\ >=\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00425}00425\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00426}00426\ \ \ \ \ \ \ \ \ pile\ =\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00427}00427\ \ \ \ \ \ \ \ \ slot\ -\/=\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00428}00428\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00429}00429\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00430}00430\ \ \ \ \ \textcolor{keywordflow}{if}\ (pile[slot]\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00431}00431\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00432}00432\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pile[slot]-\/>count\ <=\ count)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00433}00433\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00434}00434\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ pile[slot];}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00435}00435\ \ \ \ \ \ \ \ \ \ \ \ \ pile[slot]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00436}00436\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00437}00437\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00438}00438\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00439}00439\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ pile[slot]-\/>remove(count);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pile[slot]-\/>count\ ==\ 0)\ pile[slot]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00442}00442\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00443}00443\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00444}00444\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00445}00445\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00446}00446\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00447}00447\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00448}\doxymbox{\hyperlink{class_inventory_a4484a0dfce9895ef0246d2bc8b8e047b}{00448}}\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{class_inventory_a4484a0dfce9895ef0246d2bc8b8e047b}{Inventory::removeItemNoUpdate}}(\textcolor{keywordtype}{int}\ slot)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00449}00449\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00450}00450\ \ \ \ \ \doxymbox{\hyperlink{_array_with_length_8h_a599ae9fd83bc1129a54be8b5b66d0ef0}{ItemInstanceArray}}\ pile\ =\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00451}00451\ \ \ \ \ \textcolor{keywordflow}{if}\ (slot\ >=\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00452}00452\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00453}00453\ \ \ \ \ \ \ \ \ pile\ =\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00454}00454\ \ \ \ \ \ \ \ \ slot\ -\/=\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00455}00455\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00456}00456\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00457}00457\ \ \ \ \ \textcolor{keywordflow}{if}\ (pile[slot]\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00458}00458\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00459}00459\ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ pile[slot];}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00460}00460\ \ \ \ \ \ \ \ \ pile[slot]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00462}00462\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00463}00463\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00464}00464\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00465}00465\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00466}\doxymbox{\hyperlink{class_inventory_aa1597e7bd0483f2d260ecfa1c070aafa}{00466}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_aa1597e7bd0483f2d260ecfa1c070aafa}{Inventory::setItem}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ slot,\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00467}00467\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00468}00468\ \textcolor{preprocessor}{\#ifdef\ \_DEBUG}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00469}00469\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}!=\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00470}00470\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00471}00471\ \ \ \ \ \ \ \ \ wstring\ itemstring=\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>toString();}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00472}00472\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Inventory::setItem\ -\/\ slot\ =\ \%d,\(\backslash\)t\ item\ =\ \%d\ "{}},slot,\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00473}00473\ \ \ \ \ \ \ \ \ \textcolor{comment}{//OutputDebugStringW(itemstring.c\_str());}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00474}00474\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00475}00475\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00476}00476\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00477}00477\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}!=\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00478}00478\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00479}00479\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Inventory::setItem\ -\/\ slot\ =\ \%d,\(\backslash\)t\ item\ =\ \%d,\ aux\ =\ \%d\(\backslash\)n"{}},slot,\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id,\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>getAuxValue());}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00480}00480\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00481}00481\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00482}00482\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Changed\ this\ a\ little\ from\ Java\ to\ be\ less\ funn}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00483}00483\ \ \ \ \ \textcolor{keywordflow}{if}(\ slot\ >=\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length\ )}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00484}00484\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00485}00485\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[slot\ -\/\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length]\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00486}00486\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00487}00487\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00488}00488\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00489}00489\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00490}00490\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00491}00491\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>handleCollectItem(\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}});}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00492}00492\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00493}00493\ \textcolor{comment}{\ \ \ \ ItemInstanceArray\&\ pile\ =\ items;}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00494}00494\ \textcolor{comment}{\ \ \ \ if\ (slot\ >=\ pile.length)}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00495}00495\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00496}00496\ \textcolor{comment}{\ \ \ \ slot\ -\/=\ pile.length;}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00497}00497\ \textcolor{comment}{\ \ \ \ pile\ =\ armor;}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00498}00498\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00499}00499\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00500}00500\ \textcolor{comment}{\ \ \ \ pile[slot]\ =\ item;}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00501}00501\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00502}00502\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00503}00503\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00504}\doxymbox{\hyperlink{class_inventory_a37662e7464968d30c4619bcca1227229}{00504}}\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_inventory_a37662e7464968d30c4619bcca1227229}{Inventory::getDestroySpeed}}(\doxymbox{\hyperlink{class_tile}{Tile}}\ *tile)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00505}00505\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00506}00506\ \ \ \ \ \textcolor{keywordtype}{float}\ speed\ =\ 1.0f;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00507}00507\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}]\ !=\ \textcolor{keyword}{nullptr})\ speed\ *=\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}]-\/>getDestroySpeed(tile);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00508}00508\ \ \ \ \ \textcolor{keywordflow}{return}\ speed;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00509}00509\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00510}00510\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00511}\doxymbox{\hyperlink{class_inventory_a8daacd1a61090fb722b43030cf9a428e}{00511}}\ \doxymbox{\hyperlink{class_list_tag}{ListTag<CompoundTag>}}\ *\doxymbox{\hyperlink{class_inventory_a8daacd1a61090fb722b43030cf9a428e}{Inventory::save}}(\doxymbox{\hyperlink{class_list_tag}{ListTag<CompoundTag>}}\ *listTag)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00512}00512\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00513}00513\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00514}00514\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00515}00515\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00516}00516\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00517}00517\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_compound_tag}{CompoundTag}}\ *tag\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_compound_tag}{CompoundTag}}();}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00518}00518\ \ \ \ \ \ \ \ \ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a9f3f70226497e85a53ec696c9852cd6e}{putByte}}(L\textcolor{stringliteral}{"{}Slot"{}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}));}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00519}00519\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>save(tag);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00520}00520\ \ \ \ \ \ \ \ \ \ \ \ \ listTag-\/>\doxymbox{\hyperlink{class_list_tag_a4e953c7c8afc42222a8d2819acb65918}{add}}(tag);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00521}00521\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00522}00522\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00523}00523\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00524}00524\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00525}00525\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00526}00526\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_compound_tag}{CompoundTag}}\ *tag\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_compound_tag}{CompoundTag}}();}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00528}00528\ \ \ \ \ \ \ \ \ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a9f3f70226497e85a53ec696c9852cd6e}{putByte}}(L\textcolor{stringliteral}{"{}Slot"{}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{byte}\textcolor{keyword}{>}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +\ 100));}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00529}00529\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>save(tag);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00530}00530\ \ \ \ \ \ \ \ \ \ \ \ \ listTag-\/>\doxymbox{\hyperlink{class_list_tag_a4e953c7c8afc42222a8d2819acb65918}{add}}(tag);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00531}00531\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00532}00532\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00533}00533\ \ \ \ \ \textcolor{keywordflow}{return}\ listTag;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00534}00534\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00535}00535\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00536}\doxymbox{\hyperlink{class_inventory_ad5b58fbcaa47264cb23310061e997028}{00536}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_ad5b58fbcaa47264cb23310061e997028}{Inventory::load}}(\doxymbox{\hyperlink{class_list_tag}{ListTag<CompoundTag>}}\ *inventoryList)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00537}00537\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00538}00538\ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.data\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00539}00539\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00540}00540\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}[]\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.data;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00541}00541\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.data\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00542}00542\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00543}00543\ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}.data\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00544}00544\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00545}00545\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}[]\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}.data;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00546}00546\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}.data\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00547}00547\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00548}00548\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00549}00549\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a599ae9fd83bc1129a54be8b5b66d0ef0}{ItemInstanceArray}}(\ INVENTORY\_SIZE\ );}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00550}00550\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a599ae9fd83bc1129a54be8b5b66d0ef0}{ItemInstanceArray}}(\ 4\ );}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00551}00551\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ inventoryList-\/>\doxymbox{\hyperlink{class_list_tag_a6cfab54e4fc154cf8df03c92d067609b}{size}}();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00552}00552\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00553}00553\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_compound_tag}{CompoundTag}}\ *tag\ =\ inventoryList-\/>\doxymbox{\hyperlink{class_list_tag_a4b40186a466f88fe90348a625010952b}{get}}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00554}00554\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ slot\ =\ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a008486da946a4c2535b08029b8e950ee}{getByte}}(L\textcolor{stringliteral}{"{}Slot"{}})\ \&\ 0xff;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00555}00555\ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ shared\_ptr<ItemInstance>(\ \doxymbox{\hyperlink{class_item_instance_aaa13d2e6e1fa6f44d98e33343af5f476}{ItemInstance::fromTag}}(tag)\ );}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00556}00556\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00557}00557\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00558}00558\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (slot\ >=\ 0\ \&\&\ slot\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length)\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[slot]\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00559}00559\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (slot\ >=\ 100\ \&\&\ slot\ <\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}.length\ +\ 100)\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[slot\ -\/\ 100]\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00560}00560\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00561}00561\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00562}00562\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00563}00563\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00564}\doxymbox{\hyperlink{class_inventory_abdedeb8189547c0c77240e8479367a05}{00564}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_inventory_abdedeb8189547c0c77240e8479367a05}{Inventory::getContainerSize}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00565}00565\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00566}00566\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length\ +\ 4;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00567}00567\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00568}00568\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00569}\doxymbox{\hyperlink{class_inventory_af21f4514b901c8b3daff3bfbea30e7e7}{00569}}\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{class_inventory_af21f4514b901c8b3daff3bfbea30e7e7}{Inventory::getItem}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ slot)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00570}00570\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00571}00571\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Changed\ this\ a\ little\ from\ the\ Java\ so\ it's\ less\ funny}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00572}00572\ \ \ \ \ \textcolor{keywordflow}{if}(\ slot\ >=\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length\ )}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00573}00573\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00574}00574\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\ slot\ -\/\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length\ ];}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00575}00575\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00576}00576\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00577}00577\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00578}00578\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\ slot\ ];}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00579}00579\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00580}00580\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00581}00581\ \textcolor{comment}{\ \ \ \ ItemInstanceArray\ pile\ =\ items;}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00582}00582\ \textcolor{comment}{\ \ \ \ if\ (slot\ >=\ pile.length)}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00583}00583\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00584}00584\ \textcolor{comment}{\ \ \ \ slot\ -\/=\ pile.length;}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00585}00585\ \textcolor{comment}{\ \ \ \ pile\ =\ armor;}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00586}00586\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00587}00587\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00588}00588\ \textcolor{comment}{\ \ \ \ return\ pile[slot];}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00589}00589\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00590}00590\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00591}00591\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00592}\doxymbox{\hyperlink{class_inventory_aa866341935dd9ece28e4d3e851cee5fe}{00592}}\ wstring\ \doxymbox{\hyperlink{class_inventory_aa866341935dd9ece28e4d3e851cee5fe}{Inventory::getName}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00593}00593\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00594}00594\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetString(\doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a3cebd13fb7029cda35f5cee03c185e02}{IDS\_INVENTORY}});}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00595}00595\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00596}00596\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00597}\doxymbox{\hyperlink{class_inventory_af4373995f7139661798c1f202e37ed9d}{00597}}\ wstring\ \doxymbox{\hyperlink{class_inventory_af4373995f7139661798c1f202e37ed9d}{Inventory::getCustomName}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00598}00598\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00599}00599\ \ \ \ \ \textcolor{keywordflow}{return}\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00600}00600\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00601}00601\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00602}\doxymbox{\hyperlink{class_inventory_a6fd3acdb86cb5c8a37dfef429ed6ae63}{00602}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_inventory_a6fd3acdb86cb5c8a37dfef429ed6ae63}{Inventory::hasCustomName}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00603}00603\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00604}00604\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00605}00605\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00606}00606\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00607}\doxymbox{\hyperlink{class_inventory_aa69fa7e303f6bc9c8a8d1cabde4c549d}{00607}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_inventory_aa69fa7e303f6bc9c8a8d1cabde4c549d}{Inventory::getMaxStackSize}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00608}00608\ \textcolor{keyword}{}\{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00609}00609\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_inventory_a895ab61828c2eb2e10f2b38bd54ff0f6}{MAX\_INVENTORY\_STACK\_SIZE}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00610}00610\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00611}00611\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00612}\doxymbox{\hyperlink{class_inventory_a8f7d76f228690cf1a091ce53154eabd9}{00612}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_inventory_a8f7d76f228690cf1a091ce53154eabd9}{Inventory::canDestroy}}(\doxymbox{\hyperlink{class_tile}{Tile}}\ *tile)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00613}00613\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00614}00614\ \ \ \ \ \textcolor{keywordflow}{if}\ (tile-\/>\doxymbox{\hyperlink{class_tile_aa903d1807e0c038d2d56ceebe38a88bc}{material}}-\/>\doxymbox{\hyperlink{class_material_ae5c3377e87f86f702bac2927a94cfd88}{isAlwaysDestroyable}}())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00615}00615\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00616}00616\ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ \doxymbox{\hyperlink{class_inventory_af21f4514b901c8b3daff3bfbea30e7e7}{getItem}}(\doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}});}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00617}00617\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>canDestroySpecial(tile);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00618}00618\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00619}00619\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00620}00620\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00621}\doxymbox{\hyperlink{class_inventory_aa61024f57b02ef5c1887ee05be4394f0}{00621}}\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{class_inventory_aa61024f57b02ef5c1887ee05be4394f0}{Inventory::getArmor}}(\textcolor{keywordtype}{int}\ layer)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00622}00622\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00623}00623\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[layer];}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00624}00624\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00625}00625\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00626}\doxymbox{\hyperlink{class_inventory_af94cd8f653183b7d5d9fa4d45ddbc179}{00626}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_inventory_af94cd8f653183b7d5d9fa4d45ddbc179}{Inventory::getArmorValue}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00627}00627\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00628}00628\ \ \ \ \ \textcolor{keywordtype}{int}\ val\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00629}00629\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00630}00630\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00631}00631\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \ \textcolor{keyword}{dynamic\_cast<}\doxymbox{\hyperlink{class_armor_item}{ArmorItem}}\ *\textcolor{keyword}{>}(\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>\doxymbox{\hyperlink{class_inventory_af21f4514b901c8b3daff3bfbea30e7e7}{getItem}}()\ )\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00632}00632\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00633}00633\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ baseProtection\ =\ \textcolor{keyword}{dynamic\_cast<}\doxymbox{\hyperlink{class_armor_item}{ArmorItem}}\ *\textcolor{keyword}{>}(\doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>getItem())-\/>\doxymbox{\hyperlink{class_armor_item_ac8d077ec0809253eda219d2be8457401}{defense}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00634}00634\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00635}00635\ \ \ \ \ \ \ \ \ \ \ \ \ val\ +=\ baseProtection;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00636}00636\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00637}00637\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00638}00638\ \ \ \ \ \textcolor{keywordflow}{return}\ val;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00639}00639\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00640}00640\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00641}\doxymbox{\hyperlink{class_inventory_a5cb21fe2475d9625e85d6888e57d093e}{00641}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_a5cb21fe2475d9625e85d6888e57d093e}{Inventory::hurtArmor}}(\textcolor{keywordtype}{float}\ dmg)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00642}00642\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00643}00643\ \ \ \ \ dmg\ =\ dmg\ /\ 4;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00644}00644\ \ \ \ \ \textcolor{keywordflow}{if}\ (dmg\ <\ 1)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00645}00645\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00646}00646\ \ \ \ \ \ \ \ \ dmg\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00647}00647\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00648}00648\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00649}00649\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00650}00650\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \textcolor{keyword}{dynamic\_cast<}\doxymbox{\hyperlink{class_armor_item}{ArmorItem}}\ *\textcolor{keyword}{>}(\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>\doxymbox{\hyperlink{class_inventory_af21f4514b901c8b3daff3bfbea30e7e7}{getItem}}()\ )\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00651}00651\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00652}00652\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>hurtAndBreak(\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(dmg),\ dynamic\_pointer\_cast<LivingEntity>(\ \doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>shared\_from\_this()\ )\ );}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00653}00653\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>count\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00654}00654\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00655}00655\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00656}00656\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00657}00657\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00658}00658\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00659}00659\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00660}00660\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00661}\doxymbox{\hyperlink{class_inventory_aea0281946509582ecb15145d42ba6b9d}{00661}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_aea0281946509582ecb15145d42ba6b9d}{Inventory::dropAll}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00662}00662\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00663}00663\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00664}00664\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00665}00665\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00666}00666\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00667}00667\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>drop(\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}],\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00668}00668\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00669}00669\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00670}00670\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00671}00671\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00672}00672\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00673}00673\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00674}00674\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00675}00675\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>drop(\doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}],\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00676}00676\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00677}00677\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00678}00678\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00679}00679\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00680}00680\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00681}\doxymbox{\hyperlink{class_inventory_a10b03957ed75808bfc74de3a0a5765fd}{00681}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_a10b03957ed75808bfc74de3a0a5765fd}{Inventory::setChanged}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00682}00682\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00683}00683\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a06ef6e4b81892eec262d46cc60936a89}{changed}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00684}00684\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00685}00685\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00686}\doxymbox{\hyperlink{class_inventory_af0c6f643053d410924d5f82a26c22578}{00686}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_inventory_af0c6f643053d410924d5f82a26c22578}{Inventory::isSame}}(shared\_ptr<Inventory>\ \doxymbox{\hyperlink{class_inventory_a66f57e5290dfae218657de49ecc988cf}{copy}})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00687}00687\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00688}00688\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00689}00689\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00690}00690\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_inventory_af0c6f643053d410924d5f82a26c22578}{isSame}}(\ \doxymbox{\hyperlink{class_inventory_a66f57e5290dfae218657de49ecc988cf}{copy}}-\/>items[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}],\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00691}00691\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00692}00692\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00693}00693\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00694}00694\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_inventory_af0c6f643053d410924d5f82a26c22578}{isSame}}(\ \doxymbox{\hyperlink{class_inventory_a66f57e5290dfae218657de49ecc988cf}{copy}}-\/>armor[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}],\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00695}00695\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00696}00696\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00697}00697\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00698}00698\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00699}00699\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00700}00700\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_inventory_af0c6f643053d410924d5f82a26c22578}{Inventory::isSame}}(shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}},\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00701}00701\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00702}00702\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}\ ==\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00703}00703\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}\ ==\ \textcolor{keyword}{nullptr}\ ||\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00704}00704\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00705}00705\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}-\/>id\ ==\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}-\/>id\ \&\&\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}-\/>count\ ==\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}-\/>count\ \&\&\ \doxymbox{\hyperlink{json_8hpp_a1d1d2369d6b815e0f2e1f281efe0039d}{a}}-\/>getAuxValue()\ ==\ \doxymbox{\hyperlink{json_8hpp_a0da1c83fc60cdca12bf4e290286e56f1}{b}}-\/>getAuxValue();}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00706}00706\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00707}00707\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00708}00708\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00709}\doxymbox{\hyperlink{class_inventory_a66f57e5290dfae218657de49ecc988cf}{00709}}\ shared\_ptr<Inventory>\ \doxymbox{\hyperlink{class_inventory_a66f57e5290dfae218657de49ecc988cf}{Inventory::copy}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00710}00710\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00711}00711\ \ \ \ \ shared\_ptr<Inventory>\ \doxymbox{\hyperlink{class_inventory_a66f57e5290dfae218657de49ecc988cf}{copy}}\ =\ std::make\_shared<Inventory>(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00712}00712\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00713}00713\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00714}00714\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a66f57e5290dfae218657de49ecc988cf}{copy}}-\/>items[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr}\ ?\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>copy()\ :\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00715}00715\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00716}00716\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00717}00717\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00718}00718\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a66f57e5290dfae218657de49ecc988cf}{copy}}-\/>armor[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr}\ ?\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>copy()\ :\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00719}00719\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00720}00720\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_inventory_a66f57e5290dfae218657de49ecc988cf}{copy}};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00721}00721\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00722}00722\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00723}\doxymbox{\hyperlink{class_inventory_a8bc83a8ed54e62ae03cad02431a63483}{00723}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_a8bc83a8ed54e62ae03cad02431a63483}{Inventory::setCarried}}(shared\_ptr<ItemInstance>\ carried)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00724}00724\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00725}00725\ \ \ \ \ this-\/>carried\ =\ carried;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00726}00726\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>handleCollectItem(carried);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00727}00727\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00728}00728\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00729}\doxymbox{\hyperlink{class_inventory_ad15ed732fb9d6f6951ffd0eec25bbe1b}{00729}}\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{class_inventory_ad15ed732fb9d6f6951ffd0eec25bbe1b}{Inventory::getCarried}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00730}00730\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00731}00731\ \ \ \ \ \textcolor{keywordflow}{return}\ carried;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00732}00732\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00733}00733\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00734}\doxymbox{\hyperlink{class_inventory_a62552021baed011386083679b8c26264}{00734}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_inventory_a62552021baed011386083679b8c26264}{Inventory::stillValid}}(shared\_ptr<Player>\ \doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00735}00735\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00736}00736\ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>player-\/>removed)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00737}00737\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_adf2f1ac44e8db236513383f71227abc9}{player}}-\/>distanceToSqr(\doxymbox{\hyperlink{json_8hpp_a16b15c19feaca0a6aa77abb6865710ef}{this}}-\/>player-\/>shared\_from\_this())\ >\ 8\ *\ 8)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00738}00738\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00739}00739\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00740}00740\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00741}\doxymbox{\hyperlink{class_inventory_a9fd76c3fbf26e6d146d44422ef5f1de1}{00741}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_inventory_a9fd76c3fbf26e6d146d44422ef5f1de1}{Inventory::contains}}(shared\_ptr<ItemInstance>\ itemInstance)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00742}00742\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00743}00743\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00744}00744\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00745}00745\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>sameItem(itemInstance))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00746}00746\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00747}00747\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00748}00748\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00749}00749\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>sameItem(itemInstance))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00750}00750\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00751}00751\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00752}00752\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00753}00753\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00754}\doxymbox{\hyperlink{class_inventory_a4c6bb131ef148d3cfcb26d4c35b91277}{00754}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_a4c6bb131ef148d3cfcb26d4c35b91277}{Inventory::startOpen}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00755}00755\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00756}00756\ \ \ \ \ \textcolor{comment}{//\ TODO\ Auto-\/generated\ method\ stub}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00757}00757\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00758}00758\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00759}\doxymbox{\hyperlink{class_inventory_ac0e09247c7203c90ce306db69b838fc2}{00759}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_ac0e09247c7203c90ce306db69b838fc2}{Inventory::stopOpen}}()}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00760}00760\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00761}00761\ \ \ \ \ \textcolor{comment}{//\ TODO\ Auto-\/generated\ method\ stub}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00762}00762\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00763}00763\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00764}\doxymbox{\hyperlink{class_inventory_aa075071764695011c734cc64bd949434}{00764}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_inventory_aa075071764695011c734cc64bd949434}{Inventory::canPlaceItem}}(\textcolor{keywordtype}{int}\ slot,\ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}})}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00765}00765\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00766}00766\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00767}00767\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00768}00768\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00769}\doxymbox{\hyperlink{class_inventory_ac117a7d553d706189e25008bbf6bac13}{00769}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_inventory_ac117a7d553d706189e25008bbf6bac13}{Inventory::replaceWith}}(shared\_ptr<Inventory>\ other)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00770}00770\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00771}00771\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00772}00772\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00773}00773\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \doxymbox{\hyperlink{class_item_instance_ac18f6ad4b67fc70520ebdb177b1298f6}{ItemInstance::clone}}(other-\/>items[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00774}00774\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00775}00775\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00776}00776\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00777}00777\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a4d997b7b5e9169afe6ab5e63e1331fc3}{armor}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \doxymbox{\hyperlink{class_item_instance_ac18f6ad4b67fc70520ebdb177b1298f6}{ItemInstance::clone}}(other-\/>armor[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]);}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00778}00778\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00779}00779\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00780}00780\ \ \ \ \ \doxymbox{\hyperlink{class_inventory_a0f09fd6a804cbdc1c9bbcb5d91e3fea2}{selected}}\ =\ other-\/>selected;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00781}00781\ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00782}00782\ }
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00783}\doxymbox{\hyperlink{class_inventory_ab783add79ffb8d60385bb16b0074a1d2}{00783}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_inventory_ab783add79ffb8d60385bb16b0074a1d2}{Inventory::countMatches}}(shared\_ptr<ItemInstance>\ itemInstance)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00784}00784\ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00785}00785\ \ \ \ \ \textcolor{keywordflow}{if}(itemInstance\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00786}00786\ \ \ \ \ \textcolor{keywordtype}{int}\ count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00787}00787\ \ \ \ \ \textcolor{comment}{//for\ (unsigned\ int\ i\ =\ 0;\ i\ <\ armor.length;\ i++)}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00788}00788\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00789}00789\ \ \ \ \ \textcolor{comment}{//\ \ if\ (armor[i]\ !=\ nullptr\ \&\&\ armor[i]-\/>sameItem(itemInstance))\ count\ +=\ items[i]-\/>count;}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00790}00790\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00791}00791\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}.length;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00792}00792\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00793}00793\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>sameItemWithTags(itemInstance))\ count\ +=\ \doxymbox{\hyperlink{class_inventory_a8d59652e6df3e4f80455941c0a00d837}{items}}[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00794}00794\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00795}00795\ \ \ \ \ \textcolor{keywordflow}{return}\ count;}
+\DoxyCodeLine{\Hypertarget{_inventory_8cpp_source_l00796}00796\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,123 @@
+\doxysection{PS3\+\_\+\+Sound\+Engine.\+cpp}
+\hypertarget{_p_s3___sound_engine_8cpp_source}{}\label{_p_s3___sound_engine_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/Audio/PS3\_SoundEngine.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/Audio/PS3\_SoundEngine.cpp}}
+\doxymbox{\hyperlink{_p_s3___sound_engine_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}..\(\backslash\)stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ <sysutil/sysutil\_sysparam.h>}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ <cell/sysmodule.h>}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ <sys/spu\_initialize.h>}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ <fcntl.h>}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ <unistd.h>}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ <cell/audio.h>}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_common_2_audio_2_sound_engine_8h}{..\(\backslash\)..\(\backslash\)Common\(\backslash\)Audio\(\backslash\)SoundEngine.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_consoles___app_8h}{..\(\backslash\)..\(\backslash\)Common\(\backslash\)Consoles\_App.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_p_s3_2_miles_2include_2mss_8h}{..\(\backslash\)..\(\backslash\)PS3\(\backslash\)Miles\(\backslash\)include\(\backslash\)mss.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00012}00012\ \textcolor{comment}{//\ This\ file\ has\ the\ platform\ specific\ functions\ required\ for\ PS3\ audio}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00014}00014\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00015}00015\ \textcolor{comment}{//\ this\ function\ configures\ the\ audio\ hardware.}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00016}00016\ \textcolor{comment}{//\ \ \ you\ specify\ the\ minimum\ number\ of\ channels\ that\ you\ need,\ and\ it\ }}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00017}00017\ \textcolor{comment}{//\ \ \ returns\ the\ number\ of\ output\ channels\ that\ will\ be\ used\ (which\ will}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00018}00018\ \textcolor{comment}{//\ \ \ be\ at\ least\ your\ minimum\ count,\ but\ possibly\ more).\ \ it\ will\ return\ 0}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00019}00019\ \textcolor{comment}{//\ \ \ for\ any\ failure\ cases.}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00021}00021\ \textcolor{keywordtype}{int}\ SoundEngine::initAudioHardware(\ \textcolor{keywordtype}{int}\ minimum\_chans\ )}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00022}00022\ \{}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00023}00023\ \ \ \ \ \textcolor{keywordtype}{int}\ ret;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00024}00024\ \ \ \ \ \textcolor{keywordtype}{int}\ ch\_pcm;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00025}00025\ \ \ \ \ \textcolor{keywordtype}{int}\ ch\_bit;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00026}00026\ \ \ \ \ CellAudioOutConfiguration\ a\_config;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00028}00028\ \ \ \ \ memset(\ \&a\_config,\ 0,\ \textcolor{keyword}{sizeof}(\ CellAudioOutConfiguration\ )\ );}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00030}00030\ \ \ \ \ \textcolor{comment}{//\ first\ lets\ see\ how\ many\ pcm\ output\ channels\ we\ have}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00031}00031\ \ \ \ \ ch\_pcm\ =\ cellAudioOutGetSoundAvailability(\ CELL\_AUDIO\_OUT\_PRIMARY,}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ CELL\_AUDIO\_OUT\_CODING\_TYPE\_LPCM,}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ CELL\_AUDIO\_OUT\_FS\_48KHZ,\ 0\ );}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00035}00035\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ ch\_pcm\ >=\ minimum\_chans\ )}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00036}00036\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ a\_config.channel\ =\ ch\_pcm;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ a\_config.encoder\ =\ CELL\_AUDIO\_OUT\_CODING\_TYPE\_LPCM;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ a\_config.downMixer\ =\ CELL\_AUDIO\_OUT\_DOWNMIXER\_NONE;\ \textcolor{comment}{/*\ No\ downmixer\ is\ used\ */}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ cellAudioOutConfigure(\ CELL\_AUDIO\_OUT\_PRIMARY,\ \&a\_config,\ \textcolor{keyword}{nullptr},\ 0\ );}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ ret\ =\ ch\_pcm;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00043}00043\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00044}00044\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00045}00045\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00046}00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (\ ch\_pcm\ )}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00047}00047\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00048}00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 6:}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this\ means\ we\ asked\ for\ 8\ channels,\ but\ only\ 6\ are\ available}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ so,\ we'll\ turn\ on\ the\ 7.1\ to\ 5.1\ downmixer.}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ a\_config.channel\ =\ 6;\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ a\_config.encoder\ =\ CELL\_AUDIO\_OUT\_CODING\_TYPE\_LPCM;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ a\_config.downMixer\ =\ CELL\_AUDIO\_OUT\_DOWNMIXER\_TYPE\_B;\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ cellAudioOutConfigure(\ CELL\_AUDIO\_OUT\_PRIMARY,\ \&a\_config,\ \textcolor{keyword}{nullptr},\ 0\ )\ !=\ CELL\_OK\ )}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;\ \textcolor{comment}{//\ error\ -\/\ the\ downmixer\ didn't\ init}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ ret\ =\ 8;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 2:}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ok,\ this\ means\ they\ asked\ for\ multi-\/channel\ out,\ but\ only\ stereo}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ is\ supported.\ \ we'll\ try\ dolby\ digital\ first\ and\ then\ the\ downmixer}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ ch\_bit\ =\ cellAudioOutGetSoundAvailability(\ CELL\_AUDIO\_OUT\_PRIMARY,}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ CELL\_AUDIO\_OUT\_CODING\_TYPE\_AC3,}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ CELL\_AUDIO\_OUT\_FS\_48KHZ,\ 0\ );}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ ch\_bit\ >\ 0\ )\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a\_config.channel\ =\ ch\_bit;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a\_config.encoder\ =\ CELL\_AUDIO\_OUT\_CODING\_TYPE\_AC3;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ ch\_bit\ >=\ minimum\_chans\ )}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ have\ enough\ channels\ to\ support\ their\ minimum}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a\_config.downMixer\ =\ CELL\_AUDIO\_OUT\_DOWNMIXER\_NONE;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ret\ =\ ch\_bit;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ don't\ have\ enough\ channels\ to\ support\ their\ minimum,\ so\ use\ the\ downmixer}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a\_config.downMixer\ =\ CELL\_AUDIO\_OUT\_DOWNMIXER\_TYPE\_B;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ret\ =\ 8;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ cellAudioOutConfigure(\ CELL\_AUDIO\_OUT\_PRIMARY,\ \&a\_config,\ \textcolor{keyword}{nullptr},\ 0\ )\ ==\ CELL\_OK\ )}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ we\ got\ here\ the\ dolby\ encoder,\ didn't\ init,\ so\ fall\ through\ to\ downmixing\ to\ stereo}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ a\_config.channel\ =\ 2;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ a\_config.encoder\ \ \ =\ CELL\_AUDIO\_OUT\_CODING\_TYPE\_LPCM;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ a\_config.downMixer\ =\ CELL\_AUDIO\_OUT\_DOWNMIXER\_TYPE\_A;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ cellAudioOutConfigure(\ CELL\_AUDIO\_OUT\_PRIMARY,\ \&a\_config,\ \textcolor{keyword}{nullptr},\ 0\ )\ !=\ CELL\_OK\ )}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;\ \textcolor{comment}{//\ error\ -\/\ downmixer\ didn't\ work}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ ret\ =\ 2;\ \textcolor{comment}{//\ downmixer\ does\ 7.0\ to\ 2.0\ downmixing...}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ some\ other\ weird\ case\ that\ we\ don't\ understand}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00109}00109\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00111}00111\ \ \ \ \ \textcolor{comment}{//\ turn\ off\ copy\ protection\ stupidness}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00112}00112\ \ \ \ \ cellAudioOutSetCopyControl(\ CELL\_AUDIO\_OUT\_PRIMARY,}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ CELL\_AUDIO\_OUT\_COPY\_CONTROL\_COPY\_FREE\ );}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00115}00115\ \ \ \ \ \textcolor{keywordflow}{return}(\ ret\ );}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00116}00116\ \}}
+\DoxyCodeLine{\Hypertarget{_p_s3___sound_engine_8cpp_source_l00117}00117\ }
+
+\end{DoxyCode}

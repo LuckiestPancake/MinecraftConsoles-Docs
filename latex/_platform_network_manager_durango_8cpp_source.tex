@@ -1,0 +1,945 @@
+\doxysection{Platform\+Network\+Manager\+Durango.\+cpp}
+\hypertarget{_platform_network_manager_durango_8cpp_source}{}\label{_platform_network_manager_durango_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Durango/Network/PlatformNetworkManagerDurango.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Durango/Network/PlatformNetworkManagerDurango.cpp}}
+\doxymbox{\hyperlink{_platform_network_manager_durango_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_socket_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)Socket.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_helpers_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)StringHelpers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_platform_network_manager_durango_8h}{PlatformNetworkManagerDurango.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_network_player_durango_8h}{NetworkPlayerDurango.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00007}\doxymbox{\hyperlink{_platform_network_manager_durango_8cpp_a7f51d6f4f6178066ee243ca30598038a}{00007}}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango}{CPlatformNetworkManagerDurango}}\ *\doxymbox{\hyperlink{_platform_network_manager_stub_8cpp_a39c91e27b4c8526d317417411f96122c}{g\_pPlatformNetworkManager}};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00009}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_ad6406cd35cf11b75f343cec2dfb9831f}{00009}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_ad6406cd35cf11b75f343cec2dfb9831f}{CPlatformNetworkManagerDurango::HandleStateChange}}(\doxymbox{\hyperlink{class_d_q_r_network_manager_aab1ba442b6324af87b843489d4af6c54}{DQRNetworkManager::eDQRNetworkManagerState}}\ oldState,\ \doxymbox{\hyperlink{class_d_q_r_network_manager_aab1ba442b6324af87b843489d4af6c54}{DQRNetworkManager::eDQRNetworkManagerState}}\ newState)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00010}00010\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00011}00011\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ c\_apszStateNames[]\ =}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00012}00012\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00013}00013\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}DNM\_STATE\_INITIALISING"{}},}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00014}00014\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}DNM\_STATE\_INITIALISE\_FAILED"{}},}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00015}00015\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}DNM\_STATE\_IDLE"{}},}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00016}00016\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}DNM\_STATE\_HOSTING"{}},}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00017}00017\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}DNM\_STATE\_JOINING"{}},}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00018}00018\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}DNM\_STATE\_STARTING"{}},}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}DNM\_STATE\_PLAYING"{}},}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00020}00020\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}DNM\_STATE\_LEAVING"{}},}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00021}00021\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}DNM\_STATE\_ENDING"{}},}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00022}00022\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00024}00024\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\ \textcolor{stringliteral}{"{}Network\ State:\ \%s\ ==>\ \%s\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00025}00025\ \ \ \ \ \ \ \ \ c\_apszStateNames[\ oldState\ ],}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00026}00026\ \ \ \ \ \ \ \ \ c\_apszStateNames[\ newState\ ]\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00028}00028\ \ \ \ \ \textcolor{keywordflow}{if}(\ newState\ ==\ \doxymbox{\hyperlink{class_d_q_r_network_manager_aab1ba442b6324af87b843489d4af6c54a86f3c6748156c33b6c25850a3fcc9d4c}{DQRNetworkManager::DNM\_STATE\_HOSTING}}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00029}00029\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00030}00030\ \ \ \ \ \ \ \ \ m\_bLeavingGame\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ m\_bLeaveGameOnTick\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ m\_bHostChanged\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.StateChange\_AnyToHosting();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00034}00034\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00035}00035\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ newState\ ==\ \doxymbox{\hyperlink{class_d_q_r_network_manager_aab1ba442b6324af87b843489d4af6c54aba072dd13cdac29868d44ef9bfdb13c5}{DQRNetworkManager::DNM\_STATE\_JOINING}}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00036}00036\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ m\_bLeavingGame\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ m\_bLeaveGameOnTick\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ m\_bHostChanged\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.StateChange\_AnyToJoining();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00041}00041\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00042}00042\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ newState\ ==\ \doxymbox{\hyperlink{class_d_q_r_network_manager_aab1ba442b6324af87b843489d4af6c54ab0b0861c16445ec910cf8f17d01e9dbe}{DQRNetworkManager::DNM\_STATE\_IDLE}}\ \&\&\ oldState\ ==\ \doxymbox{\hyperlink{class_d_q_r_network_manager_aab1ba442b6324af87b843489d4af6c54aba072dd13cdac29868d44ef9bfdb13c5}{DQRNetworkManager::DNM\_STATE\_JOINING}}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00043}00043\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.StateChange\_JoiningToIdle(\doxymbox{\hyperlink{class_c_platform_network_manager_acba1b4fdcef2bafd18d9d09f0476faf1a00cbc2e1310ebcc3d8e395a906113e61}{JOIN\_FAILED\_NONSPECIFIC}});}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00045}00045\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00046}00046\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ newState\ ==\ \doxymbox{\hyperlink{class_d_q_r_network_manager_aab1ba442b6324af87b843489d4af6c54ab0b0861c16445ec910cf8f17d01e9dbe}{DQRNetworkManager::DNM\_STATE\_IDLE}}\ \&\&\ oldState\ ==\ \doxymbox{\hyperlink{class_d_q_r_network_manager_aab1ba442b6324af87b843489d4af6c54a86f3c6748156c33b6c25850a3fcc9d4c}{DQRNetworkManager::DNM\_STATE\_HOSTING}}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00047}00047\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00048}00048\ \ \ \ \ \ \ \ \ m\_bLeavingGame\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00049}00049\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00050}00050\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ newState\ ==\ \doxymbox{\hyperlink{class_d_q_r_network_manager_aab1ba442b6324af87b843489d4af6c54ad8ddfa1fd64fd515b06672cb000eefbf}{DQRNetworkManager::DNM\_STATE\_STARTING}}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00051}00051\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ m\_lastPlayerEventTimeStart\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.getAppTime();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.StateChange\_AnyToStarting();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00055}00055\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00056}00056\ \ \ \ \ \textcolor{comment}{//\ Fix\ for\ \#93148\ -\/\ TCR\ 001:\ BAS\ Game\ Stability:\ Title\ will\ crash\ for\ the\ multiplayer\ client\ if\ host\ of\ the\ game\ will\ exit\ during\ the\ clients\ loading\ to\ created\ world.}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00057}00057\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ If\ the\ client\ joins\ just\ as\ the\ host\ is\ exiting,\ then\ they\ can\ skip\ to\ leaving\ without\ passing\ through\ ending}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00058}00058\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ newState\ ==\ \doxymbox{\hyperlink{class_d_q_r_network_manager_aab1ba442b6324af87b843489d4af6c54a07a2d7093cb4e7bc7e3d1a58263f7563}{DQRNetworkManager::DNM\_STATE\_ENDING}}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00059}00059\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.StateChange\_AnyToEnding(\ oldState\ ==\ \doxymbox{\hyperlink{class_d_q_r_network_manager_aab1ba442b6324af87b843489d4af6c54af7c11c4c6bf3d6af9fda26986d46a2d9}{DQRNetworkManager::DNM\_STATE\_PLAYING}}\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_pDQRNet-\/>IsHost()\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ m\_bLeavingGame\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00065}00065\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00066}00066\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00068}00068\ \ \ \ \ \textcolor{keywordflow}{if}(\ newState\ ==\ \doxymbox{\hyperlink{class_d_q_r_network_manager_aab1ba442b6324af87b843489d4af6c54ab0b0861c16445ec910cf8f17d01e9dbe}{DQRNetworkManager::DNM\_STATE\_IDLE}}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00069}00069\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.StateChange\_AnyToIdle();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00071}00071\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00072}00072\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00074}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a21d729783631d06e4b01c1a0f07cdf12}{00074}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a21d729783631d06e4b01c1a0f07cdf12}{CPlatformNetworkManagerDurango::HandlePlayerJoined}}(\doxymbox{\hyperlink{class_d_q_r_network_player}{DQRNetworkPlayer}}\ *pDQRPlayer)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00075}00075\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00076}00076\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ pszDescription;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00078}00078\ \ \ \ \ \textcolor{comment}{//\ If\ this\ is\ a\ local\ player,\ we\ need\ to\ inform\ the\ chat\ system\ that\ it\ has\ joined}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00079}00079\ \ \ \ \ \textcolor{keywordflow}{if}(\ pDQRPlayer-\/>\doxymbox{\hyperlink{class_d_q_r_network_player_ab3f8ac68f78b6c97dcdb87fb73f9084a}{IsLocal}}()\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00080}00080\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ m\_pDQRNet-\/>ChatPlayerJoined(pDQRPlayer-\/>\doxymbox{\hyperlink{class_d_q_r_network_player_ada82fb73bf2510c14722bc89b55010a6}{GetLocalPlayerIndex}}());}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00082}00082\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00084}00084\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ We\ create\ a\ fake\ socket\ for\ every\ where\ that\ we\ need\ an\ INBOUND\ queue\ of\ game\ data.\ Outbound}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00085}00085\ \ \ \ \ \textcolor{comment}{//\ is\ all\ handled\ by\ QNet\ so\ we\ don't\ need\ that.\ Therefore\ each\ client\ player\ has\ one,\ and\ the\ host\ has\ one}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00086}00086\ \ \ \ \ \textcolor{comment}{//\ for\ each\ client\ player.}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00087}00087\ \ \ \ \ \textcolor{keywordtype}{bool}\ createFakeSocket\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00088}00088\ \ \ \ \ \textcolor{keywordtype}{bool}\ localPlayer\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00090}00090\ \ \ \ \ \doxymbox{\hyperlink{class_network_player_durango}{NetworkPlayerDurango}}\ *networkPlayer\ =\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_network_player_durango}{NetworkPlayerDurango}}\ *\textcolor{keyword}{>}(addNetworkPlayer(pDQRPlayer));}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00092}00092\ \ \ \ \ \textcolor{comment}{//\ Request\ full\ display\ name\ for\ this\ player}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00093}00093\ \ \ \ \ m\_pDQRNet-\/>RequestDisplayName(pDQRPlayer);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00095}00095\ \ \ \ \ \textcolor{keywordflow}{if}(\ pDQRPlayer-\/>\doxymbox{\hyperlink{class_d_q_r_network_player_ab3f8ac68f78b6c97dcdb87fb73f9084a}{IsLocal}}()\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00096}00096\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ localPlayer\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ pDQRPlayer-\/>\doxymbox{\hyperlink{class_d_q_r_network_player_ab7f6600cbe13ff01c78fc9df6776a066}{IsHost}}()\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ pszDescription\ =\ \textcolor{stringliteral}{"{}local\ host"{}};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ No\ socket\ for\ the\ localhost\ as\ it\ uses\ a\ special\ loopback\ queue}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ m\_machineDQRPrimaryPlayers.push\_back(\ pDQRPlayer\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ pszDescription\ =\ \textcolor{stringliteral}{"{}local"{}};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ need\ an\ inbound\ queue\ on\ all\ local\ players\ to\ receive\ data\ from\ the\ host}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ createFakeSocket\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00112}00112\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00113}00113\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00114}00114\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ pDQRPlayer-\/>\doxymbox{\hyperlink{class_d_q_r_network_player_ab7f6600cbe13ff01c78fc9df6776a066}{IsHost}}()\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ pszDescription\ =\ \textcolor{stringliteral}{"{}remote\ host"{}};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ pszDescription\ =\ \textcolor{stringliteral}{"{}remote"{}};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ we\ are\ the\ host,\ then\ create\ a\ fake\ socket\ for\ every\ remote\ player}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_pDQRNet-\/>IsHost()\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ createFakeSocket\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00129}00129\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_pDQRNet-\/>IsHost()\ \&\&\ !m\_bHostChanged\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Do\ we\ already\ have\ a\ primary\ player\ for\ this\ system?}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ systemHasPrimaryPlayer\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\ \doxymbox{\hyperlink{class_d_q_r_network_player}{DQRNetworkPlayer}}\ *pQNetPrimaryPlayer\ :\ m\_machineDQRPrimaryPlayers\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ pDQRPlayer-\/>\doxymbox{\hyperlink{class_d_q_r_network_player_a295da005945b03e46e8769da993c5785}{IsSameSystem}}(pQNetPrimaryPlayer)\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ systemHasPrimaryPlayer\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !systemHasPrimaryPlayer\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_machineDQRPrimaryPlayers.push\_back(\ pDQRPlayer\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00145}00145\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00146}00146\ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.PlayerJoining(\ networkPlayer\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00148}00148\ \ \ \ \ \textcolor{keywordflow}{if}(\ createFakeSocket\ ==\ \textcolor{keyword}{true}\ \&\&\ !m\_bHostChanged\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00149}00149\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.CreateSocket(\ networkPlayer,\ localPlayer\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00151}00151\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00153}00153\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\ \textcolor{stringliteral}{"{}Player\ 0x\%p\ \(\backslash\)"{}\%ls\(\backslash\)"{}\ joined;\ \%s;\ voice\ \%i;\ camera\ \%i.\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ pDQRPlayer,}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ pDQRPlayer-\/>\doxymbox{\hyperlink{class_d_q_r_network_player_ab621aaae33f998ac81735ba5a62c7637}{GetGamertag}}(),}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ pszDescription,}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{int})\ pDQRPlayer-\/>\doxymbox{\hyperlink{class_d_q_r_network_player_aa27e3194eb60a32bd8e08cf2c037e99d}{HasVoice}}(),}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{int})\ pDQRPlayer-\/>\doxymbox{\hyperlink{class_d_q_r_network_player_a86505d07314e7958f206d136ef8b67ac}{HasCamera}}()\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00159}00159\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00161}00161\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_pDQRNet-\/>IsHost()\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00162}00162\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.UpdateAndSetGameSessionData();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ SystemFlagAddPlayer(\ networkPlayer\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00165}00165\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00167}00167\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ idx\ =\ 0;\ idx\ <\ \doxymbox{\hyperlink{extra_x64_8h_a1365084304888cf899650a443d55b9a9}{XUSER\_MAX\_COUNT}};\ ++idx)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00168}00168\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(playerChangedCallback[idx]\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ playerChangedCallback[idx](\ playerChangedCallbackParam[idx],\ networkPlayer,\ \doxymbox{\hyperlink{gdraw__wgl_8c_a65e9886d74aaee76545e83dd09011727}{false}}\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00171}00171\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00173}00173\ \ \ \ \ \textcolor{keywordflow}{if}(m\_pDQRNet-\/>GetState()\ ==\ \doxymbox{\hyperlink{extra_x64_8h_a2f95e4d977acfc671006040b805c4effa420050388c97d8a575de74ca02951162}{QNET\_STATE\_GAME\_PLAY}})}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00174}00174\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ localPlayerCount\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ idx\ =\ 0;\ idx\ <\ \doxymbox{\hyperlink{extra_x64_8h_a1365084304888cf899650a443d55b9a9}{XUSER\_MAX\_COUNT}};\ ++idx)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_pDQRNet-\/>GetLocalPlayerByUserIndex(idx)\ !=\ \textcolor{keyword}{nullptr}\ )\ ++localPlayerCount;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ appTime\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.getAppTime();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ record\ stats\ for\ the\ primary\ player\ here}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ m\_lastPlayerEventTimeStart\ =\ appTime;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00185}00185\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00186}00186\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00187}00187\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00188}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a4dcf854ada39307e7772997d6b18dd71}{00188}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a4dcf854ada39307e7772997d6b18dd71}{CPlatformNetworkManagerDurango::HandlePlayerLeaving}}(\doxymbox{\hyperlink{class_d_q_r_network_player}{DQRNetworkPlayer}}\ *pDQRPlayer)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00189}00189\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00190}00190\ \ \ \ \ \textcolor{comment}{//\_\_debugbreak();}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00191}00191\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00192}00192\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\ \textcolor{stringliteral}{"{}Player\ 0x\%p\ leaving.\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ pDQRPlayer\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00195}00195\ \ \ \ \ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *networkPlayer\ =\ getNetworkPlayer(pDQRPlayer);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00196}00196\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00197}00197\ \ \ \ \ \textcolor{keywordflow}{if}(\ networkPlayer\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00198}00198\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ our\ wrapper\ object\ associated\ with\ this\ player.}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_socket}{Socket}}\ *socket\ =\ networkPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_a44e1e37718e9cc2a88f4eae05fafe43e}{GetSocket}}();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ socket\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ we\ are\ in\ game\ then\ remove\ this\ player\ from\ the\ game\ as\ well.}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ may\ get\ here\ either\ from\ the\ player\ requesting\ to\ exit\ the\ game,}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ in\ which\ case\ we\ they\ will\ already\ have\ left\ the\ game\ server,\ or\ from\ a\ disconnection}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ where\ we\ then\ have\ to\ remove\ them\ from\ the\ game\ server}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_pDQRNet-\/>IsHost()\ \&\&\ !m\_bHostChanged\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.CloseConnection(networkPlayer);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Free\ the\ wrapper\ object\ memory.}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ 4J\ Stu\ -\/\ We\ may\ still\ be\ using\ this\ at\ the\ point\ that\ the\ player\ leaves\ the\ session.}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ need\ this\ as\ long\ as\ the\ game\ server\ still\ needs\ to\ communicate\ with\ the\ player}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//delete\ socket;}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ networkPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_a2f2871067e2165b200cb8bae78019ac8}{SetSocket}}(\ \textcolor{keyword}{nullptr}\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_pDQRNet-\/>IsHost()\ \&\&\ !m\_bHostChanged\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ isSystemPrimaryPlayer(pDQRPlayer)\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_d_q_r_network_player}{DQRNetworkPlayer}}\ *pNewDQRPrimaryPlayer\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_pDQRNet-\/>GetPlayerCount();\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_d_q_r_network_player}{DQRNetworkPlayer}}\ *pDQRPlayer2\ =\ m\_pDQRNet-\/>GetPlayerByIndex(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00228}00228\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ pDQRPlayer2\ !=\ pDQRPlayer\ \&\&\ pDQRPlayer2-\/>\doxymbox{\hyperlink{class_d_q_r_network_player_a295da005945b03e46e8769da993c5785}{IsSameSystem}}(\ pDQRPlayer\ )\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNewDQRPrimaryPlayer\ =\ pDQRPlayer2;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ find(m\_machineDQRPrimaryPlayers.begin(),\ m\_machineDQRPrimaryPlayers.end(),\ pDQRPlayer);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ it\ !=\ m\_machineDQRPrimaryPlayers.end()\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_machineDQRPrimaryPlayers.erase(\ it\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ pNewDQRPrimaryPlayer\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_machineDQRPrimaryPlayers.push\_back(\ pNewDQRPrimaryPlayer\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00244}00244\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.UpdateAndSetGameSessionData(\ networkPlayer\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ SystemFlagRemovePlayer(\ networkPlayer\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00247}00247\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00249}00249\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00250}00250\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.PlayerLeaving(\ networkPlayer\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00251}00251\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00252}00252\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ idx\ =\ 0;\ idx\ <\ \doxymbox{\hyperlink{extra_x64_8h_a1365084304888cf899650a443d55b9a9}{XUSER\_MAX\_COUNT}};\ ++idx)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00253}00253\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(playerChangedCallback[idx]\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ playerChangedCallback[idx](\ playerChangedCallbackParam[idx],\ networkPlayer,\ \doxymbox{\hyperlink{gdraw__wgl_8c_a41f9c5fb8b08eb5dc3edce4dcb37fee7}{true}}\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00256}00256\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_pDQRNet-\/>GetState()\ ==\ \doxymbox{\hyperlink{class_d_q_r_network_manager_aab1ba442b6324af87b843489d4af6c54af7c11c4c6bf3d6af9fda26986d46a2d9}{DQRNetworkManager::DNM\_STATE\_PLAYING}})}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ localPlayerCount\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ idx\ =\ 0;\ idx\ <\ \doxymbox{\hyperlink{extra_x64_8h_a1365084304888cf899650a443d55b9a9}{XUSER\_MAX\_COUNT}};\ ++idx)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_pDQRNet-\/>GetLocalPlayerByUserIndex(idx)\ !=\ \textcolor{keyword}{nullptr}\ )\ ++localPlayerCount;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00265}00265\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ appTime\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.getAppTime();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ m\_lastPlayerEventTimeStart\ =\ appTime;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00269}00269\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ removeNetworkPlayer(pDQRPlayer);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00271}00271\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00272}00272\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00273}00273\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00274}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_ad5d2cb1ef0cbfe55bfa38d3c01870d0b}{00274}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_ad5d2cb1ef0cbfe55bfa38d3c01870d0b}{CPlatformNetworkManagerDurango::HandleDataReceived}}(\doxymbox{\hyperlink{class_d_q_r_network_player}{DQRNetworkPlayer}}\ *playerFrom,\ \doxymbox{\hyperlink{class_d_q_r_network_player}{DQRNetworkPlayer}}\ *playerTo,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dataSize)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00275}00275\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00276}00276\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00277}00277\ \ \ \ \ \textcolor{comment}{//\ TODO\ -\/\ put\ this\ back\ in}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00278}00278\ \ \ \ \ \textcolor{keywordflow}{if}(m\_pSQRNet-\/>GetState()\ ==\ \doxymbox{\hyperlink{class_s_q_r_network_manager_a67ab2f9736fcc6f4e94695b3afde5b54ac1c566550968f8e5786062de24ce383e}{SQRNetworkManager::SNM\_STATE\_ENDING}})}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00279}00279\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00280}00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00281}00281\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00282}00282\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00284}00284\ \ \ \ \ \textcolor{keywordflow}{if}(\ playerTo-\/>\doxymbox{\hyperlink{class_d_q_r_network_player_ab7f6600cbe13ff01c78fc9df6776a066}{IsHost}}()\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00285}00285\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00286}00286\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ we\ are\ the\ host\ we\ care\ who\ this\ came\ from}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00287}00287\ \ \ \ \ \ \ \ \ \textcolor{comment}{//app.DebugPrintf(\ "{}Pushing\ data\ into\ host\ read\ queue\ for\ user\ \(\backslash\)"{}\%ls\(\backslash\)"{}\(\backslash\)n"{},\ pPlayerFrom-\/>GetGamertag());}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00288}00288\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Push\ this\ data\ into\ the\ read\ queue\ for\ the\ player\ that\ sent\ it}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00289}00289\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *pPlayerFrom\ =\ getNetworkPlayer(playerFrom);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00290}00290\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_socket}{Socket}}\ *socket\ =\ pPlayerFrom-\/>\doxymbox{\hyperlink{class_i_network_player_a44e1e37718e9cc2a88f4eae05fafe43e}{GetSocket}}();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00291}00291\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00292}00292\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(socket\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ socket-\/>\doxymbox{\hyperlink{class_socket_aec5dad2f98af40cef60200ca21b07a94}{pushDataToQueue}}(data,\ dataSize,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00294}00294\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00295}00295\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00296}00296\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ we\ are\ not\ the\ host\ the\ message\ must\ have\ come\ from\ the\ host,\ so\ we\ care\ more\ about\ who\ it\ is\ addressed\ to}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *pPlayerTo\ =\ getNetworkPlayer(playerTo);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_socket}{Socket}}\ *socket\ =\ pPlayerTo-\/>\doxymbox{\hyperlink{class_i_network_player_a44e1e37718e9cc2a88f4eae05fafe43e}{GetSocket}}();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \textcolor{comment}{//app.DebugPrintf(\ "{}Pushing\ data\ into\ read\ queue\ for\ user\ \(\backslash\)"{}\%ls\(\backslash\)"{}\(\backslash\)n"{},\ apPlayersTo[dwPlayer]-\/>GetGamertag());}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(socket\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ socket-\/>\doxymbox{\hyperlink{class_socket_aec5dad2f98af40cef60200ca21b07a94}{pushDataToQueue}}(data,\ dataSize);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00303}00303\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00304}00304\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00306}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a37df5ea31157f57c3b20319252cd87c8}{00306}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a37df5ea31157f57c3b20319252cd87c8}{CPlatformNetworkManagerDurango::HandleInviteReceived}}(\textcolor{keywordtype}{int}\ playerIndex,\ \doxymbox{\hyperlink{class_d_q_r_network_manager_1_1_session_info}{DQRNetworkManager::SessionInfo}}\ *pInviteInfo)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00307}00307\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00308}00308\ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.GameInviteReceived(playerIndex,\ pInviteInfo);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00309}00309\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00310}00310\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00311}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a4a833346d0cace4778a91f6f4f89834a}{00311}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a4a833346d0cace4778a91f6f4f89834a}{CPlatformNetworkManagerDurango::Initialise}}(\doxymbox{\hyperlink{class_c_platform_network_manager_durango_ae4b031b6416e589f4b185e3aa684a658}{CGameNetworkManager}}\ *pGameNetworkManager,\ \textcolor{keywordtype}{int}\ flagIndexSize)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00312}00312\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00313}00313\ \ \ \ \ m\_pDQRNet\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_d_q_r_network_manager}{DQRNetworkManager}}(\textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00314}00314\ \ \ \ \ m\_pDQRNet-\/>Initialise();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00315}00315\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00316}00316\ \ \ \ \ m\_hostGameSessionIsJoinable\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00317}00317\ \ \ \ \ m\_pGameNetworkManager\ =\ pGameNetworkManager;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00318}00318\ \ \ \ \ m\_flagIndexSize\ =\ flagIndexSize;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00319}00319\ \ \ \ \ \doxymbox{\hyperlink{_platform_network_manager_stub_8cpp_a39c91e27b4c8526d317417411f96122c}{g\_pPlatformNetworkManager}}\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00320}00320\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{extra_x64_8h_a1365084304888cf899650a443d55b9a9}{XUSER\_MAX\_COUNT}};\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00321}00321\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ playerChangedCallback[\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ ]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00323}00323\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00324}00324\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00325}00325\ \ \ \ \ m\_bLeavingGame\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00326}00326\ \ \ \ \ m\_bLeaveGameOnTick\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00327}00327\ \ \ \ \ m\_bHostChanged\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00329}00329\ \ \ \ \ m\_bSearchResultsReady\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00330}00330\ \ \ \ \ m\_bSearchPending\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00331}00331\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00332}00332\ \ \ \ \ m\_bIsOfflineGame\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00333}00333\ \ \ \ \ m\_pSearchParam\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00334}00334\ \ \ \ \ m\_SessionsUpdatedCallback\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00336}00336\ \ \ \ \ m\_searchResultsCount\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00337}00337\ \ \ \ \ m\_lastSearchStartTime\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00338}00338\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00339}00339\ \ \ \ \ \textcolor{comment}{//\ The\ results\ that\ will\ be\ filled\ in\ with\ the\ current\ search}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00340}00340\ \ \ \ \ m\_pSearchResults\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00341}00341\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00342}00342\ \ \ \ \ Windows::Networking::Connectivity::NetworkInformation::NetworkStatusChanged\ +=\ ref\ \textcolor{keyword}{new}\ Windows::Networking::Connectivity::NetworkStatusChangedEventHandler(\ [](\ Platform::Object\string^\ pxObject\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00343}00343\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00344}00344\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}NetworkStatusChanged\ callback\(\backslash\)n"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ internetProfile\ =\ Windows::Networking::Connectivity::NetworkInformation::GetInternetConnectionProfile();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (internetProfile\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ connectionLevel\ =\ internetProfile-\/>GetNetworkConnectivityLevel();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Connection\ level\ has\ changed\ to\ (\%d)\(\backslash\)n"{}},\ connectionLevel);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00350}00350\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//int\ iPrimaryPlayer\ =\ g\_NetworkManager.GetPrimaryPad();}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//bool\ bConnected\ \ \ =\ (connectionLevel\ ==\ Windows::Networking::Connectivity::NetworkConnectivityLevel::XboxLiveAccess)?true:false;}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//if((g\_NetworkManager.GetLockedProfile()!=-\/1)\ \&\&\ iPrimaryPlayer!=-\/1\ \&\&\ bConnected\ ==\ false\ \&\&\ g\_NetworkManager.IsInSession()\ )}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ app.SetAction(iPrimaryPlayer,eAppAction\_EthernetDisconnected);}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00358}00358\ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00359}00359\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00360}00360\ \ \ \ \ \textcolor{comment}{//\ Success!}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00361}00361\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00362}00362\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00363}00363\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00364}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a441a9d6fd25d60e960c13295d2d9adc9}{00364}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a441a9d6fd25d60e960c13295d2d9adc9}{CPlatformNetworkManagerDurango::Terminate}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00365}00365\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00366}00366\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00367}00367\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00368}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a9a2ab6d0d8778259b160509f38a2f15a}{00368}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a9a2ab6d0d8778259b160509f38a2f15a}{CPlatformNetworkManagerDurango::GetJoiningReadyPercentage}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00369}00369\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00370}00370\ \ \ \ \ \textcolor{keywordflow}{return}\ 100;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00371}00371\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00372}00372\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00373}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_acffec00f1640f2f28a7d857b2fe59f8d}{00373}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_acffec00f1640f2f28a7d857b2fe59f8d}{CPlatformNetworkManagerDurango::CorrectErrorIDS}}(\textcolor{keywordtype}{int}\ IDS)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00374}00374\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00375}00375\ \ \ \ \ \textcolor{keywordflow}{return}\ IDS;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00376}00376\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00377}00377\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00378}00378\ \textcolor{keywordtype}{bool}\ CPlatformNetworkManagerDurango::isSystemPrimaryPlayer(\doxymbox{\hyperlink{class_d_q_r_network_player}{DQRNetworkPlayer}}\ *pDQRPlayer)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00379}00379\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00380}00380\ \ \ \ \ \textcolor{keywordtype}{bool}\ playerIsSystemPrimary\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00381}00381\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\ it\ =\ m\_machineDQRPrimaryPlayers.begin();\ it\ <\ m\_machineDQRPrimaryPlayers.end();\ ++it)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00382}00382\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00383}00383\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_d_q_r_network_player}{DQRNetworkPlayer}}\ *pDQRPrimaryPlayer\ =\ *it;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00384}00384\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ pDQRPrimaryPlayer\ ==\ pDQRPlayer\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ playerIsSystemPrimary\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00389}00389\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00390}00390\ \ \ \ \ \textcolor{keywordflow}{return}\ playerIsSystemPrimary;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00391}00391\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00392}00392\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00393}00393\ \textcolor{comment}{//\ We\ call\ this\ twice\ a\ frame,\ either\ side\ of\ the\ render\ call\ so\ is\ a\ good\ place\ to\ "{}tick"{}\ things}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00394}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a01d69fa21d53ed650483bca64b52a805}{00394}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a01d69fa21d53ed650483bca64b52a805}{CPlatformNetworkManagerDurango::DoWork}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00395}00395\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00396}00396\ \ \ \ \ m\_pDQRNet-\/>Tick();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00397}00397\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00398}00398\ \ \ \ \ TickSearch();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00399}00399\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00400}00400\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_bLeaveGameOnTick\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00401}00401\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ m\_pDQRNet-\/>LeaveRoom();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00403}00403\ \ \ \ \ \ \ \ \ m\_bLeaveGameOnTick\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00404}00404\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00405}00405\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00406}00406\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00407}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a10e9126aaa80c08362d9090c5843e9d5}{00407}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a10e9126aaa80c08362d9090c5843e9d5}{CPlatformNetworkManagerDurango::GetPlayerCount}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00408}00408\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00409}00409\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_pDQRNet-\/>GetPlayerCount();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00410}00410\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00411}00411\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00412}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a6748d9310c52e71958ed8ff346f15da8}{00412}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a6748d9310c52e71958ed8ff346f15da8}{CPlatformNetworkManagerDurango::ShouldMessageForFullSession}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00413}00413\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00414}00414\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_pDQRNet-\/>ShouldMessageForFullSession();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00415}00415\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00416}00416\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00417}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_aa5ba98e2abe1ad4fc307dd34d2674289}{00417}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_aa5ba98e2abe1ad4fc307dd34d2674289}{CPlatformNetworkManagerDurango::GetOnlinePlayerCount}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00418}00418\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00419}00419\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_pDQRNet-\/>GetOnlinePlayerCount();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00420}00420\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00421}00421\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00422}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a3e95a4ed7d680054f804ae7373711629}{00422}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a3e95a4ed7d680054f804ae7373711629}{CPlatformNetworkManagerDurango::GetLocalPlayerMask}}(\textcolor{keywordtype}{int}\ playerIndex)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00423}00423\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00424}00424\ \ \ \ \ \textcolor{keywordflow}{return}\ 1\ <<\ playerIndex;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00425}00425\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00426}00426\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00427}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a81d00eccd20cd4c7e49e210316d8639b}{00427}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a81d00eccd20cd4c7e49e210316d8639b}{CPlatformNetworkManagerDurango::AddLocalPlayerByUserIndex}}(\ \textcolor{keywordtype}{int}\ userIndex\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00428}00428\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00429}00429\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_pDQRNet-\/>AddLocalPlayerByUserIndex(\ userIndex\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00430}00430\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00431}00431\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00432}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_ab5a7fdbe7a4e548237e529c5ae9a4376}{00432}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_ab5a7fdbe7a4e548237e529c5ae9a4376}{CPlatformNetworkManagerDurango::RemoveLocalPlayerByUserIndex}}(\ \textcolor{keywordtype}{int}\ userIndex\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00433}00433\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00434}00434\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_pDQRNet-\/>RemoveLocalPlayerByUserIndex(\ userIndex\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00435}00435\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00436}00436\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00437}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a3b1113960a4247c2d24892e2c4b0f260}{00437}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a3b1113960a4247c2d24892e2c4b0f260}{CPlatformNetworkManagerDurango::IsInStatsEnabledSession}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00438}00438\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00439}00439\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00440}00440\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00441}00441\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00442}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a96e73fb46352d91b3a1506e7d8a59d93}{00442}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a96e73fb46352d91b3a1506e7d8a59d93}{CPlatformNetworkManagerDurango::SessionHasSpace}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ spaceRequired\ \textcolor{comment}{/*=\ 1*/})}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00443}00443\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00444}00444\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00445}00445\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00446}00446\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00447}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a0b9f7c3e03cefe6bcae684dc769971c0}{00447}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a0b9f7c3e03cefe6bcae684dc769971c0}{CPlatformNetworkManagerDurango::SendInviteGUI}}(\textcolor{keywordtype}{int}\ quadrant)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00448}00448\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00449}00449\ \ \ \ \ m\_pDQRNet-\/>SendInviteGUI(quadrant);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00450}00450\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00451}00451\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00452}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a1360b3f11030eb5ffb109d5aa994b663}{00452}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a1360b3f11030eb5ffb109d5aa994b663}{CPlatformNetworkManagerDurango::IsAddingPlayer}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00453}00453\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00454}00454\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_pDQRNet-\/>IsAddingPlayer();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00455}00455\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00456}00456\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00457}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_aa53b3ac95837087e9877cb452ca52282}{00457}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_aa53b3ac95837087e9877cb452ca52282}{CPlatformNetworkManagerDurango::LeaveGame}}(\textcolor{keywordtype}{bool}\ bMigrateHost)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00458}00458\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00459}00459\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_bLeavingGame\ )\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00460}00460\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00461}00461\ \ \ \ \ m\_bLeavingGame\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00462}00462\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00463}00463\ \ \ \ \ \textcolor{comment}{//\ If\ we\ are\ the\ host\ wait\ for\ the\ game\ server\ to\ end}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00464}00464\ \ \ \ \ \textcolor{keywordflow}{if}(m\_pDQRNet-\/>IsHost()\ \&\&\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.ServerStoppedValid())}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00465}00465\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00466}00466\ \textcolor{comment}{//\ \ \ \ \ \ m\_pDQRNet-\/>EndGame();}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00467}00467\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.ServerStoppedWait();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00468}00468\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.ServerStoppedDestroy();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00469}00469\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00470}00470\ \ \ \ \ \textcolor{keywordflow}{return}\ \_LeaveGame(bMigrateHost,\ \textcolor{keyword}{true});;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00471}00471\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00472}00472\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00473}00473\ \textcolor{keywordtype}{bool}\ CPlatformNetworkManagerDurango::\_LeaveGame(\textcolor{keywordtype}{bool}\ bMigrateHost,\ \textcolor{keywordtype}{bool}\ bLeaveRoom)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00474}00474\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00475}00475\ \ \ \ \ m\_bLeavingGame\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00476}00476\ \ \ \ \ m\_bLeaveGameOnTick\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00477}00477\ \ \ \ \ m\_migrateHostOnLeave\ =\ bMigrateHost;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00478}00478\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00479}00479\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00480}00480\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00481}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a062cc50087d5e66d052611536631b4ff}{00481}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a062cc50087d5e66d052611536631b4ff}{CPlatformNetworkManagerDurango::HostGame}}(\textcolor{keywordtype}{int}\ localUsersMask,\ \textcolor{keywordtype}{bool}\ bOnlineGame,\ \textcolor{keywordtype}{bool}\ bIsPrivate,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ publicSlots\ \textcolor{comment}{/*=\ MINECRAFT\_NET\_MAX\_PLAYERS*/},\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ privateSlots\ \textcolor{comment}{/*=\ 0*/})}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00482}00482\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00483}00483\ \textcolor{comment}{//\ \#ifdef\ \_XBOX}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00484}00484\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ We\ probably\ did\ this\ earlier\ as\ well,\ but\ just\ to\ be\ sure!}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00485}00485\ \ \ \ \ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a7eb56b90e63070b53cf6eaf3356ca008}{SetLocalGame}}(\ !bOnlineGame\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00486}00486\ \ \ \ \ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a7d05ac5358e915870d687bd9629f3e46}{SetPrivateGame}}(\ bIsPrivate\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00487}00487\ \ \ \ \ SystemFlagReset();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00488}00488\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00489}00489\ \ \ \ \ \textcolor{comment}{//\ Make\ sure\ that\ the\ Primary\ Pad\ is\ in\ by\ default}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00490}00490\ \ \ \ \ localUsersMask\ |=\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a3e95a4ed7d680054f804ae7373711629}{GetLocalPlayerMask}}(\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.GetPrimaryPad()\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00491}00491\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00492}00492\ \ \ \ \ m\_bLeavingGame\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00493}00493\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00494}00494\ \ \ \ \ \_HostGame(\ localUsersMask,\ publicSlots,\ privateSlots\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00495}00495\ \textcolor{comment}{//\#endif}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00496}00496\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00497}00497\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00498}00498\ \textcolor{keywordtype}{void}\ CPlatformNetworkManagerDurango::\_HostGame(\textcolor{keywordtype}{int}\ usersMask,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ publicSlots\ \textcolor{comment}{/*=\ MINECRAFT\_NET\_MAX\_PLAYERS*/},\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ privateSlots\ \textcolor{comment}{/*=\ 0*/})}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00499}00499\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00500}00500\ \ \ \ \ memset(\&m\_hostGameSessionData,0,\textcolor{keyword}{sizeof}(m\_hostGameSessionData));}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00501}00501\ \ \ \ \ m\_hostGameSessionData.\doxymbox{\hyperlink{struct___game_session_data_a5ab4c3aa33d1ab9fc31a48cb2e7d103f}{netVersion}}\ =\ \doxymbox{\hyperlink{_platform_network_manager_interface_8h_a7ac92731448c0d26a1269ebe991cb92a}{MINECRAFT\_NET\_VERSION}};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00502}00502\ \ \ \ \ m\_hostGameSessionData.\doxymbox{\hyperlink{struct___game_session_data_a53ea4b324563a0bdbd2e4d1ccf405a53}{isReadyToJoin}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00503}00503\ \ \ \ \ m\_hostGameSessionData.\doxymbox{\hyperlink{struct___game_session_data_a79cc0a12418053cb151520fa4a23d552}{m\_uiGameHostSettings}}\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetGameHostOption(\doxymbox{\hyperlink{_app__enums_8h_a3039f4892c1f252d62bfbc8aeab1fb7aa268df2d6e35c9c0975c0e657329183b0}{eGameHostOption\_All}});}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00504}00504\ \ \ \ \ m\_hostGameSessionIsJoinable\ =\ !\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a5e6348c772400fc0d64c89692136862c}{IsPrivateGame}}();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00505}00505\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00506}00506\ \ \ \ \ m\_pDQRNet-\/>\doxymbox{\hyperlink{class_d_q_r_network_manager_a3a16c83a779add6b41bb98c024aa9de6}{CreateAndJoinSession}}(usersMask,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *)\&m\_hostGameSessionData,\ \textcolor{keyword}{sizeof}(m\_hostGameSessionData),\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a8c9c63b9e38a3d68176eb9af661d2050}{IsLocalGame}}()\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00507}00507\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00508}00508\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00509}00509\ \textcolor{keywordtype}{bool}\ CPlatformNetworkManagerDurango::\_StartGame()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00510}00510\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00511}00511\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00512}00512\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00513}00513\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00514}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a87601f55092838d8a7f037334bf99b30}{00514}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a87601f55092838d8a7f037334bf99b30}{CPlatformNetworkManagerDurango::JoinGame}}(\doxymbox{\hyperlink{class_friend_session_info}{FriendSessionInfo}}\ *searchResult,\ \textcolor{keywordtype}{int}\ localUsersMask,\ \textcolor{keywordtype}{int}\ primaryUserIndex)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00515}00515\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00516}00516\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Joining\ game\ party\ from\ search\ result\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00517}00517\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00518}00518\ \ \ \ \ \textcolor{keywordtype}{int}\ joinPlayerCount\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00519}00519\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ \doxymbox{\hyperlink{class_d_q_r_network_manager_ac57405ff8a80fc239afbc898d218e1f9}{DQRNetworkManager::MAX\_LOCAL\_PLAYER\_COUNT}};\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00520}00520\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00521}00521\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ localUsersMask\ \&\ (\ 1\ <<\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ )\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00522}00522\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00523}00523\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ if\ this\ joining\ user\ is\ already\ in\ the\ session,\ in\ which\ case\ we\ don't\ need\ to\ count\ it}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00524}00524\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ isJoiningUser\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00525}00525\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ searchResult-\/>searchResult.m\_usedSlotCount;\ j++\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00526}00526\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Platform::String\string^\ xuid\ =\ ref\ \textcolor{keyword}{new}\ Platform::String(searchResult-\/>searchResult.m\_sessionXuids[j].c\_str());}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00528}00528\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ xuid\ ==\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___profile_8h_a027fde7e99d773afa28ec11d244459bf}{ProfileManager}}.GetUser(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})-\/>XboxUserId\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00529}00529\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00530}00530\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Joining\ user\ found\ to\ be\ already\ in\ session,\ so\ won't\ be\ counting\ to\ our\ total\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00531}00531\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isJoiningUser\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00532}00532\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00533}00533\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00534}00534\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00535}00535\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !isJoiningUser\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00536}00536\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00537}00537\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ joinPlayerCount++;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00538}00538\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00539}00539\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00540}00540\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00541}00541\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Used\ slots:\ \%d,\ fully\ playing\ players:\ \%d,\ trying\ to\ join\ \%d\(\backslash\)n"{}},\ searchResult-\/>searchResult.m\_usedSlotCount,\ searchResult-\/>searchResult.m\_playerCount,\ joinPlayerCount);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00542}00542\ \ \ \ \ \doxymbox{\hyperlink{_session_info_8h_a850ef119cb3409e27779abd984f14a2f}{GameSessionData}}\ *gameSession\ =\ (\doxymbox{\hyperlink{_session_info_8h_a850ef119cb3409e27779abd984f14a2f}{GameSessionData}}\ *)(\&searchResult-\/>\doxymbox{\hyperlink{class_friend_session_info_a37266395bc1425448183152231f9471c}{data}});}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00543}00543\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ searchResult-\/>searchResult.m\_usedSlotCount\ +\ joinPlayerCount\ )\ >\ \doxymbox{\hyperlink{class_d_q_r_network_manager_aa9c56f47cadab1d7d483f533b0f557af}{DQRNetworkManager::MAX\_ONLINE\_PLAYER\_COUNT}}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00544}00544\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00545}00545\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_c_game_network_manager_a061cc71078f308316bca750d75af3855adc7907e9c3b4102f74c3c24b44a51d3a}{CGameNetworkManager::JOINGAME\_FAIL\_SERVER\_FULL}};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00546}00546\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00547}00547\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00548}00548\ \ \ \ \ \textcolor{keywordflow}{if}(m\_pDQRNet-\/>JoinPartyFromSearchResult(\&searchResult-\/>searchResult,\ localUsersMask))}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00549}00549\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00550}00550\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Join\ success\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00551}00551\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_c_game_network_manager_a061cc71078f308316bca750d75af3855aa2a522da4e677386039450205cc77328}{CGameNetworkManager::JOINGAME\_SUCCESS}};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00552}00552\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00553}00553\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00554}00554\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00555}00555\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Join\ fail\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00556}00556\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_c_game_network_manager_a061cc71078f308316bca750d75af3855ab6a2e27a22d0de1409c39878bc749a1b}{CGameNetworkManager::JOINGAME\_FAIL\_GENERAL}};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00557}00557\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00558}00558\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00559}00559\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00560}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a1e91a9a314c6d759bb7a2b6228353d74}{00560}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a1e91a9a314c6d759bb7a2b6228353d74}{CPlatformNetworkManagerDurango::CancelJoinGame}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00561}00561\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00562}00562\ \ \ \ \ m\_pDQRNet-\/>CancelJoinPartyFromSearchResult();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00563}00563\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00564}00564\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00565}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a7eb56b90e63070b53cf6eaf3356ca008}{00565}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a7eb56b90e63070b53cf6eaf3356ca008}{CPlatformNetworkManagerDurango::SetLocalGame}}(\textcolor{keywordtype}{bool}\ isLocal)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00566}00566\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00567}00567\ \ \ \ \ m\_bIsOfflineGame\ =\ isLocal;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00568}00568\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00569}00569\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00570}00570\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00571}00571\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00572}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a7d05ac5358e915870d687bd9629f3e46}{00572}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a7d05ac5358e915870d687bd9629f3e46}{CPlatformNetworkManagerDurango::SetPrivateGame}}(\textcolor{keywordtype}{bool}\ isPrivate)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00573}00573\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00574}00574\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Setting\ as\ private\ game:\ \%s\(\backslash\)n"{}},\ isPrivate\ ?\ \textcolor{stringliteral}{"{}yes"{}}\ :\ \textcolor{stringliteral}{"{}no"{}}\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00575}00575\ \ \ \ \ m\_bIsPrivateGame\ =\ isPrivate;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00576}00576\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00577}00577\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00578}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_abb3f0e9874a30fb3bb0d879bd2573091}{00578}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_abb3f0e9874a30fb3bb0d879bd2573091}{CPlatformNetworkManagerDurango::RegisterPlayerChangedCallback}}(\textcolor{keywordtype}{int}\ iPad,\ \textcolor{keywordtype}{void}\ (*callback)(\textcolor{keywordtype}{void}\ *callbackParam,\ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *pPlayer,\ \textcolor{keywordtype}{bool}\ leaving),\ \textcolor{keywordtype}{void}\ *callbackParam)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00579}00579\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00580}00580\ \ \ \ \ playerChangedCallback[iPad]\ =\ callback;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00581}00581\ \ \ \ \ playerChangedCallbackParam[iPad]\ =\ callbackParam;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00582}00582\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00583}00583\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00584}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_acb3adb227e233c55777f746426e2ce1b}{00584}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_acb3adb227e233c55777f746426e2ce1b}{CPlatformNetworkManagerDurango::UnRegisterPlayerChangedCallback}}(\textcolor{keywordtype}{int}\ iPad,\ \textcolor{keywordtype}{void}\ (*callback)(\textcolor{keywordtype}{void}\ *callbackParam,\ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *pPlayer,\ \textcolor{keywordtype}{bool}\ leaving),\ \textcolor{keywordtype}{void}\ *callbackParam)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00585}00585\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00586}00586\ \ \ \ \ \textcolor{keywordflow}{if}(playerChangedCallbackParam[iPad]\ ==\ callbackParam)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00587}00587\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00588}00588\ \ \ \ \ \ \ \ \ playerChangedCallback[iPad]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00589}00589\ \ \ \ \ \ \ \ \ playerChangedCallbackParam[iPad]\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00590}00590\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00591}00591\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00592}00592\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00593}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a5e24063e011b431100b513936f41c049}{00593}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a5e24063e011b431100b513936f41c049}{CPlatformNetworkManagerDurango::HandleSignInChange}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00594}00594\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00595}00595\ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00596}00596\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00597}00597\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00598}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_af3e4c8d596142c32cb653eb058d451b3}{00598}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_af3e4c8d596142c32cb653eb058d451b3}{CPlatformNetworkManagerDurango::HandleAddLocalPlayerFailed}}(\textcolor{keywordtype}{int}\ idx,\ \textcolor{keywordtype}{bool}\ serverFull)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00599}00599\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00600}00600\ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.AddLocalPlayerFailed(idx,\ serverFull);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00601}00601\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00602}00602\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00603}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a209f64eb3b6219d5ddccfcbfdf6c2971}{00603}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a209f64eb3b6219d5ddccfcbfdf6c2971}{CPlatformNetworkManagerDurango::HandleDisconnect}}(\textcolor{keywordtype}{bool}\ bLostRoomOnly)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00604}00604\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00605}00605\ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.HandleDisconnect(bLostRoomOnly);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00606}00606\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00607}00607\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00608}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a9e06e4f894eae91f92e10d3d78724de1}{00608}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a9e06e4f894eae91f92e10d3d78724de1}{CPlatformNetworkManagerDurango::\_RunNetworkGame}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00609}00609\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00610}00610\ \ \ \ \ m\_pDQRNet-\/>StartGame();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00611}00611\ \ \ \ \ m\_hostGameSessionData.isReadyToJoin\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00612}00612\ \ \ \ \ m\_pDQRNet-\/>UpdateCustomSessionData();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00613}00613\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00614}00614\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00615}00615\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00616}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_af77210397746352394da4e26983f968c}{00616}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_af77210397746352394da4e26983f968c}{CPlatformNetworkManagerDurango::UpdateAndSetGameSessionData}}(\doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *pNetworkPlayerLeaving\ \textcolor{comment}{/*=\ nullptr*/})}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00617}00617\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00618}00618\ \ \ \ \ \textcolor{keywordflow}{if}(\ this-\/>m\_bLeavingGame\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00619}00619\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00620}00620\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00621}00621\ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a7d25852afd049a7aabbadf89b8aba449}{GetHostPlayer}}()\ ==\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00622}00622\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00623}00623\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00624}00624\ \ \ \ \ m\_hostGameSessionData.m\_uiGameHostSettings\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetGameHostOption(\doxymbox{\hyperlink{_app__enums_8h_a3039f4892c1f252d62bfbc8aeab1fb7aa268df2d6e35c9c0975c0e657329183b0}{eGameHostOption\_All}});}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00625}00625\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00626}00626\ \ \ \ \ m\_pDQRNet-\/>UpdateCustomSessionData();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00627}00627\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00628}00628\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00629}00629\ \textcolor{keywordtype}{int}\ CPlatformNetworkManagerDurango::RemovePlayerOnSocketClosedThreadProc(\ \textcolor{keywordtype}{void}*\ lpParam\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00630}00630\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00631}00631\ \ \ \ \ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *pNetworkPlayer\ =\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *\textcolor{keyword}{>}(lpParam);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00632}00632\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00633}00633\ \ \ \ \ \doxymbox{\hyperlink{class_socket}{Socket}}\ *socket\ =\ pNetworkPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_a44e1e37718e9cc2a88f4eae05fafe43e}{GetSocket}}();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00634}00634\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00635}00635\ \ \ \ \ \textcolor{keywordflow}{if}(\ socket\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00636}00636\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00637}00637\ \ \ \ \ \ \ \ \ \textcolor{comment}{//printf("{}Waiting\ for\ socket\ closed\ event\(\backslash\)n"{});}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00638}00638\ \ \ \ \ \ \ \ \ socket-\/>\doxymbox{\hyperlink{class_socket_a8dbb28660ab9f5b3c42a31249cf9be71}{m\_socketClosedEvent}}-\/>\doxymbox{\hyperlink{class_c4_j_thread_1_1_event_ad4aa8bbeeafd1c0558d6f1909592db97}{WaitForSignal}}(\doxymbox{\hyperlink{_orbis_stubs_8h_aa84a29002ab81c719c0d07bb446296e0}{INFINITE}});}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00639}00639\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00640}00640\ \ \ \ \ \ \ \ \ \textcolor{comment}{//printf("{}Socket\ closed\ event\ has\ fired\(\backslash\)n"{});}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00641}00641\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Clear\ our\ reference\ to\ this\ socket}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00642}00642\ \ \ \ \ \ \ \ \ pNetworkPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_a2f2871067e2165b200cb8bae78019ac8}{SetSocket}}(\ \textcolor{keyword}{nullptr}\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00643}00643\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ socket;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00644}00644\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00645}00645\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00646}00646\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_platform_network_manager_stub_8cpp_a39c91e27b4c8526d317417411f96122c}{g\_pPlatformNetworkManager}}-\/>RemoveLocalPlayer(\ pNetworkPlayer\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00647}00647\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00648}00648\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00649}00649\ \textcolor{keywordtype}{bool}\ CPlatformNetworkManagerDurango::RemoveLocalPlayer(\ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *pNetworkPlayer\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00650}00650\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00651}00651\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00652}00652\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00653}00653\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00654}00654\ CPlatformNetworkManagerDurango::PlayerFlags::PlayerFlags(\doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *pNetworkPlayer,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ count)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00655}00655\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00656}00656\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Don't\ assert,\ just\ make\ it\ a\ multiple\ of\ 8!\ This\ count\ is\ calculated\ from\ a\ load\ of\ separate\ values,}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00657}00657\ \ \ \ \ \textcolor{comment}{//\ and\ makes\ tweaking\ world/render\ sizes\ a\ pain\ if\ we\ hit\ an\ assert\ here}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00658}00658\ \ \ \ \ count\ =\ (count\ +\ 8\ -\/\ 1)\ \&\ \string~(8\ -\/\ 1);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00659}00659\ \ \ \ \ \textcolor{comment}{//assert(\ (\ count\ \%\ 8\ )\ ==\ 0\ );}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00660}00660\ \ \ \ \ this-\/>m\_pNetworkPlayer\ =\ pNetworkPlayer;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00661}00661\ \ \ \ \ this-\/>flags\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ [\ count\ /\ 8\ ];}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00662}00662\ \ \ \ \ memset(\ this-\/>flags,\ 0,\ count\ /\ 8\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00663}00663\ \ \ \ \ this-\/>count\ =\ count;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00664}00664\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00665}00665\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00666}00666\ CPlatformNetworkManagerDurango::PlayerFlags::\string~PlayerFlags()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00667}00667\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00668}00668\ \ \ \ \ \textcolor{keyword}{delete}\ []\ flags;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00669}00669\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00670}00670\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00671}00671\ \textcolor{comment}{//\ Add\ a\ player\ to\ the\ per\ system\ flag\ storage\ -\/\ if\ we've\ already\ got\ a\ player\ from\ that\ system,\ copy\ its\ flags\ over}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00672}00672\ \textcolor{keywordtype}{void}\ CPlatformNetworkManagerDurango::SystemFlagAddPlayer(INetworkPlayer\ *pNetworkPlayer)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00673}00673\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00674}00674\ \ \ \ \ PlayerFlags\ *newPlayerFlags\ =\ \textcolor{keyword}{new}\ PlayerFlags(\ pNetworkPlayer,\ \ m\_flagIndexSize);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00675}00675\ \ \ \ \ \textcolor{comment}{//\ If\ any\ of\ our\ existing\ players\ are\ on\ the\ same\ system,\ then\ copy\ over\ flags\ from\ that\ one}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00676}00676\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_playerFlags.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00677}00677\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00678}00678\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ pNetworkPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_ace293ccdf103ebd45b29c63f82b00613}{IsSameSystem}}(m\_playerFlags[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>m\_pNetworkPlayer)\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00679}00679\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00680}00680\ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(\ newPlayerFlags-\/>flags,\ m\_playerFlags[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>flags,\ m\_playerFlags[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>count\ /\ 8\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00681}00681\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00682}00682\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00683}00683\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00684}00684\ \ \ \ \ m\_playerFlags.push\_back(newPlayerFlags);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00685}00685\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00686}00686\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00687}00687\ \textcolor{comment}{//\ Remove\ a\ player\ from\ the\ per\ system\ flag\ storage\ -\/\ just\ maintains\ the\ m\_playerFlags\ vector\ without\ any\ gaps\ in\ it}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00688}00688\ \textcolor{keywordtype}{void}\ CPlatformNetworkManagerDurango::SystemFlagRemovePlayer(INetworkPlayer\ *pNetworkPlayer)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00689}00689\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00690}00690\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_playerFlags.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00691}00691\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00692}00692\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_playerFlags[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>m\_pNetworkPlayer\ ==\ pNetworkPlayer\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00693}00693\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00694}00694\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ m\_playerFlags[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00695}00695\ \ \ \ \ \ \ \ \ \ \ \ \ m\_playerFlags[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ m\_playerFlags.back();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00696}00696\ \ \ \ \ \ \ \ \ \ \ \ \ m\_playerFlags.pop\_back();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00697}00697\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00698}00698\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00699}00699\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00700}00700\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00701}00701\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00702}00702\ \textcolor{keywordtype}{void}\ CPlatformNetworkManagerDurango::SystemFlagReset()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00703}00703\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00704}00704\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_playerFlags.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00705}00705\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00706}00706\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ m\_playerFlags[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00707}00707\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00708}00708\ \ \ \ \ m\_playerFlags.clear();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00709}00709\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00710}00710\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00711}00711\ \textcolor{comment}{//\ Set\ a\ per\ system\ flag\ -\/\ this\ is\ done\ by\ setting\ the\ flag\ on\ every\ player\ that\ shares\ that\ system}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00712}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a8c12192477030a0b022bcd2e9c90104d}{00712}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a8c12192477030a0b022bcd2e9c90104d}{CPlatformNetworkManagerDurango::SystemFlagSet}}(\doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *pNetworkPlayer,\ \textcolor{keywordtype}{int}\ index)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00713}00713\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00714}00714\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ index\ <\ 0\ )\ ||\ (\ index\ >=\ m\_flagIndexSize\ )\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00715}00715\ \ \ \ \ \textcolor{keywordflow}{if}(\ pNetworkPlayer\ ==\ \textcolor{keyword}{nullptr}\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00716}00716\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00717}00717\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_playerFlags.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00718}00718\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00719}00719\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ pNetworkPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_ace293ccdf103ebd45b29c63f82b00613}{IsSameSystem}}(m\_playerFlags[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>m\_pNetworkPlayer)\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00720}00720\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00721}00721\ \ \ \ \ \ \ \ \ \ \ \ \ m\_playerFlags[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>flags[\ index\ /\ 8\ ]\ |=\ (\ 128\ >>\ (\ index\ \%\ 8\ )\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00722}00722\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00723}00723\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00724}00724\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00725}00725\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00726}00726\ \textcolor{comment}{//\ Get\ value\ of\ a\ per\ system\ flag\ -\/\ can\ be\ read\ from\ the\ flags\ of\ the\ passed\ in\ player\ as\ anything\ else\ sent\ to\ that}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00727}00727\ \textcolor{comment}{//\ system\ should\ also\ have\ been\ duplicated\ here}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00728}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_af8c3c4cdf76e93a1a72b9c853fae418f}{00728}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_af8c3c4cdf76e93a1a72b9c853fae418f}{CPlatformNetworkManagerDurango::SystemFlagGet}}(\doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *pNetworkPlayer,\ \textcolor{keywordtype}{int}\ index)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00729}00729\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00730}00730\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ index\ <\ 0\ )\ ||\ (\ index\ >=\ m\_flagIndexSize\ )\ )\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00731}00731\ \ \ \ \ \textcolor{keywordflow}{if}(\ pNetworkPlayer\ ==\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00732}00732\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00733}00733\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00734}00734\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00735}00735\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00736}00736\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_playerFlags.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00737}00737\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00738}00738\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_playerFlags[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>m\_pNetworkPlayer\ ==\ pNetworkPlayer\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00739}00739\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00740}00740\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\ (\ m\_playerFlags[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>flags[\ index\ /\ 8\ ]\ \&\ (\ 128\ >>\ (\ index\ \%\ 8\ )\ )\ )\ !=\ 0\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00741}00741\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00742}00742\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00743}00743\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00744}00744\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00745}00745\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00746}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a4cbc1766c7343e94c4c8bea356b1ecb0}{00746}}\ wstring\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a4cbc1766c7343e94c4c8bea356b1ecb0}{CPlatformNetworkManagerDurango::GatherStats}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00747}00747\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00748}00748\ \ \ \ \ \textcolor{keywordflow}{return}\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00749}00749\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00750}00750\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00751}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a3030067a86ff81860c962d45eafb5dca}{00751}}\ wstring\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a3030067a86ff81860c962d45eafb5dca}{CPlatformNetworkManagerDurango::GatherRTTStats}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00752}00752\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00753}00753\ \ \ \ \ \textcolor{keywordflow}{return}\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00754}00754\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00755}00755\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00756}00756\ \textcolor{keywordtype}{void}\ CPlatformNetworkManagerDurango::TickSearch()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00757}00757\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00758}00758\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_bSearchPending\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00759}00759\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00760}00760\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_pDQRNet-\/>\doxymbox{\hyperlink{class_d_q_r_network_manager_a665e8cf680d7abf6f4551267b5f93694}{FriendPartyManagerIsBusy}}()\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00761}00761\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00762}00762\ \ \ \ \ \ \ \ \ \ \ \ \ m\_searchResultsCount\ =\ m\_pDQRNet-\/>\doxymbox{\hyperlink{class_d_q_r_network_manager_a5edaca6dc5767ee41199c4f87457ad4f}{FriendPartyManagerGetCount}}();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00763}00763\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ []\ m\_pSearchResults;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00764}00764\ \ \ \ \ \ \ \ \ \ \ \ \ m\_pSearchResults\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_d_q_r_network_manager_1_1_session_search_result}{DQRNetworkManager::SessionSearchResult}}[m\_searchResultsCount];}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00765}00765\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00766}00766\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_searchResultsCount;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00767}00767\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00768}00768\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_pDQRNet-\/>\doxymbox{\hyperlink{class_d_q_r_network_manager_a9d8c8a6211810e6c0e103a0afc68c94d}{FriendPartyManagerGetSessionInfo}}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}},\ \&m\_pSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00769}00769\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00770}00770\ \ \ \ \ \ \ \ \ \ \ \ \ m\_bSearchPending\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00771}00771\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00772}00772\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_SessionsUpdatedCallback\ !=\ \textcolor{keyword}{nullptr}\ )\ m\_SessionsUpdatedCallback(m\_pSearchParam);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00773}00773\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00774}00774\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00775}00775\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00776}00776\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00777}00777\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_pDQRNet-\/>FriendPartyManagerIsBusy()\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00778}00778\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00779}00779\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Don't\ start\ searches\ unless\ we\ have\ registered\ a\ callback}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00780}00780\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_SessionsUpdatedCallback\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ (m\_lastSearchStartTime\ +\ \doxymbox{\hyperlink{_platform_network_manager_durango_8h_a8cf16fbbc11f5e45ea8dc01db1aaa8e4}{MINECRAFT\_DURANGO\_PARTY\_SEARCH\_DELAY\_MILLISECONDS}})\ <\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a055326c81f9d62c1af40c24a13b436f5}{GetTickCount}}()\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00781}00781\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00782}00782\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_pDQRNet-\/>FriendPartyManagerSearch()\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00783}00783\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00784}00784\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_bSearchPending\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00785}00785\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_lastSearchStartTime\ =\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a055326c81f9d62c1af40c24a13b436f5}{GetTickCount}}();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00786}00786\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00787}00787\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00788}00788\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00789}00789\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00790}00790\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00791}00791\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00792}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a8a9ab606e36b58d061356fa9abeed72a}{00792}}\ vector<FriendSessionInfo\ *>\ *\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a8a9ab606e36b58d061356fa9abeed72a}{CPlatformNetworkManagerDurango::GetSessionList}}(\textcolor{keywordtype}{int}\ iPad,\ \textcolor{keywordtype}{int}\ localPlayers,\ \textcolor{keywordtype}{bool}\ partyOnly)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00793}00793\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00794}00794\ \ \ \ \ vector<FriendSessionInfo\ *>\ *filteredList\ =\ \textcolor{keyword}{new}\ vector<FriendSessionInfo\ *>();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00795}00795\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_searchResultsCount;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00796}00796\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00797}00797\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_session_info_8h_a850ef119cb3409e27779abd984f14a2f}{GameSessionData}}\ *gameSessionData\ =\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{_session_info_8h_a850ef119cb3409e27779abd984f14a2f}{GameSessionData}}\ *\textcolor{keyword}{>}(m\_pSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].m\_extData);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00798}00798\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ gameSessionData-\/>\doxymbox{\hyperlink{struct___game_session_data_a5ab4c3aa33d1ab9fc31a48cb2e7d103f}{netVersion}}\ ==\ \doxymbox{\hyperlink{_platform_network_manager_interface_8h_a7ac92731448c0d26a1269ebe991cb92a}{MINECRAFT\_NET\_VERSION}}\ )\ \&\&}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00799}00799\ \ \ \ \ \ \ \ \ \ \ \ \ (\ gameSessionData-\/>\doxymbox{\hyperlink{struct___game_session_data_a53ea4b324563a0bdbd2e4d1ccf405a53}{isReadyToJoin}}\ )\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00800}00800\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00801}00801\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_friend_session_info}{FriendSessionInfo}}\ *session\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_friend_session_info}{FriendSessionInfo}}();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00802}00802\ \ \ \ \ \ \ \ \ \ \ \ \ session-\/>searchResult\ =\ m\_pSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00803}00803\ \ \ \ \ \ \ \ \ \ \ \ \ session-\/>searchResult.m\_extData\ =\ \textcolor{keyword}{nullptr};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ have\ another\ copy\ of\ the\ GameSessionData,\ so\ don't\ need\ to\ make\ another\ copy\ of\ this\ here}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00804}00804\ \ \ \ \ \ \ \ \ \ \ \ \ session-\/>\doxymbox{\hyperlink{class_friend_session_info_acc32e8156eab1ab6353f7d1c628943d3}{displayLabelLength}}\ =\ session-\/>searchResult.m\_playerNames[0].size();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00805}00805\ \ \ \ \ \ \ \ \ \ \ \ \ session-\/>\doxymbox{\hyperlink{class_friend_session_info_a1ef4d27ca866fe40e9731df260ab3734}{displayLabel}}\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{wchar\_t}[\ session-\/>\doxymbox{\hyperlink{class_friend_session_info_acc32e8156eab1ab6353f7d1c628943d3}{displayLabelLength}}\ +\ 1\ ];}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00806}00806\ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(\&session-\/>\doxymbox{\hyperlink{class_friend_session_info_a37266395bc1425448183152231f9471c}{data}},\ gameSessionData,\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{_session_info_8h_a850ef119cb3409e27779abd984f14a2f}{GameSessionData}}));}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00807}00807\ \ \ \ \ \ \ \ \ \ \ \ \ wcscpy\_s(session-\/>\doxymbox{\hyperlink{class_friend_session_info_a1ef4d27ca866fe40e9731df260ab3734}{displayLabel}},\ session-\/>\doxymbox{\hyperlink{class_friend_session_info_acc32e8156eab1ab6353f7d1c628943d3}{displayLabelLength}}\ +\ 1,\ session-\/>searchResult.m\_playerNames[0].c\_str()\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00808}00808\ \ \ \ \ \ \ \ \ \ \ \ \ filteredList-\/>push\_back(session);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00809}00809\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00810}00810\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00811}00811\ \ \ \ \ \textcolor{keywordflow}{return}\ filteredList;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00812}00812\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00813}00813\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00814}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a238cd41134935062c58abc24afbd8866}{00814}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a238cd41134935062c58abc24afbd8866}{CPlatformNetworkManagerDurango::GetGameSessionInfo}}(\textcolor{keywordtype}{int}\ iPad,\ \doxymbox{\hyperlink{extra_x64_8h_ab86a4a32e15333a581654cbad543388a}{SessionID}}\ sessionId,\ \doxymbox{\hyperlink{class_friend_session_info}{FriendSessionInfo}}\ *foundSessionInfo)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00815}00815\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00816}00816\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00817}00817\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00818}00818\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00819}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a267babef22f0c1da548f6d36743b825c}{00819}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a267babef22f0c1da548f6d36743b825c}{CPlatformNetworkManagerDurango::SetSessionsUpdatedCallback}}(\ \textcolor{keywordtype}{void}\ (*SessionsUpdatedCallback)(\doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ pParam),\ \doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ pSearchParam\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00820}00820\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00821}00821\ \ \ \ \ m\_SessionsUpdatedCallback\ =\ SessionsUpdatedCallback;\ m\_pSearchParam\ =\ pSearchParam;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00822}00822\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00823}00823\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00824}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a8106dd0fbe936be3cda103aa1942c8d7}{00824}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a8106dd0fbe936be3cda103aa1942c8d7}{CPlatformNetworkManagerDurango::GetFullFriendSessionInfo}}(\ \doxymbox{\hyperlink{class_friend_session_info}{FriendSessionInfo}}\ *foundSession,\ \textcolor{keywordtype}{void}\ (*\ FriendSessionUpdatedFn)(\textcolor{keywordtype}{bool}\ success,\ \textcolor{keywordtype}{void}\ *pParam),\ \textcolor{keywordtype}{void}\ *pParam\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00825}00825\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00826}00826\ \ \ \ \ FriendSessionUpdatedFn(\textcolor{keyword}{true},\ pParam);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00827}00827\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00828}00828\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00829}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_ab750d8f4df63fb197625d7665aadc640}{00829}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_ab750d8f4df63fb197625d7665aadc640}{CPlatformNetworkManagerDurango::ForceFriendsSessionRefresh}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00830}00830\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00831}00831\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Resetting\ friends\ session\ search\ data\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00832}00832\ \ \ \ \ m\_lastSearchStartTime\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00833}00833\ \ \ \ \ m\_searchResultsCount\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00834}00834\ \ \ \ \ \textcolor{keyword}{delete}\ []\ m\_pSearchResults;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00835}00835\ \ \ \ \ m\_pSearchResults\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00836}00836\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00837}00837\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00838}00838\ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *CPlatformNetworkManagerDurango::addNetworkPlayer(\doxymbox{\hyperlink{class_d_q_r_network_player}{DQRNetworkPlayer}}\ *pDQRPlayer)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00839}00839\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00840}00840\ \ \ \ \ \doxymbox{\hyperlink{class_network_player_durango}{NetworkPlayerDurango}}\ *pNetworkPlayer\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_network_player_durango}{NetworkPlayerDurango}}(pDQRPlayer);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00841}00841\ \ \ \ \ pDQRPlayer-\/>\doxymbox{\hyperlink{class_d_q_r_network_player_a75716458523fb9f7f057d76524b4873c}{SetCustomDataValue}}((\doxymbox{\hyperlink{_orbis_types_8h_ac87b166e5dce7fa7bf3fa6dee25e1c19}{ULONG\_PTR}})pNetworkPlayer);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00842}00842\ \ \ \ \ currentNetworkPlayers.push\_back(\ pNetworkPlayer\ );}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00843}00843\ \ \ \ \ \textcolor{keywordflow}{return}\ pNetworkPlayer;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00844}00844\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00845}00845\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00846}00846\ \textcolor{keywordtype}{void}\ CPlatformNetworkManagerDurango::removeNetworkPlayer(DQRNetworkPlayer\ *pDQRPlayer)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00847}00847\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00848}00848\ \ \ \ \ INetworkPlayer\ *pNetworkPlayer\ =\ getNetworkPlayer(pDQRPlayer);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00849}00849\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ it\ =\ currentNetworkPlayers.begin();\ it\ !=\ currentNetworkPlayers.end();\ ++it)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00850}00850\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00851}00851\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ *it\ ==\ pNetworkPlayer\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00852}00852\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00853}00853\ \ \ \ \ \ \ \ \ \ \ \ \ currentNetworkPlayers.erase(it);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00854}00854\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00855}00855\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00856}00856\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00857}00857\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00858}00858\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00859}00859\ INetworkPlayer\ *CPlatformNetworkManagerDurango::getNetworkPlayer(DQRNetworkPlayer\ *pDQRPlayer)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00860}00860\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00861}00861\ \ \ \ \ \textcolor{keywordflow}{return}\ pDQRPlayer\ ?\ (INetworkPlayer\ *)(pDQRPlayer-\/>\doxymbox{\hyperlink{class_d_q_r_network_player_a3c2a5e50953e7394cceda15763120d9a}{GetCustomDataValue}}())\ :\ \doxymbox{\hyperlink{_ps3_types_8h_a58061623a3a17ea5710702c88119522e}{nullptr}};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00862}00862\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00863}00863\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00864}00864\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00865}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a8eb0e1b79ba998b30d1f0ac98e548176}{00865}}\ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a8eb0e1b79ba998b30d1f0ac98e548176}{CPlatformNetworkManagerDurango::GetLocalPlayerByUserIndex}}(\textcolor{keywordtype}{int}\ userIndex\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00866}00866\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00867}00867\ \ \ \ \ \textcolor{keywordflow}{return}\ getNetworkPlayer(m\_pDQRNet-\/>GetLocalPlayerByUserIndex(userIndex));}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00868}00868\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00869}00869\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00870}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a165ebdb77e21810f8ef6d9e8427cf20d}{00870}}\ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a165ebdb77e21810f8ef6d9e8427cf20d}{CPlatformNetworkManagerDurango::GetPlayerByIndex}}(\textcolor{keywordtype}{int}\ playerIndex)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00871}00871\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00872}00872\ \ \ \ \ \textcolor{keywordflow}{return}\ getNetworkPlayer(m\_pDQRNet-\/>GetPlayerByIndex(playerIndex));}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00873}00873\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00874}00874\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00875}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a2417f1881f25abbdc724126dbdb8674e}{00875}}\ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a2417f1881f25abbdc724126dbdb8674e}{CPlatformNetworkManagerDurango::GetPlayerByXuid}}(\doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\ xuid)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00876}00876\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00877}00877\ \ \ \ \ \textcolor{keywordflow}{return}\ getNetworkPlayer(m\_pDQRNet-\/>GetPlayerByXuid(xuid))\ ;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00878}00878\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00879}00879\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00880}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_aab4beb9637b1825416e91445ac3e8b54}{00880}}\ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_aab4beb9637b1825416e91445ac3e8b54}{CPlatformNetworkManagerDurango::GetPlayerBySmallId}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ smallId)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00881}00881\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00882}00882\ \ \ \ \ \textcolor{keywordflow}{return}\ getNetworkPlayer(m\_pDQRNet-\/>GetPlayerBySmallId(smallId));}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00883}00883\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00884}00884\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00885}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a3990f41aa62d238c7095f58ef0156cb6}{00885}}\ wstring\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a3990f41aa62d238c7095f58ef0156cb6}{CPlatformNetworkManagerDurango::GetDisplayNameByGamertag}}(wstring\ gamertag)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00886}00886\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00887}00887\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_pDQRNet-\/>GetDisplayNameByGamertag(gamertag);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00888}00888\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00889}00889\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00890}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a7d25852afd049a7aabbadf89b8aba449}{00890}}\ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a7d25852afd049a7aabbadf89b8aba449}{CPlatformNetworkManagerDurango::GetHostPlayer}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00891}00891\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00892}00892\ \ \ \ \ \textcolor{keywordflow}{return}\ getNetworkPlayer(m\_pDQRNet-\/>GetHostPlayer());}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00893}00893\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00894}00894\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00895}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a4207200c8bf8886d432e5309f41b6495}{00895}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a4207200c8bf8886d432e5309f41b6495}{CPlatformNetworkManagerDurango::IsHost}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00896}00896\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00897}00897\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_pDQRNet-\/>IsHost()\ \&\&\ !m\_bHostChanged;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00898}00898\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00899}00899\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00900}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a0d810db614b29eb90c56050800b8bcf4}{00900}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a0d810db614b29eb90c56050800b8bcf4}{CPlatformNetworkManagerDurango::JoinGameFromInviteInfo}}(\ \textcolor{keywordtype}{int}\ userIndex,\ \textcolor{keywordtype}{int}\ userMask,\ \textcolor{keyword}{const}\ INVITE\_INFO\ *pInviteInfo)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00901}00901\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00902}00902\ \ \ \ \ m\_pDQRNet-\/>m\_currentUserMask\ =\ userMask;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00903}00903\ \ \ \ \ m\_pDQRNet-\/>JoinSessionFromInviteInfo(userMask);}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00904}00904\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00905}00905\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00906}00906\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00907}00907\ \textcolor{keywordtype}{void}\ CPlatformNetworkManagerDurango::SetSessionTexturePackParentId(\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00908}00908\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00909}00909\ \ \ \ \ m\_hostGameSessionData.texturePackParentId\ =\ id;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00910}00910\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00911}00911\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00912}00912\ \textcolor{keywordtype}{void}\ CPlatformNetworkManagerDurango::SetSessionSubTexturePackId(\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ )}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00913}00913\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00914}00914\ \ \ \ \ m\_hostGameSessionData.subTexturePackId\ =\ id;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00915}00915\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00916}00916\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00917}00917\ \textcolor{keywordtype}{void}\ CPlatformNetworkManagerDurango::Notify(\textcolor{keywordtype}{int}\ ID,\ \doxymbox{\hyperlink{_orbis_types_8h_ac87b166e5dce7fa7bf3fa6dee25e1c19}{ULONG\_PTR}}\ Param)}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00918}00918\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00919}00919\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00920}00920\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00921}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a18dc9de2c27b445d926cfa0a1fbd044f}{00921}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a18dc9de2c27b445d926cfa0a1fbd044f}{CPlatformNetworkManagerDurango::IsInSession}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00922}00922\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00923}00923\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_pDQRNet-\/>IsInSession();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00924}00924\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00925}00925\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00926}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_ac40760e151334f8b1b995959af4d3610}{00926}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_ac40760e151334f8b1b995959af4d3610}{CPlatformNetworkManagerDurango::IsInGameplay}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00927}00927\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00928}00928\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_pDQRNet-\/>GetState()\ ==\ \doxymbox{\hyperlink{class_d_q_r_network_manager_aab1ba442b6324af87b843489d4af6c54af7c11c4c6bf3d6af9fda26986d46a2d9}{DQRNetworkManager::DNM\_STATE\_PLAYING}};}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00929}00929\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00930}00930\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00931}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_a6378a87acd450ed7641f5a5408019bb0}{00931}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_a6378a87acd450ed7641f5a5408019bb0}{CPlatformNetworkManagerDurango::IsReadyToPlayOrIdle}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00932}00932\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00933}00933\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_pDQRNet-\/>IsReadyToPlayOrIdle();}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00934}00934\ \}}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00935}00935\ }
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00936}\doxymbox{\hyperlink{class_c_platform_network_manager_durango_af34914d4f3a4ca094837b742e20c3aa3}{00936}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_c_platform_network_manager_durango_af34914d4f3a4ca094837b742e20c3aa3}{CPlatformNetworkManagerDurango::IsSessionJoinable}}()}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00937}00937\ \{}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00938}00938\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_hostGameSessionIsJoinable;}
+\DoxyCodeLine{\Hypertarget{_platform_network_manager_durango_8cpp_source_l00939}00939\ \}}
+
+\end{DoxyCode}

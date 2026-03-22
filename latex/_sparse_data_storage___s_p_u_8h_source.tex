@@ -1,0 +1,81 @@
+\doxysection{Sparse\+Data\+Storage\+\_\+\+SPU.\+h}
+\hypertarget{_sparse_data_storage___s_p_u_8h_source}{}\label{_sparse_data_storage___s_p_u_8h_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/SPU\_Tasks/CompressedTile/SparseDataStorage\_SPU.h@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/SPU\_Tasks/CompressedTile/SparseDataStorage\_SPU.h}}
+\doxymbox{\hyperlink{_sparse_data_storage___s_p_u_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00001}00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00003}00003\ \textcolor{comment}{//\ 4J\ added\ -\/\ Storage\ for\ data\ (ie\ the\ extra\ per\ tile\ storage).\ Data\ is\ normally\ stored\ as\ 4-\/bits\ per\ tile,\ in\ a\ DataLayer\ class\ of\ 16384\ bytes\ (\ 128\ x\ 16\ x\ 16\ x\ 0.5\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00004}00004\ \textcolor{comment}{//\ This\ class\ provides\ more\ economical\ storage\ for\ such\ data\ by\ taking\ into\ consideration\ that\ it\ is\ quite\ common\ for\ large\ parts\ of\ the\ data\ to\ be\ very\ compressible\ (ie\ zero).}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00005}00005\ \textcolor{comment}{//\ We\ are\ aiming\ here\ to\ balance\ performance\ (this\ data\ is\ accessed\ very\ frequently)\ against\ size.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00007}00007\ \textcolor{comment}{//\ Details\ of\ storage\ method:}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00009}00009\ \textcolor{comment}{//\ 1.\ Data\ is\ split\ into\ horizontal\ planes,\ of\ which\ there\ are\ 128,\ and\ each\ taking\ up\ 128\ bytes\ (16\ x\ 16\ x\ 0.5)}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00010}00010\ \textcolor{comment}{//\ 2.\ Each\ of\ these\ layers\ has\ a\ permanently\ allocated\ index\ in\ this\ class\ (planeIndices).}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00011}00011\ \textcolor{comment}{//\ 3.\ Data\ for\ allocatedPlaneCount\ planes\ worth\ of\ data\ is\ allocated\ in\ the\ data\ array\ (\ allocatedPlaneCount\ *\ 128\ bytes\ )}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00012}00012\ \textcolor{comment}{//\ 4.\ If\ a\ plane\ index\ for\ a\ layer\ is\ <\ 128,\ then\ the\ data\ for\ that\ layer\ is\ at\ data[\ index\ *\ 128\ ]}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00013}00013\ \textcolor{comment}{//\ 5.\ If\ a\ plane\ index\ for\ a\ layer\ is\ 128,\ then\ all\ values\ for\ that\ plane\ are\ 0}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00015}00015\ \textcolor{comment}{//\ This\ class\ needs\ to\ be\ thread\ safe\ as\ there\ are\ times\ where\ chunk\ data\ is\ shared\ between\ server\ \&\ main\ threads.\ Data\ values\ are\ queried}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00016}00016\ \textcolor{comment}{//\ very\ regularly\ so\ this\ needs\ to\ be\ as\ light-\/weight\ as\ possible.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00018}00018\ \textcolor{comment}{//\ To\ meet\ these\ requirements,\ this\ class\ is\ now\ implemented\ using\ a\ lock-\/free\ system,\ implemented\ using\ a\ read-\/copy-\/update\ (RCU)\ type\ algorithm.\ Some\ details...}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00020}00020\ \textcolor{comment}{//\ (1)\ The\ storage\ details\ for\ the\ class\ are\ now\ packed\ into\ a\ single\ int64\_t,\ which\ contains\ both\ a\ pointer\ to\ the\ data\ that\ is\ required\ and\ a\ count\ of\ how\ many\ planes\ worth}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00021}00021\ \textcolor{comment}{//\ \ \ \ \ of\ storage\ are\ allocated.\ This\ allows\ the\ full\ storage\ to\ be\ updated\ atomically\ using\ compare\ and\ exchange\ operations\ (implemented\ with\ InterlockedCompareExchangeRelease64).}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00022}00022\ \textcolor{comment}{//\ (2)\ The\ data\ pointer\ referenced\ in\ this\ int64\_t\ points\ to\ an\ area\ of\ memory\ which\ is\ 128\ +\ 128\ *\ plane\_count\ bytes\ long,\ where\ the\ first\ 128\ bytes\ stoere\ the\ plane\ indices,\ and}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00023}00023\ \textcolor{comment}{//\ \ \ \ \ the\ rest\ of\ the\ data\ is\ variable\ in\ size\ to\ accomodate\ however\ many\ planes\ are\ required\ to\ be\ stored}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00024}00024\ \textcolor{comment}{//\ (3)\ The\ RCU\ bit\ of\ the\ algorithm\ means\ that\ any\ read\ operations\ don't\ need\ to\ do\ any\ checks\ or\ locks\ at\ all.\ When\ the\ data\ needs\ to\ be\ updated,\ a\ copy\ of\ it\ is\ made\ and\ updated,}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00025}00025\ \textcolor{comment}{//\ \ \ \ \ then\ an\ attempt\ is\ made\ to\ swap\ the\ new\ data\ in\ -\/\ if\ this\ succeeds\ then\ the\ old\ data\ pointer\ is\ deleted\ later\ at\ some\ point\ where\ we\ know\ nothing\ will\ be\ reading\ from\ it\ anymore.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00026}00026\ \textcolor{comment}{//\ \ \ \ \ This\ is\ achieved\ by\ putting\ the\ delete\ request\ in\ a\ queue\ which\ means\ it\ won't\ actually\ get\ deleted\ until\ 2\ game\ ticks\ after\ the\ last\ time\ its\ reference\ existed,\ which\ should\ give}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00027}00027\ \textcolor{comment}{//\ \ \ \ \ us\ a\ large\ margin\ of\ safety.\ If\ the\ attempt\ to\ swap\ the\ new\ data\ in\ fails,\ then\ the\ whole\ write\ operation\ has\ to\ be\ attempted\ again\ -\/\ this\ is\ the\ only\ time\ there\ is\ really\ a}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00028}00028\ \textcolor{comment}{//\ \ \ \ \ high\ cost\ for\ this\ algorithm\ and\ such\ write\ collisions\ should\ be\ rare.}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00030}00030\ \textcolor{comment}{//\#define\ DATA\_COMPRESSION\_STATS}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00032}\doxymbox{\hyperlink{class_sparse_data_storage___s_p_u}{00032}}\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_sparse_data_storage___s_p_u_a1093590edb5b31d221570a608813f70e}{SparseDataStorage\_SPU}}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00033}00033\ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00034}00034\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00035}00035\ \textcolor{comment}{//\ \ unsigned\ char\ \ \ planeIndices[128];}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00036}00036\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}*\ m\_pData;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00038}00038\ \textcolor{comment}{//\ \ unsigned\ char\ \ \ *data;}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00039}00039\ \textcolor{comment}{//\ \ unsigned\ int\ \ \ \ allocatedPlaneCount;}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00041}00041\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ ALL\_0\_INDEX\ =\ 128;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00043}00043\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00044}\doxymbox{\hyperlink{class_sparse_data_storage___s_p_u_a1093590edb5b31d221570a608813f70e}{00044}}\ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage___s_p_u_a1093590edb5b31d221570a608813f70e}{SparseDataStorage\_SPU}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}*\ data)\ :\ m\_pData(data)\ \{\}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00046}\doxymbox{\hyperlink{class_sparse_data_storage___s_p_u_a10f4dabbcab55f58f7add882ee107743}{00046}}\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}*\ \doxymbox{\hyperlink{class_sparse_data_storage___s_p_u_a10f4dabbcab55f58f7add882ee107743}{getDataPtr}}()\ \{\ \textcolor{keywordflow}{return}\ m\_pData;\ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00048}\doxymbox{\hyperlink{class_sparse_data_storage___s_p_u_a118994b98c4c928a81e806a5af424f22}{00048}}\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \doxymbox{\hyperlink{class_sparse_data_storage___s_p_u_a118994b98c4c928a81e806a5af424f22}{get}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ an\ individual\ data\ value}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00049}00049\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *planeIndices,\ *data;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00051}00051\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_sparse_data_storage___s_p_u_a08fb9d4c01556806616a224993a41f6c}{getPlaneIndicesAndData}}(\&planeIndices,\ \&data);}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00053}00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ planeIndices[y]\ ==\ ALL\_0\_INDEX\ )}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00054}00054\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00056}00056\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00057}00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00058}00058\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ planeIndex\ =\ x\ *\ 16\ +\ z;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Index\ within\ this\ xz\ plane}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ byteIndex\ =\ planeIndex\ /\ 2;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Byte\ index\ within\ the\ plane\ (2\ tiles\ stored\ per\ byte)}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ shift\ =\ (\ planeIndex\ \&\ 1\ )\ *\ 4;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Bit\ shift\ within\ the\ byte}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ retval\ =\ (\ data[\ planeIndices[y]\ *\ 128\ +\ byteIndex\ ]\ >>\ shift\ )\ \&\ 15;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ retval;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00065}00065\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00066}00066\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00068}\doxymbox{\hyperlink{class_sparse_data_storage___s_p_u_a08fb9d4c01556806616a224993a41f6c}{00068}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_sparse_data_storage___s_p_u_a08fb9d4c01556806616a224993a41f6c}{getPlaneIndicesAndData}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ **planeIndices,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ **data)}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00069}00069\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00070}00070\ \ \ \ \ \ \ \ \ *planeIndices\ =\ m\_pData;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00071}00071\ \ \ \ \ \ \ \ \ *data\ =\ m\_pData\ +\ 128;}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00072}00072\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00074}00074\ \};}
+\DoxyCodeLine{\Hypertarget{_sparse_data_storage___s_p_u_8h_source_l00075}00075\ }
+
+\end{DoxyCode}

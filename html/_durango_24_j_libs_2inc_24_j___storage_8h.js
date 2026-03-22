@@ -1,0 +1,58 @@
+var _durango_24_j_libs_2inc_24_j___storage_8h =
+[
+    [ "CONTAINER_METADATA", "struct_c_o_n_t_a_i_n_e_r___m_e_t_a_d_a_t_a.html", "struct_c_o_n_t_a_i_n_e_r___m_e_t_a_d_a_t_a" ],
+    [ "SAVE_INFO", "struct_s_a_v_e___i_n_f_o.html", "struct_s_a_v_e___i_n_f_o" ],
+    [ "SAVE_DETAILS", "struct_s_a_v_e___d_e_t_a_i_l_s.html", "struct_s_a_v_e___d_e_t_a_i_l_s" ],
+    [ "CONTENT_DATA", "class_c_o_n_t_e_n_t___d_a_t_a.html", "class_c_o_n_t_e_n_t___d_a_t_a" ],
+    [ "_MARKETPLACE_CONTENTOFFER_INFO", "struct___m_a_r_k_e_t_p_l_a_c_e___c_o_n_t_e_n_t_o_f_f_e_r___i_n_f_o.html", "struct___m_a_r_k_e_t_p_l_a_c_e___c_o_n_t_e_n_t_o_f_f_e_r___i_n_f_o" ],
+    [ "C4JStorage", "class_c4_j_storage.html", "class_c4_j_storage" ],
+    [ "C4JStorage::PROFILESETTINGS", "struct_c4_j_storage_1_1_p_r_o_f_i_l_e_s_e_t_t_i_n_g_s.html", "struct_c4_j_storage_1_1_p_r_o_f_i_l_e_s_e_t_t_i_n_g_s" ],
+    [ "C4JStorage::DLC_FILE_DETAILS", "struct_c4_j_storage_1_1_d_l_c___f_i_l_e___d_e_t_a_i_l_s.html", "struct_c4_j_storage_1_1_d_l_c___f_i_l_e___d_e_t_a_i_l_s" ],
+    [ "C4JStorage::DLC_FILE_PARAM", "struct_c4_j_storage_1_1_d_l_c___f_i_l_e___p_a_r_a_m.html", "struct_c4_j_storage_1_1_d_l_c___f_i_l_e___p_a_r_a_m" ],
+    [ "C4JStorage::DLC_TMS_DETAILS", "struct_c4_j_storage_1_1_d_l_c___t_m_s___d_e_t_a_i_l_s.html", "struct_c4_j_storage_1_1_d_l_c___t_m_s___d_e_t_a_i_l_s" ],
+    [ "C4JStorage::TMSPP_FILEDATA", "struct_c4_j_storage_1_1_t_m_s_p_p___f_i_l_e_d_a_t_a.html", "struct_c4_j_storage_1_1_t_m_s_p_p___f_i_l_e_d_a_t_a" ],
+    [ "C4JStorage::TMSPP_FILE_DETAILS", "struct_c4_j_storage_1_1_t_m_s_p_p___f_i_l_e___d_e_t_a_i_l_s.html", "struct_c4_j_storage_1_1_t_m_s_p_p___f_i_l_e___d_e_t_a_i_l_s" ],
+    [ "C4JStorage::TMSPP_FILE_LIST", "struct_c4_j_storage_1_1_t_m_s_p_p___f_i_l_e___l_i_s_t.html", "struct_c4_j_storage_1_1_t_m_s_p_p___f_i_l_e___l_i_s_t" ],
+    [ "C4JStorage::SAVETRANSFER_FILE_DETAILS", "struct_c4_j_storage_1_1_s_a_v_e_t_r_a_n_s_f_e_r___f_i_l_e___d_e_t_a_i_l_s.html", "struct_c4_j_storage_1_1_s_a_v_e_t_r_a_n_s_f_e_r___f_i_l_e___d_e_t_a_i_l_s" ],
+    [ "CURRENT_DLC_VERSION_NUM", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a21791dc94dd53583b68b75a9ea33ce0c", null ],
+    [ "MAX_DISPLAYNAME_LENGTH", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a442e41388deb7295a13e26ed91809cdb", null ],
+    [ "MAX_SAVEFILENAME_LENGTH", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a3fb291d544d2760eb3b254e2feb2d71a", null ],
+    [ "RESULT", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a62c939ffea0f34a0211837f4dbecee0a", null ],
+    [ "USER_INDEX_ANY", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a5db36ed6fb6354e11547929b5eee4a08", null ],
+    [ "MARKETPLACE_CONTENTOFFER_INFO", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a67b365d4a7d15634b5d843a7d27d9403", null ],
+    [ "PMARKETPLACE_CONTENTOFFER_INFO", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a572e71dea643feae6b97a8cc2378521f", null ],
+    [ "PSAVE_DETAILS", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a1a72eb568001a5e6bbb1731ad627ad15", null ],
+    [ "PSAVE_INFO", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a07991ec3de6d89313fba5f63741fede0", null ],
+    [ "PXCONTENT_DATA", "_durango_24_j_libs_2inc_24_j___storage_8h.html#ad4fa104b327ef3df2a3a674fe1737026", null ],
+    [ "XCONTENT_DATA", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a72f4f0be693f131a277b9fb07924de8f", null ],
+    [ "eTitleStorageState", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630", [
+      [ "eTitleStorage_idle", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630a177726ef5306821ffffa78750aab3997", null ],
+      [ "eTitleStorage_notsignedin", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630a7de040f8ed6d142ae6e2cafacc5f574f", null ],
+      [ "eTitleStorage_pending", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630a3e5ce7cb4e4f8413673b058479cae032", null ],
+      [ "eTitleStorage_complete", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630a3a300fe4823c729caa9e840e088779f0", null ],
+      [ "eTitleStorage_readcomplete", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630a2fa1928713fe3298e1cece45cc70d543", null ],
+      [ "eTitleStorage_readfilelistcomplete", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630ad6778a333acd523a8dd62a5426ee844e", null ],
+      [ "eTitleStorage_writecomplete", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630aa78f45cce755ceb8bf6a4bb5de7c8090", null ],
+      [ "eTitleStorage_deletecomplete", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630a8988f2023de8841f4b37b81c094ea708", null ],
+      [ "eTitleStorage_error", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630a458cca4694f79b7a14bee09c1d43b0a3", null ],
+      [ "eTitleStorage_readerror", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630a08d4ee300cbb2aa7c18e5bf3d7f27d51", null ],
+      [ "eTitleStorage_readfilelisterror", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630ab28a775517c26823b1f16ac4f600d8a4", null ],
+      [ "eTitleStorage_writeerror", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630ae77a9f9018b51d1e24f006cf580c1675", null ],
+      [ "eTitleStorage_deleteerror", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630a62e6b698763e0bb204932f7efc97c7b8", null ],
+      [ "eTitleStorage_busy", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a38e681d9b63da088ee8dd47886a67630a7de0139e8c309d0aa14036ebc4b661ce", null ]
+    ] ],
+    [ "eWebServiceState", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a6d54e32c60ee8dab5dffbacd6faffd94", [
+      [ "eWebService_idle", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a6d54e32c60ee8dab5dffbacd6faffd94afab4ecd88e1450cbc03eb3555c48ddc6", null ],
+      [ "eWebService_notsignedin", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a6d54e32c60ee8dab5dffbacd6faffd94acb0c13cc2990cc90c04a7f5767a90cca", null ],
+      [ "eWebService_pending", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a6d54e32c60ee8dab5dffbacd6faffd94ab6e5ffb605159e2b1d1ed373fd6d110e", null ],
+      [ "eWebService_error", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a6d54e32c60ee8dab5dffbacd6faffd94aed166a217a6b0df3f5aa6e958a5552e4", null ],
+      [ "eWebService_busy", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a6d54e32c60ee8dab5dffbacd6faffd94a6674b6de7774bd20cec9660c5563d9f2", null ]
+    ] ],
+    [ "XMARKETPLACE_OFFERING_TYPE", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a40f149aadbb2433ed1bbf559af6c1e03", [
+      [ "XMARKETPLACE_OFFERING_TYPE_CONTENT", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a40f149aadbb2433ed1bbf559af6c1e03a79526c6552b93924765e11ba4e4085d6", null ],
+      [ "XMARKETPLACE_OFFERING_TYPE_THEME", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a40f149aadbb2433ed1bbf559af6c1e03a05ef5929fb267776173e37a459f16c59", null ],
+      [ "XMARKETPLACE_OFFERING_TYPE_TILE", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a40f149aadbb2433ed1bbf559af6c1e03aa7910f62105ad25fac7add561c5e8c9d", null ],
+      [ "XMARKETPLACE_OFFERING_TYPE_AVATARITEM", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a40f149aadbb2433ed1bbf559af6c1e03a06a6fe4ef0dad848f9ac8e3975d7e504", null ]
+    ] ],
+    [ "StorageManager", "_durango_24_j_libs_2inc_24_j___storage_8h.html#a24a67ae8c928fe1f29f76167beeccd4b", null ]
+];

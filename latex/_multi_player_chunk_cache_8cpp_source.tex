@@ -1,0 +1,318 @@
+\doxysection{Multi\+Player\+Chunk\+Cache.\+cpp}
+\hypertarget{_multi_player_chunk_cache_8cpp_source}{}\label{_multi_player_chunk_cache_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/MultiPlayerChunkCache.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/MultiPlayerChunkCache.cpp}}
+\doxymbox{\hyperlink{_multi_player_chunk_cache_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_client_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_multi_player_chunk_cache_8h}{MultiPlayerChunkCache.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_chunk_cache_8h}{ServerChunkCache.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8chunk_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.chunk.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8dimension_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.dimension.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_arrays_8h}{..\(\backslash\)Minecraft.World\(\backslash\)Arrays.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_helpers_8h}{..\(\backslash\)Minecraft.World\(\backslash\)StringHelpers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_server_8h}{MinecraftServer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_level_8h}{ServerLevel.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_tile_8h}{..\(\backslash\)Minecraft.World\(\backslash\)Tile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_water_level_chunk_8h}{..\(\backslash\)Minecraft.World\(\backslash\)WaterLevelChunk.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00013}\doxymbox{\hyperlink{class_multi_player_chunk_cache_a9fa0ebb187306e95fa87fddcb6cec66b}{00013}}\ \doxymbox{\hyperlink{class_multi_player_chunk_cache_a9fa0ebb187306e95fa87fddcb6cec66b}{MultiPlayerChunkCache::MultiPlayerChunkCache}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level)}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00014}00014\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00015}00015\ \ \ \ \ XZSIZE\ =\ level-\/>dimension-\/>getXZSize();\ \textcolor{comment}{//\ 4J\ Added}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00016}00016\ \ \ \ \ XZOFFSET\ =\ XZSIZE/2;\ \textcolor{comment}{//\ 4J\ Added}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00017}00017\ \ \ \ \ \doxymbox{\hyperlink{class_chunk_source_a5573a03effda6a064d7143b5ec5d88a9}{m\_XZSize}}\ =\ XZSIZE;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00018}00018\ \ \ \ \ hasData\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{bool}[XZSIZE\ *\ XZSIZE];}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00019}00019\ \ \ \ \ memset(hasData,\ 0,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{bool})\ *\ XZSIZE\ *\ XZSIZE);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00021}00021\ \ \ \ \ emptyChunk\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_empty_level_chunk}{EmptyLevelChunk}}(level,\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}(16\ *\ 16\ *\ \doxymbox{\hyperlink{class_level_a64ac1a792e3476d67c2f3b6f9137428d}{Level::maxBuildHeight}}),\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00023}00023\ \ \ \ \ \textcolor{comment}{//\ For\ normal\ world\ dimension,\ create\ a\ chunk\ that\ can\ be\ used\ to\ create\ the\ illusion\ of\ infinite\ water\ at\ the\ edge\ of\ the\ world}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00024}00024\ \ \ \ \ \textcolor{keywordflow}{if}(\ level-\/>dimension-\/>id\ ==\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00025}00025\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00026}00026\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ bytes\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}(16\ *\ 16\ *\ 128);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00028}00028\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Superflat....\ make\ grass,\ not\ water...}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00029}00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(level-\/>getLevelData()-\/>getGenerator()\ ==\ \doxymbox{\hyperlink{class_level_type_a05174e57b036c43fc81fdd93eb317752}{LevelType::lvl\_flat}})}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00030}00030\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ x\ =\ 0;\ x\ <\ 16;\ x++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ y\ =\ 0;\ y\ <\ 128;\ y++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ z\ =\ 0;\ z\ <\ 16;\ z++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ tileId\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ y\ ==\ 3\ )\ tileId\ =\ \doxymbox{\hyperlink{class_tile_aacf0c5576d60af487e183a9240f23d18}{Tile::grass\_Id}};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ y\ <=\ 2\ )\ tileId\ =\ \doxymbox{\hyperlink{class_tile_a2c86111dd464cd4fb3c6d55c67a643e9}{Tile::dirt\_Id}};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bytes[x\ <<\ 11\ |\ z\ <<\ 7\ |\ y]\ =\ tileId;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00041}00041\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ x\ =\ 0;\ x\ <\ 16;\ x++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ y\ =\ 0;\ y\ <\ 128;\ y++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ z\ =\ 0;\ z\ <\ 16;\ z++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ tileId\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ y\ <=\ (\ level-\/>getSeaLevel()\ -\/\ 10\ )\ )\ tileId\ =\ \doxymbox{\hyperlink{class_tile_ae2dff8448a8fbd395579f7f72242007b}{Tile::stone\_Id}};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ y\ <\ level-\/>getSeaLevel()\ )\ tileId\ =\ \doxymbox{\hyperlink{class_tile_a9d3157ef3fa6d4d2b5d58ca7faac9dbe}{Tile::calmWater\_Id}};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bytes[x\ <<\ 11\ |\ z\ <<\ 7\ |\ y]\ =\ tileId;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ waterChunk\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_water_level_chunk}{WaterLevelChunk}}(level,\ bytes,\ 0,\ 0);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00058}00058\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}[]\ bytes.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(level-\/>getLevelData()-\/>getGenerator()\ ==\ \doxymbox{\hyperlink{class_level_type_a05174e57b036c43fc81fdd93eb317752}{LevelType::lvl\_flat}})}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00061}00061\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ x\ =\ 0;\ x\ <\ 16;\ x++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ y\ =\ 0;\ y\ <\ 128;\ y++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ z\ =\ 0;\ z\ <\ 16;\ z++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ y\ >=\ 3\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_water_level_chunk}{WaterLevelChunk}}\ *\textcolor{keyword}{>}(waterChunk)-\/>setLevelChunkBrightness(\doxymbox{\hyperlink{class_light_layer_a9c97da33576ef2ba39753928210e6a66a8d3c948a0d1f94dcf5a7402cb58899e3}{LightLayer::Sky}},x,y,z,15);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ x\ =\ 0;\ x\ <\ 16;\ x++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ y\ =\ 0;\ y\ <\ 128;\ y++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ z\ =\ 0;\ z\ <\ 16;\ z++\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ y\ >=\ (\ level-\/>getSeaLevel()\ -\/\ 1\ )\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_water_level_chunk}{WaterLevelChunk}}\ *\textcolor{keyword}{>}(waterChunk)-\/>setLevelChunkBrightness(\doxymbox{\hyperlink{class_light_layer_a9c97da33576ef2ba39753928210e6a66a8d3c948a0d1f94dcf5a7402cb58899e3}{LightLayer::Sky}},x,y,z,15);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_water_level_chunk}{WaterLevelChunk}}\ *\textcolor{keyword}{>}(waterChunk)-\/>setLevelChunkBrightness(\doxymbox{\hyperlink{class_light_layer_a9c97da33576ef2ba39753928210e6a66a8d3c948a0d1f94dcf5a7402cb58899e3}{LightLayer::Sky}},x,y,z,2);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00088}00088\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00089}00089\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00090}00090\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ waterChunk\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00092}00092\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00094}00094\ \ \ \ \ this-\/>level\ =\ level;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00096}00096\ \ \ \ \ this-\/>cache\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *[XZSIZE\ *\ XZSIZE];}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00097}00097\ \ \ \ \ memset(this-\/>cache,\ 0,\ XZSIZE\ *\ XZSIZE\ *\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *));}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00098}00098\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a73080fe1e67c4f00bd57725df2930f9a}{InitializeCriticalSectionAndSpinCount}}(\&m\_csLoadCreate,4000);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00099}00099\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00101}\doxymbox{\hyperlink{class_multi_player_chunk_cache_a0b7707dde99333081f9f32d150c414d2}{00101}}\ \doxymbox{\hyperlink{class_multi_player_chunk_cache_a0b7707dde99333081f9f32d150c414d2}{MultiPlayerChunkCache::\string~MultiPlayerChunkCache}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00102}00102\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00103}00103\ \ \ \ \ \textcolor{keyword}{delete}\ emptyChunk;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00104}00104\ \ \ \ \ \textcolor{keyword}{delete}\ waterChunk;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00105}00105\ \ \ \ \ \textcolor{keyword}{delete}\ cache;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00106}00106\ \ \ \ \ \textcolor{keyword}{delete}\ hasData;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00108}00108\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ it\ :\ loadedChunkList)}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00109}00109\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ it\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ it;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00112}00112\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00114}00114\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a1ce29d01fb8469678871cdf418f1e432}{DeleteCriticalSection}}(\&m\_csLoadCreate);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00115}00115\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00118}\doxymbox{\hyperlink{class_multi_player_chunk_cache_a21f122471bc9a8652ef188e03b90392b}{00118}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_chunk_cache_a21f122471bc9a8652ef188e03b90392b}{MultiPlayerChunkCache::hasChunk}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00119}00119\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00120}00120\ \ \ \ \ \textcolor{comment}{//\ This\ cache\ always\ claims\ to\ have\ chunks,\ although\ it\ might\ actually\ just\ return\ empty\ data\ if\ it\ doesn't\ have\ anything}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00121}00121\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00122}00122\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00124}00124\ \textcolor{comment}{//\ 4J\ \ added\ -\/\ find\ out\ if\ we\ actually\ really\ do\ have\ a\ chunk\ in\ our\ cache}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00125}\doxymbox{\hyperlink{class_multi_player_chunk_cache_ad84a862f9b417a92c05891f1f5ad3f0e}{00125}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_chunk_cache_ad84a862f9b417a92c05891f1f5ad3f0e}{MultiPlayerChunkCache::reallyHasChunk}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00126}00126\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00127}00127\ \ \ \ \ \textcolor{keywordtype}{int}\ ix\ =\ x\ +\ XZOFFSET;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00128}00128\ \ \ \ \ \textcolor{keywordtype}{int}\ iz\ =\ z\ +\ XZOFFSET;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00129}00129\ \ \ \ \ \textcolor{comment}{//\ Check\ we're\ in\ range\ of\ the\ stored\ level\ -\/\ if\ we\ aren't,\ then\ consider\ that\ we\ do\ have\ that\ chunk\ as\ we'll\ be\ able\ to\ use\ the\ water\ chunk\ there}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00130}00130\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ ix\ <\ 0\ )\ ||\ (\ ix\ >=\ XZSIZE\ )\ )\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00131}00131\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ iz\ <\ 0\ )\ ||\ (\ iz\ >=\ XZSIZE\ )\ )\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00132}00132\ \ \ \ \ \textcolor{keywordtype}{int}\ idx\ =\ ix\ *\ XZSIZE\ +\ iz;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00133}00133\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00134}00134\ \ \ \ \ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *chunk\ =\ cache[idx];}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00135}00135\ \ \ \ \ \textcolor{keywordflow}{if}(\ chunk\ ==\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00136}00136\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00138}00138\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00139}00139\ \ \ \ \ \textcolor{keywordflow}{return}\ hasData[idx];}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00140}00140\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00142}\doxymbox{\hyperlink{class_multi_player_chunk_cache_a466ec3ff34b25d8831ba1015fb044bf2}{00142}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_chunk_cache_a466ec3ff34b25d8831ba1015fb044bf2}{MultiPlayerChunkCache::drop}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00143}00143\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00144}00144\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ We\ do\ want\ to\ drop\ any\ entities\ in\ the\ chunks,\ especially\ for\ the\ case\ when\ a\ player\ is\ dead\ as\ they\ will}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00145}00145\ \ \ \ \ \textcolor{comment}{//\ not\ get\ the\ RemoveEntity\ packet\ if\ an\ entity\ is\ removed.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00146}00146\ \ \ \ \ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *chunk\ =\ \doxymbox{\hyperlink{class_multi_player_chunk_cache_a9fe0dc170022e9eeb1a4c5b7a90a42b3}{getChunk}}(x,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00147}00147\ \ \ \ \ \textcolor{keywordflow}{if}\ (!chunk-\/>\doxymbox{\hyperlink{class_level_chunk_a58c1c0f4ff2517d78a610030662a5bc7}{isEmpty}}())}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00148}00148\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Added\ parameter\ here\ specifies\ that\ we\ don't\ want\ to\ delete\ tile\ entities,\ as\ they\ won't\ get\ recreated\ unless\ they've\ got\ update\ packets}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ tile\ entities\ are\ in\ general\ only\ created\ on\ the\ client\ by\ virtue\ of\ the\ chunk\ rebuild}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ chunk-\/>\doxymbox{\hyperlink{class_level_chunk_a198d4b7bd70f16a2cb66dcbfa3afa1a2}{unload}}(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ We\ just\ want\ to\ clear\ out\ the\ entities\ in\ the\ chunk,\ but\ everything\ else\ should\ be\ valid}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ chunk-\/>\doxymbox{\hyperlink{class_level_chunk_afdc7f74a8f68b9106dc6bcdad256c93a}{loaded}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00155}00155\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00156}00156\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00158}\doxymbox{\hyperlink{class_multi_player_chunk_cache_a44b1abfa97db508c120d2dbbc47d3c16}{00158}}\ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *\doxymbox{\hyperlink{class_multi_player_chunk_cache_a44b1abfa97db508c120d2dbbc47d3c16}{MultiPlayerChunkCache::create}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00159}00159\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00160}00160\ \ \ \ \ \textcolor{keywordtype}{int}\ ix\ =\ x\ +\ XZOFFSET;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00161}00161\ \ \ \ \ \textcolor{keywordtype}{int}\ iz\ =\ z\ +\ XZOFFSET;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00162}00162\ \ \ \ \ \textcolor{comment}{//\ Check\ we're\ in\ range\ of\ the\ stored\ level}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00163}00163\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ ix\ <\ 0\ )\ ||\ (\ ix\ >=\ XZSIZE\ )\ )\ \textcolor{keywordflow}{return}\ (\ waterChunk\ ?\ waterChunk\ :\ emptyChunk\ );}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00164}00164\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ iz\ <\ 0\ )\ ||\ (\ iz\ >=\ XZSIZE\ )\ )\ \textcolor{keywordflow}{return}\ (\ waterChunk\ ?\ waterChunk\ :\ emptyChunk\ );}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00165}00165\ \ \ \ \ \textcolor{keywordtype}{int}\ idx\ =\ ix\ *\ XZSIZE\ +\ iz;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00166}00166\ \ \ \ \ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *chunk\ =\ cache[idx];}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00167}00167\ \ \ \ \ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *lastChunk\ =\ chunk;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00169}00169\ \ \ \ \ \textcolor{keywordflow}{if}(\ chunk\ ==\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00170}00170\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&m\_csLoadCreate);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \textcolor{comment}{//LevelChunk\ *chunk;}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.IsHost()\ )\ \ \ \ \ \textcolor{comment}{//\ force\ here\ to\ disable\ sharing\ of\ data}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J-\/JEV:\ We\ are\ about\ to\ use\ shared\ data,\ abort\ if\ the\ server\ is\ stopped\ and\ the\ data\ is\ deleted.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_minecraft_server_ae8aa61b7338ea3b5616d347b47e29d53}{MinecraftServer::getInstance}}()-\/>serverHalted())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00178}00178\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ we're\ the\ host,\ then\ don't\ create\ the\ chunk,\ share\ data\ from\ the\ server's\ copy}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00180}00180\ \textcolor{preprocessor}{\#ifdef\ \_LARGE\_WORLDS}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *serverChunk\ =\ \doxymbox{\hyperlink{class_minecraft_server_ae8aa61b7338ea3b5616d347b47e29d53}{MinecraftServer::getInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_server_ad814c12cc073a08905d5868a6ee063ca}{getLevel}}(level-\/>dimension-\/>id)-\/>\doxymbox{\hyperlink{class_server_level_abcdcce39f79fde5c5951402d4c8503ac}{cache}}-\/>getChunkLoadedOrUnloaded(x,z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00182}00182\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *serverChunk\ =\ \doxymbox{\hyperlink{class_minecraft_server_ae8aa61b7338ea3b5616d347b47e29d53}{MinecraftServer::getInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_server_ad814c12cc073a08905d5868a6ee063ca}{getLevel}}(level-\/>dimension-\/>id)-\/>\doxymbox{\hyperlink{class_server_level_abcdcce39f79fde5c5951402d4c8503ac}{cache}}-\/>\doxymbox{\hyperlink{class_server_chunk_cache_a6c3b4b615d8d16a6f643c247a2d76f4a}{getChunk}}(x,z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00184}00184\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ chunk\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}(level,\ x,\ z,\ serverChunk);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Let\ renderer\ know\ that\ this\ chunk\ has\ been\ created\ -\/\ it\ might\ have\ made\ render\ data\ from\ the\ EmptyChunk\ if\ it\ got\ to\ a\ chunk\ before\ the\ server\ sent\ it}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ level-\/>setTilesDirty(\ x\ *\ 16\ ,\ 0\ ,\ z\ *\ 16\ ,\ x\ *\ 16\ +\ 15,\ 127,\ z\ *\ 16\ +\ 15);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ hasData[idx]\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Passing\ an\ empty\ array\ into\ the\ LevelChunk\ ctor,\ which\ it\ now\ detects\ and\ sets\ up\ the\ chunk\ as\ compressed\ \&\ empty}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ bytes;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ chunk\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}(level,\ bytes,\ x,\ z);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00196}00196\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ changed\ to\ use\ new\ methods\ for\ lighting}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ chunk-\/>\doxymbox{\hyperlink{class_level_chunk_a0a6e141925083549326f76bd37643fe6}{setSkyLightDataAllBright}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ Arrays::fill(chunk-\/>skyLight-\/>data,\ (byte)\ 255);}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00201}00201\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ chunk-\/>\doxymbox{\hyperlink{class_level_chunk_afdc7f74a8f68b9106dc6bcdad256c93a}{loaded}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00203}00203\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&m\_csLoadCreate);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00206}00206\ \textcolor{preprocessor}{\#if\ (\ defined\ \_WIN64\ ||\ defined\ \_\_LP64\_\_\ )}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a1c147d87e7b6599f2d7d0c0c6de00ced}{InterlockedCompareExchangeRelease64}}((\doxymbox{\hyperlink{_orbis_types_8h_a53795fc399e02c3a6c39c2cb1961e4e6}{LONG64}}\ *)\&cache[idx],(\doxymbox{\hyperlink{_orbis_types_8h_a53795fc399e02c3a6c39c2cb1961e4e6}{LONG64}})chunk,(\doxymbox{\hyperlink{_orbis_types_8h_a53795fc399e02c3a6c39c2cb1961e4e6}{LONG64}})lastChunk)\ ==\ (\doxymbox{\hyperlink{_orbis_types_8h_a53795fc399e02c3a6c39c2cb1961e4e6}{LONG64}})lastChunk\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00208}00208\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a6832a5c7c31d29772377413b910d6b74}{InterlockedCompareExchangeRelease}}((\doxymbox{\hyperlink{_orbis_types_8h_a9154c0d0c21af4686624543215b4e5f2}{LONG}}\ *)\&cache[idx],(\doxymbox{\hyperlink{_orbis_types_8h_a9154c0d0c21af4686624543215b4e5f2}{LONG}})chunk,(\doxymbox{\hyperlink{_orbis_types_8h_a9154c0d0c21af4686624543215b4e5f2}{LONG}})lastChunk)\ ==\ (\doxymbox{\hyperlink{_orbis_types_8h_a9154c0d0c21af4686624543215b4e5f2}{LONG}})lastChunk\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00210}00210\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_DURANGO}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ we're\ sharing\ with\ the\ server,\ we'll\ need\ to\ calculate\ our\ heightmap\ now,\ which\ isn't\ shared.\ If\ we\ aren't\ sharing\ with\ the\ server,}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ then\ this\ will\ be\ calculated\ when\ the\ chunk\ data\ arrives.}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.IsHost()\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chunk-\/>recalcHeightmapOnly();}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00218}00218\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Successfully\ updated\ the\ cache}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&m\_csLoadCreate);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ loadedChunkList.push\_back(chunk);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&m\_csLoadCreate);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Something\ else\ must\ have\ updated\ the\ cache.\ Return\ that\ chunk\ and\ discard\ this\ one.\ This\ really\ shouldn't\ be\ happening}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ in\ multiplayer}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ chunk;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ cache[idx];}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00231}00231\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00232}00232\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00233}00233\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00234}00234\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ chunk-\/>\doxymbox{\hyperlink{class_level_chunk_a4c2c927613e827c4fd3e0cb4a58936b8}{load}}();}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00236}00236\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00238}00238\ \ \ \ \ \textcolor{keywordflow}{return}\ chunk;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00239}00239\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00241}\doxymbox{\hyperlink{class_multi_player_chunk_cache_a9fe0dc170022e9eeb1a4c5b7a90a42b3}{00241}}\ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *\doxymbox{\hyperlink{class_multi_player_chunk_cache_a9fe0dc170022e9eeb1a4c5b7a90a42b3}{MultiPlayerChunkCache::getChunk}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00242}00242\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00243}00243\ \ \ \ \ \textcolor{keywordtype}{int}\ ix\ =\ x\ +\ XZOFFSET;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00244}00244\ \ \ \ \ \textcolor{keywordtype}{int}\ iz\ =\ z\ +\ XZOFFSET;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00245}00245\ \ \ \ \ \textcolor{comment}{//\ Check\ we're\ in\ range\ of\ the\ stored\ level}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00246}00246\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ ix\ <\ 0\ )\ ||\ (\ ix\ >=\ XZSIZE\ )\ )\ \textcolor{keywordflow}{return}\ (\ waterChunk\ ?\ waterChunk\ :\ emptyChunk\ );}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00247}00247\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ iz\ <\ 0\ )\ ||\ (\ iz\ >=\ XZSIZE\ )\ )\ \textcolor{keywordflow}{return}\ (\ waterChunk\ ?\ waterChunk\ :\ emptyChunk\ );}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00248}00248\ \ \ \ \ \textcolor{keywordtype}{int}\ idx\ =\ ix\ *\ XZSIZE\ +\ iz;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00249}00249\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00250}00250\ \ \ \ \ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *chunk\ =\ cache[idx];}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00251}00251\ \ \ \ \ \textcolor{keywordflow}{if}(\ chunk\ ==\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00252}00252\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00253}00253\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ emptyChunk;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00254}00254\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00255}00255\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00256}00256\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ chunk;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00258}00258\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00259}00259\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00260}00260\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00261}\doxymbox{\hyperlink{class_multi_player_chunk_cache_ab295e11c361ae1c3b0e05b48bd48ff31}{00261}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_chunk_cache_ab295e11c361ae1c3b0e05b48bd48ff31}{MultiPlayerChunkCache::save}}(\textcolor{keywordtype}{bool}\ force,\ \doxymbox{\hyperlink{class_progress_listener}{ProgressListener}}\ *progressListener)}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00262}00262\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00263}00263\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00264}00264\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00265}00265\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00266}\doxymbox{\hyperlink{class_multi_player_chunk_cache_afc24a97e00dd235fd4da2e91f04c0740}{00266}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_chunk_cache_afc24a97e00dd235fd4da2e91f04c0740}{MultiPlayerChunkCache::tick}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00267}00267\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00268}00268\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00269}00269\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00270}00270\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00271}\doxymbox{\hyperlink{class_multi_player_chunk_cache_a60922f5dc43adf1c6c93496b7e779858}{00271}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_multi_player_chunk_cache_a60922f5dc43adf1c6c93496b7e779858}{MultiPlayerChunkCache::shouldSave}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00272}00272\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00273}00273\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00274}00274\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00275}00275\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00276}\doxymbox{\hyperlink{class_multi_player_chunk_cache_a0acc801f07e4138d3d2167b5ed6aeb4c}{00276}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_chunk_cache_a0acc801f07e4138d3d2167b5ed6aeb4c}{MultiPlayerChunkCache::postProcess}}(\doxymbox{\hyperlink{class_chunk_source}{ChunkSource}}\ *\doxymbox{\hyperlink{json_8hpp_a682088b120a3283ca341558cc23102d4}{parent}},\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00277}00277\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00278}00278\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00279}00279\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00280}\doxymbox{\hyperlink{class_multi_player_chunk_cache_a36e50fd745a1f5be5124785bb29ec4ab}{00280}}\ vector<Biome::MobSpawnerData\ *>\ *\doxymbox{\hyperlink{class_multi_player_chunk_cache_a36e50fd745a1f5be5124785bb29ec4ab}{MultiPlayerChunkCache::getMobsAt}}(\doxymbox{\hyperlink{class_mob_category}{MobCategory}}\ *mobCategory,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00281}00281\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00282}00282\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00283}00283\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00284}00284\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00285}\doxymbox{\hyperlink{class_multi_player_chunk_cache_a5d629b334c0392900ec0bccd5ab49bf3}{00285}}\ \doxymbox{\hyperlink{class_tile_pos}{TilePos}}\ *\doxymbox{\hyperlink{class_multi_player_chunk_cache_a5d629b334c0392900ec0bccd5ab49bf3}{MultiPlayerChunkCache::findNearestMapFeature}}(\doxymbox{\hyperlink{class_level}{Level}}\ *level,\ \textcolor{keyword}{const}\ wstring\ \&featureName,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00286}00286\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00287}00287\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00288}00288\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00289}00289\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00290}\doxymbox{\hyperlink{class_multi_player_chunk_cache_addeb14dccc079d0fdeed01329751f680}{00290}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_chunk_cache_addeb14dccc079d0fdeed01329751f680}{MultiPlayerChunkCache::recreateLogicStructuresForChunk}}(\textcolor{keywordtype}{int}\ chunkX,\ \textcolor{keywordtype}{int}\ chunkZ)}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00291}00291\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00292}00292\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00293}00293\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00294}\doxymbox{\hyperlink{class_multi_player_chunk_cache_a5b5718d51e44a72116c601bb7aff3c94}{00294}}\ wstring\ \doxymbox{\hyperlink{class_multi_player_chunk_cache_a5b5718d51e44a72116c601bb7aff3c94}{MultiPlayerChunkCache::gatherStats}}()}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00295}00295\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00296}00296\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&m\_csLoadCreate);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00297}00297\ \ \ \ \ \textcolor{keywordtype}{int}\ size\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(loadedChunkList.size());}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00298}00298\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&m\_csLoadCreate);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00299}00299\ \ \ \ \ \textcolor{keywordflow}{return}\ L\textcolor{stringliteral}{"{}MultiplayerChunkCache:\ "{}}\ +\ std::to\_wstring(size);}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00301}00301\ \}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00302}00302\ }
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00303}\doxymbox{\hyperlink{class_multi_player_chunk_cache_a1c3e8caca052ff59b7248f5b03086b46}{00303}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_player_chunk_cache_a1c3e8caca052ff59b7248f5b03086b46}{MultiPlayerChunkCache::dataReceived}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ z)}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00304}00304\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00305}00305\ \ \ \ \ \textcolor{keywordtype}{int}\ ix\ =\ x\ +\ XZOFFSET;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00306}00306\ \ \ \ \ \textcolor{keywordtype}{int}\ iz\ =\ z\ +\ XZOFFSET;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00307}00307\ \ \ \ \ \textcolor{comment}{//\ Check\ we're\ in\ range\ of\ the\ stored\ level}}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00308}00308\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ ix\ <\ 0\ )\ ||\ (\ ix\ >=\ XZSIZE\ )\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00309}00309\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ iz\ <\ 0\ )\ ||\ (\ iz\ >=\ XZSIZE\ )\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00310}00310\ \ \ \ \ \textcolor{keywordtype}{int}\ idx\ =\ ix\ *\ XZSIZE\ +\ iz;}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00311}00311\ \ \ \ \ hasData[idx]\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_multi_player_chunk_cache_8cpp_source_l00312}00312\ \}}
+
+\end{DoxyCode}

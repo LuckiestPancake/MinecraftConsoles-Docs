@@ -1,0 +1,28 @@
+var class_bat =
+[
+    [ "Bat", "class_bat.html#a085e9fba0e785dfea08a90d661109ded", null ],
+    [ "addAdditonalSaveData", "class_bat.html#acd50daf038ff25cfe387bb79352d21c2", null ],
+    [ "canSpawn", "class_bat.html#ade0fd9258297142a70e45790406194a4", null ],
+    [ "causeFallDamage", "class_bat.html#a56e874599ab98cb7a1e257ad1fa97e64", null ],
+    [ "checkFallDamage", "class_bat.html#adf3ae46f39d18bceb5be5c418f85ac8e", null ],
+    [ "defineSynchedData", "class_bat.html#a9ddccad06d489ee6d13bad4719efb83e", null ],
+    [ "doPush", "class_bat.html#aa5fa0eac1620fa7d1003e56a64013022", null ],
+    [ "getAmbientSound", "class_bat.html#a2624acf510c0bab6c5d05747994e8542", null ],
+    [ "getDeathSound", "class_bat.html#a1deb6bde6e337bd1445f681fbe69b36d", null ],
+    [ "getHurtSound", "class_bat.html#a63b6e18fb29a9e5b48237e65558c1d73", null ],
+    [ "getSoundVolume", "class_bat.html#aa6435efbf4979be8737d7a55af4b673d", null ],
+    [ "GetType", "class_bat.html#a53a853d7356f702f40ca0c319ac3eb85", null ],
+    [ "getVoicePitch", "class_bat.html#a1eeb5d49ed789178fa1e5882e7210f75", null ],
+    [ "hurt", "class_bat.html#abe766aed6872abd46693d4313eb2fb90", null ],
+    [ "isIgnoringTileTriggers", "class_bat.html#a4c3c2be0bf0b61a710aa79b55281e39c", null ],
+    [ "isPushable", "class_bat.html#a75c95084dc78b433ce9e4ba11c568b0c", null ],
+    [ "isResting", "class_bat.html#a7b910e12d9e3cc8efcea686b103a7e1d", null ],
+    [ "makeStepSound", "class_bat.html#a6902eb3b83a1524782175f7d910c36e5", null ],
+    [ "newServerAiStep", "class_bat.html#a3cb416373a09a19462926398414b52d6", null ],
+    [ "pushEntities", "class_bat.html#a0341b2d114513b6c2610a533879a852f", null ],
+    [ "readAdditionalSaveData", "class_bat.html#affb4673eae15b955384cafdeabd87b9f", null ],
+    [ "registerAttributes", "class_bat.html#a4c22bf91ea4d3846fdce2b72485c98d3", null ],
+    [ "setResting", "class_bat.html#ae00b46f98e6428b0dffd66665d95eb9a", null ],
+    [ "tick", "class_bat.html#a6cd06f471ff74693f6c9d1f52828bf01", null ],
+    [ "useNewAi", "class_bat.html#a48e414c93c2bea16b1984ba40982fe4d", null ]
+];

@@ -1,0 +1,86 @@
+\doxysection{Multi\+Threaded\+Hook\+Sample.\+cpp}
+\hypertarget{_multi_threaded_hook_sample_8cpp_source}{}\label{_multi_threaded_hook_sample_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/PS3Extras/HeapInspector/Samples/MultiThreadedHook/MultiThreadedHookSample.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/PS3Extras/HeapInspector/Samples/MultiThreadedHook/MultiThreadedHookSample.cpp}}
+\doxymbox{\hyperlink{_multi_threaded_hook_sample_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00001}00001\ \textcolor{comment}{//\ =================================================================================================================================}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00002}00002\ \textcolor{comment}{//\ This\ sample\ is\ more\ of\ a\ show-\/(and\ test)\ case\ for\ HeapInspector's.\ It\ demonstrates:}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00003}00003\ \textcolor{comment}{//\ 1)\ That\ HeapInspector\ is\ multithread\ safe.}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00004}00004\ \textcolor{comment}{//\ 2)\ HeapInspector's\ ability\ to\ deal\ with\ allocations\ prior\ to\ Initialise\ (although\ those\ allocations\ will\ not\ be\ tracked).}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00005}00005\ \textcolor{comment}{//\ 3)\ HeapInspector's\ ability\ to\ deal\ with\ API\ calls\ during\ static\ initialisation\ phase.}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00006}00006\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00007}00007\ \textcolor{comment}{//\ In\ this\ sample,\ multiple\ threads\ are\ started\ that\ perform\ allocations\ for\ a\ set\ period\ of\ time.\ The}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00008}00008\ \textcolor{comment}{//\ application\ will\ wait\ for\ those\ threads\ to\ finish.\ After\ the\ time\ is\ passed\ and\ the\ application\ calls\ Shutdown,}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00009}00009\ \textcolor{comment}{//\ the\ client\ will\ disconnect.}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00010}00010\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00011}00011\ \textcolor{comment}{//\ To\ switch\ between\ launching\ the\ threads\ during\ the\ static\ initalisation\ phase\ and\ launching\ the\ treads}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00012}00012\ \textcolor{comment}{//\ in\ main,\ flip\ the\ INIT\_IN\_STATIC\_PHASE\ define.}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00013}00013\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00014}00014\ \textcolor{comment}{//\ =================================================================================================================================}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_i_thread_8h}{IThread.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00017}00017\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00019}00019\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_multi_threaded_hook_sample_8cpp_a2d296c9ae43964737a2bb6366b22c087}{Wait}}(\textcolor{keywordtype}{int}\ a\_MilliSeconds);}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00021}\doxymbox{\hyperlink{_multi_threaded_hook_sample_8cpp_a544acdcb5c0b11fdca7a0e50d5633d83}{00021}}\ \textcolor{preprocessor}{\#define\ INIT\_IN\_STATIC\_PHASE\ \ \ \ 0}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00022}\doxymbox{\hyperlink{_multi_threaded_hook_sample_8cpp_a90c12987de3a6d926c8303bdb49c8b6a}{00022}}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_multi_threaded_hook_sample_8cpp_a90c12987de3a6d926c8303bdb49c8b6a}{g\_NumThreads}}\ =\ 4;}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00024}\doxymbox{\hyperlink{class_multi_threaded_allocator}{00024}}\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_multi_threaded_allocator_ac0cac49d2386534847e898afab70b70b}{MultiThreadedAllocator}}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00025}00025\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00026}00026\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00027}\doxymbox{\hyperlink{class_multi_threaded_allocator_aa6db4ad4611c147b1a3c16507d3c2400}{00027}}\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_multi_threaded_allocator_aa6db4ad4611c147b1a3c16507d3c2400}{WorkerThread}}()}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00028}00028\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00029}00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ !=\ 1000;\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00030}00030\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ mem1\ =\ \doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(10);}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_multi_threaded_hook_sample_8cpp_a2d296c9ae43964737a2bb6366b22c087}{Wait}}(10);}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(mem1);}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_multi_threaded_hook_sample_8cpp_a2d296c9ae43964737a2bb6366b22c087}{Wait}}(10);}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00035}00035\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00036}00036\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00038}\doxymbox{\hyperlink{class_multi_threaded_allocator_ac0cac49d2386534847e898afab70b70b}{00038}}\ \ \ \ \ \doxymbox{\hyperlink{class_multi_threaded_allocator_ac0cac49d2386534847e898afab70b70b}{MultiThreadedAllocator}}()}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00039}00039\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ !=\ \doxymbox{\hyperlink{_multi_threaded_hook_sample_8cpp_a90c12987de3a6d926c8303bdb49c8b6a}{g\_NumThreads}};\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00041}00041\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ m\_Threads[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \doxymbox{\hyperlink{_i_thread_8h_a30f032788cc50bc64299657b90035769}{CreateThread}}();}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ m\_Threads[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>Fork(\doxymbox{\hyperlink{class_multi_threaded_allocator_aa6db4ad4611c147b1a3c16507d3c2400}{WorkerThread}});}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00045}00045\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00047}\doxymbox{\hyperlink{class_multi_threaded_allocator_a36775726c6558023a71ac0c78d3607a6}{00047}}\ \ \ \ \ \doxymbox{\hyperlink{class_multi_threaded_allocator_a36775726c6558023a71ac0c78d3607a6}{\string~MultiThreadedAllocator}}()}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00048}00048\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00049}00049\ \ \ \ \ \ \ \ \ WaitForThreads();}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ !=\ \doxymbox{\hyperlink{_multi_threaded_hook_sample_8cpp_a90c12987de3a6d926c8303bdb49c8b6a}{g\_NumThreads}};\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00051}00051\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_i_thread_8h_a68a30e808ad5ef11277610416555eb97}{DestroyThread}}(m\_Threads[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]);}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00054}00054\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00056}00056\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00057}00057\ \ \ \ \ \textcolor{keywordtype}{void}\ WaitForThreads()}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00058}00058\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ !=\ \doxymbox{\hyperlink{_multi_threaded_hook_sample_8cpp_a90c12987de3a6d926c8303bdb49c8b6a}{g\_NumThreads}};\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ m\_Threads[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>\doxymbox{\hyperlink{class_i_thread_adfbd1618c8fb868744b0d7c4ac1e587b}{Join}}();}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00063}00063\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00065}00065\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00066}00066\ \ \ \ \ IThread*\ m\_Threads[\doxymbox{\hyperlink{_multi_threaded_hook_sample_8cpp_a90c12987de3a6d926c8303bdb49c8b6a}{g\_NumThreads}}];}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00067}00067\ \};}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00069}00069\ \textcolor{preprocessor}{\#if\ INIT\_IN\_STATIC\_PHASE}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00070}00070\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{class_multi_threaded_allocator}{MultiThreadedAllocator}}*\ g\_Allocator\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_multi_threaded_allocator}{MultiThreadedAllocator}}();}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00071}00071\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00073}\doxymbox{\hyperlink{_multi_threaded_hook_sample_8cpp_a84a9c05abc2c2098b2ea6072269987d7}{00073}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_multi_threaded_hook_sample_8cpp_a84a9c05abc2c2098b2ea6072269987d7}{RunHeapInspectorServer}}()}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00074}00074\ \{}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00075}00075\ \textcolor{preprocessor}{\#if\ !INIT\_IN\_STATIC\_PHASE}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00076}00076\ \ \ \ \ \doxymbox{\hyperlink{class_multi_threaded_allocator}{MultiThreadedAllocator}}*\ g\_Allocator\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_multi_threaded_allocator}{MultiThreadedAllocator}}();}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00077}00077\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00079}00079\ \ \ \ \ \textcolor{keyword}{delete}\ g\_Allocator;}
+\DoxyCodeLine{\Hypertarget{_multi_threaded_hook_sample_8cpp_source_l00080}00080\ \}}
+
+\end{DoxyCode}

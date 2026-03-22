@@ -1,0 +1,1037 @@
+\doxysection{Ps\+Vita\+Stubs.\+cpp}
+\hypertarget{_ps_vita_stubs_8cpp_source}{}\label{_ps_vita_stubs_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PSVita/PSVitaExtras/PsVitaStubs.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PSVita/PSVitaExtras/PsVitaStubs.cpp}}
+\doxymbox{\hyperlink{_ps_vita_stubs_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ <rtc.h>}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ <sce\_atomic.h>}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ <fios2.h>}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ <apputil.h>}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_p_s_vita_t_l_s_storage_8h}{PSVitaTLSStorage.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#ifdef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#define\ PSVITA\_ASSERT\_SCE\_ERROR(errVal)\ \{\}}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00011}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac9b041cf6d6962d8d726ed39fe056fdf}{00011}}\ \textcolor{preprocessor}{\#define\ PSVITA\_ASSERT\_SCE\_ERROR(errVal)\ if(errVal\ !=\ SCE\_OK)\ \{\ printf("{}-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\(\backslash\)n\ \ \ \ \%s\ failed\ with\ error\ \%d\ [0x\%08x]\(\backslash\)n-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\(\backslash\)n"{},\ \_\_FUNCTION\_\_,\ errVal,\ errVal);\ assert(0);\ \}}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00014}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a9eb6992d76f02128388ae95c0415604a}{00014}}\ \textcolor{preprocessor}{\#define\ MAX\_PATH\_LENGTH\ 291\ }\textcolor{comment}{//\ TODO\ -\/\ check\ this\ is\ correct\ for\ our\ usage\ here}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00016}00016\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ driveRoot[\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a9eb6992d76f02128388ae95c0415604a}{MAX\_PATH\_LENGTH}}]\ =\ \textcolor{stringliteral}{"{}app0:"{}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00017}00017\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ dirName[\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a9eb6992d76f02128388ae95c0415604a}{MAX\_PATH\_LENGTH}}];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00018}00018\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ contentInfoPath[\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a9eb6992d76f02128388ae95c0415604a}{MAX\_PATH\_LENGTH}}];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00019}00019\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ usrdirPath[\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a9eb6992d76f02128388ae95c0415604a}{MAX\_PATH\_LENGTH}}]\ =\ \textcolor{stringliteral}{"{}app0:"{}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00020}00020\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ contentInfoPathBDPatch[\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a9eb6992d76f02128388ae95c0415604a}{MAX\_PATH\_LENGTH}}];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00021}00021\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ usrdirPathBDPatch[\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a9eb6992d76f02128388ae95c0415604a}{MAX\_PATH\_LENGTH}}];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00023}00023\ \textcolor{comment}{/*E\ The\ FIOS2\ default\ maximum\ path\ is\ 1024,\ games\ can\ normally\ use\ a\ much\ smaller\ value.\ */}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00025}00025\ \textcolor{comment}{/*E\ Buffers\ for\ FIOS2\ initialization.}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00026}00026\ \textcolor{comment}{\ *\ These\ are\ typical\ values\ that\ a\ game\ might\ use,\ but\ adjust\ them\ as\ needed.\ They\ are}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00027}00027\ \textcolor{comment}{\ *\ of\ type\ int64\_t\ to\ avoid\ alignment\ issues.\ */}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00029}00029\ \textcolor{comment}{/*\ 64\ ops:\ */}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00030}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aefa61e9ed2115028a3ae96b6820e4a4d}{00030}}\ int64\_t\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a50c55f63fc8e371589712290f560b764}{g\_OpStorage}}[SCE\_FIOS\_OP\_STORAGE\_SIZE(64,\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a9eb6992d76f02128388ae95c0415604a}{MAX\_PATH\_LENGTH}})\ /\ \textcolor{keyword}{sizeof}(int64\_t)\ +\ 1];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00031}00031\ \textcolor{comment}{/*\ 1024\ chunks,\ 64KiB:\ */}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00032}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a531c33f7cc7acece72c49c0c0a38cfb8}{00032}}\ int64\_t\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_aa4fd18c9ae42190e288d89587b7223b9}{g\_ChunkStorage}}[SCE\_FIOS\_CHUNK\_STORAGE\_SIZE(1024)\ /\ \textcolor{keyword}{sizeof}(int64\_t)\ +\ 1];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00033}00033\ \textcolor{comment}{/*\ 16\ file\ handles:\ */}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00034}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a16351261a43a25b96b63f6788f53e633}{00034}}\ int64\_t\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a43d0bbc8bddd999898b23aa08eda2190}{g\_FHStorage}}[SCE\_FIOS\_FH\_STORAGE\_SIZE(16,\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a9eb6992d76f02128388ae95c0415604a}{MAX\_PATH\_LENGTH}})\ /\ \textcolor{keyword}{sizeof}(int64\_t)\ +\ 1];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00035}00035\ \textcolor{comment}{/*\ 4\ directory\ handles:\ */}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00036}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_adb73707cd811afc4b0e967d586ae4e45}{00036}}\ int64\_t\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a996e6799ceebac03459d34a7a2bbc351}{g\_DHStorage}}[SCE\_FIOS\_DH\_STORAGE\_SIZE(4,\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a9eb6992d76f02128388ae95c0415604a}{MAX\_PATH\_LENGTH}})\ /\ \textcolor{keyword}{sizeof}(int64\_t)\ +\ 1];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00038}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ab106b0eacf111dedc9ce91fcf13b0ed4}{00038}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ab106b0eacf111dedc9ce91fcf13b0ed4}{PSVitaInit}}()}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00039}00039\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00040}00040\ \ \ \ \ SceFiosParams\ params\ =\ SCE\_FIOS\_PARAMS\_INITIALIZER;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00042}00042\ \ \ \ \ \textcolor{comment}{/*E\ Provide\ required\ storage\ buffers.\ */}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00043}00043\ \ \ \ \ params.opStorage.pPtr\ =\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a50c55f63fc8e371589712290f560b764}{g\_OpStorage}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00044}00044\ \ \ \ \ params.opStorage.length\ =\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{_orbis_stubs_8cpp_a50c55f63fc8e371589712290f560b764}{g\_OpStorage}});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00045}00045\ \ \ \ \ params.chunkStorage.pPtr\ =\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_aa4fd18c9ae42190e288d89587b7223b9}{g\_ChunkStorage}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00046}00046\ \ \ \ \ params.chunkStorage.length\ =\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{_orbis_stubs_8cpp_aa4fd18c9ae42190e288d89587b7223b9}{g\_ChunkStorage}});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00047}00047\ \ \ \ \ params.fhStorage.pPtr\ =\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a43d0bbc8bddd999898b23aa08eda2190}{g\_FHStorage}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00048}00048\ \ \ \ \ params.fhStorage.length\ =\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{_orbis_stubs_8cpp_a43d0bbc8bddd999898b23aa08eda2190}{g\_FHStorage}});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00049}00049\ \ \ \ \ params.dhStorage.pPtr\ =\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a996e6799ceebac03459d34a7a2bbc351}{g\_DHStorage}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00050}00050\ \ \ \ \ params.dhStorage.length\ =\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{_orbis_stubs_8cpp_a996e6799ceebac03459d34a7a2bbc351}{g\_DHStorage}});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00052}00052\ \ \ \ \ params.pathMax\ =\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a9eb6992d76f02128388ae95c0415604a}{MAX\_PATH\_LENGTH}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00054}00054\ \ \ \ \ params.pMemcpy\ =\ memcpy;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00056}00056\ \ \ \ \ \textcolor{keywordtype}{int}\ err\ =\ sceFiosInitialize(\&params);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00057}00057\ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(err\ ==\ SCE\_FIOS\_OK);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00058}00058\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00059}\doxymbox{\hyperlink{_ps3_stubs_8h_a515532ccd6ad1ee4a41239dcfbc546c5}{00059}}\ \textcolor{keywordtype}{char}*\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a515532ccd6ad1ee4a41239dcfbc546c5}{getConsoleHomePath}}()}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00060}00060\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00061}00061\ \ \ \ \ \textcolor{keywordflow}{return}\ contentInfoPath;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00062}00062\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00064}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ae5dba3cdcba3e8021c303113b3c5ef16}{00064}}\ \textcolor{keywordtype}{char}*\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ae5dba3cdcba3e8021c303113b3c5ef16}{getUsrDirRoot}}()}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00065}00065\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00066}00066\ \ \ \ \ \textcolor{keywordflow}{return}\ driveRoot;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00067}00067\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00069}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_acc7042dd6851d78f80f95c16f5ff9220}{00069}}\ \textcolor{keywordtype}{char}*\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_acc7042dd6851d78f80f95c16f5ff9220}{getUsrDirPath}}()}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00070}00070\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00071}00071\ \ \ \ \ \textcolor{keywordflow}{return}\ usrdirPath;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00072}00072\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00074}\doxymbox{\hyperlink{_ps3_stubs_8h_a6658d82db90a9ac75692c369ca28c2cf}{00074}}\ \textcolor{keywordtype}{char}*\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a6658d82db90a9ac75692c369ca28c2cf}{getConsoleHomePathBDPatch}}()}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00075}00075\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00076}00076\ \ \ \ \ \textcolor{keywordflow}{return}\ contentInfoPathBDPatch;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00077}00077\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00079}\doxymbox{\hyperlink{_ps3_stubs_8h_a7f673d0eec7685e786c5df7cc6867ea1}{00079}}\ \textcolor{keywordtype}{char}*\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a7f673d0eec7685e786c5df7cc6867ea1}{getUsrDirPathBDPatch}}()}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00080}00080\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{return}\ usrdirPathBDPatch;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00082}00082\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00085}\doxymbox{\hyperlink{_ps3_stubs_8h_a35f978daa7a8c969bdf510636b8ebf02}{00085}}\ \textcolor{keywordtype}{char}*\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a35f978daa7a8c969bdf510636b8ebf02}{getDirName}}()}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00086}00086\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00087}00087\ \ \ \ \ \textcolor{keywordflow}{return}\ dirName;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00088}00088\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00090}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aea0d1e01ed8907a72f909adf8668a999}{00090}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aea0d1e01ed8907a72f909adf8668a999}{\_wcsicmp}}(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *\ dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *\ src\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00091}00091\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00092}00092\ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ f,l;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00094}00094\ \ \ \ \ \textcolor{comment}{//\ validation\ section}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00095}00095\ \ \ \ \ \textcolor{comment}{//\ \ \_VALIDATE\_RETURN(dst\ !=\ NULL,\ EINVAL,\ \_NLSCMPERROR);}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00096}00096\ \ \ \ \ \textcolor{comment}{//\ \ \_VALIDATE\_RETURN(src\ !=\ NULL,\ EINVAL,\ \_NLSCMPERROR);}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{do}\ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ f\ =\ towlower(*dst);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ l\ =\ towlower(*src);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ dst++;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ src++;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00103}00103\ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (\ (f)\ \&\&\ (f\ ==\ l)\ );}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00104}00104\ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{int})(f\ -\/\ l);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00105}00105\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00107}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a555dada2ca5b5f9e6446a32e605f7ebd}{00107}}\ \textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a555dada2ca5b5f9e6446a32e605f7ebd}{wcsnlen}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *wcs,\ \textcolor{keywordtype}{size\_t}\ maxsize)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00108}00108\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00109}00109\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00111}00111\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ Note\ that\ we\ do\ not\ check\ if\ s\ ==\ nullptr,\ because\ we\ do\ not}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00112}00112\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ return\ errno\_t...}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00114}00114\ \ \ \ \ \textcolor{keywordflow}{for}\ (\doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ =\ 0;\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}\ <\ maxsize\ \&\&\ *wcs;\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}}++,\ wcs++)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ ;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00117}00117\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{namespaceliterals_1_1json__literals_a041fd89fecd60a183e915fb1ef3d4ef2}{n}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00118}00118\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00120}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a37f5dbe0fa61225a578f86428f8d3420}{00120}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a37f5dbe0fa61225a578f86428f8d3420}{GetSystemTime}}(\ \doxymbox{\hyperlink{_orbis_stubs_8h_a7ec46b8d31bb93b3365a79598d4ef352}{LPSYSTEMTIME}}\ lpSystemTime)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00121}00121\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00122}00122\ \ \ \ \ SceDateTime\ dateTime;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00123}00123\ \ \ \ \ \textcolor{keywordtype}{int}\ err\ =\ sceRtcGetCurrentClock(\&dateTime,\ 0);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00124}00124\ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(err\ ==\ SCE\_OK);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00126}00126\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a06ed33a1656389cceffcfb2f05d250ae}{wYear}}\ =\ sceRtcGetYear(\&dateTime);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00127}00127\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a773fd89ec4a08997a0944cee8a3e41bf}{wMonth}}\ =\ sceRtcGetMonth(\&dateTime);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00128}00128\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_aee7ad267ed9d9ed1581ddd4ad37b6055}{wDay}}\ =\ sceRtcGetDay(\&dateTime);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00129}00129\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_af3160b42a89d9ce648f97fc6d178743f}{wDayOfWeek}}\ =\ sceRtcGetDayOfWeek(lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a06ed33a1656389cceffcfb2f05d250ae}{wYear}},\ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a773fd89ec4a08997a0944cee8a3e41bf}{wMonth}},\ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_aee7ad267ed9d9ed1581ddd4ad37b6055}{wDay}});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00130}00130\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a8661dc983347452db670a2a92ffebb67}{wHour}}\ =\ sceRtcGetHour(\&dateTime);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00131}00131\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_ab5eefa38099851abfd25436491d2b639}{wMinute}}\ =\ sceRtcGetMinute(\&dateTime);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00132}00132\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a8c9567e77fcdc10d9a1f7d687c8c5f7d}{wSecond}}\ =\ sceRtcGetSecond(\&dateTime);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00133}00133\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a3204cab99283c838ccd126efeef30976}{wMilliseconds}}\ =\ sceRtcGetMicrosecond(\&dateTime)/1000;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00134}00134\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00135}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a17287622aea253eb5a5ef810032662f7}{00135}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a17287622aea253eb5a5ef810032662f7}{FileTimeToSystemTime}}(\doxymbox{\hyperlink{_orbis_types_8h_a0c33b494a68ce28497e7ce8e5e95feff}{CONST}}\ \doxymbox{\hyperlink{_orbis_types_8h_a93d858876bc85ac559702da0c18b2183}{FILETIME}}\ *lpFileTime,\ \doxymbox{\hyperlink{_orbis_stubs_8h_a7ec46b8d31bb93b3365a79598d4ef352}{LPSYSTEMTIME}}\ lpSystemTime)\ \{\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00136}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a55f4ba41136921ec3fce262826c89c3e}{00136}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a55f4ba41136921ec3fce262826c89c3e}{SystemTimeToFileTime}}(\doxymbox{\hyperlink{_orbis_types_8h_a0c33b494a68ce28497e7ce8e5e95feff}{CONST}}\ \doxymbox{\hyperlink{_orbis_stubs_8h_a82a530fa04b141779c2d9d2d7dc2292e}{SYSTEMTIME}}\ *lpSystemTime,\ \doxymbox{\hyperlink{_orbis_types_8h_a9485d44f5ce5d50f975059097486a110}{LPFILETIME}}\ lpFileTime)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00137}00137\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00138}00138\ \ \ \ \ SceUInt64\ diffHundredNanos;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00139}00139\ \ \ \ \ SceDateTime\ dateTime;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00140}00140\ \ \ \ \ \textcolor{keywordtype}{int}\ err\ =\ sceRtcGetCurrentClock(\&dateTime,\ 0);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00141}00141\ \ \ \ \ sceRtcGetTime64\_t(\&dateTime,\ \&diffHundredNanos);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00142}00142\ \ \ \ \ diffHundredNanos\ *=\ 10;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00144}00144\ \ \ \ \ lpFileTime-\/>\doxymbox{\hyperlink{struct___f_i_l_e_t_i_m_e_a5dc60fe577a4f1b55f96b2da3e4c9361}{dwHighDateTime}}\ =\ diffHundredNanos\ >>\ 32;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00145}00145\ \ \ \ \ lpFileTime-\/>\doxymbox{\hyperlink{struct___f_i_l_e_t_i_m_e_a676f2b504f2b913602054b4e74817487}{dwLowDateTime}}\ =\ diffHundredNanos\ \&\ 0xffffffff;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00146}00146\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00147}00147\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00149}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a5953560b073d29dbe75bfd6893505d2d}{00149}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a5953560b073d29dbe75bfd6893505d2d}{GetLocalTime}}(\doxymbox{\hyperlink{_orbis_stubs_8h_a7ec46b8d31bb93b3365a79598d4ef352}{LPSYSTEMTIME}}\ lpSystemTime)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00150}00150\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00151}00151\ \ \ \ \ SceDateTime\ dateTime;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00152}00152\ \ \ \ \ \textcolor{keywordtype}{int}\ err\ =\ sceRtcGetCurrentClockLocalTime(\&dateTime);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00153}00153\ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(err\ ==\ SCE\_OK);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00155}00155\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a06ed33a1656389cceffcfb2f05d250ae}{wYear}}\ =\ sceRtcGetYear(\&dateTime);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00156}00156\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a773fd89ec4a08997a0944cee8a3e41bf}{wMonth}}\ =\ sceRtcGetMonth(\&dateTime);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00157}00157\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_aee7ad267ed9d9ed1581ddd4ad37b6055}{wDay}}\ =\ sceRtcGetDay(\&dateTime);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00158}00158\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_af3160b42a89d9ce648f97fc6d178743f}{wDayOfWeek}}\ =\ sceRtcGetDayOfWeek(lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a06ed33a1656389cceffcfb2f05d250ae}{wYear}},\ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a773fd89ec4a08997a0944cee8a3e41bf}{wMonth}},\ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_aee7ad267ed9d9ed1581ddd4ad37b6055}{wDay}});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00159}00159\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a8661dc983347452db670a2a92ffebb67}{wHour}}\ =\ sceRtcGetHour(\&dateTime);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00160}00160\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_ab5eefa38099851abfd25436491d2b639}{wMinute}}\ =\ sceRtcGetMinute(\&dateTime);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00161}00161\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a8c9567e77fcdc10d9a1f7d687c8c5f7d}{wSecond}}\ =\ sceRtcGetSecond(\&dateTime);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00162}00162\ \ \ \ \ lpSystemTime-\/>\doxymbox{\hyperlink{struct___s_y_s_t_e_m_t_i_m_e_a3204cab99283c838ccd126efeef30976}{wMilliseconds}}\ =\ sceRtcGetMicrosecond(\&dateTime)/1000;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00163}00163\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00165}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a801ce111e265b395ba66d273dfd77804}{00165}}\ \doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a801ce111e265b395ba66d273dfd77804}{CreateEvent}}(\textcolor{keywordtype}{void}*\ lpEventAttributes,\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ bManualReset,\ \ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ bInitialState,\ \doxymbox{\hyperlink{_orbis_types_8h_ae293b3b53f5804e254b575b4dd52255a}{LPCSTR}}\ lpName)\ \{\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00166}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a49ad8ff2c1f594703bf526d7f35aff4e}{00166}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a49ad8ff2c1f594703bf526d7f35aff4e}{Sleep}}(\doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwMilliseconds)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00167}00167\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00168}00168\ \ \ \ \ \doxymbox{\hyperlink{class_c4_j_thread_a5ca3db642a4a343bb377713b6e7877e5}{C4JThread::Sleep}}(dwMilliseconds);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00169}00169\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00171}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_adead9b7256c524d82a0fdcd2025d336b}{00171}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_adead9b7256c524d82a0fdcd2025d336b}{SetThreadPriority}}(\doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ hThread,\ \textcolor{keywordtype}{int}\ nPriority)\ \{\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{stb__vorbis_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}};\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00172}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a2af832cf9248b790ab7c002f18d4e72d}{00172}}\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a2af832cf9248b790ab7c002f18d4e72d}{WaitForSingleObject}}(\doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ hHandle,\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwMilliseconds)\ \{\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00173}00173\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00174}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a6832a5c7c31d29772377413b910d6b74}{00174}}\ \doxymbox{\hyperlink{_orbis_types_8h_a9154c0d0c21af4686624543215b4e5f2}{LONG}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a6832a5c7c31d29772377413b910d6b74}{InterlockedCompareExchangeRelease}}(\doxymbox{\hyperlink{_orbis_types_8h_a9154c0d0c21af4686624543215b4e5f2}{LONG}}\ \textcolor{keyword}{volatile}\ *Destination,\ \doxymbox{\hyperlink{_orbis_types_8h_a9154c0d0c21af4686624543215b4e5f2}{LONG}}\ Exchange,\doxymbox{\hyperlink{_orbis_types_8h_a9154c0d0c21af4686624543215b4e5f2}{LONG}}\ Comperand\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00175}00175\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00176}00176\ \ \ \ \ \textcolor{keywordflow}{return}\ sceAtomicCompareAndSwap32((int32\_t*)Destination,\ (int32\_t)Comperand,\ (int32\_t)Exchange);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00177}00177\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00178}00178\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00179}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a1c147d87e7b6599f2d7d0c0c6de00ced}{00179}}\ \doxymbox{\hyperlink{_orbis_types_8h_a53795fc399e02c3a6c39c2cb1961e4e6}{LONG64}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a1c147d87e7b6599f2d7d0c0c6de00ced}{InterlockedCompareExchangeRelease64}}(\doxymbox{\hyperlink{_orbis_types_8h_a53795fc399e02c3a6c39c2cb1961e4e6}{LONG64}}\ \textcolor{keyword}{volatile}\ *Destination,\ \doxymbox{\hyperlink{_orbis_types_8h_a53795fc399e02c3a6c39c2cb1961e4e6}{LONG64}}\ Exchange,\ \doxymbox{\hyperlink{_orbis_types_8h_a53795fc399e02c3a6c39c2cb1961e4e6}{LONG64}}\ Comperand)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00180}00180\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00181}00181\ \ \ \ \ \textcolor{keywordflow}{return}\ sceAtomicCompareAndSwap64((int64\_t*)Destination,\ (int64\_t)Comperand,\ (int64\_t)Exchange);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00182}00182\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00184}00184\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00185}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_af41f87535f6c7854166e69f18e0c123a}{00185}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_af41f87535f6c7854166e69f18e0c123a}{InitializeCriticalSection}}(\doxymbox{\hyperlink{_orbis_stubs_8h_afa707ca4b7a7553f902984adc2c5a694}{PCRITICAL\_SECTION}}\ CriticalSection)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00186}00186\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00187}00187\ \ \ \ \ \textcolor{keywordtype}{char}\ name[1]\ =\ \{0\};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00188}00188\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00189}00189\ \ \ \ \ \textcolor{keywordtype}{int}\ err\ =\ sceKernelCreateLwMutex((SceKernelLwMutexWork\ *)(\&CriticalSection-\/>\doxymbox{\hyperlink{class_orbis_critical_section_a00e40e46aa035624c7f9ee783ed8c21e}{mutex}}),\ name,\ SCE\_KERNEL\_LW\_MUTEX\_ATTR\_TH\_PRIO\ |\ SCE\_KERNEL\_LW\_MUTEX\_ATTR\_RECURSIVE,\ 0,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00190}00190\ \ \ \ \ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac9b041cf6d6962d8d726ed39fe056fdf}{PSVITA\_ASSERT\_SCE\_ERROR}}(err);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00191}00191\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00193}00193\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00194}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a73080fe1e67c4f00bd57725df2930f9a}{00194}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a73080fe1e67c4f00bd57725df2930f9a}{InitializeCriticalSectionAndSpinCount}}(\doxymbox{\hyperlink{_orbis_stubs_8h_afa707ca4b7a7553f902984adc2c5a694}{PCRITICAL\_SECTION}}\ CriticalSection,\ \doxymbox{\hyperlink{_orbis_types_8h_abe09d1bea023be6a07cbadde8e955435}{ULONG}}\ SpinCount)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00195}00195\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00196}00196\ \ \ \ \ \textcolor{comment}{//\ no\ spin\ count\ on\ PSVita}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00197}00197\ \ \ \ \ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_af41f87535f6c7854166e69f18e0c123a}{InitializeCriticalSection}}(CriticalSection);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00198}00198\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00199}00199\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00200}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a1ce29d01fb8469678871cdf418f1e432}{00200}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a1ce29d01fb8469678871cdf418f1e432}{DeleteCriticalSection}}(\doxymbox{\hyperlink{_orbis_stubs_8h_afa707ca4b7a7553f902984adc2c5a694}{PCRITICAL\_SECTION}}\ CriticalSection)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00201}00201\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00202}00202\ \ \ \ \ \textcolor{keywordtype}{int}\ err\ =\ sceKernelDeleteLwMutex((SceKernelLwMutexWork\ *)(\&CriticalSection-\/>\doxymbox{\hyperlink{class_orbis_critical_section_a00e40e46aa035624c7f9ee783ed8c21e}{mutex}}));}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00203}00203\ \ \ \ \ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac9b041cf6d6962d8d726ed39fe056fdf}{PSVITA\_ASSERT\_SCE\_ERROR}}(err);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00204}00204\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00206}00206\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{_orbis_stubs_8h_a18c881c9602dbf86a11ec558ec2cc990}{CRITICAL\_SECTION}}\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_ae4971555293fd0a870b0db6689349269}{g\_singleThreadCS}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00207}00207\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00208}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{00208}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\doxymbox{\hyperlink{_orbis_stubs_8h_afa707ca4b7a7553f902984adc2c5a694}{PCRITICAL\_SECTION}}\ CriticalSection)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00209}00209\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00210}00210\ \ \ \ \ \textcolor{keywordtype}{int}\ err\ =\ sceKernelLockLwMutex\ ((SceKernelLwMutexWork\ *)(\&CriticalSection-\/>\doxymbox{\hyperlink{class_orbis_critical_section_a00e40e46aa035624c7f9ee783ed8c21e}{mutex}}),\ 1,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00211}00211\ \ \ \ \ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac9b041cf6d6962d8d726ed39fe056fdf}{PSVITA\_ASSERT\_SCE\_ERROR}}(err);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00212}00212\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00214}00214\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00215}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{00215}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\doxymbox{\hyperlink{_orbis_stubs_8h_afa707ca4b7a7553f902984adc2c5a694}{PCRITICAL\_SECTION}}\ CriticalSection)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00216}00216\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00217}00217\ \ \ \ \ \textcolor{keywordtype}{int}\ err\ =\ \ sceKernelUnlockLwMutex\ ((SceKernelLwMutexWork\ *)(\&CriticalSection-\/>\doxymbox{\hyperlink{class_orbis_critical_section_a00e40e46aa035624c7f9ee783ed8c21e}{mutex}}),\ 1);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00218}00218\ \ \ \ \ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac9b041cf6d6962d8d726ed39fe056fdf}{PSVITA\_ASSERT\_SCE\_ERROR}}(err);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00219}00219\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00220}00220\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00221}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a50641c4b5b5d37a956d7244406cf702e}{00221}}\ \doxymbox{\hyperlink{_orbis_types_8h_abe09d1bea023be6a07cbadde8e955435}{ULONG}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a50641c4b5b5d37a956d7244406cf702e}{TryEnterCriticalSection}}(\doxymbox{\hyperlink{_orbis_stubs_8h_afa707ca4b7a7553f902984adc2c5a694}{PCRITICAL\_SECTION}}\ CriticalSection)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00222}00222\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00223}00223\ \ \ \ \ \textcolor{keywordtype}{int}\ err\ =\ \ sceKernelTryLockLwMutex\ ((SceKernelLwMutexWork\ *)(\&CriticalSection-\/>\doxymbox{\hyperlink{class_orbis_critical_section_a00e40e46aa035624c7f9ee783ed8c21e}{mutex}}),\ 1);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00224}00224\ \ \ \ \ \textcolor{keywordflow}{if}(err\ ==\ SCE\_OK)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00226}00226\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00227}00227\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00228}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_acb2c17e8bf814977d3653e41d6388f6f}{00228}}\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_acb2c17e8bf814977d3653e41d6388f6f}{WaitForMultipleObjects}}(\doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ nCount,\ \doxymbox{\hyperlink{_orbis_types_8h_a0c33b494a68ce28497e7ce8e5e95feff}{CONST}}\ \doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ *lpHandles,\doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ bWaitAll,\doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwMilliseconds)\ \{\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};\ \textcolor{keywordflow}{return}\ 0;\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00229}00229\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00231}00231\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00232}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ae26ce0f0b4f0b16247291f36c21acc91}{00232}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ae26ce0f0b4f0b16247291f36c21acc91}{InitializeCriticalRWSection}}(\doxymbox{\hyperlink{_p_s_vita_stubs_8h_a2edb8b09264b175646e687e30975e261}{PCRITICAL\_RW\_SECTION}}\ CriticalSection)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00233}00233\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00234}00234\ \ \ \ \ \textcolor{keywordtype}{char}\ name[1]\ =\ \{0\};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00235}00235\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00236}00236\ \ \ \ \ CriticalSection-\/>\doxymbox{\hyperlink{class_p_s_vita_critical_r_w_section_a335dae12623ee768d6f84680deecf3bd}{RWLock}}\ =\ sceKernelCreateRWLock(name,\ SCE\_KERNEL\_RW\_LOCK\_ATTR\_TH\_PRIO\ |\ SCE\_KERNEL\_RW\_LOCK\_ATTR\_RECURSIVE,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00237}00237\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00239}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ad164bd5577addaf9301f25b0ef067587}{00239}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ad164bd5577addaf9301f25b0ef067587}{DeleteCriticalRWSection}}(\doxymbox{\hyperlink{_p_s_vita_stubs_8h_a2edb8b09264b175646e687e30975e261}{PCRITICAL\_RW\_SECTION}}\ CriticalSection)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00240}00240\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00241}00241\ \ \ \ \ \textcolor{keywordtype}{int}\ err\ =\ sceKernelDeleteRWLock(CriticalSection-\/>\doxymbox{\hyperlink{class_p_s_vita_critical_r_w_section_a335dae12623ee768d6f84680deecf3bd}{RWLock}});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00242}00242\ \ \ \ \ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac9b041cf6d6962d8d726ed39fe056fdf}{PSVITA\_ASSERT\_SCE\_ERROR}}(err);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00243}00243\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00244}00244\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00245}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac90d52e1604eb9a08a8afc2171fb052d}{00245}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac90d52e1604eb9a08a8afc2171fb052d}{EnterCriticalRWSection}}(\doxymbox{\hyperlink{_p_s_vita_stubs_8h_a2edb8b09264b175646e687e30975e261}{PCRITICAL\_RW\_SECTION}}\ CriticalSection,\ \textcolor{keywordtype}{bool}\ Write)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00246}00246\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00247}00247\ \ \ \ \ \textcolor{keywordtype}{int}\ err;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00248}00248\ \ \ \ \ \textcolor{keywordflow}{if}(\ Write\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00249}00249\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00250}00250\ \ \ \ \ \ \ \ \ err\ =\ \ sceKernelLockWriteRWLock(CriticalSection-\/>\doxymbox{\hyperlink{class_p_s_vita_critical_r_w_section_a335dae12623ee768d6f84680deecf3bd}{RWLock}},\ 0);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00251}00251\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00252}00252\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00253}00253\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00254}00254\ \ \ \ \ \ \ \ \ err\ =\ \ sceKernelLockReadRWLock(CriticalSection-\/>\doxymbox{\hyperlink{class_p_s_vita_critical_r_w_section_a335dae12623ee768d6f84680deecf3bd}{RWLock}},\ 0);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00255}00255\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00256}00256\ \ \ \ \ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac9b041cf6d6962d8d726ed39fe056fdf}{PSVITA\_ASSERT\_SCE\_ERROR}}(err);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00257}00257\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00258}00258\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00259}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a1d50c97a600800ea09b870aadd7c3507}{00259}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a1d50c97a600800ea09b870aadd7c3507}{LeaveCriticalRWSection}}(\doxymbox{\hyperlink{_p_s_vita_stubs_8h_a2edb8b09264b175646e687e30975e261}{PCRITICAL\_RW\_SECTION}}\ CriticalSection,\ \textcolor{keywordtype}{bool}\ Write)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00260}00260\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00261}00261\ \ \ \ \ \textcolor{keywordtype}{int}\ err;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00262}00262\ \ \ \ \ \textcolor{keywordflow}{if}(\ Write\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00263}00263\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ err\ =\ \ sceKernelUnlockWriteRWLock(CriticalSection-\/>\doxymbox{\hyperlink{class_p_s_vita_critical_r_w_section_a335dae12623ee768d6f84680deecf3bd}{RWLock}});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00265}00265\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00266}00266\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00267}00267\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ err\ =\ \ sceKernelUnlockReadRWLock(CriticalSection-\/>\doxymbox{\hyperlink{class_p_s_vita_critical_r_w_section_a335dae12623ee768d6f84680deecf3bd}{RWLock}});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00269}00269\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00270}00270\ \ \ \ \ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac9b041cf6d6962d8d726ed39fe056fdf}{PSVITA\_ASSERT\_SCE\_ERROR}}(err);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00271}00271\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00273}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a235df26c9ee719cb6c07ee55252f512e}{00273}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a235df26c9ee719cb6c07ee55252f512e}{CloseHandle}}(\doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ hObject)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00274}00274\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00275}00275\ \ \ \ \ sceFiosFHCloseSync(\textcolor{keyword}{nullptr},(SceFiosFH)(\textcolor{keyword}{reinterpret\_cast<}int32\_t\textcolor{keyword}{>}(hObject)));}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00276}00276\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00277}00277\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00279}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a11775468508e66272ab1cbf0067ae489}{00279}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a11775468508e66272ab1cbf0067ae489}{SetEvent}}(\doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ hEvent)\ \{\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00280}00280\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00281}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a396438568663b204b407afb1c08046ad}{00281}}\ \doxymbox{\hyperlink{_orbis_types_8h_ae6568519e3fbe7c7bd031a80a2c61019}{HMODULE}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a396438568663b204b407afb1c08046ad}{GetModuleHandle}}(\doxymbox{\hyperlink{_orbis_types_8h_ae293b3b53f5804e254b575b4dd52255a}{LPCSTR}}\ lpModuleName)\ \{\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};\ \textcolor{keywordflow}{return}\ 0;\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00283}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a11f8d36738ade6c9b3aa5c1d07fdfe09}{00283}}\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a11f8d36738ade6c9b3aa5c1d07fdfe09}{TlsAlloc}}(\doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}})\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_p_s_vita_t_l_s_storage_a196735f3b93797e73d09bac27cb65fbb}{PSVitaTLSStorage::Instance}}()-\/>\doxymbox{\hyperlink{class_p_s_vita_t_l_s_storage_a9bbee765ae2a5a7717d426ee778fa45c}{Alloc}}();\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00284}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_af86d0dd9e2c9fe3b4e983a39fa0b1fd5}{00284}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_af86d0dd9e2c9fe3b4e983a39fa0b1fd5}{TlsFree}}(\doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwTlsIndex)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_p_s_vita_t_l_s_storage_a196735f3b93797e73d09bac27cb65fbb}{PSVitaTLSStorage::Instance}}()-\/>\doxymbox{\hyperlink{class_p_s_vita_t_l_s_storage_abaf8f9b7aac561a8b425379ccf4611e5}{Free}}(dwTlsIndex);\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00285}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a2c50d07843de4cd91bc8339ff75d037b}{00285}}\ \doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a2c50d07843de4cd91bc8339ff75d037b}{TlsGetValue}}(\doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwTlsIndex)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_p_s_vita_t_l_s_storage_a196735f3b93797e73d09bac27cb65fbb}{PSVitaTLSStorage::Instance}}()-\/>\doxymbox{\hyperlink{class_p_s_vita_t_l_s_storage_a569d9e2778075029853ef1f82021bd63}{GetValue}}(dwTlsIndex);\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00286}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aa8cb521a63c17b6bb78457ada43505a9}{00286}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aa8cb521a63c17b6bb78457ada43505a9}{TlsSetValue}}(\doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwTlsIndex,\ \doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ lpTlsValue)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_p_s_vita_t_l_s_storage_a196735f3b93797e73d09bac27cb65fbb}{PSVitaTLSStorage::Instance}}()-\/>\doxymbox{\hyperlink{class_p_s_vita_t_l_s_storage_a52db1f4b674c2600cf6b3cb4a1615c15}{SetValue}}(dwTlsIndex,\ lpTlsValue);\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00287}00287\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00288}00288\ \textcolor{comment}{//\ AP\ -\/\ all\ this\ virtual\ stuff\ has\ been\ added\ because\ Vita\ doesn't\ have\ a\ virtual\ memory\ system\ so\ we\ allocate\ 1MB\ real\ memory\ chunks\ instead}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00289}00289\ \textcolor{comment}{//\ and\ access\ memory\ reads\ and\ writes\ via\ VirtualCopyTo\ and\ VirtualCopyFrom\ which\ divides\ memcpys\ across\ multiple\ 1MB\ chunks\ if\ required}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00290}00290\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}*\ VirtualAllocs[1000];\ \ \ \textcolor{comment}{//\ a\ list\ of\ 1MB\ allocations}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00291}00291\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ VirtualNumAllocs\ =\ 0;\ \ \ \ \textcolor{comment}{//\ how\ many\ 1MB\ chunks\ have\ been\ allocated}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00292}00292\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00293}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a1f73a02ab541a1dce3c226f1f61601a3}{00293}}\ \doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a1f73a02ab541a1dce3c226f1f61601a3}{VirtualAlloc}}(\doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ lpAddress,\ \doxymbox{\hyperlink{_orbis_types_8h_af8429def935ee9a571d3e6dfffc3e790}{SIZE\_T}}\ dwSize,\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ flAllocationType,\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ flProtect)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00294}00294\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00295}00295\ \ \ \ \ \textcolor{keywordflow}{if}(\ flAllocationType\ ==\ \doxymbox{\hyperlink{_orbis_stubs_8h_ae7e3841306c2fd3b6f69a853a4ea437f}{MEM\_COMMIT}}\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00296}00296\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ how\ many\ pages\ do\ we\ need}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ NumPagesRequired\ =\ dwSize\ /\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ BytesLeftOver\ =\ dwSize\ \%\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ BytesLeftOver\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ NumPagesRequired\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00304}00304\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ allocate\ pages\ until\ we\ reach\ the\ required\ number\ of\ pages}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ VirtualNumAllocs\ <\ NumPagesRequired\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ allocate\ a\ new\ page}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ NewAlloc\ =\ \doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(\doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00310}00310\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ add\ it\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ VirtualAllocs[VirtualNumAllocs]\ =\ NewAlloc;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ VirtualNumAllocs\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00314}00314\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00315}00315\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00316}00316\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00317}00317\ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{void}*)\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9ec6ef74e5d23d4bdb06e5947e9e07a9}{VIRTUAL\_OFFSET}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00318}00318\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00319}00319\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00320}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aabc6122df408178a168a0a6cbe9e3c23}{00320}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aabc6122df408178a168a0a6cbe9e3c23}{VirtualFree}}(\doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ lpAddress,\ \doxymbox{\hyperlink{_orbis_types_8h_af8429def935ee9a571d3e6dfffc3e790}{SIZE\_T}}\ dwSize,\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwFreeType)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00321}00321\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00322}00322\ \ \ \ \ \textcolor{keywordflow}{while}(\ VirtualNumAllocs\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00323}00323\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ free\ and\ remove\ a\ page}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ VirtualNumAllocs\ -\/=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(VirtualAllocs[VirtualNumAllocs]);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00327}00327\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00329}00329\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{stb__vorbis_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{TRUE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00330}00330\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00331}00331\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00332}00332\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00333}00333\ \textcolor{comment}{//\ memset\ a\ section\ of\ the\ virtual\ chunks}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00334}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aa4f2459172dfaf6db0f81b8f36c60d6c}{00334}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aa4f2459172dfaf6db0f81b8f36c60d6c}{VirtualMemset}}(\doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ lpDestOffset,\ \textcolor{keywordtype}{int}\ val,\ \doxymbox{\hyperlink{_orbis_types_8h_af8429def935ee9a571d3e6dfffc3e790}{SIZE\_T}}\ dwSize)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00335}00335\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00336}00336\ \ \ \ \ \textcolor{keywordtype}{int}\ DestOffset\ =\ ((int)(lpDestOffset)\ -\/\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9ec6ef74e5d23d4bdb06e5947e9e07a9}{VIRTUAL\_OFFSET}});\ \ \ \ \textcolor{comment}{//\ convert\ the\ pointer\ back\ into\ a\ virtual\ offset}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00337}00337\ \ \ \ \ \textcolor{keywordtype}{int}\ StartPage\ =\ DestOffset\ /\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ which\ 1MB\ page\ do\ we\ start\ on}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00338}00338\ \ \ \ \ \textcolor{keywordtype}{int}\ EndPage\ =\ (DestOffset\ +\ dwSize)\ /\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};\ \ \ \ \textcolor{comment}{//\ which\ 1MB\ page\ do\ we\ end\ on}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00339}00339\ \ \ \ \ \textcolor{keywordtype}{int}\ Offset\ =\ DestOffset\ \%\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ what\ is\ the\ byte\ offset\ within\ the\ current\ 1MB\ page}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00340}00340\ \ \ \ \ \textcolor{keywordflow}{if}(\ StartPage\ ==\ EndPage\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ early\ out\ if\ we're\ on\ the\ same\ page}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00341}00341\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ uint8\_t*\ Dest\ =\ (uint8\_t*)VirtualAllocs[StartPage]\ +\ Offset;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ memset(Dest,\ val,\ dwSize);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00344}00344\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00345}00345\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00346}00346\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ dwSize\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ how\ many\ bytes\ do\ we\ copy\ in\ this\ chunk}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ BytesToSet\ =\ dwSize;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ StartPage\ !=\ EndPage\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ BytesToSet\ =\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}}\ -\/\ Offset;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00355}00355\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ get\ final\ point\ to\ real\ memory}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t*\ Dest\ =\ (uint8\_t*)VirtualAllocs[StartPage]\ +\ Offset;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00358}00358\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ copy\ the\ required\ bytes}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ memset(Dest,\ val,\ BytesToSet);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00361}00361\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ move\ to\ the\ next\ chunk}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ dwSize\ -\/=\ BytesToSet;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ StartPage\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ \ \ \ \ Offset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00367}00367\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00368}00368\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00369}00369\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00371}00371\ \textcolor{comment}{//\ copy\ a\ block\ of\ memory\ to\ the\ virtual\ chunks}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00372}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aecfda3a22362038c54cc9e2ce33382c0}{00372}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aecfda3a22362038c54cc9e2ce33382c0}{VirtualCopyTo}}(\doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ lpDestOffset,\ \doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ lpSrc,\ \doxymbox{\hyperlink{_orbis_types_8h_af8429def935ee9a571d3e6dfffc3e790}{SIZE\_T}}\ dwSize)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00373}00373\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00374}00374\ \ \ \ \ \textcolor{keywordtype}{int}\ DestOffset\ =\ ((int)(lpDestOffset)\ -\/\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9ec6ef74e5d23d4bdb06e5947e9e07a9}{VIRTUAL\_OFFSET}});\ \ \ \ \textcolor{comment}{//\ convert\ the\ pointer\ back\ into\ a\ virtual\ offset}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00375}00375\ \ \ \ \ \textcolor{keywordtype}{int}\ StartPage\ =\ DestOffset\ /\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ which\ 1MB\ page\ do\ we\ start\ on}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00376}00376\ \ \ \ \ \textcolor{keywordtype}{int}\ EndPage\ =\ (DestOffset\ +\ dwSize)\ /\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};\ \ \ \ \textcolor{comment}{//\ which\ 1MB\ page\ do\ we\ end\ on}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00377}00377\ \ \ \ \ \textcolor{keywordtype}{int}\ Offset\ =\ DestOffset\ \%\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ what\ is\ the\ byte\ offset\ within\ the\ current\ 1MB\ page}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00378}00378\ \ \ \ \ \textcolor{keywordflow}{if}(\ StartPage\ ==\ EndPage\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ early\ out\ if\ we're\ on\ the\ same\ page}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00379}00379\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ uint8\_t*\ Dest\ =\ (uint8\_t*)VirtualAllocs[StartPage]\ +\ Offset;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ memcpy(Dest,\ lpSrc,\ dwSize);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00382}00382\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00383}00383\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00384}00384\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ uint8\_t\ *Src\ =\ (uint8\_t*)\ lpSrc;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ dwSize\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ how\ many\ bytes\ do\ we\ copy\ in\ this\ chunk}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ BytesToCopy\ =\ dwSize;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ StartPage\ !=\ EndPage\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ BytesToCopy\ =\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}}\ -\/\ Offset;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00393}00393\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00394}00394\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ get\ final\ point\ to\ real\ memory}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t*\ Dest\ =\ (uint8\_t*)VirtualAllocs[StartPage]\ +\ Offset;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00397}00397\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ copy\ the\ required\ bytes}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00399}00399\ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(Dest,\ Src,\ BytesToCopy);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00400}00400\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ move\ to\ the\ next\ chunk}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ dwSize\ -\/=\ BytesToCopy;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00403}00403\ \ \ \ \ \ \ \ \ \ \ \ \ Src\ +=\ BytesToCopy;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00404}00404\ \ \ \ \ \ \ \ \ \ \ \ \ StartPage\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00405}00405\ \ \ \ \ \ \ \ \ \ \ \ \ Offset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00406}00406\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00407}00407\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00408}00408\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00409}00409\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00410}00410\ \textcolor{comment}{//\ copy\ a\ block\ of\ memory\ from\ the\ virtual\ chunks}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00411}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a522a8e8cbbcf355748d6b17b9b050a09}{00411}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a522a8e8cbbcf355748d6b17b9b050a09}{VirtualCopyFrom}}(\doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ lpDest,\ \doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ lpSrcOffset,\ \doxymbox{\hyperlink{_orbis_types_8h_af8429def935ee9a571d3e6dfffc3e790}{SIZE\_T}}\ dwSize)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00412}00412\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00413}00413\ \ \ \ \ \textcolor{keywordtype}{int}\ SrcOffset\ =\ ((int)(lpSrcOffset)\ -\/\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9ec6ef74e5d23d4bdb06e5947e9e07a9}{VIRTUAL\_OFFSET}});\ \ \textcolor{comment}{//\ convert\ the\ pointer\ back\ into\ a\ virtual\ offset}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00414}00414\ \ \ \ \ \textcolor{keywordtype}{int}\ StartPage\ =\ SrcOffset\ /\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ which\ 1MB\ page\ do\ we\ start\ on}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00415}00415\ \ \ \ \ \textcolor{keywordtype}{int}\ EndPage\ =\ (SrcOffset\ +\ dwSize)\ /\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};\ \textcolor{comment}{//\ which\ 1MB\ page\ do\ we\ end\ on}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00416}00416\ \ \ \ \ \textcolor{keywordtype}{int}\ Offset\ =\ SrcOffset\ \%\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ what\ is\ the\ byte\ offset\ within\ the\ current\ 1MB\ page}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00417}00417\ \ \ \ \ \textcolor{keywordflow}{if}(\ StartPage\ ==\ EndPage\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ early\ out\ if\ we're\ on\ the\ same\ page}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00418}00418\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00419}00419\ \ \ \ \ \ \ \ \ uint8\_t*\ Src\ =\ (uint8\_t*)VirtualAllocs[StartPage]\ +\ Offset;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00420}00420\ \ \ \ \ \ \ \ \ memcpy(lpDest,\ Src,\ dwSize);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00421}00421\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00422}00422\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00423}00423\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00424}00424\ \ \ \ \ \ \ \ \ uint8\_t\ *Dest\ =\ (uint8\_t*)\ lpDest;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00425}00425\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ dwSize\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00426}00426\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00427}00427\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ how\ many\ bytes\ do\ we\ copy\ in\ this\ chunk}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ BytesToCopy\ =\ dwSize;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ StartPage\ !=\ EndPage\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00431}00431\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ BytesToCopy\ =\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}}\ -\/\ Offset;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00432}00432\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00433}00433\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00434}00434\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ get\ final\ point\ to\ real\ memory}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00435}00435\ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t*\ Src\ =\ (uint8\_t*)VirtualAllocs[StartPage]\ +\ Offset;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00436}00436\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00437}00437\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ copy\ the\ required\ bytes}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(Dest,\ Src,\ BytesToCopy);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00439}00439\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ move\ to\ the\ next\ chunk}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \ \ dwSize\ -\/=\ BytesToCopy;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00442}00442\ \ \ \ \ \ \ \ \ \ \ \ \ Dest\ +=\ BytesToCopy;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00443}00443\ \ \ \ \ \ \ \ \ \ \ \ \ StartPage\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00444}00444\ \ \ \ \ \ \ \ \ \ \ \ \ Offset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00445}00445\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00446}00446\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00447}00447\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00448}00448\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00449}00449\ \textcolor{comment}{//\ copy\ a\ block\ of\ memory\ between\ the\ virtual\ chunks}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00450}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a87437f9b27060be51533552ae40217b4}{00450}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a87437f9b27060be51533552ae40217b4}{VirtualMove}}(\doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ lpDestOffset,\ \doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ lpSrcOffset,\ \doxymbox{\hyperlink{_orbis_types_8h_af8429def935ee9a571d3e6dfffc3e790}{SIZE\_T}}\ dwSize)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00451}00451\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00452}00452\ \ \ \ \ \textcolor{keywordtype}{int}\ DestOffset\ =\ ((int)(lpDestOffset)\ -\/\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9ec6ef74e5d23d4bdb06e5947e9e07a9}{VIRTUAL\_OFFSET}});\ \ \ \ \textcolor{comment}{//\ convert\ the\ pointer\ back\ into\ a\ virtual\ offset}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00453}00453\ \ \ \ \ \textcolor{keywordtype}{int}\ DestChunkOffset\ =\ DestOffset\ \%\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};\ \ \ \ \ \ \ \textcolor{comment}{//\ what\ is\ the\ byte\ offset\ within\ the\ current\ 1MB\ page}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00454}00454\ \ \ \ \ \textcolor{keywordtype}{int}\ DestPage\ =\ DestOffset\ /\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ which\ 1MB\ page\ do\ we\ start\ on}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00455}00455\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00456}00456\ \ \ \ \ \textcolor{keywordtype}{int}\ SrcOffset\ =\ ((int)(lpSrcOffset)\ -\/\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9ec6ef74e5d23d4bdb06e5947e9e07a9}{VIRTUAL\_OFFSET}});\ \ \ \ \ \ \textcolor{comment}{//\ convert\ the\ pointer\ back\ into\ a\ virtual\ offset}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00457}00457\ \ \ \ \ \textcolor{keywordtype}{int}\ SrcChunkOffset\ =\ SrcOffset\ \%\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ what\ is\ the\ byte\ offset\ within\ the\ current\ 1MB\ page}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00458}00458\ \ \ \ \ \textcolor{keywordtype}{int}\ SrcPage\ =\ SrcOffset\ /\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ which\ 1MB\ page\ do\ we\ start\ on}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00459}00459\ \ \ \ \ \textcolor{keywordflow}{while}(\ dwSize\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00460}00460\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ how\ many\ bytes\ do\ we\ copy\ in\ this\ chunk}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00462}00462\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ BytesToCopy\ =\ dwSize;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00463}00463\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ does\ the\ dest\ straddle\ 2\ chunks}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00464}00464\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ DestChunkOffset\ +\ BytesToCopy\ >\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}}\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00465}00465\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00466}00466\ \ \ \ \ \ \ \ \ \ \ \ \ BytesToCopy\ =\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}}\ -\/\ DestChunkOffset;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00467}00467\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00468}00468\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ does\ the\ src\ straddle\ 2\ chunks}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00469}00469\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ SrcChunkOffset\ +\ BytesToCopy\ >\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}}\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00470}00470\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00471}00471\ \ \ \ \ \ \ \ \ \ \ \ \ BytesToCopy\ =\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}}\ -\/\ SrcChunkOffset;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00472}00472\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00473}00473\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00474}00474\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ get\ final\ point\ to\ real\ memory}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00475}00475\ \ \ \ \ \ \ \ \ uint8\_t*\ Dest\ =\ (uint8\_t*)VirtualAllocs[DestPage]\ +\ DestChunkOffset;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00476}00476\ \ \ \ \ \ \ \ \ uint8\_t*\ Src\ =\ (uint8\_t*)VirtualAllocs[SrcPage]\ +\ SrcChunkOffset;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00477}00477\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00478}00478\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ copy\ the\ required\ bytes}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00479}00479\ \ \ \ \ \ \ \ \ memcpy(Dest,\ Src,\ BytesToCopy);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00480}00480\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00481}00481\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ move\ to\ the\ next\ chunk}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00482}00482\ \ \ \ \ \ \ \ \ DestChunkOffset\ +=\ BytesToCopy;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00483}00483\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ DestChunkOffset\ >=\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}}\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00484}00484\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ DestChunkOffset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ DestPage\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00487}00487\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00488}00488\ \ \ \ \ \ \ \ \ SrcChunkOffset\ +=\ BytesToCopy;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00489}00489\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ SrcChunkOffset\ >=\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}}\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00490}00490\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00491}00491\ \ \ \ \ \ \ \ \ \ \ \ \ SrcChunkOffset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ SrcPage\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00493}00493\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00494}00494\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00495}00495\ \ \ \ \ \ \ \ \ dwSize\ -\/=\ BytesToCopy;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00496}00496\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00497}00497\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00498}00498\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00499}00499\ \textcolor{comment}{//\ write\ the\ chunks\ to\ a\ file\ given\ a\ handle}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00500}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a4672b0b60831824bbdda3fd70a4dd29c}{00500}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a4672b0b60831824bbdda3fd70a4dd29c}{VirtualWriteFile}}(\doxymbox{\hyperlink{_orbis_types_8h_ae293b3b53f5804e254b575b4dd52255a}{LPCSTR}}\ lpFileName,\ \doxymbox{\hyperlink{_orbis_types_8h_ae091006405d8d309b7e2e8900a1da20b}{LPCVOID}}\ lpBuffer,\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ nNumberOfBytesToWrite,\ \doxymbox{\hyperlink{_orbis_types_8h_a143be739596851314f3c386bd6f752f9}{LPDWORD}}\ lpNumberOfBytesWritten,\ \doxymbox{\hyperlink{_orbis_types_8h_ad3c708c36ed2fdc059368b364bff9490}{LPOVERLAPPED}}\ lpOverlapped\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00501}00501\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00502}00502\ \ \ \ \ *lpNumberOfBytesWritten\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00503}00503\ \ \ \ \ \textcolor{keywordtype}{int}\ Page\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00504}00504\ \ \ \ \ \textcolor{keywordflow}{while}(\ nNumberOfBytesToWrite\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00505}00505\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00506}00506\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ BytesToWrite\ =\ nNumberOfBytesToWrite;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00507}00507\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ BytesToWrite\ >\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}}\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00508}00508\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00509}00509\ \ \ \ \ \ \ \ \ \ \ \ \ BytesToWrite\ =\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00510}00510\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00511}00511\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00512}00512\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ Data\ =\ VirtualAllocs[Page];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00513}00513\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00514}00514\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ numberOfBytesWritten=0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00515}00515\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a4a208ca1ea9cd662dd8e71243c5a648f}{WriteFileWithName}}(lpFileName,\ Data,\ BytesToWrite,\ \&numberOfBytesWritten,\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00516}00516\ \ \ \ \ \ \ \ \ *lpNumberOfBytesWritten\ +=\ numberOfBytesWritten;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00517}00517\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00518}00518\ \ \ \ \ \ \ \ \ nNumberOfBytesToWrite\ -\/=\ BytesToWrite;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00519}00519\ \ \ \ \ \ \ \ \ Page\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00520}00520\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00521}00521\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00522}00522\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00523}00523\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00524}00524\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00525}00525\ \textcolor{comment}{//\ The\ data\ is\ mostly\ zlib\ compressed.\ Only\ blank\ areas\ are\ not\ so\ this\ will\ RLE\ just\ the\ zeros}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00526}00526\ \textcolor{comment}{//\ Yields\ about\ 2:1\ compression}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00527}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ab5a6a2084c994ab7bd315c1a01bbbbba}{00527}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ab5a6a2084c994ab7bd315c1a01bbbbba}{VirtualCompress}}(\doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ lpDest,\doxymbox{\hyperlink{_orbis_types_8h_a143be739596851314f3c386bd6f752f9}{LPDWORD}}\ lpNewSize,\ \doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ lpAddress,\ \doxymbox{\hyperlink{_orbis_types_8h_af8429def935ee9a571d3e6dfffc3e790}{SIZE\_T}}\ dwSize)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00528}00528\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00529}00529\ \ \ \ \ uint8\_t\ *pDest\ =\ (uint8\_t\ *)\ lpDest;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00530}00530\ \ \ \ \ \textcolor{keywordtype}{int}\ Offset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00531}00531\ \ \ \ \ \textcolor{keywordtype}{int}\ Page\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00532}00532\ \ \ \ \ \textcolor{keywordtype}{int}\ NewSize\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00533}00533\ \ \ \ \ \textcolor{keywordtype}{int}\ CountingZeros\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00534}00534\ \ \ \ \ uint8\_t*\ Data\ =\ (uint8\_t*)\ VirtualAllocs[Page];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00535}00535\ \ \ \ \ \textcolor{keywordflow}{while}(\ dwSize\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00536}00536\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00537}00537\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ this\ has\ a\ value\ just\ add\ it}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00538}00538\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ Data[Offset]\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00539}00539\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00540}00540\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ just\ store\ the\ value}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00541}00541\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ pDest\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00542}00542\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00543}00543\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pDest[NewSize]\ =\ Data[Offset];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00544}00544\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00545}00545\ \ \ \ \ \ \ \ \ \ \ \ \ NewSize\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00546}00546\ \ \ \ \ \ \ \ \ \ \ \ \ CountingZeros\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00547}00547\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00548}00548\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00549}00549\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00550}00550\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ is\ this\ the\ first\ zero\ (also\ we\ can\ only\ count\ to\ 255\ zeros)}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00551}00551\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !CountingZeros\ ||\ CountingZeros\ ==\ 255\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00552}00552\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00553}00553\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ CountingZeros\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00554}00554\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00555}00555\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ create\ space\ for\ the\ zero\ counter}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00556}00556\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ pDest\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00557}00557\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00558}00558\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pDest[NewSize]\ =\ 0;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this\ indicates\ a\ zero}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00559}00559\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pDest[NewSize\ +\ 1]\ =\ 0;\ \ \ \ \ \textcolor{comment}{//\ this\ is\ how\ many\ zeros\ we\ counted}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00560}00560\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00561}00561\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NewSize\ +=\ 2;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00562}00562\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00563}00563\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00564}00564\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ pDest\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00565}00565\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00566}00566\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pDest[NewSize\ -\/\ 1]\ +=\ 1;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ increment\ the\ number\ of\ zeros}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00567}00567\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00568}00568\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00569}00569\ \ \ \ \ \ \ \ \ \ \ \ \ CountingZeros\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00570}00570\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00571}00571\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00572}00572\ \ \ \ \ \ \ \ \ dwSize\ -\/=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00573}00573\ \ \ \ \ \ \ \ \ Offset\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00574}00574\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ Offset\ ==\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}}\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00575}00575\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00576}00576\ \ \ \ \ \ \ \ \ \ \ \ \ Offset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00577}00577\ \ \ \ \ \ \ \ \ \ \ \ \ Page\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ Data\ =\ (uint8\_t*)\ VirtualAllocs[Page];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00579}00579\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00580}00580\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00581}00581\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00582}00582\ \ \ \ \ *lpNewSize\ =\ NewSize;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00583}00583\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00584}00584\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00585}00585\ \textcolor{comment}{//\ The\ data\ in\ is\ mostly\ zlib\ compressed.\ Only\ blank\ areas\ are\ not\ so\ this\ will\ RLE\ just\ the\ zeros}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00586}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a9b04f123ec189b9c20d041578818b262}{00586}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a9b04f123ec189b9c20d041578818b262}{VirtualDecompress}}(\doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ \doxymbox{\hyperlink{_orbis_types_8h_af8429def935ee9a571d3e6dfffc3e790}{SIZE\_T}}\ dwSize)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00587}00587\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00588}00588\ \ \ \ \ uint8\_t\ *pSrc\ =\ (uint8\_t\ *)\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00589}00589\ \ \ \ \ \textcolor{keywordtype}{int}\ Offset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00590}00590\ \ \ \ \ \textcolor{keywordtype}{int}\ Page\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00591}00591\ \ \ \ \ \textcolor{keywordtype}{int}\ Index\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00592}00592\ \ \ \ \ uint8\_t*\ Data\ =\ (uint8\_t*)\ VirtualAllocs[Page];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00593}00593\ \ \ \ \ \textcolor{keywordflow}{while}(\ Index\ !=\ dwSize\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00594}00594\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00595}00595\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ is\ this\ a\ normal\ value}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00596}00596\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ pSrc[Index]\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00597}00597\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00598}00598\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ just\ copy\ it\ across}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00599}00599\ \ \ \ \ \ \ \ \ \ \ \ \ Data[Offset]\ =\ pSrc[Index];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00600}00600\ \ \ \ \ \ \ \ \ \ \ \ \ Offset\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00601}00601\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ Offset\ ==\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}}\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00602}00602\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00603}00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Offset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00604}00604\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Page\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00605}00605\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ Page\ ==\ VirtualNumAllocs\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ allocate\ a\ new\ page}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00608}00608\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ NewAlloc\ =\ \doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(\doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00609}00609\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00610}00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ add\ it\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00611}00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VirtualAllocs[VirtualNumAllocs]\ =\ NewAlloc;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00612}00612\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VirtualNumAllocs\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00613}00613\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00614}00614\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Data\ =\ (uint8\_t*)\ VirtualAllocs[Page];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00615}00615\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00616}00616\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00617}00617\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00618}00618\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00619}00619\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ how\ many\ zeros\ do\ we\ have}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00620}00620\ \ \ \ \ \ \ \ \ \ \ \ \ Index\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00621}00621\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ Count\ =\ pSrc[Index];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00622}00622\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ to\ do\ :\ this\ should\ really\ be\ a\ sequence\ of\ memsets}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00623}00623\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ Count;\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ +=\ 1\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00624}00624\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00625}00625\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Data[Offset]\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00626}00626\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Offset\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00627}00627\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ Offset\ ==\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}}\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00628}00628\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00629}00629\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Offset\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00630}00630\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Page\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00631}00631\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ Page\ ==\ VirtualNumAllocs\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00632}00632\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00633}00633\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ allocate\ a\ new\ page}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00634}00634\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ NewAlloc\ =\ \doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(\doxymbox{\hyperlink{_p_s_vita_stubs_8h_ae3dbf13ed61e5d591cecc21321e249e2}{VIRTUAL\_PAGE\_SIZE}});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00635}00635\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00636}00636\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ add\ it\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00637}00637\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VirtualAllocs[VirtualNumAllocs]\ =\ NewAlloc;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00638}00638\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VirtualNumAllocs\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00639}00639\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00640}00640\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Data\ =\ (uint8\_t*)\ VirtualAllocs[Page];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00641}00641\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00642}00642\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00643}00643\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00644}00644\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00645}00645\ \ \ \ \ \ \ \ \ Index\ +=\ 1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00646}00646\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00647}00647\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00648}00648\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00649}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aa97f3e3161b706c72f674f964cdaaab3}{00649}}\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aa97f3e3161b706c72f674f964cdaaab3}{GetFileSize}}(\ \doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ hFile,\ \doxymbox{\hyperlink{_orbis_types_8h_a143be739596851314f3c386bd6f752f9}{LPDWORD}}\ lpFileSizeHigh\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00650}00650\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00651}00651\ \ \ \ \ SceFiosFH\ \doxymbox{\hyperlink{gdraw__gl__shared_8inl_aca90264c115c5e3e8e02cfbb5e63a9db}{fh}}\ =\ (SceFiosFH)(hFile);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00652}00652\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00653}00653\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ sceFiosFHGetSize\ didn't\ seem\ to\ work...so\ doing\ this\ for\ now}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00654}00654\ \ \ \ \ \textcolor{comment}{//SceFiosSize\ FileSize;}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00655}00655\ \ \ \ \ \textcolor{comment}{//FileSize=sceFiosFHGetSize(fh);}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00656}00656\ \ \ \ \ SceFiosStat\ statData;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00657}00657\ \ \ \ \ \textcolor{keywordtype}{int}\ err\ =\ sceFiosFHStatSync(\textcolor{keyword}{nullptr},\doxymbox{\hyperlink{gdraw__gl__shared_8inl_aca90264c115c5e3e8e02cfbb5e63a9db}{fh}},\&statData);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00658}00658\ \ \ \ \ SceFiosOffset\ FileSize\ =\ statData.fileSize;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00659}00659\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00660}00660\ \ \ \ \ \textcolor{keywordflow}{if}(lpFileSizeHigh)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00661}00661\ \ \ \ \ \ \ \ \ *lpFileSizeHigh=\ (\doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}})(FileSize>>32);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00662}00662\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00663}00663\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00664}00664\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(FileSize>>32\ ==\ 0);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00665}00665\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00666}00666\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00667}00667\ \ \ \ \ \textcolor{keywordflow}{return}\ (\doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}})(FileSize\&0xffffffff);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00668}00668\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00669}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a87f2af11b8d98a4a3c7a90dc4719b70a}{00669}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a87f2af11b8d98a4a3c7a90dc4719b70a}{GetFileSizeEx}}(\doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ hFile,\ \doxymbox{\hyperlink{_orbis_types_8h_a77c43a01285362bf954dd6a5e22159aa}{PLARGE\_INTEGER}}\ lpFileSize\ )\ \{\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00670}00670\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00671}00671\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00672}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a4a208ca1ea9cd662dd8e71243c5a648f}{00672}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a4a208ca1ea9cd662dd8e71243c5a648f}{WriteFileWithName}}(\doxymbox{\hyperlink{_orbis_types_8h_ae293b3b53f5804e254b575b4dd52255a}{LPCSTR}}\ lpFileName,\ \ \doxymbox{\hyperlink{_orbis_types_8h_ae091006405d8d309b7e2e8900a1da20b}{LPCVOID}}\ lpBuffer,\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ nNumberOfBytesToWrite,\ \doxymbox{\hyperlink{_orbis_types_8h_a143be739596851314f3c386bd6f752f9}{LPDWORD}}\ lpNumberOfBytesWritten,\ \doxymbox{\hyperlink{_orbis_types_8h_ad3c708c36ed2fdc059368b364bff9490}{LPOVERLAPPED}}\ lpOverlapped\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00673}00673\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00674}00674\ \ \ \ \ \textcolor{keywordtype}{char}\ filePath[256];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00675}00675\ \ \ \ \ sprintf(filePath,\textcolor{stringliteral}{"{}\%s/\%s"{}},\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_acc7042dd6851d78f80f95c16f5ff9220}{getUsrDirPath}}(),\ lpFileName\ );}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00676}00676\ \ \ \ \ SceFiosSize\ bytesWritten\ =\ sceFiosFileWriteSync(\ \textcolor{keyword}{nullptr},\ filePath,\ lpBuffer,\ nNumberOfBytesToWrite,\ 0\ );}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00677}00677\ \ \ \ \ \textcolor{keywordflow}{if}(bytesWritten\ !=\ nNumberOfBytesToWrite)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00678}00678\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00679}00679\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ error}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00680}00680\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}WriteFile\ error\ \%x\%08x\(\backslash\)n"{}},bytesWritten);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00681}00681\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{stb__vorbis_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00682}00682\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00683}00683\ \ \ \ \ *lpNumberOfBytesWritten\ =\ (\doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}})bytesWritten;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00684}00684\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{stb__vorbis_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{TRUE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00685}00685\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00686}00686\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00687}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac0e6170281e17582f06354df25d9d984}{00687}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac0e6170281e17582f06354df25d9d984}{WriteFile}}(\ \doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ hFile,\ \doxymbox{\hyperlink{_orbis_types_8h_ae091006405d8d309b7e2e8900a1da20b}{LPCVOID}}\ lpBuffer,\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ nNumberOfBytesToWrite,\ \doxymbox{\hyperlink{_orbis_types_8h_a143be739596851314f3c386bd6f752f9}{LPDWORD}}\ lpNumberOfBytesWritten,\ \doxymbox{\hyperlink{_orbis_types_8h_ad3c708c36ed2fdc059368b364bff9490}{LPOVERLAPPED}}\ lpOverlapped\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00688}00688\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00689}00689\ \ \ \ \ \textcolor{comment}{//CD\ -\/\ Use\ 'WriteFileWithName'\ instead}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00690}00690\ \ \ \ \ \textcolor{comment}{//CD\ -\/\ it\ won't\ write\ via\ handle,\ for\ some\ unknown\ reason...}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00691}00691\ \ \ \ \ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00692}00692\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{stb__vorbis_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00693}00693\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00694}00694\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00695}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a0283336b536ee747a7b1cb7834a389ef}{00695}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a0283336b536ee747a7b1cb7834a389ef}{ReadFile}}(\doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ hFile,\ \doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ lpBuffer,\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ nNumberOfBytesToRead,\ \doxymbox{\hyperlink{_orbis_types_8h_a143be739596851314f3c386bd6f752f9}{LPDWORD}}\ lpNumberOfBytesRead,\ \doxymbox{\hyperlink{_orbis_types_8h_ad3c708c36ed2fdc059368b364bff9490}{LPOVERLAPPED}}\ lpOverlapped\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00696}00696\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00697}00697\ \ \ \ \ SceFiosFH\ \doxymbox{\hyperlink{gdraw__gl__shared_8inl_aca90264c115c5e3e8e02cfbb5e63a9db}{fh}}\ =\ (SceFiosFH)((int64\_t)hFile);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00698}00698\ \ \ \ \ \textcolor{comment}{//\ sceFiosFHReadSync\ -\/\ Non-\/negative\ values\ are\ the\ number\ of\ bytes\ read,\ 0\ <=\ result\ <=\ length.\ Negative\ values\ are\ error\ codes.}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00699}00699\ \ \ \ \ SceFiosSize\ bytesRead\ =\ sceFiosFHReadSync(\textcolor{keyword}{nullptr},\ \doxymbox{\hyperlink{gdraw__gl__shared_8inl_aca90264c115c5e3e8e02cfbb5e63a9db}{fh}},\ lpBuffer,\ (SceFiosSize)nNumberOfBytesToRead);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00700}00700\ \ \ \ \ \textcolor{keywordflow}{if}(bytesRead\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00701}00701\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00702}00702\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ error}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00703}00703\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{stb__vorbis_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00704}00704\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00705}00705\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00706}00706\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00707}00707\ \ \ \ \ \ \ \ \ *lpNumberOfBytesRead\ =\ (\doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}})bytesRead;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00708}00708\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{stb__vorbis_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{TRUE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00709}00709\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00710}00710\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00711}00711\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00712}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aa9cb99a049eceed853344930ccf16e51}{00712}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aa9cb99a049eceed853344930ccf16e51}{SetFilePointer}}(\doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ hFile,\ \doxymbox{\hyperlink{_orbis_types_8h_a9154c0d0c21af4686624543215b4e5f2}{LONG}}\ lDistanceToMove,\ \doxymbox{\hyperlink{_orbis_types_8h_ac8302673626a3da544dd72b39d4b9e52}{PLONG}}\ lpDistanceToMoveHigh,\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwMoveMethod)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00713}00713\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00714}00714\ \ \ \ \ SceFiosFH\ fd\ =\ (SceFiosFH)((int64\_t)hFile);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00715}00715\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00716}00716\ \ \ \ \ uint64\_t\ bitsToMove\ =\ (int64\_t)\ lDistanceToMove;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00717}00717\ \ \ \ \ SceFiosOffset\ pos\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00718}00718\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00719}00719\ \ \ \ \ \textcolor{keywordflow}{if}\ (lpDistanceToMoveHigh\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00720}00720\ \ \ \ \ \ \ \ \ bitsToMove\ |=\ ((uint64\_t)\ (*lpDistanceToMoveHigh))\ <<\ 32;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00721}00721\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00722}00722\ \ \ \ \ SceFiosWhence\ whence\ =\ SCE\_FIOS\_SEEK\_SET;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00723}00723\ \ \ \ \ \textcolor{keywordflow}{switch}(dwMoveMethod)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00724}00724\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00725}00725\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_orbis_stubs_8h_a1b6a16ca70fb99d4c13aeae1e7283680}{FILE\_BEGIN}}:\ \ \ \ whence\ =\ SCE\_FIOS\_SEEK\_SET;\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00726}00726\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_orbis_stubs_8h_a815ce73e2d97f51e08c4f0cb39acc389}{FILE\_CURRENT}}:\ \ whence\ =\ SCE\_FIOS\_SEEK\_CUR;\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00727}00727\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_orbis_stubs_8h_a1f36ce1882fa7f063018087a226e4867}{FILE\_END}}:\ \ \ \ \ \ whence\ =\ SCE\_FIOS\_SEEK\_END;\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00728}00728\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00729}00729\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00730}00730\ \ \ \ \ pos\ =\ sceFiosFHSeek(fd,\ (int64\_t)\ lDistanceToMove,\ whence);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00731}00731\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00732}00732\ \ \ \ \ \textcolor{keywordflow}{return}\ (pos\ !=\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00733}00733\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00734}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aa01ac9d46c9d2ac0e8ba75e480a2c3d5}{00734}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aa01ac9d46c9d2ac0e8ba75e480a2c3d5}{replaceBackslashes}}(\textcolor{keywordtype}{char}*\ szFilename)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00735}00735\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00736}00736\ \ \ \ \ \textcolor{keywordtype}{int}\ len\ =\ strlen(szFilename);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00737}00737\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}=0;\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}<len;\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00738}00738\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00739}00739\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(szFilename[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ ==\ \textcolor{charliteral}{'\(\backslash\)\(\backslash\)'})}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00740}00740\ \ \ \ \ \ \ \ \ \ \ \ \ szFilename[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ =\ \textcolor{charliteral}{'/'};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00741}00741\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00742}00742\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00743}00743\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00744}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a4ccbcc1be2f18e8a2c43063fa78ec688}{00744}}\ \doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a4ccbcc1be2f18e8a2c43063fa78ec688}{CreateFileA}}(\doxymbox{\hyperlink{_orbis_types_8h_ae293b3b53f5804e254b575b4dd52255a}{LPCSTR}}\ lpFileName,\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwDesiredAccess,\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwShareMode,\ \doxymbox{\hyperlink{_orbis_types_8h_a4fdf38cfd66d6757e92870fd804b5813}{LPSECURITY\_ATTRIBUTES}}\ lpSecurityAttributes,\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwCreationDisposition,\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ dwFlagsAndAttributes,\ \doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ hTemplateFile)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00745}00745\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00746}00746\ \ \ \ \ \textcolor{keywordtype}{char}\ filePath[256];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00747}00747\ \ \ \ \ std::string\ mountedPath\ =\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___storage_8h_a24a67ae8c928fe1f29f76167beeccd4b}{StorageManager}}.GetMountedPath(lpFileName);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00748}00748\ \ \ \ \ \textcolor{keywordflow}{if}(mountedPath.length()\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00749}00749\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00750}00750\ \ \ \ \ \ \ \ \ strcpy(filePath,\ mountedPath.c\_str());}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00751}00751\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00752}00752\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(strstr(lpFileName,\textcolor{stringliteral}{"{}:"{}})\ !=\ 0)\ \textcolor{comment}{//\ already\ fully\ qualified\ path}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00753}00753\ \ \ \ \ \ \ \ \ strcpy(filePath,\ lpFileName\ );}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00754}00754\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00755}00755\ \ \ \ \ \ \ \ \ sprintf(filePath,\textcolor{stringliteral}{"{}\%s/\%s"{}},\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_acc7042dd6851d78f80f95c16f5ff9220}{getUsrDirPath}}(),\ lpFileName\ );}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00756}00756\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ sprintf(filePath,"{}\%s/\%s"{},\ driveRoot,\ lpFileName\ );}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00757}00757\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00758}00758\ \ \ \ \ \textcolor{comment}{//CD\ -\/\ Does\ the\ file\ need\ created?}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00759}00759\ \ \ \ \ \textcolor{keywordflow}{if}(\ dwDesiredAccess\ ==\ \doxymbox{\hyperlink{_orbis_stubs_8h_ae7a3106c6bef5edbff79f9e203c7ccf4}{GENERIC\_WRITE}}\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00760}00760\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00761}00761\ \ \ \ \ \ \ \ \ \textcolor{comment}{//CD\ -\/\ Create\ a\ blank\ file}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00762}00762\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ err\ =\ sceFiosFileWriteSync(\ \textcolor{keyword}{nullptr},\ filePath,\ \textcolor{keyword}{nullptr},\ 0,\ 0\ );}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00763}00763\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\ err\ ==\ SCE\_FIOS\_OK\ );}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00764}00764\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00765}00765\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00766}00766\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00767}00767\ \ \ \ \ printf(\textcolor{stringliteral}{"{}***\ Opening\ \%s\(\backslash\)n"{}},filePath);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00768}00768\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00769}00769\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00770}00770\ \ \ \ \ SceFiosFH\ \doxymbox{\hyperlink{gdraw__gl__shared_8inl_aca90264c115c5e3e8e02cfbb5e63a9db}{fh}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00771}00771\ \ \ \ \ \textcolor{keywordtype}{int}\ err\ =\ sceFiosFHOpenSync(\textcolor{keyword}{nullptr},\ \&\doxymbox{\hyperlink{gdraw__gl__shared_8inl_aca90264c115c5e3e8e02cfbb5e63a9db}{fh}},\ filePath,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00772}00772\ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\ err\ ==\ SCE\_FIOS\_OK\ );}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00773}00773\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00774}00774\ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{void}*)\doxymbox{\hyperlink{gdraw__gl__shared_8inl_aca90264c115c5e3e8e02cfbb5e63a9db}{fh}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00775}00775\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00776}00776\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00777}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_acf3950e1c33a8e212720bbd6f3f4bffe}{00777}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_acf3950e1c33a8e212720bbd6f3f4bffe}{CreateDirectoryA}}(\doxymbox{\hyperlink{_orbis_types_8h_ae293b3b53f5804e254b575b4dd52255a}{LPCSTR}}\ lpPathName,\ \doxymbox{\hyperlink{_orbis_types_8h_a4fdf38cfd66d6757e92870fd804b5813}{LPSECURITY\_ATTRIBUTES}}\ lpSecurityAttributes)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00778}00778\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00779}00779\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00780}00780\ \ \ \ \ \textcolor{keywordtype}{char}\ filePath[256];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00781}00781\ \ \ \ \ sprintf(filePath,\textcolor{stringliteral}{"{}\%s/\%s"{}},usrdirPath,\ lpPathName\ );}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00782}00782\ \ \ \ \ \textcolor{keywordtype}{int}\ ret\ =\ sceIoMkdir(\ filePath,\ SCE\_STM\_RWU\ );}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00783}00783\ \ \ \ \ \textcolor{keywordflow}{if}(\ ret\ !=\ SCE\_OK\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00784}00784\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00785}00785\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}***\ CreateDirectory\ \%s\ FAILED\(\backslash\)n"{}},filePath);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00786}00786\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00787}00787\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00788}00788\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00789}00789\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00790}00790\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00791}00791\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00792}00792\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00793}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aaed1a9c1b5aa0e52c471ec413a8df2cd}{00793}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_aaed1a9c1b5aa0e52c471ec413a8df2cd}{DeleteFileA}}(\doxymbox{\hyperlink{_orbis_types_8h_ae293b3b53f5804e254b575b4dd52255a}{LPCSTR}}\ lpFileName)\ \{\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00794}00794\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00795}00795\ \textcolor{comment}{//\ BOOL\ XCloseHandle(HANDLE\ a)}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00796}00796\ \textcolor{comment}{//\ \{}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00797}00797\ \textcolor{comment}{//\ \ cellFsClose(int(a));}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00798}00798\ \textcolor{comment}{//\ \}}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00799}00799\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00800}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a16386e615b3b7613e8915ddfe6c6ebeb}{00800}}\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a16386e615b3b7613e8915ddfe6c6ebeb}{GetFileAttributesA}}(\doxymbox{\hyperlink{_orbis_types_8h_ae293b3b53f5804e254b575b4dd52255a}{LPCSTR}}\ lpFileName)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00801}00801\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00802}00802\ \ \ \ \ \textcolor{keywordtype}{char}\ filePath[256];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00803}00803\ \ \ \ \ std::string\ mountedPath\ =\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___storage_8h_a24a67ae8c928fe1f29f76167beeccd4b}{StorageManager}}.GetMountedPath(lpFileName);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00804}00804\ \ \ \ \ \textcolor{keywordflow}{if}(mountedPath.length()\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00805}00805\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00806}00806\ \ \ \ \ \ \ \ \ strcpy(filePath,\ mountedPath.c\_str());}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00807}00807\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00808}00808\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(strstr(lpFileName,\textcolor{stringliteral}{"{}:"{}})\ !=\ 0)\ \textcolor{comment}{//\ colon\ in\ the\ filename,\ so\ it's\ fully\ qualified}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00809}00809\ \ \ \ \ \ \ \ \ strcpy(filePath,\ lpFileName);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00810}00810\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00811}00811\ \ \ \ \ \ \ \ \ sprintf(filePath,\textcolor{stringliteral}{"{}\%s/\%s"{}},\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_acc7042dd6851d78f80f95c16f5ff9220}{getUsrDirPath}}(),\ lpFileName\ );}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00812}00812\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00813}00813\ \ \ \ \ \textcolor{comment}{//\ \ sprintf(filePath,"{}\%s/\%s"{},\ driveRoot,\ lpFileName\ );}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00814}00814\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00815}00815\ \ \ \ \ \textcolor{comment}{//\ check\ if\ the\ file\ exists\ first}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00816}00816\ \ \ \ \ SceFiosStat\ \ statData;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00817}00817\ \ \ \ \ \textcolor{keywordflow}{if}(sceFiosStatSync(\textcolor{keyword}{nullptr},\ filePath,\ \&statData)\ !=\ SCE\_FIOS\_OK)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00818}00818\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00819}00819\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}***\ sceFiosStatSync\ Failed\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00820}00820\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00821}00821\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00822}00822\ \ \ \ \ \textcolor{keywordflow}{if}(statData.statFlags\ \&\ SCE\_FIOS\_STATUS\_DIRECTORY\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00823}00823\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_orbis_stubs_8h_ab8cdec58fbd68d2fa2c1ef3dc4946db4}{FILE\_ATTRIBUTE\_DIRECTORY}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00824}00824\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00825}00825\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00826}00826\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00827}00827\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00828}00828\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00829}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac6c9527fec1ed17fc0cdbc1dfbc8afd8}{00829}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac6c9527fec1ed17fc0cdbc1dfbc8afd8}{MoveFileA}}(\doxymbox{\hyperlink{_orbis_types_8h_ae293b3b53f5804e254b575b4dd52255a}{LPCSTR}}\ lpExistingFileName,\ \doxymbox{\hyperlink{_orbis_types_8h_ae293b3b53f5804e254b575b4dd52255a}{LPCSTR}}\ lpNewFileName)\ \{\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00830}00830\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00831}\doxymbox{\hyperlink{_orbis_stubs_8h_a836a58a917bc9dcc3256ceecb2717746}{00831}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a836a58a917bc9dcc3256ceecb2717746}{\_\_debugbreak}}()\ \{\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a0df05100df93690bfee8dac563c193b3}{SCE\_BREAK}}();\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00832}\doxymbox{\hyperlink{_orbis_stubs_8h_a5f8dd646028a22011cff6ba3e915a25e}{00832}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a5f8dd646028a22011cff6ba3e915a25e}{DebugBreak}}(\doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}})\ \{\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a0df05100df93690bfee8dac563c193b3}{SCE\_BREAK}}();\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00833}00833\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00834}00834\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00835}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a150d4c72936fc456260278e24be1221c}{00835}}\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a150d4c72936fc456260278e24be1221c}{GetLastError}}(\doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}})\ \{\ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};\ \textcolor{keywordflow}{return}\ 0;\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00836}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac7e2cbd6eca0a1196f4c649ca8d5e2b4}{00836}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ac7e2cbd6eca0a1196f4c649ca8d5e2b4}{GlobalMemoryStatus}}(\doxymbox{\hyperlink{_orbis_stubs_8h_aa22cf127442e0ec47cb9772b75c86fab}{LPMEMORYSTATUS}}\ lpBuffer)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00837}00837\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00838}00838\ \ \ \ \ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00839}00839\ \ \ \ \ \textcolor{comment}{/*\ \ malloc\_managed\_size\ stat;}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00840}00840\ \textcolor{comment}{\ \ \ \ int\ err\ =\ malloc\_stats(\&stat);}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00841}00841\ \textcolor{comment}{\ \ \ \ if(err\ !=\ 0)}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00842}00842\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00843}00843\ \textcolor{comment}{\ \ \ \ //printf("{}Failed\ to\ get\ mem\ stats\(\backslash\)n"{});}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00844}00844\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00845}00845\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00846}00846\ \textcolor{comment}{\ \ \ \ lpBuffer-\/>dwTotalPhys\ =\ stat.max\_system\_size;}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00847}00847\ \textcolor{comment}{\ \ \ \ lpBuffer-\/>dwAvailPhys\ =\ stat.max\_system\_size\ -\/\ stat.current\_system\_size;}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00848}00848\ \textcolor{comment}{\ \ \ \ lpBuffer-\/>dwAvailVirtual\ =\ stat.max\_system\_size\ -\/\ stat.current\_inuse\_size;*/}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00849}00849\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00850}00850\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00851}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a055326c81f9d62c1af40c24a13b436f5}{00851}}\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a055326c81f9d62c1af40c24a13b436f5}{GetTickCount}}()}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00852}00852\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00853}00853\ \ \ \ \ \textcolor{comment}{//\ This\ function\ returns\ the\ current\ system\ time\ at\ this\ function\ is\ called.}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00854}00854\ \ \ \ \ \textcolor{comment}{//\ The\ system\ time\ is\ represented\ the\ time\ elapsed\ since\ the\ system\ starts\ up\ in\ microseconds.}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00855}00855\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00856}00856\ \ \ \ \ uint64\_t\ sysTime\ =\ sceKernelGetProcessTimeWide();}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00857}00857\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00858}00858\ \ \ \ \ \textcolor{keywordflow}{return}\ sysTime\ /\ 1000;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00859}00859\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00860}00860\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00861}00861\ \textcolor{comment}{//\ we\ should\ really\ use\ libperf\ for\ this\ kind\ of\ thing,\ but\ this\ will\ do\ for\ now.}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00862}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a1f9d45b004e9b55ba94dcef2ea9004be}{00862}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a1f9d45b004e9b55ba94dcef2ea9004be}{QueryPerformanceFrequency}}(\doxymbox{\hyperlink{_orbis_types_8h_a9bf80943e02f031c99d510a40a6d52e6}{LARGE\_INTEGER}}\ *lpFrequency)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00863}00863\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00864}00864\ \ \ \ \ \textcolor{comment}{//\ microseconds}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00865}00865\ \ \ \ \ lpFrequency-\/>\doxymbox{\hyperlink{union___l_a_r_g_e___i_n_t_e_g_e_r_a34beb9c05c3a2982d57fc450cc934ae3}{QuadPart}}\ =\ \ (1000\ *\ 1000);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00866}00866\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00867}00867\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00868}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a3b4728b70df60dc646ce578155a6a405}{00868}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a3b4728b70df60dc646ce578155a6a405}{QueryPerformanceCounter}}(\doxymbox{\hyperlink{_orbis_types_8h_a9bf80943e02f031c99d510a40a6d52e6}{LARGE\_INTEGER}}\ *lpPerformanceCount)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00869}00869\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00870}00870\ \ \ \ \ \textcolor{comment}{//\ microseconds}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00871}00871\ \ \ \ \ lpPerformanceCount-\/>\doxymbox{\hyperlink{union___l_a_r_g_e___i_n_t_e_g_e_r_a34beb9c05c3a2982d57fc450cc934ae3}{QuadPart}}\ =\ sceKernelGetProcessTimeWide();}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00872}00872\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00873}00873\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00874}00874\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00875}00875\ \textcolor{preprocessor}{\#ifndef\ \_FINAL\_BUILD}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00876}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a8cad18e3f36287edefc1dfc6247f452d}{00876}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a8cad18e3f36287edefc1dfc6247f452d}{OutputDebugStringW}}(\doxymbox{\hyperlink{_orbis_types_8h_ad603fe499be9d6c86e874ab2bc0b73c4}{LPCWSTR}}\ lpOutputString)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00877}00877\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00878}00878\ \ \ \ \ wprintf(lpOutputString);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00879}00879\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00880}00880\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00881}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a06ebe735c3d198ebb4f9a119f06f597b}{00881}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a06ebe735c3d198ebb4f9a119f06f597b}{OutputDebugString}}(\doxymbox{\hyperlink{_orbis_types_8h_ae293b3b53f5804e254b575b4dd52255a}{LPCSTR}}\ lpOutputString)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00882}00882\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00883}00883\ \ \ \ \ printf(lpOutputString);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00884}00884\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00885}00885\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00886}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a6473fa6f7eb16d7c68193767f2eed266}{00886}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a6473fa6f7eb16d7c68193767f2eed266}{OutputDebugStringA}}(\doxymbox{\hyperlink{_orbis_types_8h_ae293b3b53f5804e254b575b4dd52255a}{LPCSTR}}\ lpOutputString)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00887}00887\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00888}00888\ \ \ \ \ printf(lpOutputString);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00889}00889\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00890}00890\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00891}00891\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00892}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ae8ec091c045f26ddc450c5690da16360}{00892}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ae8ec091c045f26ddc450c5690da16360}{GetFileAttributesExA}}(\doxymbox{\hyperlink{_orbis_types_8h_ae293b3b53f5804e254b575b4dd52255a}{LPCSTR}}\ lpFileName,\doxymbox{\hyperlink{_orbis_stubs_8h_a86a74a44fb9269cb2e7b884da3ea80e8}{GET\_FILEEX\_INFO\_LEVELS}}\ fInfoLevelId,\doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}}\ lpFileInformation)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00893}00893\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00894}00894\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a1b5655968b24b087e63052b883c515cf}{WIN32\_FILE\_ATTRIBUTE\_DATA}}\ *fileInfoBuffer\ =\ (\doxymbox{\hyperlink{_orbis_stubs_8h_a1b5655968b24b087e63052b883c515cf}{WIN32\_FILE\_ATTRIBUTE\_DATA}}*)\ lpFileInformation;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00895}00895\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00896}00896\ \ \ \ \ \textcolor{keywordtype}{char}\ filePath[256];}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00897}00897\ \ \ \ \ \textcolor{keywordflow}{if}(strstr(lpFileName,\textcolor{stringliteral}{"{}:"{}})\ !=\ 0)\ \textcolor{comment}{//\ colon\ in\ the\ filename,\ so\ it's\ fully\ qualified}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00898}00898\ \ \ \ \ \ \ \ \ strcpy(filePath,\ lpFileName);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00899}00899\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00900}00900\ \ \ \ \ \ \ \ \ sprintf(filePath,\textcolor{stringliteral}{"{}\%s/\%s"{}},\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_acc7042dd6851d78f80f95c16f5ff9220}{getUsrDirPath}}(),\ lpFileName\ );}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00901}00901\ \ \ \ \ \textcolor{comment}{//\ \ sprintf(filePath,"{}\%s/\%s"{},\ driveRoot,\ lpFileName\ );}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00902}00902\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00903}00903\ \ \ \ \ \textcolor{comment}{//\ check\ if\ the\ file\ exists\ first}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00904}00904\ \ \ \ \ SceFiosStat\ \ statData;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00905}00905\ \ \ \ \ \textcolor{keywordflow}{if}(sceFiosStatSync(\textcolor{keyword}{nullptr},\ filePath,\ \&statData)\ !=\ SCE\_FIOS\_OK)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00906}00906\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00907}00907\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}***\ sceFiosStatSync\ Failed\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00908}00908\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00909}00909\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00910}00910\ \ \ \ \ \textcolor{keywordflow}{if}(statData.statFlags\ \&\ SCE\_FIOS\_STATUS\_DIRECTORY\ )}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00911}00911\ \ \ \ \ \ \ \ \ fileInfoBuffer-\/>\doxymbox{\hyperlink{struct___w_i_n32___f_i_l_e___a_t_t_r_i_b_u_t_e___d_a_t_a_a3932ddff54e71c5335088431300a6a0e}{dwFileAttributes}}\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_ab8cdec58fbd68d2fa2c1ef3dc4946db4}{FILE\_ATTRIBUTE\_DIRECTORY}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00912}00912\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00913}00913\ \ \ \ \ \ \ \ \ fileInfoBuffer-\/>\doxymbox{\hyperlink{struct___w_i_n32___f_i_l_e___a_t_t_r_i_b_u_t_e___d_a_t_a_a3932ddff54e71c5335088431300a6a0e}{dwFileAttributes}}\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00914}00914\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00915}00915\ \ \ \ \ fileInfoBuffer-\/>\doxymbox{\hyperlink{struct___w_i_n32___f_i_l_e___a_t_t_r_i_b_u_t_e___d_a_t_a_a6806b28db7254f6f646ee903a5c82e7e}{nFileSizeHigh}}\ =\ statData.fileSize\ >>\ 32;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00916}00916\ \ \ \ \ fileInfoBuffer-\/>\doxymbox{\hyperlink{struct___w_i_n32___f_i_l_e___a_t_t_r_i_b_u_t_e___d_a_t_a_ae66b432ae7abd3ef8f409715e11c1b20}{nFileSizeLow}}\ =\ statData.fileSize;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00917}00917\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00918}00918\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00919}00919\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00920}00920\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00921}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a87a71c4112ec87088780740f5b60b4e3}{00921}}\ \doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a87a71c4112ec87088780740f5b60b4e3}{FindFirstFileA}}(\doxymbox{\hyperlink{_orbis_types_8h_ae293b3b53f5804e254b575b4dd52255a}{LPCSTR}}\ lpFileName,\ \doxymbox{\hyperlink{_orbis_stubs_8h_ac05582102fb07f9a691cedbc6a89295e}{LPWIN32\_FIND\_DATA}}\ lpFindFileData)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00922}00922\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00923}00923\ \ \ \ \ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00924}00924\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00925}00925\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00926}00926\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00927}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a464c3f475d7a23d38c8b652d4e12da46}{00927}}\ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a464c3f475d7a23d38c8b652d4e12da46}{FindNextFileA}}(\doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ hFindFile,\ \doxymbox{\hyperlink{_orbis_stubs_8h_accd82b7693b07ca9ef1b82f2c91a7d13}{LPWIN32\_FIND\_DATAA}}\ lpFindFileData)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00928}00928\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00929}00929\ \ \ \ \ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00930}00930\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00931}00931\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00932}00932\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00933}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a5fab2779e31c15cf0b65e4887d7d468c}{00933}}\ \doxymbox{\hyperlink{_orbis_stubs_8h_a46a037236862ac1a534efbe605c10f42}{errno\_t}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a5fab2779e31c15cf0b65e4887d7d468c}{\_itoa\_s}}(\textcolor{keywordtype}{int}\ \_Value,\ \textcolor{keywordtype}{char}\ *\ \_DstBuf,\ \textcolor{keywordtype}{size\_t}\ \_Size,\ \textcolor{keywordtype}{int}\ \_Radix)\ \{\ \textcolor{keywordflow}{if}(\_Radix==10)\ sprintf(\_DstBuf,\textcolor{stringliteral}{"{}\%d"{}},\_Value);\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\_Radix==16)\ sprintf(\_DstBuf,\textcolor{stringliteral}{"{}\%lx"{}},\_Value);\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{return}\ -\/1;\ \textcolor{keywordflow}{return}\ 0;\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00934}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a976235b8c377fa3458981c60206f4d6a}{00934}}\ \doxymbox{\hyperlink{_orbis_stubs_8h_a46a037236862ac1a534efbe605c10f42}{errno\_t}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a976235b8c377fa3458981c60206f4d6a}{\_i64toa\_s}}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \_Val,\ \textcolor{keywordtype}{char}\ *\ \_DstBuf,\ \textcolor{keywordtype}{size\_t}\ \_Size,\ \textcolor{keywordtype}{int}\ \_Radix)\ \{\ \textcolor{keywordflow}{if}(\_Radix==10)\ sprintf(\_DstBuf,\textcolor{stringliteral}{"{}\%lld"{}},\_Val);\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{return}\ -\/1;\ \textcolor{keywordflow}{return}\ 0;\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00935}00935\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00936}\doxymbox{\hyperlink{_ps3_stubs_8h_abfdd4bc83e49ab7ec8fb28963e4b3391}{00936}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_abfdd4bc83e49ab7ec8fb28963e4b3391}{\_wtoi}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *\_Str)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00937}00937\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00938}00938\ \ \ \ \ \textcolor{keywordflow}{return}\ wcstol(\_Str,\ \textcolor{keyword}{nullptr},\ 10);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00939}00939\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00940}00940\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00941}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ad3cbd06df893a211bf629fd806792028}{00941}}\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_ad3cbd06df893a211bf629fd806792028}{XGetLanguage}}()}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00942}00942\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00943}00943\ \ \ \ \ \textcolor{comment}{//\ check\ if\ we\ should\ override\ the\ system\ language\ or\ not}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00944}00944\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ ucLang\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetMinecraftLanguage(0);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00945}00945\ \ \ \ \ \textcolor{keywordflow}{if}\ (ucLang\ !=\ \doxymbox{\hyperlink{_app___defines_8h_ac2166199070f72d76afa3eb0b23f1cd7}{MINECRAFT\_LANGUAGE\_DEFAULT}})\ \textcolor{keywordflow}{return}\ ucLang;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00946}00946\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00947}00947\ \ \ \ \ SceInt32\ iLang;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00948}00948\ \ \ \ \ sceAppUtilSystemParamGetInt(SCE\_SYSTEM\_PARAM\_ID\_LANG,\&iLang);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00949}00949\ \ \ \ \ \textcolor{keywordflow}{switch}(iLang)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00950}00950\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00951}00951\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_JAPANESE\ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a42f8a6d2be286c11222b4ba3753c65b2}{XC\_LANGUAGE\_JAPANESE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00952}00952\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_ENGLISH\_US\ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a528e22696f373112ee270f9669bdb78e}{XC\_LANGUAGE\_ENGLISH}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00953}00953\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_FRENCH\ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_acddd51a85ee30bbaf6f1d5bdfad204c9}{XC\_LANGUAGE\_FRENCH}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00954}00954\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_SPANISH\ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a8995ae0fb5c890cb92f944af96a2c676}{XC\_LANGUAGE\_SPANISH}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00955}00955\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_GERMAN\ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_af8f4e2054191ab234429b0910ea8f3b9}{XC\_LANGUAGE\_GERMAN}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00956}00956\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_ITALIAN\ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a3430436522e798c66b50187748e9b636}{XC\_LANGUAGE\_ITALIAN}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00957}00957\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_PORTUGUESE\_PT\ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_aede48d930e80fe217d04f7098df3d938}{XC\_LANGUAGE\_PORTUGUESE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00958}00958\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00959}00959\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_RUSSIAN\ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_aa1a34656e6fd9d625fdc6fcd92fd064b}{XC\_LANGUAGE\_RUSSIAN}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00960}00960\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_KOREAN\ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a885d1fe5463570eda838567714bf1740}{XC\_LANGUAGE\_KOREAN}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00961}00961\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_CHINESE\_T\ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a1be4e507c035ae25bf1873d483c12569}{XC\_LANGUAGE\_TCHINESE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00962}00962\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_PORTUGUESE\_BR\ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_aede48d930e80fe217d04f7098df3d938}{XC\_LANGUAGE\_PORTUGUESE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00963}00963\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_ENGLISH\_GB\ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a528e22696f373112ee270f9669bdb78e}{XC\_LANGUAGE\_ENGLISH}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00964}00964\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00965}00965\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_DUTCH\ \ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_ae1e964644686934ec191e1cbee97c43b}{XC\_LANGUAGE\_DUTCH}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00966}00966\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_FINNISH\ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a9ce166b5565dd7857de3f19f001eb608}{XC\_LANGUAGE\_FINISH}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00967}00967\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_SWEDISH\ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_adfa2da2b2f8b1c10bc50f565b8d1d62b}{XC\_LANGUAGE\_SWEDISH}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00968}00968\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_DANISH\ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a4f526216b1d728b5d0fe6247221a9484}{XC\_LANGUAGE\_DANISH}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00969}00969\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_NORWEGIAN\ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a6dd2ea93ec4a66f8560e4c6307576eac}{XC\_LANGUAGE\_BNORWEGIAN}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00970}00970\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_POLISH\ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_ac110dc4beefd9add9e7da3303b140f8e}{XC\_LANGUAGE\_POLISH}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00971}00971\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_TURKISH\ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_ac5efe9dcc3cf9e94f1e1c827247eb1c0}{XC\_LANGUAGE\_TURKISH}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00972}00972\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00973}00973\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00974}00974\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_CHINESE\_S\ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a6f38fadd37a352064f5a1287aefab65a}{XC\_LANGUAGE\_SCHINESE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00975}00975\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00976}00976\ \ \ \ \ default\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a528e22696f373112ee270f9669bdb78e}{XC\_LANGUAGE\_ENGLISH}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00977}00977\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00978}00978\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00979}00979\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00980}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a49052e75c419e3a27ad1e7878a99b9e3}{00980}}\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a49052e75c419e3a27ad1e7878a99b9e3}{XGetLocale}}()}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00981}00981\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00982}00982\ \ \ \ \ \textcolor{comment}{//\ check\ if\ we\ should\ override\ the\ system\ locale\ or\ not}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00983}00983\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ ucLocale\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetMinecraftLocale(0);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00984}00984\ \ \ \ \ \textcolor{keywordflow}{if}\ (ucLocale\ !=\ \doxymbox{\hyperlink{_app___defines_8h_ac2166199070f72d76afa3eb0b23f1cd7}{MINECRAFT\_LANGUAGE\_DEFAULT}})\ \textcolor{keywordflow}{return}\ ucLocale;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00985}00985\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00986}00986\ \ \ \ \ SceInt32\ iLang;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00987}00987\ \ \ \ \ sceAppUtilSystemParamGetInt(SCE\_SYSTEM\_PARAM\_ID\_LANG,\&iLang);}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00988}00988\ \ \ \ \ \textcolor{keywordflow}{switch}(iLang)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00989}00989\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00990}00990\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_JAPANESE\ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_ae025b834c02053c2c69d47b0dc43f31f}{XC\_LOCALE\_JAPAN}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00991}00991\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_ENGLISH\_US\ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a05681bebced53e87931dfeef5756abf7}{XC\_LOCALE\_UNITED\_STATES}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00992}00992\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_FRENCH\ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a449a3bda9417d425f93d5c426c5fe38c}{XC\_LOCALE\_FRANCE}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00993}00993\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00994}00994\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_SPANISH\ \ \ \ \ \ \ \ \ \ :}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00995}00995\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.IsAmericanSKU())}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00996}00996\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00997}00997\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a3cdd2858a9003393f886d0d431fb013f}{XC\_LOCALE\_LATIN\_AMERICA}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00998}00998\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l00999}00999\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01000}01000\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01001}01001\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a89690021febfde14a514baf227d18a94}{XC\_LOCALE\_SPAIN}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01002}01002\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01003}01003\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01004}01004\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_GERMAN\ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a90030ac92dc4d83b4457352052d5649e}{XC\_LOCALE\_GERMANY}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01005}01005\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_ITALIAN\ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a91b7883572b062aeebfa3247421b508d}{XC\_LOCALE\_ITALY}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01006}01006\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_PORTUGUESE\_PT\ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a605b9fa98c453a0054136dadb735f041}{XC\_LOCALE\_PORTUGAL}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01007}01007\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01008}01008\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_RUSSIAN\ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a0042878136d72855c39abb5d4a9c4c4c}{XC\_LOCALE\_RUSSIAN\_FEDERATION}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01009}01009\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_KOREAN\ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a87ecce2913f02034c24db9190fde025f}{XC\_LOCALE\_KOREA}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01010}01010\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_CHINESE\_T\ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a42e98779809a189adf0107f1499b1cd0}{XC\_LOCALE\_CHINA}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01011}01011\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_PORTUGUESE\_BR\ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a55278780d57ecee71791c9e3e46e179b}{XC\_LOCALE\_BRAZIL}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01012}01012\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_ENGLISH\_GB\ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a7d8cdd01511bd03dcea41d47a5291117}{XC\_LOCALE\_GREAT\_BRITAIN}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01013}01013\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01014}01014\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_DUTCH\ \ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a572de6def71fb4456ea7caff3bf1a47c}{XC\_LOCALE\_NETHERLANDS}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01015}01015\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_FINNISH\ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a1f338f93dc93cc13fca890a1e53e2703}{XC\_LOCALE\_FINLAND}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01016}01016\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_SWEDISH\ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a3bc1df197b3c822e8e0801e2445707f0}{XC\_LOCALE\_SWEDEN}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01017}01017\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_DANISH\ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a6fb19705af14cf01a1f07e7e1256af6d}{XC\_LOCALE\_DENMARK}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01018}01018\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_NORWEGIAN\ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_ab5745261d0b437cc96ed548c4b49b47f}{XC\_LOCALE\_NORWAY}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01019}01019\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_POLISH\ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a4a363d2ed2b7191fd49f739fb409a80f}{XC\_LOCALE\_POLAND}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01020}01020\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_TURKISH\ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_acbe71f7abe734bcd64cff834d41fcdc7}{XC\_LOCALE\_TURKEY}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01021}01021\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01022}01022\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01023}01023\ \ \ \ \ \textcolor{keywordflow}{case}\ SCE\_SYSTEM\_PARAM\_LANG\_CHINESE\_S\ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a42e98779809a189adf0107f1499b1cd0}{XC\_LOCALE\_CHINA}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01024}01024\ \ \ \ \ default\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{extra_x64_8h_a05681bebced53e87931dfeef5756abf7}{XC\_LOCALE\_UNITED\_STATES}};}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01025}01025\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01026}01026\ \}}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01027}01027\ }
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01028}\doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a6f49713286a71c9c232eabb0559587b8}{01028}}\ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ \doxymbox{\hyperlink{_ps_vita_stubs_8cpp_a6f49713286a71c9c232eabb0559587b8}{XEnableGuestSignin}}(\doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ fEnable)}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01029}01029\ \{}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01030}01030\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_ps_vita_stubs_8cpp_source_l01031}01031\ \}}
+
+\end{DoxyCode}

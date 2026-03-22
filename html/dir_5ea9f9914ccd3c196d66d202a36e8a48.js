@@ -1,0 +1,26 @@
+var dir_5ea9f9914ccd3c196d66d202a36e8a48 =
+[
+    [ "Conf.h", "_conf_8h.html", null ],
+    [ "CustomMap.cpp", "_custom_map_8cpp.html", null ],
+    [ "CustomMap.h", "_custom_map_8h.html", "_custom_map_8h" ],
+    [ "CustomSet.cpp", "_custom_set_8cpp.html", null ],
+    [ "CustomSet.h", "_custom_set_8h.html", "_custom_set_8h" ],
+    [ "libdivide.h", "libdivide_8h.html", "libdivide_8h" ],
+    [ "PSVitaMaths.h", "_p_s_vita_maths_8h.html", "_p_s_vita_maths_8h" ],
+    [ "PSVitaStrings.cpp", "_p_s_vita_strings_8cpp.html", "_p_s_vita_strings_8cpp" ],
+    [ "PSVitaStrings.h", "_p_s_vita_strings_8h.html", "_p_s_vita_strings_8h" ],
+    [ "PsVitaStubs.cpp", "_ps_vita_stubs_8cpp.html", "_ps_vita_stubs_8cpp" ],
+    [ "PSVitaStubs.h", "_p_s_vita_stubs_8h.html", "_p_s_vita_stubs_8h" ],
+    [ "PSVitaTLSStorage.cpp", "_p_s_vita_t_l_s_storage_8cpp.html", "_p_s_vita_t_l_s_storage_8cpp" ],
+    [ "PSVitaTLSStorage.h", "_p_s_vita_t_l_s_storage_8h.html", "_p_s_vita_t_l_s_storage_8h" ],
+    [ "PSVitaTypes.h", "_p_s_vita_types_8h.html", "_p_s_vita_types_8h" ],
+    [ "ShutdownManager.cpp", "_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8cpp.html", null ],
+    [ "ShutdownManager.h", "_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8h.html", "_p_s_vita_2_p_s_vita_extras_2_shutdown_manager_8h" ],
+    [ "TLSStorage.cpp", "_p_s_vita_2_p_s_vita_extras_2_t_l_s_storage_8cpp.html", null ],
+    [ "TLSStorage.h", "_p_s_vita_2_p_s_vita_extras_2_t_l_s_storage_8h.html", null ],
+    [ "user_malloc.c", "user__malloc_8c.html", "user__malloc_8c" ],
+    [ "user_malloc_for_tls.c", "user__malloc__for__tls_8c.html", "user__malloc__for__tls_8c" ],
+    [ "user_new.cpp", "_p_s_vita_2_p_s_vita_extras_2user__new_8cpp.html", "_p_s_vita_2_p_s_vita_extras_2user__new_8cpp" ],
+    [ "zconf.h", "_p_s_vita_2_p_s_vita_extras_2zconf_8h.html", "_p_s_vita_2_p_s_vita_extras_2zconf_8h" ],
+    [ "zlib.h", "_p_s_vita_2_p_s_vita_extras_2zlib_8h.html", "_p_s_vita_2_p_s_vita_extras_2zlib_8h" ]
+];

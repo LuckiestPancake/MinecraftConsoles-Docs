@@ -1,0 +1,766 @@
+\doxysection{Villager.\+cpp}
+\hypertarget{_villager_8cpp_source}{}\label{_villager_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/Villager.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/Villager.cpp}}
+\doxymbox{\hyperlink{_villager_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{com_8mojang_8nbt_8h}{com.mojang.nbt.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8attributes_8h}{net.minecraft.world.entity.ai.attributes.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8goal_8h}{net.minecraft.world.entity.ai.goal.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8navigation_8h}{net.minecraft.world.entity.ai.navigation.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8village_8h}{net.minecraft.world.entity.ai.village.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8monster_8h}{net.minecraft.world.entity.monster.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8player_8h}{net.minecraft.world.entity.player.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8effect_8h}{net.minecraft.world.effect.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8h}{net.minecraft.world.entity.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8damagesource_8h}{net.minecraft.world.damagesource.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8h}{net.minecraft.world.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8enchantment_8h}{net.minecraft.world.item.enchantment.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8trading_8h}{net.minecraft.world.item.trading.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8tile_8h}{net.minecraft.world.level.tile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8h}{net.minecraft.world.level.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00017}00017\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_textures_8h}{..\(\backslash\)Minecraft.Client\(\backslash\)Textures.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00018}00018\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_villager_8h}{Villager.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00019}00019\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_abstract_container_menu_8h}{AbstractContainerMenu.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00021}00021\ unordered\_map<int,\ pair<int,int>\ >\ Villager::MIN\_MAX\_VALUES;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00022}00022\ unordered\_map<int,\ pair<int,int>\ >\ Villager::MIN\_MAX\_PRICES;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00024}00024\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_living_entity_add33b0acc262751ffaa49deb92671601}{Villager::\_init}}(\textcolor{keywordtype}{int}\ profession)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00025}00025\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00026}00026\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ This\ function\ call\ had\ to\ be\ moved\ here\ from\ the\ Entity\ ctor\ to\ ensure\ that}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00027}00027\ \ \ \ \ \textcolor{comment}{//\ the\ derived\ version\ of\ the\ function\ is\ called}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00028}00028\ \ \ \ \ this-\/>\doxymbox{\hyperlink{class_villager_a3a13fd18dfb417c48f4addfa95d42fe0}{defineSynchedData}}();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00029}00029\ \ \ \ \ \doxymbox{\hyperlink{class_villager_a0e045685cadd7bce3f741d31efc83da4}{registerAttributes}}();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00030}00030\ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_a6357a1d4d4478e0ad62d5236b2615b40}{setHealth}}(\doxymbox{\hyperlink{class_living_entity_a679c180d1b9a974728c0a933accab8f9}{getMaxHealth}}());}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00032}00032\ \ \ \ \ \doxymbox{\hyperlink{class_villager_a0e2ae15161f15c31e060e9fdcf84526c}{setProfession}}(profession);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00033}00033\ \ \ \ \ \doxymbox{\hyperlink{class_agable_mob_a06f920a12446f8e157227c906d60755c}{setSize}}(.6f,\ 1.8f);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00035}00035\ \ \ \ \ villageUpdateInterval\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00036}00036\ \ \ \ \ inLove\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00037}00037\ \ \ \ \ chasing\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00038}00038\ \ \ \ \ village\ =\ weak\_ptr<Village>();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00040}00040\ \ \ \ \ tradingPlayer\ =\ weak\_ptr<Player>();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00041}00041\ \ \ \ \ offers\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00042}00042\ \ \ \ \ updateMerchantTimer\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00043}00043\ \ \ \ \ addRecipeOnUpdate\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00044}00044\ \ \ \ \ riches\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00045}00045\ \ \ \ \ lastPlayerTradeName\ =\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00046}00046\ \ \ \ \ rewardPlayersOnFirstVillage\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00047}00047\ \ \ \ \ baseRecipeChanceMod\ =\ 0.0f;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00049}00049\ \ \ \ \ \doxymbox{\hyperlink{class_mob_ad588b0b4b705647e885e9affa1911533}{getNavigation}}()-\/>\doxymbox{\hyperlink{class_path_navigation_aa4f965545ba222761c6aff209eeef3dc}{setCanOpenDoors}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00050}00050\ \ \ \ \ \doxymbox{\hyperlink{class_mob_ad588b0b4b705647e885e9affa1911533}{getNavigation}}()-\/>\doxymbox{\hyperlink{class_path_navigation_a7bac2f5f74000a16d7db28066b68203d}{setAvoidWater}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00052}00052\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(0,\ \textcolor{keyword}{new}\ FloatGoal(\textcolor{keyword}{this}));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00053}00053\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(1,\ \textcolor{keyword}{new}\ AvoidPlayerGoal(\textcolor{keyword}{this},\ \textcolor{keyword}{typeid}(Zombie),\ 8,\ 0.6,\ 0.6));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00054}00054\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(1,\ \textcolor{keyword}{new}\ TradeWithPlayerGoal(\textcolor{keyword}{this}));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00055}00055\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(1,\ \textcolor{keyword}{new}\ LookAtTradingPlayerGoal(\textcolor{keyword}{this}));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00056}00056\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(2,\ \textcolor{keyword}{new}\ MoveIndoorsGoal(\textcolor{keyword}{this}));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00057}00057\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(3,\ \textcolor{keyword}{new}\ RestrictOpenDoorGoal(\textcolor{keyword}{this}));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00058}00058\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(4,\ \textcolor{keyword}{new}\ OpenDoorGoal(\textcolor{keyword}{this},\ \textcolor{keyword}{true}));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00059}00059\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(5,\ \textcolor{keyword}{new}\ MoveTowardsRestrictionGoal(\textcolor{keyword}{this},\ 0.6));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00060}00060\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(6,\ \textcolor{keyword}{new}\ MakeLoveGoal(\textcolor{keyword}{this}));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00061}00061\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(7,\ \textcolor{keyword}{new}\ TakeFlowerGoal(\textcolor{keyword}{this}));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00062}00062\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(8,\ \textcolor{keyword}{new}\ PlayGoal(\textcolor{keyword}{this},\ 0.32));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00063}00063\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(9,\ \textcolor{keyword}{new}\ InteractGoal(\textcolor{keyword}{this},\ \textcolor{keyword}{typeid}(Player),\ 3,\ 1.f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00064}00064\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(9,\ \textcolor{keyword}{new}\ InteractGoal(\textcolor{keyword}{this},\ \textcolor{keyword}{typeid}(\doxymbox{\hyperlink{class_villager_afcbf72e69442df07d55f43f160891b64}{Villager}}),\ 5,\ 0.02f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00065}00065\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(9,\ \textcolor{keyword}{new}\ RandomStrollGoal(\textcolor{keyword}{this},\ 0.6));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00066}00066\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a016859cc56769eb6a11ea3be0b8a24f9}{goalSelector}}.addGoal(10,\ \textcolor{keyword}{new}\ LookAtPlayerGoal(\textcolor{keyword}{this},\ \textcolor{keyword}{typeid}(\doxymbox{\hyperlink{class_mob_a0db1f4c225b412fdcda234d8ab410ca3}{Mob}}),\ 8));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00067}00067\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00069}\doxymbox{\hyperlink{class_villager_afcbf72e69442df07d55f43f160891b64}{00069}}\ \doxymbox{\hyperlink{class_villager_afcbf72e69442df07d55f43f160891b64}{Villager::Villager}}(\doxymbox{\hyperlink{class_level}{Level}}\ *\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}})\ :\ \doxymbox{\hyperlink{class_agable_mob_a11c856eef3cbe68ce84f25806839092c}{AgableMob}}(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00070}00070\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00071}00071\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a85a7b2cf6bf51424ae4abf8f6525010c}{\_init}}(0);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00072}00072\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00074}\doxymbox{\hyperlink{class_villager_a111736d88dfdbf25bc9d691529b416ef}{00074}}\ \doxymbox{\hyperlink{class_villager_afcbf72e69442df07d55f43f160891b64}{Villager::Villager}}(\doxymbox{\hyperlink{class_level}{Level}}\ *\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}},\ \textcolor{keywordtype}{int}\ profession)\ :\ \doxymbox{\hyperlink{class_agable_mob_a11c856eef3cbe68ce84f25806839092c}{AgableMob}}(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00075}00075\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00076}00076\ \ \ \ \ \doxymbox{\hyperlink{class_mob_a85a7b2cf6bf51424ae4abf8f6525010c}{\_init}}(profession);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00077}00077\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00079}\doxymbox{\hyperlink{class_villager_aa167955bf39bd3b756458e273ad0104b}{00079}}\ \doxymbox{\hyperlink{class_villager_aa167955bf39bd3b756458e273ad0104b}{Villager::\string~Villager}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00080}00080\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00081}00081\ \ \ \ \ \textcolor{keyword}{delete}\ offers;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00082}00082\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00084}\doxymbox{\hyperlink{class_villager_a0e045685cadd7bce3f741d31efc83da4}{00084}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_a0e045685cadd7bce3f741d31efc83da4}{Villager::registerAttributes}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00085}00085\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00086}00086\ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_ac6818ad31fbf3970905db182032c9d83}{AgableMob::registerAttributes}}();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00088}00088\ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_a1fea8534cdafa00c00991a8e18227c0c}{getAttribute}}(\doxymbox{\hyperlink{class_shared_monster_attributes_afd4af9b46e905a33709cd182d3b1a60d}{SharedMonsterAttributes::MOVEMENT\_SPEED}})-\/>\doxymbox{\hyperlink{class_attribute_instance_a4b5f9b622a894d9edc89a08055cb3c18}{setBaseValue}}(0.5f);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00089}00089\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00091}\doxymbox{\hyperlink{class_villager_a69eb81e37f1e7bad9e570e8b1947856a}{00091}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_villager_a69eb81e37f1e7bad9e570e8b1947856a}{Villager::useNewAi}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00092}00092\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00093}00093\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00094}00094\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00096}\doxymbox{\hyperlink{class_villager_ae9b3249b1f209502eca37b3457c4bf93}{00096}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_ae9b3249b1f209502eca37b3457c4bf93}{Villager::serverAiMobStep}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00097}00097\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{if}\ (-\/-\/villageUpdateInterval\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00099}00099\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>villages-\/>queryUpdateAround(\doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}),\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}),\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ villageUpdateInterval\ =\ 70\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(50);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ shared\_ptr<Village>\ \_village\ =\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>villages-\/>getClosestVillage(\doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}),\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}),\ \doxymbox{\hyperlink{class_mth_aa28610a9d98cbe30f2621f5d7e37fd8a}{Mth::floor}}(\doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}),\ \doxymbox{\hyperlink{class_villages_a0e408d5cda5ef3e02c948082b85ec014}{Villages::MaxDoorDist}});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ village\ =\ \_village;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_village\ ==\ \textcolor{keyword}{nullptr})\ \doxymbox{\hyperlink{class_pathfinder_mob_a1fe1667d069fd74cc0db230b06126ed4}{clearRestriction}}();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pos}{Pos}}\ *center\ =\ \_village-\/>getCenter();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pathfinder_mob_ab8f22222f3706b4fe12bb42bdd7fa22d}{restrictTo}}(center-\/>\doxymbox{\hyperlink{class_pos_a4bcafee8dc3800fb8c3792de54996496}{x}},\ center-\/>\doxymbox{\hyperlink{class_pos_a6b309684454df6615bce567e09437348}{y}},\ center-\/>\doxymbox{\hyperlink{class_pos_aa923cf2200dcc6f44fa6dd381be58c7e}{z}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}((\textcolor{keywordtype}{float})\_village-\/>getRadius()\ *\ 0.6f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rewardPlayersOnFirstVillage)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rewardPlayersOnFirstVillage\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_village-\/>rewardAllPlayers(5);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00116}00116\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00118}00118\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_villager_aa880e5331cc3fde47ebb65e5c179364a}{isTrading}}()\ \&\&\ updateMerchantTimer\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00119}00119\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ updateMerchantTimer-\/-\/;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (updateMerchantTimer\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (addRecipeOnUpdate)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ improve\ max\ uses\ for\ all\ obsolete\ recipes}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (offers-\/>size()\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//for\ (MerchantRecipe\ recipe\ :\ offers)}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ recipe\ :\ *offers)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (recipe-\/>isDeprecated())}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ recipe-\/>increaseMaxUses(\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(6)\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(6)\ +\ 2);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ addOffers(1);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ addRecipeOnUpdate\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (village.lock()\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ !lastPlayerTradeName.empty())}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>broadcastEntityEvent(shared\_from\_this(),\ \doxymbox{\hyperlink{class_entity_event_a6c13ec768de9952c6e97740f28097253}{EntityEvent::VILLAGER\_HAPPY}});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ village.lock()-\/>modifyStanding(lastPlayerTradeName,\ 1);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_a75fe12db8b9f45748f1cb5c885537ec0}{addEffect}}(\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_mob_effect_instance}{MobEffectInstance}}(\doxymbox{\hyperlink{class_mob_effect_a80e43d960525b248e66b14d25fb87496}{MobEffect::regeneration}}-\/>\textcolor{keywordtype}{id},\ \doxymbox{\hyperlink{class_shared_constants_a170b00572bc783af06c9f0cda11f24c2}{SharedConstants::TICKS\_PER\_SECOND}}\ *\ 10,\ 0));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00148}00148\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00150}00150\ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_a8b66f5b1232dd2ac34e05ca585910439}{AgableMob::serverAiMobStep}}();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00151}00151\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00153}\doxymbox{\hyperlink{class_villager_a5a5ed22199ce7e49ebe7b89193eecfa6}{00153}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_villager_a5a5ed22199ce7e49ebe7b89193eecfa6}{Villager::mobInteract}}(shared\_ptr<Player>\ player)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00154}00154\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00155}00155\ \ \ \ \ \textcolor{comment}{//\ [EB]:\ Truly\ dislike\ this\ code\ but\ I\ don't\ see\ another\ easy\ way}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00156}00156\ \ \ \ \ shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ =\ player-\/>inventory-\/>getSelected();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00157}00157\ \ \ \ \ \textcolor{keywordtype}{bool}\ holdingSpawnEgg\ =\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}-\/>id\ ==\ \doxymbox{\hyperlink{class_item_a30b0880ea36cfa5153a7efc585c73d89}{Item::spawnEgg\_Id}};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00159}00159\ \ \ \ \ \textcolor{keywordflow}{if}\ (!holdingSpawnEgg\ \&\&\ \doxymbox{\hyperlink{class_living_entity_a4b89bc4521885605f6071bb6cd8b5864}{isAlive}}()\ \&\&\ !\doxymbox{\hyperlink{class_villager_aa880e5331cc3fde47ebb65e5c179364a}{isTrading}}()\ \&\&\ !\doxymbox{\hyperlink{class_agable_mob_ab854d7fa33523be816dc0f74cdbbde16}{isBaby}}())}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00160}00160\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>isClientSide)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ note:\ stop()\ logic\ is\ controlled\ by\ trading\ ai\ goal}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_villager_aeb1830e835c56703bdeadab194530160}{setTradingPlayer}}(player);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J-\/JEV:\ Villagers\ in\ PC\ game\ don't\ display\ professions.}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ player-\/>openTrading(dynamic\_pointer\_cast<Merchant>(shared\_from\_this()),\ \doxymbox{\hyperlink{class_villager_ad68d7e8a006ed3cd61211d2079ab7702}{getDisplayName}}()\ );}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00170}00170\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00171}00171\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_agable_mob_abf0f002fdc9ee240e0353304645b3d07}{AgableMob::mobInteract}}(player);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00172}00172\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00173}00173\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00174}\doxymbox{\hyperlink{class_villager_a3a13fd18dfb417c48f4addfa95d42fe0}{00174}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_a3a13fd18dfb417c48f4addfa95d42fe0}{Villager::defineSynchedData}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00175}00175\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00176}00176\ \ \ \ \ \doxymbox{\hyperlink{class_agable_mob_a39229b49af577304b98d4cb4485de37c}{AgableMob::defineSynchedData}}();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00177}00177\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>define(DATA\_PROFESSION\_ID,\ 0);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00178}00178\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00179}00179\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00180}\doxymbox{\hyperlink{class_villager_aeb668430408b23d43b833084e978fded}{00180}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_aeb668430408b23d43b833084e978fded}{Villager::addAdditonalSaveData}}(\doxymbox{\hyperlink{class_compound_tag}{CompoundTag}}\ *tag)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00181}00181\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00182}00182\ \ \ \ \ \doxymbox{\hyperlink{class_agable_mob_af30bf5a1c278a96de4fb30f873c3702e}{AgableMob::addAdditonalSaveData}}(tag);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00183}00183\ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a73ac6bf6b8ff94a00f8fde1e094072b6}{putInt}}(L\textcolor{stringliteral}{"{}Profession"{}},\ \doxymbox{\hyperlink{class_villager_a8dc1715328454f949ab39343245ec350}{getProfession}}());}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00184}00184\ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a73ac6bf6b8ff94a00f8fde1e094072b6}{putInt}}(L\textcolor{stringliteral}{"{}Riches"{}},\ riches);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00185}00185\ \ \ \ \ \textcolor{keywordflow}{if}\ (offers\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00186}00186\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ tag-\/>\doxymbox{\hyperlink{class_compound_tag_ac0f295c8d2b2b1a1697eb1b0c1a6abbd}{putCompound}}(L\textcolor{stringliteral}{"{}Offers"{}},\ offers-\/>createTag());}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00188}00188\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00189}00189\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00190}00190\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00191}\doxymbox{\hyperlink{class_villager_ae38580a4f4dd3b3b6af10e64ca706e6d}{00191}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_ae38580a4f4dd3b3b6af10e64ca706e6d}{Villager::readAdditionalSaveData}}(\doxymbox{\hyperlink{class_compound_tag}{CompoundTag}}\ *tag)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00192}00192\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00193}00193\ \ \ \ \ \doxymbox{\hyperlink{class_agable_mob_a9ceac1e336d06d40f6a09d0a217ae388}{AgableMob::readAdditionalSaveData}}(tag);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00194}00194\ \ \ \ \ \doxymbox{\hyperlink{class_villager_a0e2ae15161f15c31e060e9fdcf84526c}{setProfession}}(tag-\/>\doxymbox{\hyperlink{class_compound_tag_a8efa86997e6f00c3d459928f57331b5c}{getInt}}(L\textcolor{stringliteral}{"{}Profession"{}}));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00195}00195\ \ \ \ \ riches\ =\ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a8efa86997e6f00c3d459928f57331b5c}{getInt}}(L\textcolor{stringliteral}{"{}Riches"{}});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00196}00196\ \ \ \ \ \textcolor{keywordflow}{if}\ (tag-\/>\doxymbox{\hyperlink{class_compound_tag_abfd5a4d5c417b71cdb916da5b4324d70}{contains}}(L\textcolor{stringliteral}{"{}Offers"{}}))}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00197}00197\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_compound_tag}{CompoundTag}}\ *compound\ =\ tag-\/>\doxymbox{\hyperlink{class_compound_tag_a738473de5b02d917a651947cc8f1fbac}{getCompound}}(L\textcolor{stringliteral}{"{}Offers"{}});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ offers;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ offers\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_merchant_recipe_list}{MerchantRecipeList}}(compound);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00201}00201\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00202}00202\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00203}00203\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00204}\doxymbox{\hyperlink{class_villager_a29bfd876693c0430f156fb230ef41987}{00204}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_villager_a29bfd876693c0430f156fb230ef41987}{Villager::removeWhenFarAway}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00205}00205\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00206}00206\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00207}00207\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00209}\doxymbox{\hyperlink{class_villager_a3c1d5776b3e30a9feeec1c09215c0726}{00209}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_villager_a3c1d5776b3e30a9feeec1c09215c0726}{Villager::getAmbientSound}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00210}00210\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00211}00211\ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_villager_aa880e5331cc3fde47ebb65e5c179364a}{isTrading}}())}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00212}00212\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87a31e8f22c3758716c9f1c0771f93ff4c4}{eSoundType\_MOB\_VILLAGER\_HAGGLE}};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00214}00214\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00215}00215\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87abc9e3a9c9541cf10bfd86cb6168e6211}{eSoundType\_MOB\_VILLAGER\_IDLE}};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00216}00216\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00218}\doxymbox{\hyperlink{class_villager_a1f89d16d6d333a1dc459f0e66079460d}{00218}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_villager_a1f89d16d6d333a1dc459f0e66079460d}{Villager::getHurtSound}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00219}00219\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00220}00220\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87ae871dcfba72968fa1725ccb5ff04e821}{eSoundType\_MOB\_VILLAGER\_HIT}};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00221}00221\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00222}00222\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00223}\doxymbox{\hyperlink{class_villager_a809da550284dc911fb4ecee835bdab62}{00223}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_villager_a809da550284dc911fb4ecee835bdab62}{Villager::getDeathSound}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00224}00224\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00225}00225\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87a4ee606dcae059fa825f0714ad822a6bc}{eSoundType\_MOB\_VILLAGER\_DEATH}};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00226}00226\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00227}00227\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00228}\doxymbox{\hyperlink{class_villager_a0e2ae15161f15c31e060e9fdcf84526c}{00228}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_a0e2ae15161f15c31e060e9fdcf84526c}{Villager::setProfession}}(\textcolor{keywordtype}{int}\ profession)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00229}00229\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00230}00230\ \ \ \ \ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>set(DATA\_PROFESSION\_ID,\ profession);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00231}00231\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00232}00232\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00233}\doxymbox{\hyperlink{class_villager_a8dc1715328454f949ab39343245ec350}{00233}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_villager_a8dc1715328454f949ab39343245ec350}{Villager::getProfession}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00234}00234\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00235}00235\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_entity_aee10d1c7c48a9c59f115f955e2955bf3}{entityData}}-\/>getInteger(DATA\_PROFESSION\_ID);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00236}00236\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00238}\doxymbox{\hyperlink{class_villager_a86f2d17ec9c6cb8d09ef7634dfb744ab}{00238}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_villager_a86f2d17ec9c6cb8d09ef7634dfb744ab}{Villager::isInLove}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00239}00239\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00240}00240\ \ \ \ \ \textcolor{keywordflow}{return}\ inLove;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00241}00241\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00243}\doxymbox{\hyperlink{class_villager_ad9007a8a5b38a46b88c99f1080a979b3}{00243}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_ad9007a8a5b38a46b88c99f1080a979b3}{Villager::setInLove}}(\textcolor{keywordtype}{bool}\ inLove)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00244}00244\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00245}00245\ \ \ \ \ this-\/>inLove\ =\ inLove;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00246}00246\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00247}00247\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00248}\doxymbox{\hyperlink{class_villager_a2db01298f2ee367c404c4bdbf443468b}{00248}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_a2db01298f2ee367c404c4bdbf443468b}{Villager::setChasing}}(\textcolor{keywordtype}{bool}\ chasing)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00249}00249\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00250}00250\ \ \ \ \ this-\/>chasing\ =\ chasing;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00251}00251\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00252}00252\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00253}\doxymbox{\hyperlink{class_villager_adf4ac8fdb0f81750b78230f281026091}{00253}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_villager_adf4ac8fdb0f81750b78230f281026091}{Villager::isChasing}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00254}00254\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00255}00255\ \ \ \ \ \textcolor{keywordflow}{return}\ chasing;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00256}00256\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00258}\doxymbox{\hyperlink{class_villager_a043dee4fc392ee0781fa787bbfa83af8}{00258}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_a043dee4fc392ee0781fa787bbfa83af8}{Villager::setLastHurtByMob}}(shared\_ptr<LivingEntity>\ mob)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00259}00259\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00260}00260\ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_acabeed91daf87bf540447ebad681b8d4}{AgableMob::setLastHurtByMob}}(mob);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00261}00261\ \ \ \ \ shared\_ptr<Village>\ \_village\ =\ village.lock();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00262}00262\ \ \ \ \ \textcolor{keywordflow}{if}\ (\_village\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ mob\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00263}00263\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ \_village-\/>addAggressor(mob);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00265}00265\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00266}00266\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ mob-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a81976c0b62a5e1b5bb0e672101ce8358}{eTYPE\_PLAYER}})\ )}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ amount\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_agable_mob_ab854d7fa33523be816dc0f74cdbbde16}{isBaby}}())}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amount\ =\ -\/3;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \_village-\/>modifyStanding(\ dynamic\_pointer\_cast<Player>(mob)-\/>getName(),\ amount\ );}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_living_entity_a4b89bc4521885605f6071bb6cd8b5864}{isAlive}}())}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>broadcastEntityEvent(shared\_from\_this(),\ \doxymbox{\hyperlink{class_entity_event_aaaf64b2aa33af8e71e6813f792b82ed5}{EntityEvent::VILLAGER\_ANGRY}});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00279}00279\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00280}00280\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00281}00281\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00282}\doxymbox{\hyperlink{class_villager_a0abd3eda10aecce12100188d007984b2}{00282}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_a0abd3eda10aecce12100188d007984b2}{Villager::die}}(\doxymbox{\hyperlink{class_damage_source}{DamageSource}}\ *source)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00283}00283\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00284}00284\ \ \ \ \ shared\_ptr<Village>\ \_village\ =\ village.lock();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00285}00285\ \ \ \ \ \textcolor{keywordflow}{if}\ (\_village\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00286}00286\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00287}00287\ \ \ \ \ \ \ \ \ shared\_ptr<Entity>\ sourceEntity\ =\ source-\/>\doxymbox{\hyperlink{class_damage_source_a21d279882a9f658847e0a3fba91c1a0d}{getEntity}}();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00288}00288\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (sourceEntity\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00289}00289\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ sourceEntity-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a81976c0b62a5e1b5bb0e672101ce8358}{eTYPE\_PLAYER}})\ )}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_village-\/>modifyStanding(\ dynamic\_pointer\_cast<Player>(sourceEntity)-\/>getName(),\ -\/2\ );}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\ sourceEntity-\/>instanceof(\doxymbox{\hyperlink{_class_8h_ae2349c54aeddb1b3e9b06fc13b82e3c6a9be6d36b2d196e21af5e9d6b1fdca324}{eTYPE\_ENEMY}})\ )}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_village-\/>resetNoBreedTimer();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (sourceEntity\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ the\ villager\ was\ killed\ by\ the\ world\ (such\ as\ lava\ or\ falling),\ blame}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ nearest\ player\ by\ not\ reproducing\ for\ a\ while}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<Player>\ nearestPlayer\ =\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>getNearestPlayer(shared\_from\_this(),\ 16.0f);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (nearestPlayer\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_village-\/>resetNoBreedTimer();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00309}00309\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00310}00310\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00311}00311\ \ \ \ \ \textcolor{comment}{//\ Make\ the\ gui\ close\ if\ the\ villager\ die\ while\ trading}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00312}00312\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{auto}\ currentTrader\ =\ tradingPlayer.lock())}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00313}00313\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00314}00314\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (currentTrader-\/>containerMenu\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ menu\ =\ currentTrader-\/>containerMenu;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ menu-\/>removed(currentTrader);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00319}00319\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ tradingPlayer.reset();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00321}00321\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00322}00322\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00323}00323\ \ \ \ \ \doxymbox{\hyperlink{class_living_entity_a4248ebe53bb8064be29c195f4baa4d4b}{AgableMob::die}}(source);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00324}00324\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00325}00325\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00326}\doxymbox{\hyperlink{class_villager_aeb1830e835c56703bdeadab194530160}{00326}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_aeb1830e835c56703bdeadab194530160}{Villager::setTradingPlayer}}(shared\_ptr<Player>\ player)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00327}00327\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00328}00328\ \ \ \ \ tradingPlayer\ =\ weak\_ptr<Player>(player);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00329}00329\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00330}00330\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00331}\doxymbox{\hyperlink{class_villager_a9d24538b392d47407e29f2f6f8d21adc}{00331}}\ shared\_ptr<Player>\ \doxymbox{\hyperlink{class_villager_a9d24538b392d47407e29f2f6f8d21adc}{Villager::getTradingPlayer}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00332}00332\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00333}00333\ \ \ \ \ \textcolor{keywordflow}{return}\ tradingPlayer.lock();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00334}00334\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00336}\doxymbox{\hyperlink{class_villager_aa880e5331cc3fde47ebb65e5c179364a}{00336}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_villager_aa880e5331cc3fde47ebb65e5c179364a}{Villager::isTrading}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00337}00337\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00338}00338\ \ \ \ \ \textcolor{keywordflow}{return}\ tradingPlayer.lock()\ !=\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00339}00339\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00340}00340\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00341}\doxymbox{\hyperlink{class_villager_a27a3eef28166dd42e8e62066fad88d1a}{00341}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_a27a3eef28166dd42e8e62066fad88d1a}{Villager::notifyTrade}}(\doxymbox{\hyperlink{class_merchant_recipe}{MerchantRecipe}}\ *activeRecipe)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00342}00342\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00343}00343\ \ \ \ \ activeRecipe-\/>\doxymbox{\hyperlink{class_merchant_recipe_a92574b639d52e8670f2261b1b844cd7f}{increaseUses}}();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00344}00344\ \ \ \ \ \doxymbox{\hyperlink{class_mob_adeb5d36f775005329261898ae2f8e02d}{ambientSoundTime}}\ =\ -\/\doxymbox{\hyperlink{class_mob_a7cf60c0032d726f9352a918a93ffac8d}{getAmbientSoundInterval}}();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00345}00345\ \ \ \ \ \doxymbox{\hyperlink{class_entity_a08ed2a3c26d775b4698c873926a3a788}{playSound}}(\doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87ad7877bf5e1d7d97a73adfc1263d7ca1c}{eSoundType\_MOB\_VILLAGER\_YES}},\ \doxymbox{\hyperlink{class_living_entity_a9426023afc6b4a5273b7dada6fe806a5}{getSoundVolume}}(),\ \doxymbox{\hyperlink{class_living_entity_aec8f4f173f2cec8d180c51821b8646d8}{getVoicePitch}}());}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00347}00347\ \ \ \ \ \textcolor{comment}{//\ when\ the\ player\ buys\ the\ latest\ item,\ we\ improve\ the\ merchant\ a\ little\ while\ later}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00348}00348\ \ \ \ \ \textcolor{keywordflow}{if}\ (activeRecipe-\/>\doxymbox{\hyperlink{class_merchant_recipe_a365a8fb85a4d2ef0196f9ef6be1abd57}{isSame}}(offers-\/>at(offers-\/>size()\ -\/\ 1)))}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00349}00349\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ updateMerchantTimer\ =\ \doxymbox{\hyperlink{class_shared_constants_a170b00572bc783af06c9f0cda11f24c2}{SharedConstants::TICKS\_PER\_SECOND}}\ *\ 2;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ addRecipeOnUpdate\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tradingPlayer.lock()\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ lastPlayerTradeName\ =\ tradingPlayer.lock()-\/>getName();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ lastPlayerTradeName\ =\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00360}00360\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00361}00361\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00362}00362\ \ \ \ \ \textcolor{keywordflow}{if}\ (activeRecipe-\/>\doxymbox{\hyperlink{class_merchant_recipe_a4f1fbc47138b4dd6015a2d5d67d47a3e}{getBuyAItem}}()-\/>id\ ==\ \doxymbox{\hyperlink{class_item_a4407d753e7f8d62bd333ef1e1d195996}{Item::emerald\_Id}})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00363}00363\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00364}00364\ \ \ \ \ \ \ \ \ riches\ +=\ activeRecipe-\/>\doxymbox{\hyperlink{class_merchant_recipe_a4f1fbc47138b4dd6015a2d5d67d47a3e}{getBuyAItem}}()-\/>count;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00365}00365\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00366}00366\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00367}00367\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00368}\doxymbox{\hyperlink{class_villager_a070dde24a2d9f614f8726e2768621876}{00368}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_a070dde24a2d9f614f8726e2768621876}{Villager::notifyTradeUpdated}}(shared\_ptr<ItemInstance>\ \doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00369}00369\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00370}00370\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>isClientSide\ \&\&\ (\doxymbox{\hyperlink{class_mob_adeb5d36f775005329261898ae2f8e02d}{ambientSoundTime}}\ >\ (-\/\doxymbox{\hyperlink{class_mob_a7cf60c0032d726f9352a918a93ffac8d}{getAmbientSoundInterval}}()\ +\ \doxymbox{\hyperlink{class_shared_constants_a170b00572bc783af06c9f0cda11f24c2}{SharedConstants::TICKS\_PER\_SECOND}})))}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00371}00371\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_mob_adeb5d36f775005329261898ae2f8e02d}{ambientSoundTime}}\ =\ -\/\doxymbox{\hyperlink{class_mob_a7cf60c0032d726f9352a918a93ffac8d}{getAmbientSoundInterval}}();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00373}00373\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_x_u_i___custom_messages_8h_abb4202ed67815596bc389dca4bdc8691}{item}}\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00374}00374\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a08ed2a3c26d775b4698c873926a3a788}{playSound}}(\doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87ad7877bf5e1d7d97a73adfc1263d7ca1c}{eSoundType\_MOB\_VILLAGER\_YES}},\ \doxymbox{\hyperlink{class_living_entity_a9426023afc6b4a5273b7dada6fe806a5}{getSoundVolume}}(),\ \doxymbox{\hyperlink{class_living_entity_aec8f4f173f2cec8d180c51821b8646d8}{getVoicePitch}}());}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00376}00376\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00377}00377\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00378}00378\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00379}00379\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_a08ed2a3c26d775b4698c873926a3a788}{playSound}}(\doxymbox{\hyperlink{_sound_types_8h_aadb94151dbb549b62ec15f3e5104fc87ace5b88ea9a7ee40250558b18e8ae316b}{eSoundType\_MOB\_VILLAGER\_NO}},\ \doxymbox{\hyperlink{class_living_entity_a9426023afc6b4a5273b7dada6fe806a5}{getSoundVolume}}(),\ \doxymbox{\hyperlink{class_living_entity_aec8f4f173f2cec8d180c51821b8646d8}{getVoicePitch}}());}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00381}00381\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00382}00382\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00383}00383\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00384}\doxymbox{\hyperlink{class_villager_a09dc56aafee342292af15a7a297a30da}{00384}}\ \doxymbox{\hyperlink{class_merchant_recipe_list}{MerchantRecipeList}}\ *\doxymbox{\hyperlink{class_villager_a09dc56aafee342292af15a7a297a30da}{Villager::getOffers}}(shared\_ptr<Player>\ forPlayer)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00385}00385\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00386}00386\ \ \ \ \ \textcolor{keywordflow}{if}\ (offers\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00387}00387\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ addOffers(1);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00389}00389\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00390}00390\ \ \ \ \ \textcolor{keywordflow}{return}\ offers;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00391}00391\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00392}00392\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00393}00393\ \textcolor{keywordtype}{float}\ Villager::getRecipeChance(\textcolor{keywordtype}{float}\ baseChance)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00394}00394\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00395}00395\ \ \ \ \ \textcolor{keywordtype}{float}\ newChance\ =\ baseChance\ +\ baseRecipeChanceMod;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00396}00396\ \ \ \ \ \textcolor{keywordflow}{if}\ (newChance\ >\ .9f)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00397}00397\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00398}00398\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ .9f\ -\/\ (newChance\ -\/\ .9f);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00399}00399\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00400}00400\ \ \ \ \ \textcolor{keywordflow}{return}\ newChance;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00401}00401\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00402}00402\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00403}00403\ \textcolor{keywordtype}{void}\ Villager::addOffers(\textcolor{keywordtype}{int}\ addCount)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00404}00404\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00405}00405\ \ \ \ \ MerchantRecipeList\ *newOffers\ =\ \textcolor{keyword}{new}\ MerchantRecipeList();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00406}00406\ \ \ \ \ \textcolor{keywordflow}{switch}\ (\doxymbox{\hyperlink{class_villager_a8dc1715328454f949ab39343245ec350}{getProfession}}())}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00407}00407\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00408}00408\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_villager_a16c8cc2705ece7d3aba0d855357f72b2}{PROFESSION\_FARMER}}:}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00409}00409\ \ \ \ \ \ \ \ \ addItemForTradeIn(newOffers,\ \doxymbox{\hyperlink{class_item_af58183e5bebea5da4db22acee78bccba}{Item::wheat\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.9f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00410}00410\ \ \ \ \ \ \ \ \ addItemForTradeIn(newOffers,\ \doxymbox{\hyperlink{class_tile_a555c12411ab257649e7423f4e6227ad4}{Tile::wool\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.5f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00411}00411\ \ \ \ \ \ \ \ \ addItemForTradeIn(newOffers,\ \doxymbox{\hyperlink{class_item_a6bfcd966e4f8ee887cd61b36eab681a0}{Item::chicken\_raw\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.5f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00412}00412\ \ \ \ \ \ \ \ \ addItemForTradeIn(newOffers,\ \doxymbox{\hyperlink{class_item_a5fb9e295bbceb603872c3ac47fc14b66}{Item::fish\_cooked\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.4f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00413}00413\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a83eb914f5f976d78f38a1900d788c2cc}{Item::bread\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.9f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00414}00414\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a8fd8a2d4ceaec85aeaeeb884e62bb454}{Item::melon\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00415}00415\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_ab050428abdeaf32ef766c8da1bd3f264}{Item::apple\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00416}00416\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_adaffc0bc42e37b37a0e91bd9ed35ba28}{Item::cookie\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00417}00417\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a93e034f8279e92669f79b733bd6391f1}{Item::shears\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00418}00418\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a6cd0a858578fb8307c3de6a8caa6181d}{Item::flintAndSteel\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00419}00419\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a44c26039fc83c724ca13d12403eb85cc}{Item::chicken\_cooked\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00420}00420\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a6040f1f53c6417a9397c89ed0c007ec8}{Item::arrow\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.5f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00421}00421\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ <\ getRecipeChance(.5f))}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00422}00422\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00423}00423\ \ \ \ \ \ \ \ \ \ \ \ \ newOffers-\/>\doxymbox{\hyperlink{class_merchant_recipe_list_abf96e703d4ff15536f39a3e96b889c64}{push\_back}}(\textcolor{keyword}{new}\ MerchantRecipe(std::make\_shared<ItemInstance>(\doxymbox{\hyperlink{class_tile_ae251b670a518d418c7ad776f0a6739cd}{Tile::gravel}},\ 10),\ std::make\_shared<ItemInstance>(\doxymbox{\hyperlink{class_item_a4e03c0806729f760fddcfeeb281ed25d}{Item::emerald}}),\ std::make\_shared<ItemInstance>(\doxymbox{\hyperlink{class_item_add53ffdfb6bc62261c848512282d1645}{Item::flint\_Id}},\ 4\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(2),\ 0)));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00424}00424\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00425}00425\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00426}00426\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_villager_a929d10c9e982240e9e26e8f835233a2b}{PROFESSION\_BUTCHER}}:}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00427}00427\ \ \ \ \ \ \ \ \ addItemForTradeIn(newOffers,\ \doxymbox{\hyperlink{class_item_a3bd913cdbf09e9f59fb6a9758b57b3d6}{Item::coal\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.7f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00428}00428\ \ \ \ \ \ \ \ \ addItemForTradeIn(newOffers,\ \doxymbox{\hyperlink{class_item_aee1d4421e46ec215cfaa63f81b732059}{Item::porkChop\_raw\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.5f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00429}00429\ \ \ \ \ \ \ \ \ addItemForTradeIn(newOffers,\ \doxymbox{\hyperlink{class_item_add7db8e9f34fd3934279f1bdb06155a9}{Item::beef\_raw\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.5f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00430}00430\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_ab372089d43d2cd88413b49562a506ba9}{Item::saddle\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.1f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00431}00431\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a4338a8642261812e7ce0ef3e419537f3}{Item::chestplate\_leather\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00432}00432\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a92f2a73aff25ce40284138ebc82cfe6f}{Item::boots\_leather\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00433}00433\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_ac2e6ef917525f913d14133ba9d3321f8}{Item::helmet\_leather\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00434}00434\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a1ce54bc0b6b03f2dd4820e2b105d4688}{Item::leggings\_leather\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00435}00435\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_ad14458194fde4adb0b96b285e7d4f472}{Item::porkChop\_cooked\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00436}00436\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_afed2410612464cc33fb44cd3247d8ba1}{Item::beef\_cooked\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00437}00437\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00438}00438\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_villager_a256b8b7f7e3aa0639136cac72625cdc9}{PROFESSION\_SMITH}}:}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00439}00439\ \ \ \ \ \ \ \ \ addItemForTradeIn(newOffers,\ \doxymbox{\hyperlink{class_item_a3bd913cdbf09e9f59fb6a9758b57b3d6}{Item::coal\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.7f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00440}00440\ \ \ \ \ \ \ \ \ addItemForTradeIn(newOffers,\ \doxymbox{\hyperlink{class_item_a27fd32143f93c3424ed0ce4d80df8867}{Item::ironIngot\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.5f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00441}00441\ \ \ \ \ \ \ \ \ addItemForTradeIn(newOffers,\ \doxymbox{\hyperlink{class_item_a701175cf39ffa077d70e0b845dc24725}{Item::goldIngot\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.5f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00442}00442\ \ \ \ \ \ \ \ \ addItemForTradeIn(newOffers,\ \doxymbox{\hyperlink{class_item_a1007d666a894f7253af202eb840946ac}{Item::diamond\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.5f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00443}00443\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00444}00444\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_af2263d3ee23c369819f72b41decd1523}{Item::sword\_iron\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.5f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00445}00445\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a2bab4014a25a0a46c6b80cb854e0c299}{Item::sword\_diamond\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.5f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00446}00446\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a873501c70063d1a55071e92a88849429}{Item::hatchet\_iron\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00447}00447\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a9138f4d53a18e1a97aba4ec44dc9be91}{Item::hatchet\_diamond\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00448}00448\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_ab37db0e5f2e058ce21dc0853e6b60d7c}{Item::pickAxe\_iron\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.5f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00449}00449\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a9f918a9649ba2492380e34ee4c95c1f7}{Item::pickAxe\_diamond\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.5f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00450}00450\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a0ad900f020ac0725469955fff65fc644}{Item::shovel\_iron\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00451}00451\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_affa5f53ab0a61ee339ef4d9b2a09addf}{Item::shovel\_diamond\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00452}00452\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a6e5c6450cf74210a9c8811c5f65528c1}{Item::hoe\_iron\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00453}00453\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a4f55e5310af4418c0a6fc549b5d465fa}{Item::hoe\_diamond\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00454}00454\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_aebcd6713d79fef74a7fd814897ff626d}{Item::boots\_iron\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00455}00455\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a176a7f4cc1a03adb6159b14fdcc94689}{Item::boots\_diamond\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00456}00456\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_af6031f7422f24fef1418596186de3fed}{Item::helmet\_iron\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00457}00457\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_aca1cda39c4cac9a0ebfd11ad39ad093e}{Item::helmet\_diamond\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00458}00458\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a4bcbde733bc87170ff2338c0fcf35c2c}{Item::chestplate\_iron\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00459}00459\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a3c423d3dc00e6be3076a998beca1d147}{Item::chestplate\_diamond\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00460}00460\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a60cf10e1649173d388ff50547545823a}{Item::leggings\_iron\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a6f7c32afefc59de55185956f3a717301}{Item::leggings\_diamond\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00462}00462\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_acbea4599786198822e18a9068c054ef2}{Item::boots\_chain\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.1f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00463}00463\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_ac666a5488eedb3bc04b6d90abd3b52f0}{Item::helmet\_chain\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.1f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00464}00464\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a6f6dd74029314d62356c3bfaf427b938}{Item::chestplate\_chain\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.1f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00465}00465\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a5b7b6c5a8cbfdce04ca7a41c5c2d395e}{Item::leggings\_chain\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.1f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00466}00466\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00467}00467\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_villager_a62bd69abc891cd14bb52c2e2698f7a4b}{PROFESSION\_LIBRARIAN}}:}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00468}00468\ \ \ \ \ \ \ \ \ addItemForTradeIn(newOffers,\ \doxymbox{\hyperlink{class_item_a4f560b44869f6923f9c703cba6a083b6}{Item::paper\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.8f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00469}00469\ \ \ \ \ \ \ \ \ addItemForTradeIn(newOffers,\ \doxymbox{\hyperlink{class_item_a38e9f22d094d10fcfb5137acd76b002a}{Item::book\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.8f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00470}00470\ \ \ \ \ \ \ \ \ \textcolor{comment}{//addItemForTradeIn(newOffers,\ Item::writtenBook\_Id,\ random,\ getRecipeChance(0.3f));}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00471}00471\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_tile_a4f91bad6f283fede873de297c570a365}{Tile::bookshelf\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.8f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00472}00472\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_tile_a460d8f78ab1bdcb5fb046798667e07e2}{Tile::glass\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00473}00473\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_ad7c6e7203844709cc5ccd47c57ccb809}{Item::compass\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00474}00474\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_af8d04638ec268b9874130a1030cae888}{Item::clock\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00475}00475\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00476}00476\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ <\ getRecipeChance(0.07f))}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00477}00477\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ Enchantment\ *enchantment\ =\ \doxymbox{\hyperlink{class_enchantment_ac767443ef1d0ef71b89507ee45783229}{Enchantment::validEnchantments}}[\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(\doxymbox{\hyperlink{class_enchantment_ac767443ef1d0ef71b89507ee45783229}{Enchantment::validEnchantments}}.size())];}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}\ =\ \doxymbox{\hyperlink{class_mth_aee4b1e44f392218c71d2c96216a47f10}{Mth::nextInt}}(\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ enchantment-\/>\doxymbox{\hyperlink{class_enchantment_af0fc9ccb2a307bb60c0adb749f89affb}{getMinLevel}}(),\ enchantment-\/>\doxymbox{\hyperlink{class_enchantment_ad75bb2deaddc7dbf5daffee520a34e5c}{getMaxLevel}}());}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ book\ =\ \doxymbox{\hyperlink{class_item_ad701f732f98cf976812239b5e60eefce}{Item::enchantedBook}}-\/>\doxymbox{\hyperlink{class_enchanted_book_item_ae6277479a841e399ef638a1e7956b55c}{createForEnchantment}}(\textcolor{keyword}{new}\ EnchantmentInstance(enchantment,\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00481}00481\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ cost\ =\ 2\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(5\ +\ (\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}\ *\ 10))\ +\ 3\ *\ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00482}00482\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ newOffers-\/>\doxymbox{\hyperlink{class_merchant_recipe_list_abf96e703d4ff15536f39a3e96b889c64}{push\_back}}(\textcolor{keyword}{new}\ MerchantRecipe(std::make\_shared<ItemInstance>(\doxymbox{\hyperlink{class_item_ab85cde0cef0a404a0f97d9b173f3dd82}{Item::book}}),\ std::make\_shared<ItemInstance>(\doxymbox{\hyperlink{class_item_a4e03c0806729f760fddcfeeb281ed25d}{Item::emerald}},\ cost),\ book));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00484}00484\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00485}00485\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00486}00486\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_villager_ad185db8cd66b729e82ff9564ad45dc65}{PROFESSION\_PRIEST}}:}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00487}00487\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_ac769ba2d548d361b2ea7af72c834a2c4}{Item::eyeOfEnder\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00488}00488\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_aec069b6a8928a3a607fadc1cd2827d2c}{Item::expBottle\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.2f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00489}00489\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_item_a5b3414c9f4e951f760325c792d1b7a5e}{Item::redStone\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.4f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00490}00490\ \ \ \ \ \ \ \ \ addItemForPurchase(newOffers,\ \doxymbox{\hyperlink{class_tile_a9be5f19845abba0a486d7a48f9c0faed}{Tile::glowstone\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ getRecipeChance(.3f));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00491}00491\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ enchantItems[]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item_af2263d3ee23c369819f72b41decd1523}{Item::sword\_iron\_Id}},\ \doxymbox{\hyperlink{class_item_a2bab4014a25a0a46c6b80cb854e0c299}{Item::sword\_diamond\_Id}},\ \doxymbox{\hyperlink{class_item_a4bcbde733bc87170ff2338c0fcf35c2c}{Item::chestplate\_iron\_Id}},\ \doxymbox{\hyperlink{class_item_a3c423d3dc00e6be3076a998beca1d147}{Item::chestplate\_diamond\_Id}},\ \doxymbox{\hyperlink{class_item_a873501c70063d1a55071e92a88849429}{Item::hatchet\_iron\_Id}},\ \doxymbox{\hyperlink{class_item_a9138f4d53a18e1a97aba4ec44dc9be91}{Item::hatchet\_diamond\_Id}},\ \doxymbox{\hyperlink{class_item_ab37db0e5f2e058ce21dc0853e6b60d7c}{Item::pickAxe\_iron\_Id}},}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_item_a9f918a9649ba2492380e34ee4c95c1f7}{Item::pickAxe\_diamond\_Id}}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00495}00495\ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00496}00496\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 8;\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00497}00497\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00498}00498\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ =\ enchantItems[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00499}00499\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ <\ getRecipeChance(.05f))}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00500}00500\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00501}00501\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newOffers-\/>\doxymbox{\hyperlink{class_merchant_recipe_list_abf96e703d4ff15536f39a3e96b889c64}{push\_back}}(\textcolor{keyword}{new}\ MerchantRecipe(std::make\_shared<ItemInstance>(\textcolor{keywordtype}{id},\ 1,\ 0),}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00502}00502\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::make\_shared<ItemInstance>(\doxymbox{\hyperlink{class_item_a4e03c0806729f760fddcfeeb281ed25d}{Item::emerald}},\ 2\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(3),\ 0),}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00503}00503\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_enchantment_helper_a7b10cb781a75601ea6eb17d775a85374}{EnchantmentHelper::enchantItem}}(\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ std::make\_shared<ItemInstance>(\textcolor{keywordtype}{id},\ 1,\ 0),\ 5\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(15))));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00504}00504\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00505}00505\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00506}00506\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00507}00507\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00508}00508\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00509}00509\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00510}00510\ \ \ \ \ \textcolor{keywordflow}{if}\ (newOffers-\/>\doxymbox{\hyperlink{class_merchant_recipe_list_af272124a8c39623b56dbdd9ca30ce1ee}{empty}}())}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00511}00511\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00512}00512\ \ \ \ \ \ \ \ \ addItemForTradeIn(newOffers,\ \doxymbox{\hyperlink{class_item_a701175cf39ffa077d70e0b845dc24725}{Item::goldIngot\_Id}},\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}},\ 1.0f);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00513}00513\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00514}00514\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00515}00515\ \ \ \ \ \textcolor{comment}{//\ shuffle\ the\ list\ to\ make\ it\ more\ interesting}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00516}00516\ \ \ \ \ std::shuffle(newOffers-\/>\doxymbox{\hyperlink{class_merchant_recipe_list_a3fc227e8c7433d58927bdd22e873118e}{begin}}(),\ newOffers-\/>\doxymbox{\hyperlink{class_merchant_recipe_list_ae9fc5a26bd5c1593454cf0276b801b0a}{end}}(),\ std::mt19937\{std::random\_device\{\}()\});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00517}00517\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00518}00518\ \ \ \ \ \textcolor{keywordflow}{if}\ (offers\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00519}00519\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00520}00520\ \ \ \ \ \ \ \ \ offers\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_merchant_recipe_list}{MerchantRecipeList}}();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00521}00521\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00522}00522\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ addCount\ \&\&\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ newOffers-\/>\doxymbox{\hyperlink{class_merchant_recipe_list_ac8a403206f6195d5c5acd6c8d1cd81fc}{size}}();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00523}00523\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00524}00524\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ offers-\/>addIfNewOrBetter(newOffers-\/>\doxymbox{\hyperlink{class_merchant_recipe_list_a13d7f42378a9d50d2aa9b255a8ad3220}{at}}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})))}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00525}00525\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00526}00526\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 4J\ Added\ so\ we\ can\ delete\ newOffers}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ newOffers-\/>\doxymbox{\hyperlink{class_merchant_recipe_list_a5577cfca11a28fbb28a4abe7354421d9}{erase}}(newOffers-\/>\doxymbox{\hyperlink{class_merchant_recipe_list_a3fc227e8c7433d58927bdd22e873118e}{begin}}()\ +\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00528}00528\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00529}00529\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00530}00530\ \ \ \ \ \textcolor{keyword}{delete}\ newOffers;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00531}00531\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00532}00532\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00533}\doxymbox{\hyperlink{class_villager_aebf6e022e2f76807e6ac60815226f484}{00533}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_aebf6e022e2f76807e6ac60815226f484}{Villager::overrideOffers}}(\doxymbox{\hyperlink{class_merchant_recipe_list}{MerchantRecipeList}}\ *recipeList)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00534}00534\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00535}00535\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00536}00536\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00537}00537\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00538}\doxymbox{\hyperlink{class_villager_a7ae503b09dabb9d9b3a6d2d05c66a283}{00538}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_a7ae503b09dabb9d9b3a6d2d05c66a283}{Villager::staticCtor}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00539}00539\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00540}00540\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_a3bd913cdbf09e9f59fb6a9758b57b3d6}{Item::coal\_Id}}]\ =\ pair<int,int>(16,\ 24);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00541}00541\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_a27fd32143f93c3424ed0ce4d80df8867}{Item::ironIngot\_Id}}]\ =\ pair<int,int>(8,\ 10);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00542}00542\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_a701175cf39ffa077d70e0b845dc24725}{Item::goldIngot\_Id}}]\ =\ pair<int,int>(8,\ 10);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00543}00543\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_a1007d666a894f7253af202eb840946ac}{Item::diamond\_Id}}]\ =\ pair<int,int>(4,\ 6);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00544}00544\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_a4f560b44869f6923f9c703cba6a083b6}{Item::paper\_Id}}]\ =\ pair<int,int>(24,\ 36);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00545}00545\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_a38e9f22d094d10fcfb5137acd76b002a}{Item::book\_Id}}]\ =\ pair<int,int>(11,\ 13);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00546}00546\ \ \ \ \ \textcolor{comment}{//MIN\_MAX\_VALUES.insert(Item::writtenBook\_Id,\ pair<int,int>(1,\ 1));}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00547}00547\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_a7c99a9f239e8bb64ba905b067d2ff957}{Item::enderPearl\_Id}}]\ =\ pair<int,int>(3,\ 4);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00548}00548\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_ac769ba2d548d361b2ea7af72c834a2c4}{Item::eyeOfEnder\_Id}}]\ =\ pair<int,int>(2,\ 3);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00549}00549\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_aee1d4421e46ec215cfaa63f81b732059}{Item::porkChop\_raw\_Id}}]\ =\ pair<int,int>(14,\ 18);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00550}00550\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_add7db8e9f34fd3934279f1bdb06155a9}{Item::beef\_raw\_Id}}]\ =\ pair<int,int>(14,\ 18);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00551}00551\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_a6bfcd966e4f8ee887cd61b36eab681a0}{Item::chicken\_raw\_Id}}]\ =\ pair<int,int>(14,\ 18);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00552}00552\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_a5fb9e295bbceb603872c3ac47fc14b66}{Item::fish\_cooked\_Id}}]\ =\ pair<int,int>(9,\ 13);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00553}00553\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_ab626bb8ab0853b7032d589615d365ab4}{Item::seeds\_wheat\_Id}}]\ =\ pair<int,int>(34,\ 48);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00554}00554\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_a8b752d3a18d535876e0a1c5289d67b33}{Item::seeds\_melon\_Id}}]\ =\ pair<int,int>(30,\ 38);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00555}00555\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_a6fce8508eb46deab14abc8dd82feaab3}{Item::seeds\_pumpkin\_Id}}]\ =\ pair<int,int>(30,\ 38);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00556}00556\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_af58183e5bebea5da4db22acee78bccba}{Item::wheat\_Id}}]\ =\ pair<int,int>(18,\ 22);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00557}00557\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_tile_a555c12411ab257649e7423f4e6227ad4}{Tile::wool\_Id}}]\ =\ pair<int,int>(14,\ 22);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00558}00558\ \ \ \ \ MIN\_MAX\_VALUES[\doxymbox{\hyperlink{class_item_a985996739495a9a78c481bb3bd50bd5a}{Item::rotten\_flesh\_Id}}]\ =\ pair<int,int>(36,\ 64);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00559}00559\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00560}00560\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a6cd0a858578fb8307c3de6a8caa6181d}{Item::flintAndSteel\_Id}}]\ =\ pair<int,int>(3,\ 4);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00561}00561\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a93e034f8279e92669f79b733bd6391f1}{Item::shears\_Id}}]\ =\ pair<int,int>(3,\ 4);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00562}00562\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_af2263d3ee23c369819f72b41decd1523}{Item::sword\_iron\_Id}}]\ =\ pair<int,int>(7,\ 11);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00563}00563\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a2bab4014a25a0a46c6b80cb854e0c299}{Item::sword\_diamond\_Id}}]\ =\ pair<int,int>(12,\ 14);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00564}00564\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a873501c70063d1a55071e92a88849429}{Item::hatchet\_iron\_Id}}]\ =\ pair<int,int>(6,\ 8);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00565}00565\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a9138f4d53a18e1a97aba4ec44dc9be91}{Item::hatchet\_diamond\_Id}}]\ =\ pair<int,int>(9,\ 12);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00566}00566\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_ab37db0e5f2e058ce21dc0853e6b60d7c}{Item::pickAxe\_iron\_Id}}]\ =\ pair<int,int>(7,\ 9);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00567}00567\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a9f918a9649ba2492380e34ee4c95c1f7}{Item::pickAxe\_diamond\_Id}}]\ =\ pair<int,int>(10,\ 12);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00568}00568\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a0ad900f020ac0725469955fff65fc644}{Item::shovel\_iron\_Id}}]\ =\ pair<int,int>(4,\ 6);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00569}00569\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_affa5f53ab0a61ee339ef4d9b2a09addf}{Item::shovel\_diamond\_Id}}]\ =\ pair<int,int>(7,\ 8);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00570}00570\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a6e5c6450cf74210a9c8811c5f65528c1}{Item::hoe\_iron\_Id}}]\ =\ pair<int,int>(4,\ 6);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00571}00571\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a4f55e5310af4418c0a6fc549b5d465fa}{Item::hoe\_diamond\_Id}}]\ =\ pair<int,int>(7,\ 8);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00572}00572\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_aebcd6713d79fef74a7fd814897ff626d}{Item::boots\_iron\_Id}}]\ =\ pair<int,int>(4,\ 6);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00573}00573\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a176a7f4cc1a03adb6159b14fdcc94689}{Item::boots\_diamond\_Id}}]\ =\ pair<int,int>(7,\ 8);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00574}00574\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_af6031f7422f24fef1418596186de3fed}{Item::helmet\_iron\_Id}}]\ =\ pair<int,int>(4,\ 6);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00575}00575\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_aca1cda39c4cac9a0ebfd11ad39ad093e}{Item::helmet\_diamond\_Id}}]\ =\ pair<int,int>(7,\ 8);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00576}00576\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a4bcbde733bc87170ff2338c0fcf35c2c}{Item::chestplate\_iron\_Id}}]\ =\ pair<int,int>(10,\ 14);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00577}00577\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a3c423d3dc00e6be3076a998beca1d147}{Item::chestplate\_diamond\_Id}}]\ =\ pair<int,int>(16,\ 19);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00578}00578\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a60cf10e1649173d388ff50547545823a}{Item::leggings\_iron\_Id}}]\ =\ pair<int,int>(8,\ 10);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00579}00579\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a6f7c32afefc59de55185956f3a717301}{Item::leggings\_diamond\_Id}}]\ =\ pair<int,int>(11,\ 14);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00580}00580\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_acbea4599786198822e18a9068c054ef2}{Item::boots\_chain\_Id}}]\ =\ pair<int,int>(5,\ 7);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00581}00581\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_ac666a5488eedb3bc04b6d90abd3b52f0}{Item::helmet\_chain\_Id}}]\ =\ pair<int,int>(5,\ 7);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00582}00582\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a6f6dd74029314d62356c3bfaf427b938}{Item::chestplate\_chain\_Id}}]\ =\ pair<int,int>(11,\ 15);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00583}00583\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a5b7b6c5a8cbfdce04ca7a41c5c2d395e}{Item::leggings\_chain\_Id}}]\ =\ pair<int,int>(9,\ 11);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00584}00584\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a83eb914f5f976d78f38a1900d788c2cc}{Item::bread\_Id}}]\ =\ pair<int,int>(-\/4,\ -\/2);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00585}00585\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a8fd8a2d4ceaec85aeaeeb884e62bb454}{Item::melon\_Id}}]\ =\ pair<int,int>(-\/8,\ -\/4);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00586}00586\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_ab050428abdeaf32ef766c8da1bd3f264}{Item::apple\_Id}}]\ =\ pair<int,int>(-\/8,\ -\/4);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00587}00587\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_adaffc0bc42e37b37a0e91bd9ed35ba28}{Item::cookie\_Id}}]\ =\ pair<int,int>(-\/10,\ -\/7);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00588}00588\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_tile_a460d8f78ab1bdcb5fb046798667e07e2}{Tile::glass\_Id}}]\ =\ pair<int,int>(-\/5,\ -\/3);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00589}00589\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_tile_a4f91bad6f283fede873de297c570a365}{Tile::bookshelf\_Id}}]\ =\ pair<int,int>(3,\ 4);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00590}00590\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a4338a8642261812e7ce0ef3e419537f3}{Item::chestplate\_leather\_Id}}]\ =\ pair<int,int>(4,\ 5);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00591}00591\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a92f2a73aff25ce40284138ebc82cfe6f}{Item::boots\_leather\_Id}}]\ =\ pair<int,int>(2,\ 4);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00592}00592\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_ac2e6ef917525f913d14133ba9d3321f8}{Item::helmet\_leather\_Id}}]\ =\ pair<int,int>(2,\ 4);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00593}00593\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a1ce54bc0b6b03f2dd4820e2b105d4688}{Item::leggings\_leather\_Id}}]\ =\ pair<int,int>(2,\ 4);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00594}00594\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_ab372089d43d2cd88413b49562a506ba9}{Item::saddle\_Id}}]\ =\ pair<int,int>(6,\ 8);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00595}00595\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_aec069b6a8928a3a607fadc1cd2827d2c}{Item::expBottle\_Id}}]\ =\ pair<int,int>(-\/4,\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00596}00596\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a5b3414c9f4e951f760325c792d1b7a5e}{Item::redStone\_Id}}]\ =\ pair<int,int>(-\/4,\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00597}00597\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_ad7c6e7203844709cc5ccd47c57ccb809}{Item::compass\_Id}}]\ =\ pair<int,int>(10,\ 12);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00598}00598\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_af8d04638ec268b9874130a1030cae888}{Item::clock\_Id}}]\ =\ pair<int,int>(10,\ 12);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00599}00599\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_tile_a9be5f19845abba0a486d7a48f9c0faed}{Tile::glowstone\_Id}}]\ =\ pair<int,int>(-\/3,\ -\/1);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00600}00600\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_ad14458194fde4adb0b96b285e7d4f472}{Item::porkChop\_cooked\_Id}}]\ =\ pair<int,int>(-\/7,\ -\/5);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00601}00601\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_afed2410612464cc33fb44cd3247d8ba1}{Item::beef\_cooked\_Id}}]\ =\ pair<int,int>(-\/7,\ -\/5);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00602}00602\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a44c26039fc83c724ca13d12403eb85cc}{Item::chicken\_cooked\_Id}}]\ =\ pair<int,int>(-\/8,\ -\/6);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00603}00603\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_ac769ba2d548d361b2ea7af72c834a2c4}{Item::eyeOfEnder\_Id}}]\ =\ pair<int,int>(7,\ 11);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00604}00604\ \ \ \ \ MIN\_MAX\_PRICES[\doxymbox{\hyperlink{class_item_a6040f1f53c6417a9397c89ed0c007ec8}{Item::arrow\_Id}}]\ =\ pair<int,int>(-\/12,\ -\/8);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00605}00605\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00606}00606\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00615}00615\ \textcolor{keywordtype}{void}\ Villager::addItemForTradeIn(\doxymbox{\hyperlink{class_merchant_recipe_list}{MerchantRecipeList}}\ *list,\ \textcolor{keywordtype}{int}\ itemId,\ \doxymbox{\hyperlink{class_random}{Random}}\ *random,\ \textcolor{keywordtype}{float}\ likelyHood)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00616}00616\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00617}00617\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}()\ <\ likelyHood)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00618}00618\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00619}00619\ \ \ \ \ \ \ \ \ list-\/>\doxymbox{\hyperlink{class_merchant_recipe_list_abf96e703d4ff15536f39a3e96b889c64}{push\_back}}(\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_merchant_recipe}{MerchantRecipe}}(getItemTradeInValue(itemId,\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}),\ \doxymbox{\hyperlink{class_item_a4e03c0806729f760fddcfeeb281ed25d}{Item::emerald}}));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00620}00620\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00621}00621\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00622}00622\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00623}00623\ shared\_ptr<ItemInstance>\ Villager::getItemTradeInValue(\textcolor{keywordtype}{int}\ itemId,\ \doxymbox{\hyperlink{class_random}{Random}}\ *random)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00624}00624\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00625}00625\ \ \ \ \ \textcolor{keywordflow}{return}\ std::make\_shared<ItemInstance>(itemId,\ getTradeInValue(itemId,\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}),\ 0);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00626}00626\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00627}00627\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00628}00628\ \textcolor{keywordtype}{int}\ Villager::getTradeInValue(\textcolor{keywordtype}{int}\ itemId,\ \doxymbox{\hyperlink{class_random}{Random}}\ *random)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00629}00629\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00630}00630\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ MIN\_MAX\_VALUES.find(itemId);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00631}00631\ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ ==\ MIN\_MAX\_VALUES.end())}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00632}00632\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00633}00633\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00634}00634\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00635}00635\ \ \ \ \ pair<int,\ int>\ minMax\ =\ it-\/>second;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00636}00636\ \ \ \ \ \textcolor{keywordflow}{if}\ (minMax.first\ >=\ minMax.second)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00637}00637\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00638}00638\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ minMax.first;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00639}00639\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00640}00640\ \ \ \ \ \textcolor{keywordflow}{return}\ minMax.first\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(minMax.second\ -\/\ minMax.first);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00641}00641\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00642}00642\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00652}00652\ \textcolor{keywordtype}{void}\ Villager::addItemForPurchase(\doxymbox{\hyperlink{class_merchant_recipe_list}{MerchantRecipeList}}\ *list,\ \textcolor{keywordtype}{int}\ itemId,\ \doxymbox{\hyperlink{class_random}{Random}}\ *random,\ \textcolor{keywordtype}{float}\ likelyHood)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00653}00653\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00654}00654\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextFloat()\ <\ likelyHood)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00655}00655\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00656}00656\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ purchaseCost\ =\ getPurchaseCost(itemId,\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00657}00657\ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ rubyItem;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00658}00658\ \ \ \ \ \ \ \ \ shared\_ptr<ItemInstance>\ resultItem;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00659}00659\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (purchaseCost\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00660}00660\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00661}00661\ \ \ \ \ \ \ \ \ \ \ \ \ rubyItem\ =\ std::make\_shared<ItemInstance>(\doxymbox{\hyperlink{class_item_a4407d753e7f8d62bd333ef1e1d195996}{Item::emerald\_Id}},\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00662}00662\ \ \ \ \ \ \ \ \ \ \ \ \ resultItem\ =\ std::make\_shared<ItemInstance>(itemId,\ -\/purchaseCost,\ 0);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00663}00663\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00664}00664\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00665}00665\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00666}00666\ \ \ \ \ \ \ \ \ \ \ \ \ rubyItem\ =\ std::make\_shared<ItemInstance>(\doxymbox{\hyperlink{class_item_a4407d753e7f8d62bd333ef1e1d195996}{Item::emerald\_Id}},\ purchaseCost,\ 0);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00667}00667\ \ \ \ \ \ \ \ \ \ \ \ \ resultItem\ =\ std::make\_shared<ItemInstance>(itemId,\ 1,\ 0);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00668}00668\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00669}00669\ \ \ \ \ \ \ \ \ list-\/>\doxymbox{\hyperlink{class_merchant_recipe_list_abf96e703d4ff15536f39a3e96b889c64}{push\_back}}(\textcolor{keyword}{new}\ MerchantRecipe(rubyItem,\ resultItem));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00670}00670\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00671}00671\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00672}00672\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00673}00673\ \textcolor{keywordtype}{int}\ Villager::getPurchaseCost(\textcolor{keywordtype}{int}\ itemId,\ \doxymbox{\hyperlink{class_random}{Random}}\ *random)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00674}00674\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00675}00675\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ MIN\_MAX\_PRICES.find(itemId);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00676}00676\ \ \ \ \ \textcolor{keywordflow}{if}\ (it\ ==\ MIN\_MAX\_PRICES.end())}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00677}00677\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00678}00678\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00679}00679\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00680}00680\ \ \ \ \ pair<int,\ int>\ minMax\ =\ it-\/>second;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00681}00681\ \ \ \ \ \textcolor{keywordflow}{if}\ (minMax.first\ >=\ minMax.second)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00682}00682\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00683}00683\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ minMax.first;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00684}00684\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00685}00685\ \ \ \ \ \textcolor{keywordflow}{return}\ minMax.first\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>nextInt(minMax.second\ -\/\ minMax.first);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00686}00686\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00687}00687\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00688}\doxymbox{\hyperlink{class_villager_a0056cdc3785c0b914233b83a260eb081}{00688}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_a0056cdc3785c0b914233b83a260eb081}{Villager::handleEntityEvent}}(\textcolor{keywordtype}{byte}\ \textcolor{keywordtype}{id})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00689}00689\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00690}00690\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keywordtype}{id}\ ==\ \doxymbox{\hyperlink{class_entity_event_a8677e97b6f919402832d7f63fc3f978b}{EntityEvent::LOVE\_HEARTS}})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00691}00691\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00692}00692\ \ \ \ \ \ \ \ \ addParticlesAroundSelf(\doxymbox{\hyperlink{_particle_types_8h_a837667734b04ac1e75501a7107342843ab2f8699489e5f5dc1b119edd77b0c608}{eParticleType\_heart}});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00693}00693\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00694}00694\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\textcolor{keywordtype}{id}\ ==\ \doxymbox{\hyperlink{class_entity_event_aaaf64b2aa33af8e71e6813f792b82ed5}{EntityEvent::VILLAGER\_ANGRY}})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00695}00695\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00696}00696\ \ \ \ \ \ \ \ \ addParticlesAroundSelf(\doxymbox{\hyperlink{_particle_types_8h_a837667734b04ac1e75501a7107342843ada3f3de1b1afd6ffac9d4ae38010542c}{eParticleType\_angryVillager}});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00697}00697\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00698}00698\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\textcolor{keywordtype}{id}\ ==\ \doxymbox{\hyperlink{class_entity_event_a6c13ec768de9952c6e97740f28097253}{EntityEvent::VILLAGER\_HAPPY}})}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00699}00699\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00700}00700\ \ \ \ \ \ \ \ \ addParticlesAroundSelf(\doxymbox{\hyperlink{_particle_types_8h_a837667734b04ac1e75501a7107342843ad049d5a6956b244cb7a2584b7218d9b7}{eParticleType\_happyVillager}});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00701}00701\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00702}00702\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00703}00703\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00704}00704\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ac2f815149b7fbff4c921714fb1a70acc}{AgableMob::handleEntityEvent}}(\textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00705}00705\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00706}00706\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00707}00707\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00708}00708\ \textcolor{keywordtype}{void}\ Villager::addParticlesAroundSelf(\doxymbox{\hyperlink{_particle_types_8h_a837667734b04ac1e75501a7107342843}{ePARTICLE\_TYPE}}\ particle)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00709}00709\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00710}00710\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ 5;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00711}00711\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00712}00712\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ xa\ =\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>\doxymbox{\hyperlink{class_random_a1be8c48607e7a4d62ab2d0ffb46d8d70}{nextGaussian}}()\ *\ 0.02;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00713}00713\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ ya\ =\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>\doxymbox{\hyperlink{class_random_a1be8c48607e7a4d62ab2d0ffb46d8d70}{nextGaussian}}()\ *\ 0.02;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00714}00714\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ za\ =\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>\doxymbox{\hyperlink{class_random_a1be8c48607e7a4d62ab2d0ffb46d8d70}{nextGaussian}}()\ *\ 0.02;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00715}00715\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>\doxymbox{\hyperlink{class_level_a6ff30e7e597ed15e0959b4ee29f9311e}{addParticle}}(particle,\ \doxymbox{\hyperlink{class_entity_abe84b2274427a984d952acd6d4c4061f}{x}}\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}()\ *\ \doxymbox{\hyperlink{class_entity_ac236e702a850201c2c4246cc3e6f4df2}{bbWidth}}\ *\ 2\ -\/\ \doxymbox{\hyperlink{class_entity_ac236e702a850201c2c4246cc3e6f4df2}{bbWidth}},\ \doxymbox{\hyperlink{class_entity_aeaf8012f92ad9f8ea0df589e3fc67c8f}{y}}\ +\ 1.0f\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}()\ *\ \doxymbox{\hyperlink{class_entity_ac9bc686604e12af0c3fc68e67badecb2}{bbHeight}},\ \doxymbox{\hyperlink{class_entity_a685f19c6c7e2ae1124203cf18429dfae}{z}}\ +\ \doxymbox{\hyperlink{class_entity_aa5b87ae6971f81535edb94f964f490eb}{random}}-\/>\doxymbox{\hyperlink{class_random_a77c91b72bbe093e047eb0a48293d4bf5}{nextFloat}}()\ *\ \doxymbox{\hyperlink{class_entity_ac236e702a850201c2c4246cc3e6f4df2}{bbWidth}}\ *\ 2\ -\/\ \doxymbox{\hyperlink{class_entity_ac236e702a850201c2c4246cc3e6f4df2}{bbWidth}},\ xa,\ ya,\ za);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00716}00716\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00717}00717\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00718}00718\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00719}\doxymbox{\hyperlink{class_villager_a4750669b24b8f1e381e4d3af72af790d}{00719}}\ \doxymbox{\hyperlink{class_mob_group_data}{MobGroupData}}\ *\doxymbox{\hyperlink{class_villager_a4750669b24b8f1e381e4d3af72af790d}{Villager::finalizeMobSpawn}}(\doxymbox{\hyperlink{class_mob_group_data}{MobGroupData}}\ *groupData,\ \textcolor{keywordtype}{int}\ extraData\ \textcolor{comment}{/*=\ 0*/})\ \textcolor{comment}{//\ 4J\ Added\ extraData\ param}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00720}00720\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00721}00721\ \ \ \ \ groupData\ =\ \doxymbox{\hyperlink{class_mob_a5f22ff1d894b298bacf9fbb7d7e381bf}{AgableMob::finalizeMobSpawn}}(groupData);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00722}00722\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00723}00723\ \ \ \ \ \doxymbox{\hyperlink{class_villager_a0e2ae15161f15c31e060e9fdcf84526c}{setProfession}}(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>random-\/>nextInt(\doxymbox{\hyperlink{class_villager_aaf89dd07d101b0b5d35329d3c886b30e}{PROFESSION\_MAX}}));}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00724}00724\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00725}00725\ \ \ \ \ \textcolor{keywordflow}{return}\ groupData;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00726}00726\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00727}00727\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00728}\doxymbox{\hyperlink{class_villager_a0a0a941cd18502c4082e4c8f326d468a}{00728}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_villager_a0a0a941cd18502c4082e4c8f326d468a}{Villager::setRewardPlayersInVillage}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00729}00729\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00730}00730\ \ \ \ \ rewardPlayersOnFirstVillage\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00731}00731\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00732}00732\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00733}\doxymbox{\hyperlink{class_villager_a231bbae28169225f26e138febd76ba85}{00733}}\ shared\_ptr<AgableMob>\ \doxymbox{\hyperlink{class_villager_a231bbae28169225f26e138febd76ba85}{Villager::getBreedOffspring}}(shared\_ptr<AgableMob>\ target)}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00734}00734\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00735}00735\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ added\ limit\ to\ villagers\ that\ can\ be\ bred}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00736}00736\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>canCreateMore(\doxymbox{\hyperlink{class_villager_a816a78b0e762c10c44e4f5f4f2877960}{GetType}}(),\ \doxymbox{\hyperlink{class_level_a6a3ad4035f730b111c96b4a9117bf2b4a2cfd582383c4b89df6a5561b628f685a}{Level::eSpawnType\_Breed}})\ )}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00737}00737\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00738}00738\ \ \ \ \ \ \ \ \ shared\_ptr<Villager>\ villager\ =\ std::make\_shared<Villager>(\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00739}00739\ \ \ \ \ \ \ \ \ villager-\/>finalizeMobSpawn(\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00740}00740\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ villager;}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00741}00741\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00742}00742\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00743}00743\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00744}00744\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00745}00745\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00746}00746\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00747}00747\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00748}\doxymbox{\hyperlink{class_villager_a293bfae63b0d34ed898660d08d12af5a}{00748}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_villager_a293bfae63b0d34ed898660d08d12af5a}{Villager::canBeLeashed}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00749}00749\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00750}00750\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00751}00751\ \}}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00752}00752\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00753}\doxymbox{\hyperlink{class_villager_ad68d7e8a006ed3cd61211d2079ab7702}{00753}}\ wstring\ \doxymbox{\hyperlink{class_villager_ad68d7e8a006ed3cd61211d2079ab7702}{Villager::getDisplayName}}()}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00754}00754\ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00755}00755\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{class_mob_ab1b56856265f4e93dcefe97a08ac4395}{hasCustomName}}())\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_mob_a7d1b4d40f2c2b7f3004e84b5f20d181d}{getCustomName}}();}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00756}00756\ }
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00757}00757\ \ \ \ \ \textcolor{keywordtype}{int}\ name\ =\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a53444848fe2982f5382bfd6645f3fdd2}{IDS\_VILLAGER}};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00758}00758\ \ \ \ \ \textcolor{keywordflow}{switch}(\doxymbox{\hyperlink{class_villager_a8dc1715328454f949ab39343245ec350}{getProfession}}())}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00759}00759\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00760}00760\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_villager_a16c8cc2705ece7d3aba0d855357f72b2}{PROFESSION\_FARMER}}:}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00761}00761\ \ \ \ \ \ \ \ \ name\ =\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_ad1e80b29b95e9b2c706e3ab00180b0b5}{IDS\_VILLAGER\_FARMER}};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00762}00762\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00763}00763\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_villager_a62bd69abc891cd14bb52c2e2698f7a4b}{PROFESSION\_LIBRARIAN}}:}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00764}00764\ \ \ \ \ \ \ \ \ name\ =\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_afae67f44c9b4600d294d41ab0175422a}{IDS\_VILLAGER\_LIBRARIAN}};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00765}00765\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00766}00766\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_villager_ad185db8cd66b729e82ff9564ad45dc65}{PROFESSION\_PRIEST}}:}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00767}00767\ \ \ \ \ \ \ \ \ name\ =\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a73ff1c218d3c43a3bcc2b480fbd8d7a4}{IDS\_VILLAGER\_PRIEST}};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00768}00768\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00769}00769\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_villager_a256b8b7f7e3aa0639136cac72625cdc9}{PROFESSION\_SMITH}}:}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00770}00770\ \ \ \ \ \ \ \ \ name\ =\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_aa1e999d9edcd188a4257772f7860ee13}{IDS\_VILLAGER\_SMITH}};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00771}00771\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00772}00772\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_villager_a929d10c9e982240e9e26e8f835233a2b}{PROFESSION\_BUTCHER}}:}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00773}00773\ \ \ \ \ \ \ \ \ name\ =\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_ae8d1360c2955f636aaa5191b1c9e2aae}{IDS\_VILLAGER\_BUTCHER}};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00774}00774\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00775}00775\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00776}00776\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetString(name);}
+\DoxyCodeLine{\Hypertarget{_villager_8cpp_source_l00777}00777\ \}}
+
+\end{DoxyCode}

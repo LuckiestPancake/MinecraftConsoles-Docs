@@ -1,0 +1,542 @@
+\doxysection{UIScene\+\_\+\+In\+Game\+Info\+Menu.\+cpp}
+\hypertarget{_u_i_scene___in_game_info_menu_8cpp_source}{}\label{_u_i_scene___in_game_info_menu_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/UI/UIScene\_InGameInfoMenu.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/UI/UIScene\_InGameInfoMenu.cpp}}
+\doxymbox{\hyperlink{_u_i_scene___in_game_info_menu_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_u_i_8h}{UI.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_u_i_scene___in_game_info_menu_8h}{UIScene\_InGameInfoMenu.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_multi_player_local_player_8h}{..\(\backslash\)..\(\backslash\)MultiPlayerLocalPlayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8network_8packet_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.network.packet.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_multi_player_local_player_8h}{..\(\backslash\)..\(\backslash\)MultiPlayerLocalPlayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_client_connection_8h}{..\(\backslash\)..\(\backslash\)ClientConnection.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00009}\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a85a3c313f81f2a60e5bb1639289ddacc}{00009}}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a85a3c313f81f2a60e5bb1639289ddacc}{UIScene\_InGameInfoMenu::UIScene\_InGameInfoMenu}}(\textcolor{keywordtype}{int}\ iPad,\ \textcolor{keywordtype}{void}\ *initData,\ \doxymbox{\hyperlink{class_u_i_scene_a51836e98d66a868eacff38d348f2d35c}{UILayer}}\ *parentLayer)\ :\ \doxymbox{\hyperlink{class_u_i_scene_a3ba88e19a2bb55feaef23eeeba7646aa}{UIScene}}(iPad,\ parentLayer)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00010}00010\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00011}00011\ \ \ \ \ \textcolor{comment}{//\ Setup\ all\ the\ Iggy\ references\ we\ need\ for\ this\ scene}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00012}00012\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_a7f21c1edae92cf27df2f857dcc9dcf20}{initialiseMovie}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00014}00014\ \ \ \ \ m\_buttonGameOptions.init(\doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetString(\doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a1fb2c4bc97dd991a58782ef84ce28c3d}{IDS\_HOST\_OPTIONS}}),eControl\_GameOptions);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00015}00015\ \ \ \ \ m\_labelTitle.init(\doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetString(\doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a8b416dbdddd3fed4ce2127b117fe849e}{IDS\_PLAYERS\_INVITE}}));}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00016}00016\ \ \ \ \ m\_playerList.init(eControl\_GamePlayers);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00018}00018\ \ \ \ \ m\_players\ =\ vector<PlayerInfo\ *>();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00020}00020\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ playerCount\ =\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.GetPlayerCount();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00022}00022\ \ \ \ \ \textcolor{keywordflow}{for}(\doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ playerCount;\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00023}00023\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00024}00024\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *player\ =\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.GetPlayerByIndex(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00026}00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ player\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00027}00027\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00028}00028\ \ \ \ \ \ \ \ \ \ \ \ \ PlayerInfo\ *info\ =\ BuildPlayerInfo(player);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00030}00030\ \ \ \ \ \ \ \ \ \ \ \ \ m\_players.push\_back(info);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ m\_playerList.addItem(info-\/>m\_name,\ info-\/>m\_colorState,\ info-\/>m\_voiceStatus);\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00033}00033\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00035}00035\ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.RegisterPlayerChangedCallback(\doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}},\ \&\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a99a079a26370f98a183b9e6e14a30014}{UIScene\_InGameInfoMenu::OnPlayerChanged}},\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00037}00037\ \ \ \ \ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *thisPlayer\ =\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.GetLocalPlayerByUserIndex(\ \doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}}\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00038}00038\ \ \ \ \ m\_isHostPlayer\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00039}00039\ \ \ \ \ \textcolor{keywordflow}{if}(thisPlayer\ !=\ \textcolor{keyword}{nullptr})\ m\_isHostPlayer\ =\ thisPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_a576525cd1b1bbe57d3da5c8e65f2b41e}{IsHost}}()\ ==\ \doxymbox{\hyperlink{stb__vorbis_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{TRUE}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00041}00041\ \ \ \ \ \doxymbox{\hyperlink{class_minecraft}{Minecraft}}\ *pMinecraft\ =\ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00042}00042\ \ \ \ \ shared\_ptr<MultiplayerLocalPlayer>\ localPlayer\ =\ pMinecraft-\/>\doxymbox{\hyperlink{class_minecraft_a7210d12b17639bbe0d615e334cc88e7e}{localplayers}}[\doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}}];}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00043}00043\ \ \ \ \ \textcolor{keywordflow}{if}(!m\_isHostPlayer\ \&\&\ !localPlayer-\/>isModerator()\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00044}00044\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_aafc60505226fefdc586c08f820ed9e70}{removeControl}}(\ \&m\_buttonGameOptions,\ \textcolor{keyword}{false}\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00046}00046\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00048}00048\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_acde1f3698f39eb09bda61022000a7cd5}{updateTooltips}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00050}00050\ \textcolor{preprocessor}{\#if\ TO\_BE\_IMPLEMENTED}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00051}00051\ \ \ \ \ SetTimer(\ \doxymbox{\hyperlink{_x_u_i___in_game_info_8cpp_a0aae00e0b0a3e41e19f8045d65d5d83c}{TOOLTIP\_TIMERID}}\ ,\ \doxymbox{\hyperlink{_x_u_i___in_game_info_8h_a799ba625b0c4bbb0fb36e9da767e522a}{INGAME\_INFO\_TOOLTIP\_TIMER}}\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00052}00052\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00054}00054\ \ \ \ \ \textcolor{comment}{//\ get\ rid\ of\ the\ quadrant\ display\ if\ it's\ on}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00055}00055\ \ \ \ \ \doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.HidePressStart();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00057}00057\ \textcolor{preprocessor}{\#if\ TO\_BE\_IMPLEMENTED}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00058}00058\ \ \ \ \ SetTimer(\doxymbox{\hyperlink{_x_u_i___in_game_info_8cpp_a3e9af25b79e7b51755a4a75d23a4b2de}{IGNORE\_KEYPRESS\_TIMERID}},\doxymbox{\hyperlink{_x_u_i___in_game_info_8cpp_a56a38cda80b6209d33bcc26641c7fc3b}{IGNORE\_KEYPRESS\_TIME}});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00059}00059\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00060}00060\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00062}\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a9e0916980b80fff889de14958cde505a}{00062}}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a9e0916980b80fff889de14958cde505a}{UIScene\_InGameInfoMenu::\string~UIScene\_InGameInfoMenu}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00063}00063\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00064}00064\ \ \ \ \ \textcolor{comment}{//\ Delete\ player\ infos}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00065}00065\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_players.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)\ \{\ \textcolor{keyword}{delete}\ m\_players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00066}00066\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00068}\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a9083683ddf830951449cba4601108e2a}{00068}}\ wstring\ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a9083683ddf830951449cba4601108e2a}{UIScene\_InGameInfoMenu::getMoviePath}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00069}00069\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00070}00070\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetLocalPlayerCount()\ >\ 1)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00071}00071\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ L\textcolor{stringliteral}{"{}InGameInfoMenuSplit"{}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00073}00073\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00074}00074\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00075}00075\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ L\textcolor{stringliteral}{"{}InGameInfoMenu"{}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00077}00077\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00078}00078\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00080}\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_acde1f3698f39eb09bda61022000a7cd5}{00080}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_acde1f3698f39eb09bda61022000a7cd5}{UIScene\_InGameInfoMenu::updateTooltips}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00081}00081\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00082}00082\ \ \ \ \ \textcolor{keywordtype}{int}\ keyX\ =\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a10326fba5076f3b98018eeb02f16fc08}{IDS\_TOOLTIPS\_INVITE\_FRIENDS}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00083}00083\ \ \ \ \ \textcolor{keywordtype}{int}\ ikeyY\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00085}00085\ \ \ \ \ \doxymbox{\hyperlink{extra_x64client_8h_a5dad03373be86090ac60d69dd61cd811}{XPARTY\_USER\_LIST}}\ partyList;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00086}00086\ \ \ \ \ \textcolor{keywordflow}{if}((\doxymbox{\hyperlink{extra_x64client_8h_a52f8d6054d6be26125fa1366dad5fba8}{XPartyGetUserList}}(\ \ \&partyList\ )\ !=\ \doxymbox{\hyperlink{extra_x64client_8h_ab5751661bb609b2ba45ccac8d81dab5d}{XPARTY\_E\_NOT\_IN\_PARTY}}\ )\ \&\&\ (partyList.\doxymbox{\hyperlink{struct___x_p_a_r_t_y___u_s_e_r___l_i_s_t_ac26f1c81177a230af664392fb566738d}{dwUserCount}}>1))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00087}00087\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ keyX\ =\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a0b8f940f78b1eb72d95c9eca1c685361}{IDS\_TOOLTIPS\_INVITE\_PARTY}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00089}00089\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00091}00091\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.IsLocalGame())\ keyX\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00092}00092\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00093}00093\ \ \ \ \ \textcolor{keywordflow}{if}(CGameNetworkManager::usingAdhocMode())\ keyX\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00094}00094\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00096}00096\ \ \ \ \ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *selectedPlayer\ =\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.GetPlayerBySmallId(m\_players[m\_playerList.getCurrentSelection()]-\/>m\_smallId);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00098}00098\ \ \ \ \ \textcolor{keywordtype}{int}\ keyA\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00099}00099\ \ \ \ \ \doxymbox{\hyperlink{class_minecraft}{Minecraft}}\ *pMinecraft\ =\ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00100}00100\ \ \ \ \ shared\_ptr<MultiplayerLocalPlayer>\ localPlayer\ =\ pMinecraft-\/>\doxymbox{\hyperlink{class_minecraft_a7210d12b17639bbe0d615e334cc88e7e}{localplayers}}[\doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}}];}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00102}00102\ \ \ \ \ \textcolor{keywordtype}{bool}\ isOp\ =\ m\_isHostPlayer\ ||\ localPlayer-\/>isModerator();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00103}00103\ \ \ \ \ \textcolor{keywordtype}{bool}\ cheats\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetGameHostOption(\doxymbox{\hyperlink{_app__enums_8h_a3039f4892c1f252d62bfbc8aeab1fb7aa2816ebbae42852e62f6f5f91e19c7d4e}{eGameHostOption\_CheatsEnabled}})\ !=\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00104}00104\ \ \ \ \ \textcolor{keywordtype}{bool}\ trust\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetGameHostOption(\doxymbox{\hyperlink{_app__enums_8h_a3039f4892c1f252d62bfbc8aeab1fb7aad7ea58bd0d36face7267c1a3e6465a6d}{eGameHostOption\_TrustPlayers}})\ !=\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00106}00106\ \ \ \ \ \textcolor{keywordflow}{if}(\ isOp\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00107}00107\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_buttonGameOptions.hasFocus())}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ keyA\ =\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a76107444b972a0217b895eb7ff5d4d55}{IDS\_TOOLTIPS\_SELECT}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ selectedPlayer\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ editingHost\ =\ selectedPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_a576525cd1b1bbe57d3da5c8e65f2b41e}{IsHost}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (cheats\ \&\&\ (m\_isHostPlayer\ ||\ !editingHost\ )\ )\ ||\ (!trust\ \&\&\ (m\_isHostPlayer\ ||\ !editingHost))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00116}00116\ \#\textcolor{keywordflow}{if}\ (!defined(\_CONTENT\_PACKAGE)\ \&\&\ !defined(\_FINAL\_BUILD)\ \&\&\ defined(\_DEBUG\_MENUS\_ENABLED))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ||\ (m\_isHostPlayer\ \&\&\ editingHost)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00118}00118\ \#endif}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ keyA\ =\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a58090c25ba3b085f134f84bc19566f45}{IDS\_TOOLTIPS\_PRIVILEGES}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(selectedPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_a006a1cde803e8b93a95f6983af826104}{IsLocal}}()\ !=\ \doxymbox{\hyperlink{stb__vorbis_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{TRUE}}\ \&\&\ selectedPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_ace293ccdf103ebd45b29c63f82b00613}{IsSameSystem}}(\doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.GetHostPlayer())\ !=\ \doxymbox{\hyperlink{stb__vorbis_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{TRUE}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ ops\ will\ hit\ this,\ can\ kick\ anyone\ not\ local\ and\ not\ local\ to\ the\ host}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ keyA\ =\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_aa22941510af5f3d13defce9e4082819c}{IDS\_TOOLTIPS\_KICK}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00129}00129\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00130}00130\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00131}00131\ \textcolor{preprocessor}{\#if\ defined(\_\_PS3\_\_)\ ||\ defined(\_\_ORBIS\_\_)}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00132}00132\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}}\ ==\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___profile_8h_a027fde7e99d773afa28ec11d244459bf}{ProfileManager}}.GetPrimaryPad()\ )\ ikeyY\ =\ \doxymbox{\hyperlink{_orbis_media_2loc_2strings_8h_a548e2bc735c0b7c1520a8c02e11bfa47}{IDS\_TOOLTIPS\_GAME\_INVITES}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00133}00133\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00134}00134\ \ \ \ \ \textcolor{keywordflow}{if}(!m\_buttonGameOptions.hasFocus())}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00135}00135\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ the\ player\ is\ me,\ then\ view\ gamer\ profile}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(selectedPlayer\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ selectedPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_a006a1cde803e8b93a95f6983af826104}{IsLocal}}()\ \&\&\ selectedPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_ad41e3fec8d05e5e64706c43008f423ad}{GetUserIndex}}()==\doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ ikeyY\ =\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_af4cca784989fce76462eac1cd8af201b}{IDS\_TOOLTIPS\_VIEW\_GAMERPROFILE}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ ikeyY\ =\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a008d066e1700d6a4dc8802da7b2f3939}{IDS\_TOOLTIPS\_VIEW\_GAMERCARD}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00145}00145\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00146}00146\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00147}00147\ \ \ \ \ \doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.SetTooltips(\ \doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}},\ keyA,\doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a34d9e97806d6692fc2c9c0ff7268ccbb}{IDS\_TOOLTIPS\_BACK}},keyX,ikeyY);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00148}00148\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00150}\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_af10037e05beed002b43ba59c16873d98}{00150}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_af10037e05beed002b43ba59c16873d98}{UIScene\_InGameInfoMenu::handleDestroy}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00151}00151\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00152}00152\ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.UnRegisterPlayerChangedCallback(\doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}},\ \&\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a99a079a26370f98a183b9e6e14a30014}{UIScene\_InGameInfoMenu::OnPlayerChanged}},\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00153}00153\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00155}\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a264ea648b7fea050133c86078a215383}{00155}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a264ea648b7fea050133c86078a215383}{UIScene\_InGameInfoMenu::handleGainFocus}}(\textcolor{keywordtype}{bool}\ navBack)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00156}00156\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00157}00157\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_a6e98fe99096745fdb1465dce6b154c3b}{UIScene::handleGainFocus}}(navBack);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00158}00158\ \ \ \ \ \textcolor{keywordflow}{if}(\ navBack\ )\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.RegisterPlayerChangedCallback(\doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}},\ \&\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a99a079a26370f98a183b9e6e14a30014}{UIScene\_InGameInfoMenu::OnPlayerChanged}},\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00159}00159\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00160}00160\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00161}\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_ab3ed6e0c27ce34bc93d64808ef31ec3c}{00161}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_ab3ed6e0c27ce34bc93d64808ef31ec3c}{UIScene\_InGameInfoMenu::handleReload}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00162}00162\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00163}00163\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ playerCount\ =\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.GetPlayerCount();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00165}00165\ \ \ \ \ \textcolor{comment}{//\ Remove\ all\ player\ info}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00166}00166\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_players.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)\ \{\ \textcolor{keyword}{delete}\ m\_players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00167}00167\ \ \ \ \ m\_players.clear();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00169}00169\ \ \ \ \ \textcolor{keywordflow}{for}(\doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ playerCount;\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00170}00170\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *player\ =\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.GetPlayerByIndex(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ player\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ PlayerInfo\ *info\ =\ BuildPlayerInfo(player);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00176}00176\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ m\_players.push\_back(info);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ m\_playerList.addItem(info-\/>m\_name,\ info-\/>m\_colorState,\ info-\/>m\_voiceStatus);\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00180}00180\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00182}00182\ \ \ \ \ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *thisPlayer\ =\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.GetLocalPlayerByUserIndex(\ \doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}}\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00183}00183\ \ \ \ \ m\_isHostPlayer\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00184}00184\ \ \ \ \ \textcolor{keywordflow}{if}(thisPlayer\ !=\ \textcolor{keyword}{nullptr})\ m\_isHostPlayer\ =\ thisPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_a576525cd1b1bbe57d3da5c8e65f2b41e}{IsHost}}()\ ==\ \doxymbox{\hyperlink{stb__vorbis_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{TRUE}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00186}00186\ \ \ \ \ \doxymbox{\hyperlink{class_minecraft}{Minecraft}}\ *pMinecraft\ =\ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00187}00187\ \ \ \ \ shared\_ptr<MultiplayerLocalPlayer>\ localPlayer\ =\ pMinecraft-\/>\doxymbox{\hyperlink{class_minecraft_a7210d12b17639bbe0d615e334cc88e7e}{localplayers}}[\doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}}];}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00188}00188\ \ \ \ \ \textcolor{keywordflow}{if}(!m\_isHostPlayer\ \&\&\ !localPlayer-\/>isModerator()\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00189}00189\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_aafc60505226fefdc586c08f820ed9e70}{removeControl}}(\ \&m\_buttonGameOptions,\ \textcolor{keyword}{false}\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00191}00191\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00193}00193\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_acde1f3698f39eb09bda61022000a7cd5}{updateTooltips}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00195}00195\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{class_u_i_scene_aaaae07ceb2b5e0de821857fa4611bee1}{controlHasFocus}}(eControl\_GamePlayers))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00196}00196\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ m\_playerList.setCurrentSelection(\doxymbox{\hyperlink{class_u_i_scene_a908de1ff26c91dd34f75298c39fd5975}{getControlChildFocus}}());}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00198}00198\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00199}00199\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00201}\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a1eadb359b83af541e9320b97eab02488}{00201}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a1eadb359b83af541e9320b97eab02488}{UIScene\_InGameInfoMenu::tick}}()}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00202}00202\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00203}00203\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_a6dda066e4c1cc95afb64426df5da2ca9}{UIScene::tick}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00204}00204\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00205}00205\ \ \ \ \ \textcolor{comment}{//\ Update\ players\ by\ index}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00206}00206\ \ \ \ \ \textcolor{keywordflow}{for}(\doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_players.size();\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00207}00207\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *player\ =\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.GetPlayerByIndex(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(player\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ PlayerInfo\ *info\ =\ BuildPlayerInfo(player);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ m\_players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>m\_smallId\ =\ info-\/>m\_smallId;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00215}00215\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(info-\/>m\_voiceStatus\ !=\ m\_players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>m\_voiceStatus)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>m\_voiceStatus\ =\ info-\/>m\_voiceStatus;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_playerList.setVOIPIcon(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}},\ info-\/>m\_voiceStatus);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(info-\/>m\_colorState\ !=\ m\_players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>m\_colorState)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>m\_colorState\ =\ info-\/>m\_colorState;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_playerList.setPlayerIcon(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}},\ info-\/>m\_colorState);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00227}00227\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(info-\/>m\_name.compare(\ m\_players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>m\_name\ )\ !=\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_playerList.setButtonLabel(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}},\ info-\/>m\_name);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>m\_name\ =\ info-\/>m\_name;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00233}00233\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ info;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00236}00236\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00237}00237\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00239}\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a151e6700ba173dc5634a99bf7f7af9a3}{00239}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a151e6700ba173dc5634a99bf7f7af9a3}{UIScene\_InGameInfoMenu::handleInput}}(\textcolor{keywordtype}{int}\ iPad,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}},\ \textcolor{keywordtype}{bool}\ repeat,\ \textcolor{keywordtype}{bool}\ pressed,\ \textcolor{keywordtype}{bool}\ released,\ \textcolor{keywordtype}{bool}\ \&handled)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00240}00240\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00241}00241\ \ \ \ \ \textcolor{comment}{//app.DebugPrintf("{}UIScene\_DebugOverlay\ handling\ input\ for\ pad\ \%d,\ key\ \%d,\ down-\/\ \%s,\ pressed-\/\ \%s,\ released-\/\ \%s\(\backslash\)n"{},\ iPad,\ key,\ down?"{}TRUE"{}:"{}FALSE"{},\ pressed?"{}TRUE"{}:"{}FALSE"{},\ released?"{}TRUE"{}:"{}FALSE"{});}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00242}00242\ \ \ \ \ \doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.AnimateKeyPress(\doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}},\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}},\ repeat,\ pressed,\ released);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00244}00244\ \ \ \ \ \textcolor{keywordflow}{switch}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00245}00245\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00246}00246\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a3fd1b6f525260f84f36835657fa5ca3e}{ACTION\_MENU\_CANCEL}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(pressed\ \&\&\ !repeat)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.PlayUISFX(\doxymbox{\hyperlink{_sound_types_8h_a0e901fc587ec4b1f9b35a51145ffc48daf08bdcee58d388685c3a74b83efe1f15}{eSFX\_Back}});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_a18367b02f996b9140f1cceeb3185fb44}{navigateBack}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00251}00251\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00252}00252\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00253}00253\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a2df4d5c009e59176c81e436fe95f43b7}{ACTION\_MENU\_Y}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00254}00254\ \textcolor{preprocessor}{\#if\ defined(\_\_PS3\_\_)\ ||\ defined(\_\_ORBIS\_\_)}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(pressed\ \&\&\ iPad\ ==\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___profile_8h_a027fde7e99d773afa28ec11d244459bf}{ProfileManager}}.GetPrimaryPad())}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00256}00256\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00257}00257\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ are\ we\ offline?}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___profile_8h_a027fde7e99d773afa28ec11d244459bf}{ProfileManager}}.IsSignedInLive(iPad))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ get\ them\ to\ sign\ in\ to\ online}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}}\ uiIDA[2];}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uiIDA[0]=\doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a045f0938876e04154b7c45d932bad1a0}{IDS\_PRO\_NOTONLINE\_ACCEPT}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uiIDA[1]=\doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_ab306b7cc68b0df1143067ba160ac23e1}{IDS\_PRO\_NOTONLINE\_DECLINE}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.RequestErrorMessage(\doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_a7fc37bc95d10cf727c0fe2a2e9b2e8f8}{IDS\_PRO\_NOTONLINE\_TITLE}},\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_ab0abe51f3aabdf59736687cae4e595f0}{IDS\_PRO\_NOTONLINE\_TEXT}},\ uiIDA,\ 2,\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___profile_8h_a027fde7e99d773afa28ec11d244459bf}{ProfileManager}}.GetPrimaryPad(),\&UIScene\_InGameInfoMenu::MustSignInReturnedPSN,\textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00268}00268\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00270}00270\ \textcolor{preprocessor}{\#ifdef\ \_\_ORBIS\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_s_q_r_network_manager___orbis_a9ce9bb78cee562f30687fd91769cf05a}{SQRNetworkManager\_Orbis::RecvInviteGUI}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00272}00272\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{//\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ret\ =\ sceNpBasicRecvMessageCustom(SCE\_NP\_BASIC\_MESSAGE\_MAIN\_TYPE\_INVITE,\ SCE\_NP\_BASIC\_RECV\_MESSAGE\_OPTIONS\_INCLUDE\_BOOTABLE,\ SYS\_MEMORY\_CONTAINER\_ID\_INVALID);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}sceNpBasicRecvMessageCustom\ return\ \%d\ (\ \%08x\ )\(\backslash\)n"{}},\ ret,\ ret);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00275}00275\ \textcolor{preprocessor}{\#endif\ }}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00278}00278\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00279}00279\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00280}00280\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00281}00281\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(pressed\ \&\&\ m\_playerList.hasFocus()\ \&\&\ (m\_playerList.getItemCount()\ >\ 0)\ \&\&\ (m\_playerList.getCurrentSelection()\ <\ m\_players.size())\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *player\ =\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.GetPlayerBySmallId(m\_players[m\_playerList.getCurrentSelection()]-\/>m\_smallId);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00284}00284\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ player\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00286}00286\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\ uid\ =\ player-\/>\doxymbox{\hyperlink{class_i_network_player_a05719c0ceffee58bd6f19cb5583583da}{GetUID}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ uid\ !=\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}}\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00288}00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00289}00289\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_p_s_vita_stubs_8h_a9d2d9b4582865b7e683fb1262fb486e2}{PSVITA\_STUBBED}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00291}00291\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___profile_8h_a027fde7e99d773afa28ec11d244459bf}{ProfileManager}}.ShowProfileCard(iPad,uid);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00293}00293\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00296}00296\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00297}00297\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00298}00298\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00300}00300\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a8385064c3dbfae4e44e67550ac8bd8cb}{ACTION\_MENU\_X}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00301}00301\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(pressed\ \&\&\ !repeat\ \&\&\ !\doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.IsLocalGame()\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00304}00304\ \textcolor{preprocessor}{\#ifdef\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(CGameNetworkManager::usingAdhocMode()\ ==\ \textcolor{keyword}{false})\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.SendInviteGUI(iPad);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00307}00307\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.SendInviteGUI(iPad);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00309}00309\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00311}00311\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00313}00313\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7af3f318c1f3477b7d78855732a3d2e6d2}{ACTION\_MENU\_OK}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00314}00314\ \textcolor{preprocessor}{\#ifdef\ \_\_ORBIS\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00315}00315\ \ \ \ \ \textcolor{keywordflow}{case}\ ACTION\_MENU\_TOUCHPAD\_PRESS:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00316}00316\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00317}00317\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7aaff95c01bfb4a5cc7c075051c1c0754c}{ACTION\_MENU\_UP}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00318}00318\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a94c204514afcc17d81251e640e64bb8b}{ACTION\_MENU\_DOWN}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00319}00319\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7ab09edc35799f2a3c43cc7f77e3c2b817}{ACTION\_MENU\_PAGEUP}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00320}00320\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{_app__enums_8h_ad91fcaa7923c4140eba5f460078632d7a0f2c0de2d5daa1b0646e28d40a342e48}{ACTION\_MENU\_PAGEDOWN}}:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene_a63634396502a68f08782d6cf2f80ab57}{sendInputToMovie}}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}},\ repeat,\ pressed,\ released);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00323}00323\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00324}00324\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00325}00325\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00326}\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a02a52ec4edf970f66843b654597238c3}{00326}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a02a52ec4edf970f66843b654597238c3}{UIScene\_InGameInfoMenu::handlePress}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_ab2d8260a86f8d9d700fea930b54fa142}{F64}}\ controlId,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_ab2d8260a86f8d9d700fea930b54fa142}{F64}}\ childId)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00327}00327\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00328}00328\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Pressed\ =\ \%d,\ \%d\(\backslash\)n"{}},\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(controlId),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(childId));}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00329}00329\ \ \ \ \ \textcolor{keywordflow}{switch}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(controlId))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00330}00330\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00331}00331\ \ \ \ \ \textcolor{keywordflow}{case}\ eControl\_GameOptions:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.NavigateToScene(\doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}},\doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a88994f5be5eae47929470506cd23aeed}{eUIScene\_InGameHostOptionsMenu}});}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00333}00333\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00334}00334\ \ \ \ \ \textcolor{keywordflow}{case}\ eControl\_GamePlayers:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ currentSelection\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(childId);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00336}00336\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *selectedPlayer\ =\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.GetPlayerBySmallId(m\_players[currentSelection]-\/>m\_smallId);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00337}00337\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00338}00338\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecraft}{Minecraft}}\ *pMinecraft\ =\ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ shared\_ptr<MultiplayerLocalPlayer>\ localPlayer\ =\ pMinecraft-\/>\doxymbox{\hyperlink{class_minecraft_a7210d12b17639bbe0d615e334cc88e7e}{localplayers}}[\doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}}];}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00340}00340\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ isOp\ =\ m\_isHostPlayer\ ||\ localPlayer-\/>isModerator();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ cheats\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetGameHostOption(\doxymbox{\hyperlink{_app__enums_8h_a3039f4892c1f252d62bfbc8aeab1fb7aa2816ebbae42852e62f6f5f91e19c7d4e}{eGameHostOption\_CheatsEnabled}})\ !=\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ trust\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetGameHostOption(\doxymbox{\hyperlink{_app__enums_8h_a3039f4892c1f252d62bfbc8aeab1fb7aad7ea58bd0d36face7267c1a3e6465a6d}{eGameHostOption\_TrustPlayers}})\ !=\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00344}00344\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ isOp\ \&\&\ selectedPlayer\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ editingHost\ =\ selectedPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_a576525cd1b1bbe57d3da5c8e65f2b41e}{IsHost}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (cheats\ \&\&\ (m\_isHostPlayer\ ||\ !editingHost\ )\ )\ ||\ (!trust\ \&\&\ (m\_isHostPlayer\ ||\ !editingHost))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00349}00349\ \#\textcolor{keywordflow}{if}\ (!defined(\_CONTENT\_PACKAGE)\ \&\&\ !defined(\_FINAL\_BUILD)\ \&\&\ defined(\_DEBUG\_MENUS\_ENABLED))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ||\ (m\_isHostPlayer\ \&\&\ editingHost)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00351}00351\ \#endif}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_u_i_structs_8h_a8aa7cada11e062ba816bfb8faa6311a2}{InGamePlayerOptionsInitData}}\ *pInitData\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{_u_i_structs_8h_a8aa7cada11e062ba816bfb8faa6311a2}{InGamePlayerOptionsInitData}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pInitData-\/>\doxymbox{\hyperlink{struct___in_game_player_options_init_data_a81fa54fcec9f0f2057ff68e2f7b74176}{iPad}}\ =\ \doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pInitData-\/>\doxymbox{\hyperlink{struct___in_game_player_options_init_data_aebdb06c5c125eeaee9f2bfb125e2a958}{networkSmallId}}\ =\ m\_players[currentSelection]-\/>m\_smallId;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pInitData-\/>\doxymbox{\hyperlink{struct___in_game_player_options_init_data_a703840e99c15dc44322bdaf2e76f0163}{playerPrivileges}}\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetPlayerPrivileges(m\_players[currentSelection]-\/>m\_smallId);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.NavigateToScene(\doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}},\doxymbox{\hyperlink{_u_i_enums_8h_a8c919e0c689c33e5f539a238ea44f832a21c70f5c3f2626d11d16523af98b1ed3}{eUIScene\_InGamePlayerOptionsMenu}},pInitData);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(selectedPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_a006a1cde803e8b93a95f6983af826104}{IsLocal}}()\ !=\ \doxymbox{\hyperlink{stb__vorbis_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{TRUE}}\ \&\&\ selectedPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_ace293ccdf103ebd45b29c63f82b00613}{IsSameSystem}}(\doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.GetHostPlayer())\ !=\ \doxymbox{\hyperlink{stb__vorbis_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{TRUE}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ ops\ will\ hit\ this,\ can\ kick\ anyone\ not\ local\ and\ not\ local\ to\ the\ host}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}\ *smallId\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{_orbis_types_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *smallId\ =\ m\_players[currentSelection]-\/>m\_smallId;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}}\ uiIDA[2];}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uiIDA[0]=\doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_aba8ed24fed967f17af65873db52a87fe}{IDS\_CONFIRM\_OK}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uiIDA[1]=\doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_af164bcfcce9877bad67c966e6cf5ef35}{IDS\_CONFIRM\_CANCEL}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00368}00368\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.RequestAlertMessage(\doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_aa8dcdacabcca33a1f53957180b2f6a7e}{IDS\_UNLOCK\_KICK\_PLAYER\_TITLE}},\ \doxymbox{\hyperlink{_durango_media_2loc_2strings_8h_aece857e2bdb4f5f326b8194f08f0c203}{IDS\_UNLOCK\_KICK\_PLAYER}},\ uiIDA,\ 2,\ \doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}},\&\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_aaf0cceddfbae8396be34fb4b38a9d2ae}{UIScene\_InGameInfoMenu::KickPlayerReturned}},smallId);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00373}00373\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00374}00374\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00375}00375\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00376}\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a50a570f589fd8a7cc33989c937d307e0}{00376}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a50a570f589fd8a7cc33989c937d307e0}{UIScene\_InGameInfoMenu::handleFocusChange}}(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_ab2d8260a86f8d9d700fea930b54fa142}{F64}}\ controlId,\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_ab2d8260a86f8d9d700fea930b54fa142}{F64}}\ childId)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00377}00377\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00378}00378\ \ \ \ \ \textcolor{keywordflow}{switch}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(controlId))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00379}00379\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00380}00380\ \ \ \ \ \textcolor{keywordflow}{case}\ eControl\_GamePlayers:}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ m\_playerList.updateChildFocus(\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(childId)\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00382}00382\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00383}00383\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_acde1f3698f39eb09bda61022000a7cd5}{updateTooltips}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00384}00384\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00385}00385\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00386}\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a99a079a26370f98a183b9e6e14a30014}{00386}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a99a079a26370f98a183b9e6e14a30014}{UIScene\_InGameInfoMenu::OnPlayerChanged}}(\textcolor{keywordtype}{void}\ *callbackParam,\ \doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *pPlayer,\ \textcolor{keywordtype}{bool}\ leaving)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00387}00387\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00388}00388\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}<UIScene\_InGameInfoMenu::OnPlayerChanged>\ Player\ \(\backslash\)"{}\%ls\(\backslash\)"{}\ \%s\ (smallId:\ \%d)\(\backslash\)n"{}},\ pPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_abf55c701f776c64b9c2932fe73988282}{GetOnlineName}}(),\ leaving\ ?\ \textcolor{stringliteral}{"{}leaving"{}}\ :\ \textcolor{stringliteral}{"{}joining"{}},\ pPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_a717f3b509d5a51431007ac293909a525}{GetSmallId}}());}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00389}00389\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00390}00390\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a85a3c313f81f2a60e5bb1639289ddacc}{UIScene\_InGameInfoMenu}}\ *scene\ =\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a85a3c313f81f2a60e5bb1639289ddacc}{UIScene\_InGameInfoMenu}}\ *\textcolor{keyword}{>}(callbackParam);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00391}00391\ \ \ \ \ \textcolor{keywordtype}{bool}\ playerFound\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00392}00392\ \ \ \ \ \textcolor{keywordtype}{int}\ foundIndex\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00393}00393\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ scene-\/>m\_players.size();\ ++\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00394}00394\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!playerFound\ \&\&\ scene-\/>m\_players[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>m\_smallId\ ==\ pPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_a717f3b509d5a51431007ac293909a525}{GetSmallId}}()\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00396}00396\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00397}00397\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ scene-\/>m\_playerList.\doxymbox{\hyperlink{class_u_i_control___button_list_af76a731a61b348ecd3bf0652e956298b}{getCurrentSelection}}()\ ==\ scene-\/>m\_playerList.\doxymbox{\hyperlink{class_u_i_control___button_list_a9b786683ceea9fda9193bfbbc9944fc2}{getItemCount}}()\ -\/\ 1\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00399}00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ scene-\/>m\_playerList.\doxymbox{\hyperlink{class_u_i_control___button_list_ab42b19a1cbb47b773a5927e480353038}{setCurrentSelection}}(\ scene-\/>m\_playerList.\doxymbox{\hyperlink{class_u_i_control___button_list_a9b786683ceea9fda9193bfbbc9944fc2}{getItemCount}}()\ -\/\ 2\ );}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00401}00401\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Player\ found}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00403}00403\ \ \ \ \ \ \ \ \ \ \ \ \ playerFound\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00404}00404\ \ \ \ \ \ \ \ \ \ \ \ \ foundIndex\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00405}00405\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00406}00406\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00407}00407\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00408}00408\ \ \ \ \ \textcolor{keywordflow}{if}\ (leaving\ \&\&\ !playerFound)\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}<UIScene\_InGameInfoMenu::OnPlayerChanged>\ Error:\ Player\ \(\backslash\)"{}\%ls\(\backslash\)"{}\ leaving\ but\ not\ found\ in\ list\(\backslash\)n"{}},\ pPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_abf55c701f776c64b9c2932fe73988282}{GetOnlineName}}());}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00409}00409\ \ \ \ \ \textcolor{keywordflow}{if}\ (!leaving\ \&\&\ playerFound)\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}<UIScene\_InGameInfoMenu::OnPlayerChanged>\ Error:\ Player\ \(\backslash\)"{}\%ls\(\backslash\)"{}\ joining\ but\ already\ in\ list\(\backslash\)n"{}},\ pPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_abf55c701f776c64b9c2932fe73988282}{GetOnlineName}}());}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00410}00410\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00411}00411\ \ \ \ \ \textcolor{comment}{//\ If\ the\ player\ was\ found\ remove\ them\ (even\ if\ they're\ joining,\ they'll\ be\ added\ again\ later)}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00412}00412\ \ \ \ \ \textcolor{keywordflow}{if}(playerFound)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00413}00413\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00414}00414\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}<UIScene\_InGameInfoMenu::OnPlayerChanged>\ Player\ \(\backslash\)"{}\%ls\(\backslash\)"{}\ found,\ removing\(\backslash\)n"{}},\ pPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_abf55c701f776c64b9c2932fe73988282}{GetOnlineName}}());}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00415}00415\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00416}00416\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Remove\ player\ info}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00417}00417\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ scene-\/>m\_players[foundIndex];}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00418}00418\ \ \ \ \ \ \ \ \ scene-\/>m\_players.erase(scene-\/>m\_players.begin()\ +\ foundIndex);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00419}00419\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00420}00420\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Remove\ player\ from\ list}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00421}00421\ \ \ \ \ \ \ \ \ scene-\/>m\_playerList.\doxymbox{\hyperlink{class_u_i_control___button_list_afbbdffbd364ec4997d6fa88cae6687ef}{removeItem}}(foundIndex);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00422}00422\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00423}00423\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00424}00424\ \ \ \ \ \textcolor{comment}{//\ If\ the\ player\ is\ joining}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00425}00425\ \ \ \ \ \textcolor{keywordflow}{if}(!leaving)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00426}00426\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00427}00427\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}<UIScene\_InGameInfoMenu::OnPlayerChanged>\ Player\ \(\backslash\)"{}\%ls\(\backslash\)"{}\ not\ found,\ adding\(\backslash\)n"{}},\ pPlayer-\/>\doxymbox{\hyperlink{class_i_network_player_abf55c701f776c64b9c2932fe73988282}{GetOnlineName}}());}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00428}00428\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00429}00429\ \ \ \ \ \ \ \ \ PlayerInfo\ *info\ =\ scene-\/>BuildPlayerInfo(pPlayer);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00430}00430\ \ \ \ \ \ \ \ \ scene-\/>m\_players.push\_back(info);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00431}00431\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00432}00432\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note\ that\ the\ tick\ updates\ buttons\ every\ tick\ so\ it's\ only\ really\ important\ that\ we}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00433}00433\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ add\ the\ button\ (not\ the\ order\ or\ content)}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00434}00434\ \ \ \ \ \ \ \ \ scene-\/>m\_playerList.\doxymbox{\hyperlink{class_u_i_control___player_list_af61d9b6d54e2f8295f3bd174b09e9f9f}{addItem}}(info-\/>m\_name,\ info-\/>m\_colorState,\ info-\/>m\_voiceStatus);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00435}00435\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00436}00436\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00437}00437\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00438}\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_aaf0cceddfbae8396be34fb4b38a9d2ae}{00438}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_aaf0cceddfbae8396be34fb4b38a9d2ae}{UIScene\_InGameInfoMenu::KickPlayerReturned}}(\textcolor{keywordtype}{void}\ *pParam,\textcolor{keywordtype}{int}\ iPad,\doxymbox{\hyperlink{class_c4_j_storage_a09f34d44bac43e21fd929fbd51a128c5}{C4JStorage::EMessageResult}}\ result)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00439}00439\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00440}00440\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}\ smallId\ =\ *\textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{_orbis_types_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}\ *\textcolor{keyword}{>}(pParam);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00441}00441\ \ \ \ \ \textcolor{keyword}{delete}\ pParam;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00442}00442\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00443}00443\ \ \ \ \ \textcolor{keywordflow}{if}(result==\doxymbox{\hyperlink{class_c4_j_storage_a09f34d44bac43e21fd929fbd51a128c5ad83ed7035baa27f3c027c02470b494e2}{C4JStorage::EMessage\_ResultAccept}})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00444}00444\ \ \ \ \ \{\ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00445}00445\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_minecraft}{Minecraft}}\ *pMinecraft\ =\ \doxymbox{\hyperlink{class_minecraft_aac1f3f213a6196f5207dcf52a4df8b44}{Minecraft::GetInstance}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00446}00446\ \ \ \ \ \ \ \ \ shared\_ptr<MultiplayerLocalPlayer>\ localPlayer\ =\ pMinecraft-\/>\doxymbox{\hyperlink{class_minecraft_a7210d12b17639bbe0d615e334cc88e7e}{localplayers}}[iPad];}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00447}00447\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(localPlayer-\/>connection)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00448}00448\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00449}00449\ \ \ \ \ \ \ \ \ \ \ \ \ localPlayer-\/>connection-\/>send(std::make\_shared<KickPlayerPacket>(smallId));}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00450}00450\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00451}00451\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00452}00452\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00453}00453\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00454}00454\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00455}00455\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00456}00456\ UIScene\_InGameInfoMenu::PlayerInfo\ *UIScene\_InGameInfoMenu::BuildPlayerInfo(\doxymbox{\hyperlink{class_i_network_player}{INetworkPlayer}}\ *player)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00457}00457\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00458}00458\ \ \ \ \ \doxymbox{\hyperlink{class_player_info}{PlayerInfo}}\ *info\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_player_info}{PlayerInfo}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00459}00459\ \ \ \ \ info-\/>m\_smallId\ =\ player-\/>\doxymbox{\hyperlink{class_i_network_player_a717f3b509d5a51431007ac293909a525}{GetSmallId}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00460}00460\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00461}00461\ \ \ \ \ wstring\ playerName\ =\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00462}00462\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00463}00463\ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugSettingsOn()\ \&\&\ (\doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetGameSettingsDebugMask()\&(1L<<\doxymbox{\hyperlink{_console___debug__enum_8h_aeb1d54f9dc0d6691887aee6cb5d6fb8fae3ca6e61edc0f6c56ab2eb567fa37fc6}{eDebugSetting\_DebugLeaderboards}})))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00464}00464\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00465}00465\ \ \ \ \ \ \ \ \ playerName\ =\ \ L\textcolor{stringliteral}{"{}WWWWWWWWWWWWWWWW"{}};}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00466}00466\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00467}00467\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00468}00468\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00469}00469\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00470}00470\ \ \ \ \ \ \ \ \ playerName\ =\ player-\/>\doxymbox{\hyperlink{class_i_network_player_a8a08ee95ccc17c2bae3520afce570f0c}{GetDisplayName}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00471}00471\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00472}00472\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00473}00473\ \ \ \ \ \textcolor{keywordtype}{int}\ voiceStatus\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00474}00474\ \ \ \ \ \textcolor{keywordflow}{if}(player\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ player-\/>\doxymbox{\hyperlink{class_i_network_player_a7bad9d9f64305b773530c2a44b4727ee}{HasVoice}}()\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00475}00475\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00476}00476\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ player-\/>\doxymbox{\hyperlink{class_i_network_player_a01c8e43dad80ec762179154767563997}{IsMutedByLocalUser}}(\doxymbox{\hyperlink{class_u_i_scene_ac8b615136641ed5f26c76316870e725e}{m\_iPad}})\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00477}00477\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Muted\ image}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ voiceStatus\ =\ 3;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00480}00480\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00481}00481\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ player-\/>\doxymbox{\hyperlink{class_i_network_player_a3bc9fe1078c9736f876aaa6e939d26e9}{IsTalking}}()\ )}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00482}00482\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Talking\ image}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00484}00484\ \ \ \ \ \ \ \ \ \ \ \ \ voiceStatus\ =\ 2;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00485}00485\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00486}00486\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00487}00487\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Not\ talking\ image}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ voiceStatus\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00490}00490\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00491}00491\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00492}00492\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00493}00493\ \ \ \ \ info-\/>m\_voiceStatus\ =\ voiceStatus;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00494}00494\ \ \ \ \ info-\/>m\_colorState\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_aeead2d445e838ff32849935c708f73b6}{GetPlayerColour}}(info-\/>m\_smallId);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00495}00495\ \ \ \ \ info-\/>m\_name\ =\ playerName;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00496}00496\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00497}00497\ \ \ \ \ \textcolor{keywordflow}{return}\ info;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00498}00498\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00499}00499\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00500}00500\ \textcolor{preprocessor}{\#if\ defined\ \_\_PS3\_\_\ ||\ defined\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00501}00501\ \textcolor{keywordtype}{int}\ UIScene\_InGameInfoMenu::MustSignInReturnedPSN(\textcolor{keywordtype}{void}\ *pParam,\textcolor{keywordtype}{int}\ iPad,\doxymbox{\hyperlink{class_c4_j_storage_a09f34d44bac43e21fd929fbd51a128c5}{C4JStorage::EMessageResult}}\ result)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00502}00502\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00503}00503\ \ \ \ \ \doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a85a3c313f81f2a60e5bb1639289ddacc}{UIScene\_InGameInfoMenu}}*\ pClass\ =\ (\doxymbox{\hyperlink{class_u_i_scene___in_game_info_menu_a85a3c313f81f2a60e5bb1639289ddacc}{UIScene\_InGameInfoMenu}}*)pParam;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00504}00504\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00505}00505\ \ \ \ \ \textcolor{keywordflow}{if}(result==\doxymbox{\hyperlink{class_c4_j_storage_a09f34d44bac43e21fd929fbd51a128c5ad83ed7035baa27f3c027c02470b494e2}{C4JStorage::EMessage\_ResultAccept}})\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00506}00506\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00507}00507\ \textcolor{preprocessor}{\#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00508}00508\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_s_q_r_network_manager___p_s3_a0876f64d4602a0078d6f563bd2bc63c7}{SQRNetworkManager\_PS3::AttemptPSNSignIn}}(\&UIScene\_InGameInfoMenu::ViewInvites\_SignInReturned,\ pClass);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00509}00509\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{//\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00510}00510\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_s_q_r_network_manager___vita_a3cd2da110ff6c479be0f9d0f4fc0e6e2}{SQRNetworkManager\_Vita::AttemptPSNSignIn}}(\&UIScene\_InGameInfoMenu::ViewInvites\_SignInReturned,\ pClass);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00511}00511\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00512}00512\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00513}00513\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00514}00514\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00515}00515\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00516}00516\ }
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00517}00517\ \textcolor{keywordtype}{int}\ UIScene\_InGameInfoMenu::ViewInvites\_SignInReturned(\textcolor{keywordtype}{void}\ *pParam,\textcolor{keywordtype}{bool}\ bContinue,\ \textcolor{keywordtype}{int}\ iPad)}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00518}00518\ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00519}00519\ \ \ \ \ \textcolor{keywordflow}{if}(bContinue==\textcolor{keyword}{true})}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00520}00520\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00521}00521\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ if\ we're\ signed\ in\ to\ LIVE}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00522}00522\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___profile_8h_a027fde7e99d773afa28ec11d244459bf}{ProfileManager}}.\doxymbox{\hyperlink{class_c__4_j_profile_a40e0d4d843e736bdf8da8903f8deba92}{IsSignedInLive}}(iPad))}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00523}00523\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00524}00524\ \textcolor{preprocessor}{\#ifdef\ \_\_ORBIS\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00525}00525\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_s_q_r_network_manager___orbis_a9ce9bb78cee562f30687fd91769cf05a}{SQRNetworkManager\_Orbis::RecvInviteGUI}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00526}00526\ \textcolor{preprocessor}{\#elif\ defined(\_\_PS3\_\_)}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ret\ =\ sceNpBasicRecvMessageCustom(SCE\_NP\_BASIC\_MESSAGE\_MAIN\_TYPE\_INVITE,\ SCE\_NP\_BASIC\_RECV\_MESSAGE\_OPTIONS\_INCLUDE\_BOOTABLE,\ SYS\_MEMORY\_CONTAINER\_ID\_INVALID);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00528}00528\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}sceNpBasicRecvMessageCustom\ return\ \%d\ (\ \%08x\ )\(\backslash\)n"{}},\ ret,\ ret);}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00529}00529\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{//\ \_\_PSVITA\_\_}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00530}00530\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_s_q_r_network_manager___vita_a68fbb36ab3076fbe865da72942b15086}{SQRNetworkManager\_Vita::RecvInviteGUI}}();}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00531}00531\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00532}00532\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00533}00533\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00534}00534\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00535}00535\ \}}
+\DoxyCodeLine{\Hypertarget{_u_i_scene___in_game_info_menu_8cpp_source_l00536}00536\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

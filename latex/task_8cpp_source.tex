@@ -1,0 +1,86 @@
+\doxysection{task.\+cpp}
+\hypertarget{task_8cpp_source}{}\label{task_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/SPU\_Tasks/ChunkUpdate/task.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PS3/SPU\_Tasks/ChunkUpdate/task.cpp}}
+\doxymbox{\hyperlink{task_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00001}00001\ \textcolor{comment}{/*\ SCE\ CONFIDENTIAL}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00002}00002\ \textcolor{comment}{PlayStation(R)3\ Programmer\ Tool\ Runtime\ Library\ 430.001}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00003}00003\ \textcolor{comment}{*\ Copyright\ (C)\ 2007\ Sony\ Computer\ Entertainment\ Inc.}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00004}00004\ \textcolor{comment}{*\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00005}00005\ \textcolor{comment}{*/}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00007}00007\ \textcolor{comment}{/*\ common\ headers\ */}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ <spu\_intrinsics.h>}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <cell/spurs.h>}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <cell/dma.h>}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_chunk_rebuild_data_8h}{ChunkRebuildData.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_tile_renderer___s_p_u_8h}{TileRenderer\_SPU.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_dma_data_8h}{..\(\backslash\)Common\(\backslash\)DmaData.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00018}00018\ \textcolor{comment}{//\ \#define\ SPU\_HEAPSIZE\ (0*1024)}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00019}00019\ \textcolor{comment}{//\ \#define\ SPU\_STACKSIZE\ (64*1024)}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00020}00020\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00021}00021\ \textcolor{comment}{//\ CELL\_SPU\_LS\_PARAM(0*1024,\ 64*1024);\ \ //\ can't\ use\ \#defines\ here\ as\ it\ seems\ to\ \ create\ an\ asm\ instruction}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00024}00024\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ sc\_verbose\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00025}00025\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00026}\doxymbox{\hyperlink{task_8cpp_ad0549b950612f2da66d34a548ce0ed81}{00026}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{task_8cpp_ad0549b950612f2da66d34a548ce0ed81}{g\_lastHitBlockX}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00027}\doxymbox{\hyperlink{task_8cpp_a75893925008d682f0b51619ac33a4d2d}{00027}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{task_8cpp_a75893925008d682f0b51619ac33a4d2d}{g\_lastHitBlockY}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00028}\doxymbox{\hyperlink{task_8cpp_ab0ff1c6a1f2933f6ee98aa046adb645e}{00028}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{task_8cpp_ab0ff1c6a1f2933f6ee98aa046adb645e}{g\_lastHitBlockZ}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00030}\doxymbox{\hyperlink{task_8cpp_a306b5fcc0cae50a7195b460bb38e364a}{00030}}\ CellSpursJobContext2*\ \doxymbox{\hyperlink{task_8cpp_a306b5fcc0cae50a7195b460bb38e364a}{g\_pSpursJobContext}};}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00032}\doxymbox{\hyperlink{task_8cpp_a3f174bec6854ffe9e8b1e7bb4aafc9f6}{00032}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{task_8cpp_a3f174bec6854ffe9e8b1e7bb4aafc9f6}{cellSpursJobQueueMain}}(CellSpursJobContext2\ *pContext,\ CellSpursJob256\ *pJob)}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00033}00033\ \{}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00034}00034\ \ \ \ \ CellSpursTaskId\ idTask\ =\ cellSpursGetTaskId();}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00035}00035\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ idSpu\ =\ cellSpursGetCurrentSpuId();}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00037}00037\ \ \ \ \ \textcolor{keywordflow}{if}(sc\_verbose)}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{spu__assert_8h_ab76445a0b56d3f47e494565f40a3f43f}{spu\_print}}(\textcolor{stringliteral}{"{}ChunkUpdate\ [SPU\#\%u]\ start\(\backslash\)n"{}},\ idSpu);}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00039}00039\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00040}00040\ \ \ \ \ \doxymbox{\hyperlink{task_8cpp_a306b5fcc0cae50a7195b460bb38e364a}{g\_pSpursJobContext}}\ =\ pContext;}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00042}00042\ \textcolor{comment}{//\ \ void*\ pVolatileMem\ =\ NULL;}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00043}00043\ \textcolor{comment}{//\ \ uint32\_t\ volatileSize\ =\ 0;}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00044}00044\ \textcolor{comment}{//\ \ ret\ =\ cellSpursGetTaskVolatileArea(\&pVolatileMem,\ \&volatileSize);}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00045}00045\ \textcolor{comment}{//\ \ spu\_print(\ \ "{}-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ ChunkUpdate\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00046}00046\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Stack\ :\ \%dKb\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00047}00047\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Heap\ \ :\ \%dKb\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00048}00048\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Prog\ \ :\ \%dKb\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00049}00049\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}Free\ \ :\ \%dKb\(\backslash\)n"{}}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00050}00050\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\(\backslash\)n"{},\ }}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00051}00051\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ SPU\_STACKSIZE/1024,}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00052}00052\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ SPU\_HEAPSIZE/1024,}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00053}00053\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ 256\ -\/\ ((SPU\_HEAPSIZE+SPU\_STACKSIZE+volatileSize)/1024),}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00054}00054\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ volatileSize/1024);}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00056}00056\ \textcolor{comment}{//\ \ uint32\_t\ eaEventFlag\ =\ spu\_extract((vec\_uint4)argTask,\ 0);}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ uint32\_t\ eaDataIn\ =\ pJob-\/>workArea.userData[0];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00058}00058\ \ \ \ \ \ \ \ \ uint32\_t\ eaDataOut\ =pJob-\/>workArea.userData[1];}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00061}00061\ \ \ \ \ \doxymbox{\hyperlink{class_chunk_rebuild_data}{ChunkRebuildData}}\ rebuildData;}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00062}00062\ \ \ \ \ \doxymbox{\hyperlink{class_tile_renderer___s_p_u}{TileRenderer\_SPU}}\ tileRenderer(\&rebuildData);}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00063}00063\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ arrayData[4096+32];}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00064}00064\ \ \ \ \ \doxymbox{\hyperlink{classint_array___s_p_u}{intArray\_SPU}}\ tesselatorArray(arrayData);}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00065}00065\ \ \ \ \ \doxymbox{\hyperlink{class_tile___s_p_u_a11297dfb8b8b2b1fd4f5b5c8b264ff04}{Tile\_SPU::initTilePointers}}();}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00067}00067\ \ \ \ \ \doxymbox{\hyperlink{class_dma_data___s_p_u_a554786827d16a48f76f0d06f2112bbb4}{DmaData\_SPU::getAndWait}}(\&rebuildData,\ eaDataIn,\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{class_chunk_rebuild_data}{ChunkRebuildData}}));}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00068}00068\ \ \ \ \ \doxymbox{\hyperlink{task_8cpp_ad0549b950612f2da66d34a548ce0ed81}{g\_lastHitBlockX}}\ =\ rebuildData.\doxymbox{\hyperlink{class_chunk_rebuild_data_a0bf2173f05788eed4a9a7a105c7bf82a}{m\_lastHitBlockX}};}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00069}00069\ \ \ \ \ \doxymbox{\hyperlink{task_8cpp_a75893925008d682f0b51619ac33a4d2d}{g\_lastHitBlockY}}\ =\ rebuildData.\doxymbox{\hyperlink{class_chunk_rebuild_data_acaae21f5881d1bb611295d72de60b7c6}{m\_lastHitBlockY}};}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00070}00070\ \ \ \ \ \doxymbox{\hyperlink{task_8cpp_ab0ff1c6a1f2933f6ee98aa046adb645e}{g\_lastHitBlockZ}}\ =\ rebuildData.\doxymbox{\hyperlink{class_chunk_rebuild_data_adda6e1361706bcf5d7ecfd4e75819f65}{m\_lastHitBlockZ}};}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00072}00072\ \ \ \ \ rebuildData.\doxymbox{\hyperlink{class_chunk_rebuild_data_ab61120c4efee72902de0babf290acc94}{m\_tesselator}}.\doxymbox{\hyperlink{class_tesselator___s_p_u_a8d0d69ff228d5feba78cfb287b7b2ddb}{\_array}}\ =\ \&tesselatorArray;}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00073}00073\ \ \ \ \ rebuildData.\doxymbox{\hyperlink{class_chunk_rebuild_data_ab568a08d841968a02753ed832307c7a5}{disableUnseenTiles}}();}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00074}00074\ \ \ \ \ rebuildData.\doxymbox{\hyperlink{class_chunk_rebuild_data_a75a7a45752d94a1dd35f29730421c2f7}{tesselateAllTiles}}(\&tileRenderer);}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00075}00075\ \ \ \ \ \doxymbox{\hyperlink{class_dma_data___s_p_u_a7857a22b3871edd93cd9ee5e24f120fa}{DmaData\_SPU::putAndWait}}(\&rebuildData,\ eaDataOut,\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{class_chunk_rebuild_data}{ChunkRebuildData}}));}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{if}(sc\_verbose)}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00078}00078\ \ \ \ \ \doxymbox{\hyperlink{spu__assert_8h_ab76445a0b56d3f47e494565f40a3f43f}{spu\_print}}(\textcolor{stringliteral}{"{}ChunkUpdate\ [SPU\#\%u]\ exit\(\backslash\)n"{}},\ idTask,\ idSpu);}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00079}00079\ \}}
+\DoxyCodeLine{\Hypertarget{task_8cpp_source_l00080}00080\ }
+
+\end{DoxyCode}

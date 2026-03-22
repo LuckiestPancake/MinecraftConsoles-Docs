@@ -1,0 +1,26 @@
+var class_pig =
+[
+    [ "Pig", "class_pig.html#a50e4b3512768e104742d653290fb74f9", null ],
+    [ "addAdditonalSaveData", "class_pig.html#a28dee429468f5d87242ca228d4a0d3ac", null ],
+    [ "canBeControlledByRider", "class_pig.html#a8c351a244be9f9dd5a6d37b99b78fd3f", null ],
+    [ "causeFallDamage", "class_pig.html#afbd56ba7a33ff0ae59099bf68836af08", null ],
+    [ "defineSynchedData", "class_pig.html#af2db91c86f0981267a11f3a77850465f", null ],
+    [ "dropDeathLoot", "class_pig.html#a9aea7e30369094cb21a0e66794da2b42", null ],
+    [ "getAmbientSound", "class_pig.html#a37af84ad4f999f72230334baa96570e2", null ],
+    [ "getBreedOffspring", "class_pig.html#a20c202f0ab4270817fe26d19c263472f", null ],
+    [ "getControlGoal", "class_pig.html#a5d40461a26996a023a6493f142a95c4d", null ],
+    [ "getDeathLoot", "class_pig.html#a9be553e77a0a844f5a78c84b23c36d7c", null ],
+    [ "getDeathSound", "class_pig.html#adec7f7bce173ce8830555d08c7ce7109", null ],
+    [ "getHurtSound", "class_pig.html#a308df2edbce186fda52297baaa773cc0", null ],
+    [ "GetType", "class_pig.html#a36b375565d9c9f432a7726479328bc8c", null ],
+    [ "hasSaddle", "class_pig.html#a0b0ffe7cbe075201a73146c52fc21804", null ],
+    [ "isFood", "class_pig.html#a8c622aea629ccccb37415f0b373839a9", null ],
+    [ "mobInteract", "class_pig.html#a1ae2fd0f409e876a59f09055b3920bd2", null ],
+    [ "newServerAiStep", "class_pig.html#a24732f4c9fd11bfe8dc63b1aa1dbab71", null ],
+    [ "playStepSound", "class_pig.html#ac04a96da3894b8af55d7b4dae8fe8003", null ],
+    [ "readAdditionalSaveData", "class_pig.html#ada5e84c9f7a24716a45daa8dc9157fbb", null ],
+    [ "registerAttributes", "class_pig.html#aa38e5ca3072c1fc22f889e6b5aa6219b", null ],
+    [ "setSaddle", "class_pig.html#a78886181993e084dc7061a1c0f0730c7", null ],
+    [ "thunderHit", "class_pig.html#a49059d3e2454613f1e8de6f4d8bbdd73", null ],
+    [ "useNewAi", "class_pig.html#a3fcebf9002cd9dcf05aad89f489edc66", null ]
+];

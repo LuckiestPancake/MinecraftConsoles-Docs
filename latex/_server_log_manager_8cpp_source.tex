@@ -1,0 +1,392 @@
+\doxysection{Server\+Log\+Manager.\+cpp}
+\hypertarget{_server_log_manager_8cpp_source}{}\label{_server_log_manager_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/ServerLogManager.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/ServerLogManager.cpp}}
+\doxymbox{\hyperlink{_server_log_manager_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_log_manager_8h}{ServerLogManager.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_utils_8h}{Common\(\backslash\)StringUtils.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_logger_8h}{ServerLogger.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00011}00011\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{_server_log_manager_8cpp_ac2e06368b48f26321098bc920ea5df1f}{g\_Win64DedicatedServer}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00013}00013\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_server_runtime}{ServerRuntime}}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00014}00014\ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00015}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager}{00015}}\ \ \ \ \ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager}{ServerLogManager}}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00016}00016\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00017}00017\ \ \ \ \ \ \ \ \ \textcolor{keyword}{namespace}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00018}00018\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00025}00025\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }ConnectionLogEntry}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ remoteIp;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00028}00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ playerName;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }ServerLogState}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::mutex\ stateLock;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::array<ConnectionLogEntry,\ 256>\ entries;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ ServerLogState\ g\_serverLogState;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ IsDedicatedServerLoggingEnabled()}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{_server_log_manager_8cpp_ac2e06368b48f26321098bc920ea5df1f}{g\_Win64DedicatedServer}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ResetConnectionLogEntry(ConnectionLogEntry\ *entry)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (entry\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entry-\/>remoteIp.clear();}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entry-\/>playerName.clear();}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ std::string\ NormalizeRemoteIp(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *ip)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ip\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ ||\ ip[0]\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::string(\textcolor{stringliteral}{"{}unknown"{}});}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::string(ip);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ std::string\ NormalizePlayerName(\textcolor{keyword}{const}\ std::wstring\ \&playerName)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ playerNameUtf8\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a2d940afc106d1a397e2077009458d3b9}{StringUtils::WideToUtf8}}(playerName);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (playerNameUtf8.empty())}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ playerNameUtf8\ =\ \textcolor{stringliteral}{"{}<unknown>"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ playerNameUtf8;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Default\ to\ the\ main\ app\ channel\ when\ the\ caller\ does\ not\ provide\ a\ source\ tag.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *NormalizeClientLogSource(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *source)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (source\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ ||\ source[0]\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}app"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ source;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ EmitClientDebugLogLine(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *source,\ \textcolor{keyword}{const}\ std::string\ \&\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}})}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.empty())}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_a05c70c22e29e6f2a38d9431f2eecae0a}{LogDebugf}}(\textcolor{stringliteral}{"{}client"{}},\ \textcolor{stringliteral}{"{}[\%s]\ \%s"{}},\ NormalizeClientLogSource(source),\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.c\_str());}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Split\ one\ debug\ payload\ into\ individual\ lines\ so\ each\ line\ becomes\ a\ prompt-\/safe\ server\ log\ entry.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ForwardClientDebugMessage(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *source,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}})}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}}\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ ||\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}}[0]\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *cursor\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a69040edcd518f8b6a8c4d36b8fb0e27e}{message}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (*cursor\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *lineStart\ =\ cursor;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (*cursor\ !=\ 0\ \&\&\ *cursor\ !=\ \textcolor{charliteral}{'\(\backslash\)r'}\ \&\&\ *cursor\ !=\ \textcolor{charliteral}{'\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++cursor;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Split\ multi-\/line\ client\ debug\ output\ into\ prompt-\/safe\ server\ log\ entries.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cursor\ >\ lineStart)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EmitClientDebugLogLine(source,\ std::string(lineStart,\ (\textcolor{keywordtype}{size\_t})(cursor\ -\/\ lineStart)));}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (*cursor\ ==\ \textcolor{charliteral}{'\(\backslash\)r'}\ ||\ *cursor\ ==\ \textcolor{charliteral}{'\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++cursor;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Share\ the\ same\ formatting\ path\ for\ app,\ user,\ and\ legacy\ debug-\/spew\ forwards.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ ForwardFormattedClientDebugLogV(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *source,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ va\_list\ args)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!IsDedicatedServerLoggingEnabled()\ ||\ format\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}}\ ||\ format[0]\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ messageBuffer[2048]\ =\ \{\};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vsnprintf\_s(messageBuffer,\ \textcolor{keyword}{sizeof}(messageBuffer),\ \_TRUNCATE,\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ForwardClientDebugMessage(source,\ messageBuffer);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *TcpRejectReasonToString(\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a4ed0b09b350feef28709bb1c83cc4c1f}{ETcpRejectReason}}\ reason)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (reason)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a4ed0b09b350feef28709bb1c83cc4c1fa06006851784f680d6079286b0d0548cd}{eTcpRejectReason\_BannedIp}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}banned-\/ip"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a4ed0b09b350feef28709bb1c83cc4c1fa7826720fcbcc8252ead834c6aafcaf1e}{eTcpRejectReason\_GameNotReady}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}game-\/not-\/ready"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a4ed0b09b350feef28709bb1c83cc4c1fa0082c5b28e0e4bc6e11867d6968df4a8}{eTcpRejectReason\_ServerFull}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}server-\/full"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}unknown"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *LoginRejectReasonToString(\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2e12e14c2ace95671a80422a0b4ffe38}{ELoginRejectReason}}\ reason)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (reason)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2e12e14c2ace95671a80422a0b4ffe38ab3adb5815d92731e99c24c3e07eefcf4}{eLoginRejectReason\_BannedXuid}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}banned-\/xuid"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2e12e14c2ace95671a80422a0b4ffe38a1bd2c4601492b2d1477a648cf65b6cc2}{eLoginRejectReason\_NotWhitelisted}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}not-\/whitelisted"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2e12e14c2ace95671a80422a0b4ffe38aaec8371ae530319fb54267fdff3f7c29}{eLoginRejectReason\_DuplicateXuid}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}duplicate-\/xuid"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2e12e14c2ace95671a80422a0b4ffe38ab616a71e2a3636379aeda815649088b9}{eLoginRejectReason\_DuplicateName}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}duplicate-\/name"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}unknown"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *DisconnectReasonToString(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19}{DisconnectPacket::eDisconnectReason}}\ reason)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (reason)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a8c254d06cc7b35e510b01fa348c6aa8d}{DisconnectPacket::eDisconnect\_None}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}none"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19ae6b04840091bd26a411a8fe94d2b2b15}{DisconnectPacket::eDisconnect\_Quitting}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}quitting"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19ae25413a0aedbfe3b44ff60e004d57ee4}{DisconnectPacket::eDisconnect\_Closed}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}closed"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a47a08f0eb76ca594d41a4ff1094852e5}{DisconnectPacket::eDisconnect\_LoginTooLong}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}login-\/too-\/long"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a4c2b963c4708ca140a190750e6c93cb0}{DisconnectPacket::eDisconnect\_IllegalStance}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}illegal-\/stance"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a19dabfd5cd9415e9fbb42d0ba8e79771}{DisconnectPacket::eDisconnect\_IllegalPosition}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}illegal-\/position"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a4b7d1d4832f364851c7a91efe44a9e0e}{DisconnectPacket::eDisconnect\_MovedTooQuickly}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}moved-\/too-\/quickly"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19ac619ee40febfb6b7fb925d9506dc2f95}{DisconnectPacket::eDisconnect\_NoFlying}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}no-\/flying"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a884bd581f440096fa06b3cf36d5b7cc3}{DisconnectPacket::eDisconnect\_Kicked}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}kicked"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a0ccbafc1ca2d781a153fc3b6d9f15189}{DisconnectPacket::eDisconnect\_TimeOut}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}timeout"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a7962160be8eb16d010831ec394b3affe}{DisconnectPacket::eDisconnect\_Overflow}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}overflow"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19ad4d60f0042b3eb6b1239fd4cd2aa68f1}{DisconnectPacket::eDisconnect\_EndOfStream}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}end-\/of-\/stream"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a0b53a273836d2753afb65e1a159a3958}{DisconnectPacket::eDisconnect\_ServerFull}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}server-\/full"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a7db0417492f0f186fa66ea244709c54d}{DisconnectPacket::eDisconnect\_OutdatedServer}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}outdated-\/server"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a23d8dedbf36c53acce279b5c65c00c42}{DisconnectPacket::eDisconnect\_OutdatedClient}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}outdated-\/client"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a81c47418d551e06f7f63b9e2066bf5ab}{DisconnectPacket::eDisconnect\_UnexpectedPacket}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}unexpected-\/packet"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a93eb6f6046ee4a4ae5d133b016db2f6d}{DisconnectPacket::eDisconnect\_ConnectionCreationFailed}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}connection-\/creation-\/failed"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19abce51b1022e93fe22ecfed2dde48fa17}{DisconnectPacket::eDisconnect\_NoMultiplayerPrivilegesHost}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}no-\/multiplayer-\/privileges-\/host"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a796b7d5059a9533ec8584a71610ef313}{DisconnectPacket::eDisconnect\_NoMultiplayerPrivilegesJoin}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}no-\/multiplayer-\/privileges-\/join"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19afdbfe8f2580dd67164777b09d7e64675}{DisconnectPacket::eDisconnect\_NoUGC\_AllLocal}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}no-\/ugc-\/all-\/local"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a59eda137d12a1119926613ce59e4dac7}{DisconnectPacket::eDisconnect\_NoUGC\_Single\_Local}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}no-\/ugc-\/single-\/local"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a4508f80c9f6e8c23aa554a3ee20d75e8}{DisconnectPacket::eDisconnect\_ContentRestricted\_AllLocal}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}content-\/restricted-\/all-\/local"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19ac504e05f9ea54fda55fd5f9fa02fa6c4}{DisconnectPacket::eDisconnect\_ContentRestricted\_Single\_Local}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}content-\/restricted-\/single-\/local"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a54e55d4f7943db5c035dbd26096ef695}{DisconnectPacket::eDisconnect\_NoUGC\_Remote}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}no-\/ugc-\/remote"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a693090734b48c7dcfdd405082a86e4a6}{DisconnectPacket::eDisconnect\_NoFriendsInGame}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}no-\/friends-\/in-\/game"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a42c764efd646cbc8650220396a6a082a}{DisconnectPacket::eDisconnect\_Banned}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}banned"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a9e430b8caae066bc24a6ca74fa2945ae}{DisconnectPacket::eDisconnect\_NotFriendsWithHost}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}not-\/friends-\/with-\/host"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a0aec10baa333f25b9b1e85654d0229f5}{DisconnectPacket::eDisconnect\_NATMismatch}}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}nat-\/mismatch"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}unknown"{}};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00202}00202\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00203}00203\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ forward\ client-\/side\ debug\ output\ while\ the\ process\ is\ running\ as\ the\ dedicated\ server.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00205}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_add8a72101e02f8439e595514d43193c8}{00205}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_add8a72101e02f8439e595514d43193c8}{ShouldForwardClientDebugLogs}}()}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00206}00206\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ IsDedicatedServerLoggingEnabled();}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00210}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2a0c75f09da5819b050d81dce81779bd}{00210}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2a0c75f09da5819b050d81dce81779bd}{ForwardClientAppDebugLogV}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ va\_list\ args)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ ForwardFormattedClientDebugLogV(\textcolor{stringliteral}{"{}app"{}},\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00214}00214\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00215}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_ae0c1d23c1fe08d5c9fcb33c118abae7c}{00215}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_ae0c1d23c1fe08d5c9fcb33c118abae7c}{ForwardClientUserDebugLogV}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ va\_list\ args)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ source[32]\ =\ \{\};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \_snprintf\_s(source,\ \textcolor{keyword}{sizeof}(source),\ \_TRUNCATE,\ \textcolor{stringliteral}{"{}app:user=\%d"{}},\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_a7e614d4afef53717baa62cc07b3363bb}{user}});}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ ForwardFormattedClientDebugLogV(source,\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00221}00221\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00222}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_ad5a26605f7b88c9f92c1f757aecbe0aa}{00222}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_ad5a26605f7b88c9f92c1f757aecbe0aa}{ForwardClientDebugSpewLogV}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ va\_list\ args)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ ForwardFormattedClientDebugLogV(\textcolor{stringliteral}{"{}debug-\/spew"{}},\ format,\ args);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Clear\ every\ cached\ connection\ slot\ during\ startup\ so\ stale\ metadata\ never\ leaks\ into\ future\ logs.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00228}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_af56b08da02e48de7640c775d95322850}{00228}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_af56b08da02e48de7640c775d95322850}{Initialize}}()}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_serverLogState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ index\ =\ 0;\ index\ <\ g\_serverLogState.entries.size();\ ++index)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ResetConnectionLogEntry(\&g\_serverLogState.entries[index]);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00235}00235\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00236}00236\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reuse\ Initialize\ as\ the\ shutdown\ cleanup\ path\ because\ both\ operations\ wipe\ the\ cache.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00238}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a0cc710ecc87aebaa09078f0d2730e4cb}{00238}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a0cc710ecc87aebaa09078f0d2730e4cb}{Shutdown}}()}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00239}00239\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_af56b08da02e48de7640c775d95322850}{Initialize}}();}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00241}00241\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00243}00243\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Log\ the\ raw\ socket\ arrival\ before\ a\ smallId\ is\ assigned\ so\ early\ rejects\ still\ have\ an\ IP\ in\ the\ logs.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00244}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2f5918c69979a03db766ea8883e5b955}{00244}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2f5918c69979a03db766ea8883e5b955}{OnIncomingTcpConnection}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *ip)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00245}00245\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!IsDedicatedServerLoggingEnabled())}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ remoteIp\ =\ NormalizeRemoteIp(ip);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_a27b5f62791fd5c61710ede777fb91b57}{LogInfof}}(\textcolor{stringliteral}{"{}network"{}},\ \textcolor{stringliteral}{"{}incoming\ tcp\ connection\ from\ \%s"{}},\ remoteIp.c\_str());}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00253}00253\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TCP\ rejects\ happen\ before\ connection\ state\ is\ cached,\ so\ log\ directly\ from\ the\ supplied\ remote\ IP.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00256}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a3f11c7e5476c3d0b7429533e12f1d2df}{00256}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a3f11c7e5476c3d0b7429533e12f1d2df}{OnRejectedTcpConnection}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *ip,\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a4ed0b09b350feef28709bb1c83cc4c1f}{ETcpRejectReason}}\ reason)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!IsDedicatedServerLoggingEnabled())}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00262}00262\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ remoteIp\ =\ NormalizeRemoteIp(ip);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_a7a4113b5b4ee3e0eb11d1d8447359ef8}{LogWarnf}}(\textcolor{stringliteral}{"{}network"{}},\ \textcolor{stringliteral}{"{}rejected\ tcp\ connection\ from\ \%s:\ reason=\%s"{}},\ remoteIp.c\_str(),\ TcpRejectReasonToString(reason));}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00265}00265\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Cache\ the\ accepted\ remote\ IP\ immediately\ so\ later\ login\ and\ disconnect\ logs\ can\ reuse\ it.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00268}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_ac25fbcdab2cff2528a2320f4df88ef52}{00268}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_ac25fbcdab2cff2528a2320f4df88ef52}{OnAcceptedTcpConnection}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ smallId,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *ip)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!IsDedicatedServerLoggingEnabled())}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00274}00274\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ remoteIp\ =\ NormalizeRemoteIp(ip);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_serverLogState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00278}00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ConnectionLogEntry\ \&entry\ =\ g\_serverLogState.entries[smallId];}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ResetConnectionLogEntry(\&entry);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entry.remoteIp\ =\ remoteIp;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00281}00281\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_a27b5f62791fd5c61710ede777fb91b57}{LogInfof}}(\textcolor{stringliteral}{"{}network"{}},\ \textcolor{stringliteral}{"{}accepted\ tcp\ connection\ from\ \%s\ as\ smallId=\%u"{}},\ remoteIp.c\_str(),\ (\textcolor{keywordtype}{unsigned})smallId);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00284}00284\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00285}00285\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00286}00286\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Once\ login\ succeeds,\ bind\ the\ resolved\ player\ name\ onto\ the\ cached\ transport\ entry.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00287}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_aef65d679c061e92a4c555b725cc692cc}{00287}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_aef65d679c061e92a4c555b725cc692cc}{OnAcceptedPlayerLogin}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ smallId,\ \textcolor{keyword}{const}\ std::wstring\ \&playerName)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00288}00288\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!IsDedicatedServerLoggingEnabled())}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00290}00290\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00293}00293\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ playerNameUtf8\ =\ NormalizePlayerName(playerName);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ remoteIp(\textcolor{stringliteral}{"{}unknown"{}});}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_serverLogState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ConnectionLogEntry\ \&entry\ =\ g\_serverLogState.entries[smallId];}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ entry.playerName\ =\ playerNameUtf8;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!entry.remoteIp.empty())}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ remoteIp\ =\ entry.remoteIp;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_a27b5f62791fd5c61710ede777fb91b57}{LogInfof}}(\textcolor{stringliteral}{"{}network"{}},\ \textcolor{stringliteral}{"{}accepted\ player\ login:\ name=\(\backslash\)"{}\%s\(\backslash\)"{}\ ip=\%s\ smallId=\%u"{}},\ playerNameUtf8.c\_str(),\ remoteIp.c\_str(),\ (\textcolor{keywordtype}{unsigned})smallId);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00308}00308\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00309}00309\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Read\ the\ cached\ IP\ for\ the\ rejection\ log,\ then\ clear\ the\ slot\ because\ the\ player\ never\ fully\ joined.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00310}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a61f1ed396aff0f018f1903a57334f350}{00310}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a61f1ed396aff0f018f1903a57334f350}{OnRejectedPlayerLogin}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ smallId,\ \textcolor{keyword}{const}\ std::wstring\ \&playerName,\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2e12e14c2ace95671a80422a0b4ffe38}{ELoginRejectReason}}\ reason)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!IsDedicatedServerLoggingEnabled())}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00316}00316\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ playerNameUtf8\ =\ NormalizePlayerName(playerName);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ remoteIp(\textcolor{stringliteral}{"{}unknown"{}});}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_serverLogState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ConnectionLogEntry\ \&entry\ =\ g\_serverLogState.entries[smallId];}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!entry.remoteIp.empty())}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ remoteIp\ =\ entry.remoteIp;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ResetConnectionLogEntry(\&entry);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_a7a4113b5b4ee3e0eb11d1d8447359ef8}{LogWarnf}}(\textcolor{stringliteral}{"{}network"{}},\ \textcolor{stringliteral}{"{}rejected\ login\ from\ \%s:\ name=\(\backslash\)"{}\%s\(\backslash\)"{}\ reason=\%s"{}},\ remoteIp.c\_str(),\ playerNameUtf8.c\_str(),\ LoginRejectReasonToString(reason));}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00331}00331\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Disconnect\ logging\ is\ the\ final\ consumer\ of\ cached\ metadata,\ so\ it\ also\ clears\ the\ slot\ afterward.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00333}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a9f72aff032ce8b7cdf7918a9a17d76cc}{00333}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a9f72aff032ce8b7cdf7918a9a17d76cc}{OnPlayerDisconnected}}(}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ smallId,}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::wstring\ \&playerName,}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19}{DisconnectPacket::eDisconnectReason}}\ reason,}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ initiatedByServer)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00338}00338\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!IsDedicatedServerLoggingEnabled())}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00343}00343\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ playerNameUtf8\ =\ NormalizePlayerName(playerName);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ remoteIp(\textcolor{stringliteral}{"{}unknown"{}});}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00346}00346\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Copy\ state\ under\ lock\ and\ emit\ the\ log\ after\ unlocking\ so\ CLI\ output\ never\ blocks\ connection\ bookkeeping.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_serverLogState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ConnectionLogEntry\ \&entry\ =\ g\_serverLogState.entries[smallId];}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!entry.remoteIp.empty())}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ remoteIp\ =\ entry.remoteIp;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (playerNameUtf8\ ==\ \textcolor{stringliteral}{"{}<unknown>"{}}\ \&\&\ !entry.playerName.empty())}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ playerNameUtf8\ =\ entry.playerName;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ResetConnectionLogEntry(\&entry);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00360}00360\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_a27b5f62791fd5c61710ede777fb91b57}{LogInfof}}(}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}network"{}},}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\%s:\ name=\(\backslash\)"{}\%s\(\backslash\)"{}\ ip=\%s\ smallId=\%u\ reason=\%s"{}},}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00364}00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ initiatedByServer\ ?\ \textcolor{stringliteral}{"{}disconnecting\ player"{}}\ :\ \textcolor{stringliteral}{"{}player\ disconnected"{}},}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ playerNameUtf8.c\_str(),}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ remoteIp.c\_str(),}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned})smallId,}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DisconnectReasonToString(reason));}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00377}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a47c88c85d2faf27b56abf10872cad0ae}{00377}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a47c88c85d2faf27b56abf10872cad0ae}{TryGetConnectionRemoteIp}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ smallId,\ std::string\ *outIp)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00378}00378\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00379}00379\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!IsDedicatedServerLoggingEnabled()\ ||\ outIp\ ==\ \doxymbox{\hyperlink{miniaudio_8h_a070d2ce7b6bb7e5c05602aa8c308d0c4}{NULL}})}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00383}00383\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_serverLogState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ConnectionLogEntry\ \&entry\ =\ g\_serverLogState.entries[smallId];}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (entry.remoteIp.empty()\ ||\ entry.remoteIp\ ==\ \textcolor{stringliteral}{"{}unknown"{}})}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00390}00390\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ \ \ *outIp\ =\ entry.remoteIp;}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00393}00393\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00394}00394\ }
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00395}00395\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Provide\ explicit\ cache\ cleanup\ for\ paths\ that\ terminate\ without\ going\ through\ disconnect\ logging.}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00396}\doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2fdc4c7b1465c269e66219dee80d308d}{00396}}\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2fdc4c7b1465c269e66219dee80d308d}{ClearConnection}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ smallId)}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00397}00397\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ stateLock(g\_serverLogState.stateLock);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00399}00399\ \ \ \ \ \ \ \ \ \ \ \ \ ResetConnectionLogEntry(\&g\_serverLogState.entries[smallId]);}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00400}00400\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00401}00401\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_server_log_manager_8cpp_source_l00402}00402\ \}}
+
+\end{DoxyCode}

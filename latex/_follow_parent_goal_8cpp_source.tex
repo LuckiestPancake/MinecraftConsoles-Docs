@@ -1,0 +1,71 @@
+\doxysection{Follow\+Parent\+Goal.\+cpp}
+\hypertarget{_follow_parent_goal_8cpp_source}{}\label{_follow_parent_goal_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/FollowParentGoal.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.World/FollowParentGoal.cpp}}
+\doxymbox{\hyperlink{_follow_parent_goal_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_world_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8animal_8h}{net.minecraft.world.entity.animal.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8entity_8ai_8navigation_8h}{net.minecraft.world.entity.ai.navigation.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8h}{net.minecraft.world.level.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8phys_8h}{net.minecraft.world.phys.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_basic_type_containers_8h}{BasicTypeContainers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_follow_parent_goal_8h}{FollowParentGoal.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00009}\doxymbox{\hyperlink{class_follow_parent_goal_af298c93712d690adbdc974e0f71aecd0}{00009}}\ \doxymbox{\hyperlink{class_follow_parent_goal_af298c93712d690adbdc974e0f71aecd0}{FollowParentGoal::FollowParentGoal}}(\doxymbox{\hyperlink{class_animal}{Animal}}\ *animal,\ \textcolor{keywordtype}{double}\ speedModifier)}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00010}00010\ \{}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00011}00011\ \ \ \ \ timeToRecalcPath\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00013}00013\ \ \ \ \ this-\/>animal\ =\ animal;}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00014}00014\ \ \ \ \ this-\/>speedModifier\ =\ speedModifier;}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00015}00015\ \}}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00017}\doxymbox{\hyperlink{class_follow_parent_goal_a3db88416af1563a849b99a369e1e0148}{00017}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_follow_parent_goal_a3db88416af1563a849b99a369e1e0148}{FollowParentGoal::canUse}}()}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00018}00018\ \{}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00019}00019\ \ \ \ \ \textcolor{keywordflow}{if}\ (animal-\/>getAge()\ >=\ 0)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00021}00021\ \ \ \ \ vector<shared\_ptr<Entity>\ >\ *parents\ =\ animal-\/>\doxymbox{\hyperlink{class_entity_ab3abe22c1423d9b51a6a9765e7edf2cb}{level}}-\/>\doxymbox{\hyperlink{class_level_ac8c295e0c7ab0aea9cb71f5d4782a0c2}{getEntitiesOfClass}}(\textcolor{keyword}{typeid}(*animal),\ animal-\/>bb-\/>grow(8,\ 4,\ 8));}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00023}00023\ \ \ \ \ shared\_ptr<Animal>\ closest\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00024}00024\ \ \ \ \ \textcolor{keywordtype}{double}\ closestDistSqr\ =\ \doxymbox{\hyperlink{class_double_a57d7b8990474ecae3b116c14c7570afb}{Double::MAX\_VALUE}};}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00025}00025\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ it\ :\ *parents)}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00026}00026\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00027}00027\ \ \ \ \ \ \ \ \ shared\_ptr<Animal>\ parent\ =\ dynamic\_pointer\_cast<Animal>(it);}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00028}00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (parent-\/>getAge()\ <\ 0)\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00029}00029\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ distSqr\ =\ animal-\/>distanceToSqr(parent);}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00030}00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (distSqr\ >\ closestDistSqr)\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ closestDistSqr\ =\ distSqr;}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ closest\ =\ parent;}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00033}00033\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00034}00034\ \ \ \ \ \textcolor{keyword}{delete}\ parents;}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00036}00036\ \ \ \ \ \textcolor{keywordflow}{if}\ (closest\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00037}00037\ \ \ \ \ \textcolor{keywordflow}{if}\ (closestDistSqr\ <\ 3\ *\ 3)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00038}00038\ \ \ \ \ parent\ =\ weak\_ptr<Animal>(closest);}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00039}00039\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00040}00040\ \}}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00042}\doxymbox{\hyperlink{class_follow_parent_goal_a1ba8d96d12baf3ce96505df5fc594ce5}{00042}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_follow_parent_goal_a1ba8d96d12baf3ce96505df5fc594ce5}{FollowParentGoal::canContinueToUse}}()}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00043}00043\ \{}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00044}00044\ \ \ \ \ \textcolor{keywordflow}{if}\ (parent.lock()\ ==\ \textcolor{keyword}{nullptr}\ ||\ !parent.lock()-\/>isAlive())\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00045}00045\ \ \ \ \ \textcolor{keywordtype}{double}\ distSqr\ =\ animal-\/>distanceToSqr(parent.lock());}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00046}00046\ \ \ \ \ \textcolor{keywordflow}{if}\ (distSqr\ <\ 3\ *\ 3\ ||\ distSqr\ >\ 16\ *\ 16)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00047}00047\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00048}00048\ \}}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00050}\doxymbox{\hyperlink{class_follow_parent_goal_a3a2cc6eb17379f3827b208561a492d11}{00050}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_follow_parent_goal_a3a2cc6eb17379f3827b208561a492d11}{FollowParentGoal::start}}()}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00051}00051\ \{}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00052}00052\ \ \ \ \ timeToRecalcPath\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00053}00053\ \}}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00055}\doxymbox{\hyperlink{class_follow_parent_goal_aeb9a22cc2044a390102873890450f682}{00055}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_follow_parent_goal_aeb9a22cc2044a390102873890450f682}{FollowParentGoal::stop}}()}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00056}00056\ \{}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00057}00057\ \ \ \ \ parent\ =\ weak\_ptr<Animal>();}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00058}00058\ \}}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00060}\doxymbox{\hyperlink{class_follow_parent_goal_adcdc928240257084feb64d76bb550368}{00060}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_follow_parent_goal_adcdc928240257084feb64d76bb550368}{FollowParentGoal::tick}}()}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00061}00061\ \{}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00062}00062\ \ \ \ \ \textcolor{keywordflow}{if}\ (-\/-\/timeToRecalcPath\ >\ 0)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00063}00063\ \ \ \ \ timeToRecalcPath\ =\ 10;}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00064}00064\ \ \ \ \ animal-\/>getNavigation()-\/>moveTo(parent.lock(),\ speedModifier);}
+\DoxyCodeLine{\Hypertarget{_follow_parent_goal_8cpp_source_l00065}00065\ \}}
+
+\end{DoxyCode}

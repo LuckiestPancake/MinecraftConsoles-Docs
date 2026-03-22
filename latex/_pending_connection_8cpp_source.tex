@@ -1,0 +1,402 @@
+\doxysection{Pending\+Connection.\+cpp}
+\hypertarget{_pending_connection_8cpp_source}{}\label{_pending_connection_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PendingConnection.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/PendingConnection.cpp}}
+\doxymbox{\hyperlink{_pending_connection_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_client_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_pending_connection_8h}{PendingConnection.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_player_connection_8h}{PlayerConnection.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_connection_8h}{ServerConnection.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_player_8h}{ServerPlayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_player_game_mode_8h}{ServerPlayerGameMode.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_level_8h}{ServerLevel.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_player_list_8h}{PlayerList.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_server_8h}{MinecraftServer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8network_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.network.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_pos_8h}{..\(\backslash\)Minecraft.World\(\backslash\)pos.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8dimension_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.dimension.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8storage_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.storage.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8item_8h}{..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.item.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_shared_constants_8h}{..\(\backslash\)Minecraft.World\(\backslash\)SharedConstants.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_settings_8h}{Settings.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00017}00017\ \textcolor{preprocessor}{\#if\ defined(\_WINDOWS64)\ \&\&\ defined(MINECRAFT\_SERVER\_BUILD)}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00018}00018\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_log_manager_8h}{..\(\backslash\)Minecraft.Server\(\backslash\)ServerLogManager.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00019}00019\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_access_8h}{..\(\backslash\)Minecraft.Server\(\backslash\)Access\(\backslash\)Access.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00020}00020\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_socket_8h}{..\(\backslash\)Minecraft.World\(\backslash\)Socket.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00021}00021\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00022}00022\ \textcolor{comment}{//\ \#ifdef\ \_\_PS3\_\_}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00023}00023\ \textcolor{comment}{//\ \#include\ "{}PS3\(\backslash\)Network\(\backslash\)NetworkPlayerSony.h"{}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00024}00024\ \textcolor{comment}{//\ \#endif}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00026}00026\ \doxymbox{\hyperlink{class_random}{Random}}\ *PendingConnection::random\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_random}{Random}}();}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00028}00028\ \textcolor{preprocessor}{\#ifdef\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00029}00029\ \textcolor{keywordtype}{bool}\ g\_bRejectDuplicateNames\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00030}00030\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00032}00032\ \textcolor{preprocessor}{\#if\ defined(\_WINDOWS64)\ \&\&\ defined(MINECRAFT\_SERVER\_BUILD)}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00033}00033\ \textcolor{keyword}{namespace}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00034}00034\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00035}00035\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ GetPendingConnectionSmallId(\doxymbox{\hyperlink{class_connection}{Connection}}\ *connection)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00036}00036\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (connection\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_socket}{Socket}}\ *socket\ =\ connection-\/>\doxymbox{\hyperlink{class_connection_abd7e6fe8f678406d70528031142972d5}{getSocket}}();}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (socket\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ socket-\/>\doxymbox{\hyperlink{class_socket_a749354e557914e8b7011b5f588a813a6}{getSmallId}}();}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00046}00046\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00047}00047\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00048}00048\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00050}\doxymbox{\hyperlink{class_pending_connection_ab14736803e8be7f7f26718fc23da0d95}{00050}}\ \doxymbox{\hyperlink{class_pending_connection_ab14736803e8be7f7f26718fc23da0d95}{PendingConnection::PendingConnection}}(\doxymbox{\hyperlink{class_minecraft_server}{MinecraftServer}}\ *server,\ \doxymbox{\hyperlink{class_socket}{Socket}}\ *socket,\ \textcolor{keyword}{const}\ wstring\&\ \textcolor{keywordtype}{id})}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00051}00051\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{comment}{//\ 4J\ -\/\ added\ initialisers}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00053}00053\ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_a13c675b93e098291e560b96c39c9f290}{done}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00054}00054\ \ \ \ \ \_tick\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00055}00055\ \ \ \ \ name\ =\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00056}00056\ \ \ \ \ acceptedLogin\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00057}00057\ \ \ \ \ loginKey\ =\ L\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00059}00059\ \ \ \ \ this-\/>server\ =\ server;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00060}00060\ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_connection}{Connection}}(socket,\ \textcolor{keywordtype}{id},\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00061}00061\ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}-\/>fakeLag\ =\ FAKE\_LAG;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00062}00062\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00064}\doxymbox{\hyperlink{class_pending_connection_ab8d93aeac1b11aff371cdf86474d2b07}{00064}}\ \doxymbox{\hyperlink{class_pending_connection_ab8d93aeac1b11aff371cdf86474d2b07}{PendingConnection::\string~PendingConnection}}()}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00065}00065\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00066}00066\ \ \ \ \ \textcolor{keyword}{delete}\ \doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00067}00067\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00069}\doxymbox{\hyperlink{class_pending_connection_ae1dd76553539d60ad2c3bd31b5278712}{00069}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pending_connection_ae1dd76553539d60ad2c3bd31b5278712}{PendingConnection::tick}}()}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00070}00070\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00071}00071\ \ \ \ \ \textcolor{keywordflow}{if}\ (acceptedLogin\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00072}00072\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ this-\/>\doxymbox{\hyperlink{class_pending_connection_a7d75b908fadbd5c2a004b584372debd4}{handleAcceptedLogin}}(acceptedLogin);}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ acceptedLogin\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00075}00075\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00076}00076\ \ \ \ \ \textcolor{keywordflow}{if}\ (\_tick++\ ==\ MAX\_TICKS\_BEFORE\_LOGIN)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00077}00077\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_ac1de7c0615ded941f22e3a5fd94dc3da}{disconnect}}(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a47a08f0eb76ca594d41a4ff1094852e5}{DisconnectPacket::eDisconnect\_LoginTooLong}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00079}00079\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00080}00080\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00081}00081\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}-\/>tick();}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00083}00083\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00084}00084\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00086}\doxymbox{\hyperlink{class_pending_connection_ac1de7c0615ded941f22e3a5fd94dc3da}{00086}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pending_connection_ac1de7c0615ded941f22e3a5fd94dc3da}{PendingConnection::disconnect}}(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19}{DisconnectPacket::eDisconnectReason}}\ reason)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00087}00087\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00088}00088\ \ \ \ \ \textcolor{comment}{//\ \ \ try\ \{\ \ //\ 4J\ -\/\ removed\ try/catch}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00089}00089\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ logger.info("{}Disconnecting\ "{}\ +\ getName()\ +\ "{}:\ "{}\ +\ reason);}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00090}00090\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Pending\ connection\ disconnect:\ \%d\(\backslash\)n"{}},\ reason\ );}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00091}00091\ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}-\/>send(std::make\_shared<DisconnectPacket>(reason));}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00092}00092\ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}-\/>sendAndQuit();}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00093}00093\ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_a13c675b93e098291e560b96c39c9f290}{done}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00094}00094\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \}\ catch\ (Exception\ e)\ \{}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00095}00095\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ e.printStackTrace();}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00096}00096\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00097}00097\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00099}\doxymbox{\hyperlink{class_pending_connection_a4ccc141b6b9f62b307978f0a1acf2a9a}{00099}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pending_connection_a4ccc141b6b9f62b307978f0a1acf2a9a}{PendingConnection::handlePreLogin}}(shared\_ptr<PreLoginPacket>\ packet)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00100}00100\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00101}00101\ \ \ \ \ \textcolor{keywordflow}{if}\ (packet-\/>m\_netcodeVersion\ !=\ \doxymbox{\hyperlink{_platform_network_manager_interface_8h_a7ac92731448c0d26a1269ebe991cb92a}{MINECRAFT\_NET\_VERSION}})}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00102}00102\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Netcode\ version\ is\ \%d\ not\ equal\ to\ \%d\(\backslash\)n"{}},\ packet-\/>m\_netcodeVersion,\ \doxymbox{\hyperlink{_platform_network_manager_interface_8h_a7ac92731448c0d26a1269ebe991cb92a}{MINECRAFT\_NET\_VERSION}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (packet-\/>m\_netcodeVersion\ >\ \doxymbox{\hyperlink{_platform_network_manager_interface_8h_a7ac92731448c0d26a1269ebe991cb92a}{MINECRAFT\_NET\_VERSION}})}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_ac1de7c0615ded941f22e3a5fd94dc3da}{disconnect}}(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a7db0417492f0f186fa66ea244709c54d}{DisconnectPacket::eDisconnect\_OutdatedServer}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_ac1de7c0615ded941f22e3a5fd94dc3da}{disconnect}}(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a23d8dedbf36c53acce279b5c65c00c42}{DisconnectPacket::eDisconnect\_OutdatedClient}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00113}00113\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00114}00114\ \ \ \ \ \textcolor{comment}{//\ \ printf("{}Server:\ handlePreLogin\(\backslash\)n"{});}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00115}00115\ \ \ \ \ name\ =\ packet-\/>loginKey;\ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Change\ from\ the\ login\ packet\ as\ we\ know\ better\ on\ client\ end\ during\ the\ pre-\/login\ packet}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00116}00116\ \ \ \ \ sendPreLoginResponse();}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00117}00117\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00119}00119\ \textcolor{keywordtype}{void}\ PendingConnection::sendPreLoginResponse()}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00120}00120\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00121}00121\ \ \ \ \ \textcolor{comment}{//\ 4J\ Stu\ -\/\ Calculate\ the\ players\ with\ UGC\ privileges\ set}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00122}00122\ \ \ \ \ \doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\ *ugcXuids\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}[\doxymbox{\hyperlink{extra_8h_aa9a003390f52d96da6d9c9b12d302c92}{MINECRAFT\_NET\_MAX\_PLAYERS}}];}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00123}00123\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ ugcXuidCount\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00124}00124\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ hostIndex\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00125}00125\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}\ ugcFriendsOnlyBits\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00126}00126\ \ \ \ \ \textcolor{keywordtype}{char}\ szUniqueMapName[14];}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00128}00128\ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___storage_8h_a24a67ae8c928fe1f29f76167beeccd4b}{StorageManager}}.GetSaveUniqueFilename(szUniqueMapName);}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00129}00129\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00130}00130\ \ \ \ \ \doxymbox{\hyperlink{class_player_list}{PlayerList}}\ *playerList\ =\ \doxymbox{\hyperlink{class_minecraft_server_ae8aa61b7338ea3b5616d347b47e29d53}{MinecraftServer::getInstance}}()-\/>\doxymbox{\hyperlink{class_minecraft_server_aebe4fa9eb4b2748df34200d4a66b6640}{getPlayers}}();}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00131}00131\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keyword}{auto}\&\ player\ :\ playerList-\/>\doxymbox{\hyperlink{class_player_list_ae3cf1077f1288431caaa6255d43cbc19}{players}})}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00132}00132\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ the\ offline\ Xuid\ is\ invalid\ but\ the\ online\ one\ is\ not\ then\ that's\ guest\ which\ we\ should\ ignore}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ the\ online\ Xuid\ is\ invalid\ but\ the\ offline\ one\ is\ not\ then\ we\ are\ definitely\ an\ offline\ game\ so\ dont\ care\ about\ UGC}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ PADDY\ -\/\ this\ is\ failing\ when\ a\ local\ player\ with\ chat\ restrictions\ joins\ an\ online\ game}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ player\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ player-\/>connection-\/>m\_offlineXUID\ !=\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}}\ \&\&\ player-\/>connection-\/>m\_onlineXUID\ !=\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}}\ )}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ player-\/>connection-\/>m\_friendsOnlyUGC\ )}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ugcFriendsOnlyBits\ |=\ (1<<ugcXuidCount);}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Need\ to\ use\ the\ online\ XUID\ otherwise\ friend\ checks\ will\ fail\ on\ the\ client}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ ugcXuids[ugcXuidCount]\ =\ player-\/>connection-\/>m\_onlineXUID;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ player-\/>connection-\/>getNetworkPlayer()\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ player-\/>connection-\/>getNetworkPlayer()-\/>IsHost()\ )\ hostIndex\ =\ ugcXuidCount;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ ++ugcXuidCount;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00151}00151\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00153}00153\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00154}00154\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{false})\textcolor{comment}{//\ \ \ \ server-\/>onlineMode)\ //\ 4J\ -\/\ removed}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00155}00155\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ loginKey\ =\ L\textcolor{stringliteral}{"{}TOIMPLEMENT"{}};\ \textcolor{comment}{//\ 4J\ -\/\ todo\ Long.toHexString(random.nextLong());}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}-\/>send(\ shared\_ptr<PreLoginPacket>(\ \textcolor{keyword}{new}\ PreLoginPacket(loginKey,\ ugcXuids,\ ugcXuidCount,\ ugcFriendsOnlyBits,\ server-\/>m\_ugcPlayersVersion,\ szUniqueMapName,\doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a962f9b1851f29d5730b1b6781321dde5}{GetGameHostOption}}(\doxymbox{\hyperlink{_app__enums_8h_a3039f4892c1f252d62bfbc8aeab1fb7aa268df2d6e35c9c0975c0e657329183b0}{eGameHostOption\_All}}),hostIndex)\ )\ );}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00158}00158\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00159}00159\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00160}00160\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00161}00161\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00162}00162\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ cappedCount\ =\ (ugcXuidCount\ >\ 255u)\ ?\ 255u\ :\ ugcXuidCount;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}\ cappedHostIndex\ =\ (hostIndex\ >=\ 255u)\ ?\ 254\ :\ static\_cast<\doxymbox{\hyperlink{_orbis_types_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}>(hostIndex);}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}-\/>send(std::make\_shared<PreLoginPacket>(L\textcolor{stringliteral}{"{}-\/"{}},\ ugcXuids,\ cappedCount,\ ugcFriendsOnlyBits,\ server-\/>m\_ugcPlayersVersion,\ szUniqueMapName,\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a962f9b1851f29d5730b1b6781321dde5}{GetGameHostOption}}(\doxymbox{\hyperlink{_app__enums_8h_a3039f4892c1f252d62bfbc8aeab1fb7aa268df2d6e35c9c0975c0e657329183b0}{eGameHostOption\_All}}),\ cappedHostIndex,\ server-\/>m\_texturePackId));}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00165}00165\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00166}00166\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00168}\doxymbox{\hyperlink{class_pending_connection_ade67916628dd99af4c96c7d22f1a5ae7}{00168}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pending_connection_ade67916628dd99af4c96c7d22f1a5ae7}{PendingConnection::handleLogin}}(shared\_ptr<LoginPacket>\ packet)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00169}00169\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00170}00170\ \ \ \ \ \textcolor{comment}{//\ \ printf("{}Server:\ handleLogin\(\backslash\)n"{});}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00171}00171\ \ \ \ \ \textcolor{comment}{//name\ =\ packet-\/>userName;}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00172}00172\ \ \ \ \ \textcolor{keywordflow}{if}\ (packet-\/>clientVersion\ !=\ \doxymbox{\hyperlink{class_shared_constants_a9a9c08304167769157b9e8559292d16a}{SharedConstants::NETWORK\_PROTOCOL\_VERSION}})}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00173}00173\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Client\ version\ is\ \%d\ not\ equal\ to\ \%d\(\backslash\)n"{}},\ packet-\/>clientVersion,\ \doxymbox{\hyperlink{class_shared_constants_a9a9c08304167769157b9e8559292d16a}{SharedConstants::NETWORK\_PROTOCOL\_VERSION}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (packet-\/>clientVersion\ >\ \doxymbox{\hyperlink{class_shared_constants_a9a9c08304167769157b9e8559292d16a}{SharedConstants::NETWORK\_PROTOCOL\_VERSION}})}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_ac1de7c0615ded941f22e3a5fd94dc3da}{disconnect}}(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a7db0417492f0f186fa66ea244709c54d}{DisconnectPacket::eDisconnect\_OutdatedServer}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_ac1de7c0615ded941f22e3a5fd94dc3da}{disconnect}}(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a23d8dedbf36c53acce279b5c65c00c42}{DisconnectPacket::eDisconnect\_OutdatedClient}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00184}00184\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00186}00186\ \ \ \ \ \textcolor{comment}{//if\ (true)//\ 4J\ removed\ !server-\/>onlineMode)}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00187}00187\ \ \ \ \ \textcolor{keywordtype}{bool}\ sentDisconnect\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00188}00188\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00189}00189\ \ \ \ \ \textcolor{comment}{//\ Use\ the\ same\ Xuid\ choice\ as\ handleAcceptedLogin\ (offline\ first,\ online\ fallback).}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00190}00190\ \ \ \ \ \textcolor{comment}{//\ }}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00191}00191\ \ \ \ \ \doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\ loginXuid\ =\ packet-\/>m\_offlineXuid;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00192}00192\ \ \ \ \ \textcolor{keywordflow}{if}\ (loginXuid\ ==\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}})\ loginXuid\ =\ packet-\/>m\_onlineXuid;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00193}00193\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00194}00194\ \ \ \ \ \textcolor{keywordtype}{bool}\ duplicateXuid\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00195}00195\ \ \ \ \ \textcolor{keywordflow}{if}\ (loginXuid\ !=\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}}\ \&\&\ server-\/>getPlayers()-\/>getPlayer(loginXuid)\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00196}00196\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ duplicateXuid\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00198}00198\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00199}00199\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (packet-\/>m\_onlineXuid\ !=\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}}\ \&\&}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ packet-\/>m\_onlineXuid\ !=\ loginXuid\ \&\&}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ server-\/>getPlayers()-\/>getPlayer(packet-\/>m\_onlineXuid)\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00202}00202\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ duplicateXuid\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00204}00204\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00206}00206\ \ \ \ \ \textcolor{keywordtype}{bool}\ bannedXuid\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00207}00207\ \ \ \ \ \textcolor{keywordflow}{if}\ (loginXuid\ !=\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}})}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00208}00208\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ bannedXuid\ =\ server-\/>getPlayers()-\/>isXuidBanned(loginXuid);}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00210}00210\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00211}00211\ \ \ \ \ \textcolor{keywordflow}{if}\ (!bannedXuid\ \&\&\ packet-\/>m\_onlineXuid\ !=\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}}\ \&\&\ packet-\/>m\_onlineXuid\ !=\ loginXuid)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00212}00212\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ bannedXuid\ =\ server-\/>getPlayers()-\/>isXuidBanned(packet-\/>m\_onlineXuid);}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00214}00214\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00215}00215\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00216}00216\ \ \ \ \ \textcolor{keywordtype}{bool}\ whitelistSatisfied\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00217}00217\ \textcolor{preprocessor}{\#if\ defined(\_WINDOWS64)\ \&\&\ defined(MINECRAFT\_SERVER\_BUILD)}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00218}00218\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_aee0f4b588e42b2f07e22fdf167c85284}{ServerRuntime::Access::IsWhitelistEnabled}}())}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00219}00219\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ whitelistSatisfied\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (loginXuid\ !=\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}})}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ whitelistSatisfied\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a904b7586a18a47258dd4486c60c9d4fa}{ServerRuntime::Access::IsPlayerWhitelisted}}(loginXuid);}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!whitelistSatisfied\ \&\&\ packet-\/>m\_onlineXuid\ !=\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}}\ \&\&\ packet-\/>m\_onlineXuid\ !=\ loginXuid)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ whitelistSatisfied\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a904b7586a18a47258dd4486c60c9d4fa}{ServerRuntime::Access::IsPlayerWhitelisted}}(packet-\/>m\_onlineXuid);}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00229}00229\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00230}00230\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00231}00231\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00232}00232\ \ \ \ \ \textcolor{keywordflow}{if}(\ sentDisconnect\ )}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00233}00233\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Do\ nothing}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00235}00235\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00236}00236\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (bannedXuid)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00237}00237\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00238}00238\ \textcolor{preprocessor}{\#if\ defined(\_WINDOWS64)\ \&\&\ defined(MINECRAFT\_SERVER\_BUILD)}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00239}00239\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a61f1ed396aff0f018f1903a57334f350}{ServerRuntime::ServerLogManager::OnRejectedPlayerLogin}}(GetPendingConnectionSmallId(\doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}),\ name,\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2e12e14c2ace95671a80422a0b4ffe38ab3adb5815d92731e99c24c3e07eefcf4}{ServerRuntime::ServerLogManager::eLoginRejectReason\_BannedXuid}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00240}00240\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00241}00241\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_ac1de7c0615ded941f22e3a5fd94dc3da}{disconnect}}(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a42c764efd646cbc8650220396a6a082a}{DisconnectPacket::eDisconnect\_Banned}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00242}00242\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00243}00243\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (!whitelistSatisfied)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00244}00244\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00245}00245\ \textcolor{preprocessor}{\#if\ defined(\_WINDOWS64)\ \&\&\ defined(MINECRAFT\_SERVER\_BUILD)}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a61f1ed396aff0f018f1903a57334f350}{ServerRuntime::ServerLogManager::OnRejectedPlayerLogin}}(GetPendingConnectionSmallId(\doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}),\ name,\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2e12e14c2ace95671a80422a0b4ffe38a1bd2c4601492b2d1477a648cf65b6cc2}{ServerRuntime::ServerLogManager::eLoginRejectReason\_NotWhitelisted}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00247}00247\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00248}00248\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_ac1de7c0615ded941f22e3a5fd94dc3da}{disconnect}}(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a42c764efd646cbc8650220396a6a082a}{DisconnectPacket::eDisconnect\_Banned}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00249}00249\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00250}00250\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (duplicateXuid)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00251}00251\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00252}00252\ \textcolor{preprocessor}{\#if\ defined(\_WINDOWS64)\ \&\&\ defined(MINECRAFT\_SERVER\_BUILD)}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00253}00253\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a61f1ed396aff0f018f1903a57334f350}{ServerRuntime::ServerLogManager::OnRejectedPlayerLogin}}(GetPendingConnectionSmallId(\doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}),\ name,\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2e12e14c2ace95671a80422a0b4ffe38aaec8371ae530319fb54267fdff3f7c29}{ServerRuntime::ServerLogManager::eLoginRejectReason\_DuplicateXuid}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00254}00254\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reject\ the\ incoming\ connection\ —\ a\ player\ with\ this\ UID\ is\ already}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00256}00256\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ on\ the\ server.\ \ Allowing\ duplicates\ causes\ invisible\ players\ and}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ other\ undefined\ behaviour.}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}LOGIN:\ Rejecting\ duplicate\ xuid\ for\ name:\ \%ls\(\backslash\)n"{}},\ name.c\_str());}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_ac1de7c0615ded941f22e3a5fd94dc3da}{disconnect}}(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a42c764efd646cbc8650220396a6a082a}{DisconnectPacket::eDisconnect\_Banned}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00260}00260\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00261}00261\ \textcolor{preprocessor}{\#ifdef\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00262}00262\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (g\_bRejectDuplicateNames)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00263}00263\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ nameTaken\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00265}00265\ \ \ \ \ \ \ \ \ vector<shared\_ptr<ServerPlayer>\ >\&\ pl\ =\ server-\/>getPlayers()-\/>players;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00266}00266\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ :\ pl)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}-\/>name\ ==\ name)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nameTaken\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00273}00273\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (nameTaken)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00275}00275\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00276}00276\ \textcolor{preprocessor}{\#if\ defined(\_WINDOWS64)\ \&\&\ defined(MINECRAFT\_SERVER\_BUILD)}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a61f1ed396aff0f018f1903a57334f350}{ServerRuntime::ServerLogManager::OnRejectedPlayerLogin}}(GetPendingConnectionSmallId(\doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}),\ name,\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_a2e12e14c2ace95671a80422a0b4ffe38ab616a71e2a3636379aeda815649088b9}{ServerRuntime::ServerLogManager::eLoginRejectReason\_DuplicateName}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00278}00278\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00279}00279\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Rejecting\ duplicate\ name:\ \%ls\(\backslash\)n"{}},\ name.c\_str());}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00280}00280\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_ac1de7c0615ded941f22e3a5fd94dc3da}{disconnect}}(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a42c764efd646cbc8650220396a6a082a}{DisconnectPacket::eDisconnect\_Banned}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00281}00281\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00282}00282\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00283}00283\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00284}00284\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_a7d75b908fadbd5c2a004b584372debd4}{handleAcceptedLogin}}(packet);}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00285}00285\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00286}00286\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00287}00287\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00288}00288\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00289}00289\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00290}00290\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_a7d75b908fadbd5c2a004b584372debd4}{handleAcceptedLogin}}(packet);}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00291}00291\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00292}00292\ \ \ \ \ \textcolor{comment}{//else}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00293}00293\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ \textcolor{comment}{//4J\ -\/\ removed}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00295}00295\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00296}00296\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}\ Thread()\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ run()\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ String\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}}\ =\ loginKey;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ URL\ url\ =\ \textcolor{keyword}{new}\ URL(\textcolor{stringliteral}{"{}http://www.minecraft.net/game/checkserver.jsp?user="{}}\ +\ URLEncoder.encode(packet.userName,\ \textcolor{stringliteral}{"{}UTF-\/8"{}})\ +\ \textcolor{stringliteral}{"{}\&serverId="{}}\ +\ URLEncoder.encode(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4822ee74736429ad839d65b6cf922a04}{key}},\ \textcolor{stringliteral}{"{}UTF-\/8"{}}));}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_buffered_reader}{BufferedReader}}\ br\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_buffered_reader}{BufferedReader}}(\textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_input_stream_reader}{InputStreamReader}}(url.openStream()));}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ String\ msg\ =\ br.\doxymbox{\hyperlink{class_buffered_reader_a79858351f375eec1b11271db048ddbed}{readLine}}();}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ br.\doxymbox{\hyperlink{class_buffered_reader_a8bd02fd95679de470e61c2db7e475e54}{close}}();}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (msg.equals(\textcolor{stringliteral}{"{}YES"{}}))\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ acceptedLogin\ =\ packet;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_ac1de7c0615ded941f22e3a5fd94dc3da}{disconnect}}(\textcolor{stringliteral}{"{}Failed\ to\ verify\ username!"{}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (Exception\ e)\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_ac1de7c0615ded941f22e3a5fd94dc3da}{disconnect}}(\textcolor{stringliteral}{"{}Failed\ to\ verify\ username!\ [internal\ error\ "{}}\ +\ e\ +\ \textcolor{stringliteral}{"{}]"{}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e.printStackTrace();}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00314}00314\ \ \ \ \ \ \ \ \ \}.start();}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00315}00315\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00316}00316\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00318}00318\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00319}00319\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00320}\doxymbox{\hyperlink{class_pending_connection_a7d75b908fadbd5c2a004b584372debd4}{00320}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pending_connection_a7d75b908fadbd5c2a004b584372debd4}{PendingConnection::handleAcceptedLogin}}(shared\_ptr<LoginPacket>\ packet)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00321}00321\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00322}00322\ \ \ \ \ \textcolor{keywordflow}{if}(packet-\/>m\_ugcPlayersVersion\ !=\ server-\/>m\_ugcPlayersVersion)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00323}00323\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00324}00324\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Send\ the\ pre-\/login\ packet\ again\ with\ the\ new\ list\ of\ players}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ sendPreLoginResponse();}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00327}00327\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00329}00329\ \ \ \ \ \textcolor{comment}{//\ Guests\ use\ the\ online\ xuid,\ everyone\ else\ uses\ the\ offline\ one}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00330}00330\ \ \ \ \ \doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\ playerXuid\ =\ packet-\/>m\_offlineXuid;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00331}00331\ \ \ \ \ \textcolor{keywordflow}{if}(playerXuid\ ==\ \doxymbox{\hyperlink{extra_x64_8h_a38f9d84d0df11ab5f9d246546251915a}{INVALID\_XUID}})\ playerXuid\ =\ packet-\/>m\_onlineXuid;}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00332}00332\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00333}00333\ \ \ \ \ shared\_ptr<ServerPlayer>\ playerEntity\ =\ server-\/>getPlayers()-\/>getPlayerForLogin(\textcolor{keyword}{this},\ name,\ playerXuid,packet-\/>m\_onlineXuid);}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00334}00334\ \ \ \ \ \textcolor{keywordflow}{if}\ (playerEntity\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00335}00335\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00336}00336\ \textcolor{preprocessor}{\#if\ defined(\_WINDOWS64)\ \&\&\ defined(MINECRAFT\_SERVER\_BUILD)}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_1_1_server_log_manager_aef65d679c061e92a4c555b725cc692cc}{ServerRuntime::ServerLogManager::OnAcceptedPlayerLogin}}(GetPendingConnectionSmallId(\doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}),\ name);}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00338}00338\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ server-\/>getPlayers()-\/>placeNewPlayer(\doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}},\ playerEntity,\ packet);}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}\ =\ \textcolor{keyword}{nullptr};\ \ \ \textcolor{comment}{//\ We've\ moved\ responsibility\ for\ this\ over\ to\ the\ new\ PlayerConnection,\ nullptr\ so\ we\ don't\ delete\ our\ reference\ to\ it\ here\ in\ our\ dtor}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00341}00341\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00342}00342\ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_a13c675b93e098291e560b96c39c9f290}{done}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00343}00343\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00344}00344\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00345}00345\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00346}\doxymbox{\hyperlink{class_pending_connection_aba6f54724d550856592ef0fde53e13c8}{00346}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pending_connection_aba6f54724d550856592ef0fde53e13c8}{PendingConnection::onDisconnect}}(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19}{DisconnectPacket::eDisconnectReason}}\ reason,\ \textcolor{keywordtype}{void}\ *reasonObjects)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00347}00347\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00348}00348\ \ \ \ \ \textcolor{comment}{//\ \ \ \ logger.info(getName()\ +\ "{}\ lost\ connection"{});}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00349}00349\ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_a13c675b93e098291e560b96c39c9f290}{done}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00350}00350\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00351}00351\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00352}\doxymbox{\hyperlink{class_pending_connection_a29c8fcf48c84fa8b17fa45cc5a3faee7}{00352}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pending_connection_a29c8fcf48c84fa8b17fa45cc5a3faee7}{PendingConnection::handleGetInfo}}(shared\_ptr<GetInfoPacket>\ packet)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00353}00353\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00354}00354\ \ \ \ \ \textcolor{comment}{//try\ \{}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00355}00355\ \ \ \ \ \textcolor{comment}{//String\ message\ =\ server-\/>motd\ +\ "{}{\ucr}"{}\ +\ server-\/>players-\/>getPlayerCount()\ +\ "{}{\ucr}"{}\ +\ server-\/>players-\/>getMaxPlayers();}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00356}00356\ \ \ \ \ \textcolor{comment}{//connection-\/>send(new\ DisconnectPacket(message));}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00357}00357\ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}-\/>send(std::make\_shared<DisconnectPacket>(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a0b53a273836d2753afb65e1a159a3958}{DisconnectPacket::eDisconnect\_ServerFull}}));}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00358}00358\ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}-\/>sendAndQuit();}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00359}00359\ \ \ \ \ server-\/>connection-\/>removeSpamProtection(\doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}-\/>getSocket());}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00360}00360\ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_a13c675b93e098291e560b96c39c9f290}{done}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00361}00361\ \ \ \ \ \textcolor{comment}{//\}\ catch\ (Exception\ e)\ \{}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00362}00362\ \ \ \ \ \textcolor{comment}{//\ \ e.printStackTrace();}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00363}00363\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00364}00364\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00365}00365\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00366}\doxymbox{\hyperlink{class_pending_connection_aaef450dc4ea128a5b67a0a21c1e4f046}{00366}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pending_connection_aaef450dc4ea128a5b67a0a21c1e4f046}{PendingConnection::handleKeepAlive}}(shared\_ptr<KeepAlivePacket>\ packet)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00367}00367\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00368}00368\ \ \ \ \ \textcolor{comment}{//\ Ignore}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00369}00369\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00371}\doxymbox{\hyperlink{class_pending_connection_a469dbe32e063714ca02318513e9f6b44}{00371}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pending_connection_a469dbe32e063714ca02318513e9f6b44}{PendingConnection::onUnhandledPacket}}(shared\_ptr<Packet>\ packet)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00372}00372\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00373}00373\ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_ac1de7c0615ded941f22e3a5fd94dc3da}{disconnect}}(\doxymbox{\hyperlink{class_disconnect_packet_a29fb171cbdfa0e6bfb48e67f5b1dea19a81c47418d551e06f7f63b9e2066bf5ab}{DisconnectPacket::eDisconnect\_UnexpectedPacket}});}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00374}00374\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00375}00375\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00376}\doxymbox{\hyperlink{class_pending_connection_a682455f96ea0c83a295bafbe93474d67}{00376}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_pending_connection_a682455f96ea0c83a295bafbe93474d67}{PendingConnection::send}}(shared\_ptr<Packet>\ packet)}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00377}00377\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00378}00378\ \ \ \ \ \doxymbox{\hyperlink{class_pending_connection_af095ce97e6936db7923eed4b4c8688ab}{connection}}-\/>send(packet);}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00379}00379\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00380}00380\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00381}\doxymbox{\hyperlink{class_pending_connection_aa42d674ef855d62514769f89145a2bfb}{00381}}\ wstring\ \doxymbox{\hyperlink{class_pending_connection_aa42d674ef855d62514769f89145a2bfb}{PendingConnection::getName}}()}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00382}00382\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00383}00383\ \ \ \ \ \textcolor{keywordflow}{return}\ L\textcolor{stringliteral}{"{}Unimplemented"{}};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00384}00384\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ if\ (name\ !=\ null)\ return\ name\ +\ "{}\ ["{}\ +\ connection.getRemoteAddress().toString()\ +\ "{}]"{};}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00385}00385\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ return\ connection.getRemoteAddress().toString();}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00386}00386\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00387}00387\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00388}\doxymbox{\hyperlink{class_pending_connection_a4e052bcd9df6fb6dfba67fde69836c7a}{00388}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_pending_connection_a4e052bcd9df6fb6dfba67fde69836c7a}{PendingConnection::isServerPacketListener}}()}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00389}00389\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00390}00390\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00391}00391\ \}}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00392}00392\ }
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00393}\doxymbox{\hyperlink{class_pending_connection_a5b4aa0762963ccc23de5686f164e743a}{00393}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_pending_connection_a5b4aa0762963ccc23de5686f164e743a}{PendingConnection::isDisconnected}}()}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00394}00394\ \{}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00395}00395\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_pending_connection_a13c675b93e098291e560b96c39c9f290}{done}};}
+\DoxyCodeLine{\Hypertarget{_pending_connection_8cpp_source_l00396}00396\ \}}
+
+\end{DoxyCode}

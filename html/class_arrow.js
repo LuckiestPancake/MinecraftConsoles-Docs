@@ -1,0 +1,27 @@
+var class_arrow =
+[
+    [ "Arrow", "class_arrow.html#a7d3e8f84e86c70e415cb28cda3186eda", null ],
+    [ "Arrow", "class_arrow.html#a0bdaade437630a3338078825b9c6641a", null ],
+    [ "Arrow", "class_arrow.html#ac987587dd8bdb6918f3779f1ea66874e", null ],
+    [ "Arrow", "class_arrow.html#a3ff01b1ce55c0c300b0e32a93c559cfc", null ],
+    [ "addAdditonalSaveData", "class_arrow.html#a20f8eb7b3b3dd6286c2dec93ee5b3277", null ],
+    [ "defineSynchedData", "class_arrow.html#a5fce8e21b37714dfc21c4c744bef903f", null ],
+    [ "getBaseDamage", "class_arrow.html#ab22f3177c1d746bb50963120224e9cd9", null ],
+    [ "getShadowHeightOffs", "class_arrow.html#a5ac874b2c479e348ade7624e27aa7d99", null ],
+    [ "GetType", "class_arrow.html#a36c1749e088ac959068a5da09c5e2710", null ],
+    [ "isAttackable", "class_arrow.html#a4aedd13583951547acf3d9e8bfe2c407", null ],
+    [ "isCritArrow", "class_arrow.html#a0917d00aa4412833366ca84c1f1ad8ef", null ],
+    [ "lerpMotion", "class_arrow.html#a564b2b1e2dd10292027b62824511c599", null ],
+    [ "lerpTo", "class_arrow.html#a79cca34649e502b62eccda357124e79e", null ],
+    [ "makeStepSound", "class_arrow.html#aaf5e8ac3d7534ccac5a9a90bee3c3f48", null ],
+    [ "playerTouch", "class_arrow.html#a4e305e9b729f6a61f5d53c2d3873a562", null ],
+    [ "readAdditionalSaveData", "class_arrow.html#aeee7544d4cac8efb370711ea5d5cf69c", null ],
+    [ "setBaseDamage", "class_arrow.html#a6a99716d415b613e338bd13a01f9a510", null ],
+    [ "setCritArrow", "class_arrow.html#ae9fa75b436c4c9d5168a261496b2e57e", null ],
+    [ "setKnockback", "class_arrow.html#a3df6638ad4c952424ad276d7e72dd772", null ],
+    [ "shoot", "class_arrow.html#aa79db630f4cf81c301ffb13e053952ad", null ],
+    [ "tick", "class_arrow.html#a0f5f44b82f282d81e79a9857d8eb4178", null ],
+    [ "owner", "class_arrow.html#afcfd74c13e69b9d3fef66aef9b4063c9", null ],
+    [ "pickup", "class_arrow.html#a472ba890e5cb193992905eb4545de1a1", null ],
+    [ "shakeTime", "class_arrow.html#a1db7303f27dca20797eb23b13126bc2a", null ]
+];

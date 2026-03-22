@@ -1,0 +1,597 @@
+\doxysection{DQRNetwork\+Manager\+\_\+\+Friend\+Sessions.\+cpp}
+\hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source}{}\label{_d_q_r_network_manager___friend_sessions_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Durango/Network/DQRNetworkManager\_FriendSessions.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Durango/Network/DQRNetworkManager\_FriendSessions.cpp}}
+\doxymbox{\hyperlink{_d_q_r_network_manager___friend_sessions_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_d_q_r_network_manager_8h}{DQRNetworkManager.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_party_controller_8h}{PartyController.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ <collection.h>}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ <ppltasks.h>}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ <ws2tcpip.h>}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}..\(\backslash\)Minecraft.World\(\backslash\)StringHelpers.h"{}}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_durango_2_network_2base64_8h}{base64.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00011}00011\ \textcolor{preprocessor}{\#ifdef\ \_DURANGO}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}..\(\backslash\)Minecraft.World\(\backslash\)DurangoStats.h"{}}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00013}00013\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_chat_integration_layer_8h}{ChatIntegrationLayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00017}00017\ \textcolor{keyword}{using\ namespace\ }Concurrency;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00018}00018\ \textcolor{keyword}{using\ namespace\ }Windows::Foundation::Collections;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00020}00020\ \textcolor{comment}{//\ Returns\ true\ if\ we\ are\ already\ processing\ a\ request\ to\ find\ game\ parties\ of\ friends}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00021}\doxymbox{\hyperlink{class_d_q_r_network_manager_a665e8cf680d7abf6f4551267b5f93694}{00021}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_d_q_r_network_manager_a665e8cf680d7abf6f4551267b5f93694}{DQRNetworkManager::FriendPartyManagerIsBusy}}()}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00022}00022\ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00023}00023\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_GetFriendPartyThread\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00024}00024\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00025}00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_GetFriendPartyThread-\/>isRunning()\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00026}00026\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00028}00028\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00029}00029\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00030}00030\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00031}00031\ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00033}00033\ \textcolor{comment}{//\ Returns\ the\ total\ count\ of\ game\ parties\ that\ we\ found\ for\ our\ friends}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00034}\doxymbox{\hyperlink{class_d_q_r_network_manager_a5edaca6dc5767ee41199c4f87457ad4f}{00034}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_d_q_r_network_manager_a5edaca6dc5767ee41199c4f87457ad4f}{DQRNetworkManager::FriendPartyManagerGetCount}}()}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00035}00035\ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00036}00036\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_sessionResultCount;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00037}00037\ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00039}00039\ \textcolor{comment}{//\ Initiate\ the\ (asynchronous)\ search\ for\ game\ parties\ of\ our\ friends}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00040}\doxymbox{\hyperlink{class_d_q_r_network_manager_a98ae0d7f605b95cd3c4a24a6ca68e62a}{00040}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_d_q_r_network_manager_a98ae0d7f605b95cd3c4a24a6ca68e62a}{DQRNetworkManager::FriendPartyManagerSearch}}()}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00041}00041\ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00042}00042\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_GetFriendPartyThread\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00043}00043\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_GetFriendPartyThread-\/>isRunning()\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00047}00047\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00048}00048\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00050}00050\ \ \ \ \ m\_sessionResultCount\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00051}00051\ \ \ \ \ \textcolor{keyword}{delete}\ []\ m\_sessionSearchResults;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00052}00052\ \ \ \ \ m\_sessionSearchResults\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00054}00054\ \ \ \ \ m\_GetFriendPartyThread\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_c4_j_thread}{C4JThread}}(\&\_GetFriendsThreadProc,\textcolor{keyword}{this},\textcolor{stringliteral}{"{}GetFriendsThreadProc"{}});}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00055}00055\ \ \ \ \ m\_GetFriendPartyThread-\/>Run();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00057}00057\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00058}00058\ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00060}00060\ \textcolor{comment}{//\ Get\ a\ particular\ search\ result\ for\ a\ game\ party\ that\ we\ have\ discovered.\ Index\ should\ be\ from\ 0\ to\ the\ value\ returned\ by\ FriendPartyManagerGetCount.}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00061}\doxymbox{\hyperlink{class_d_q_r_network_manager_a9d8c8a6211810e6c0e103a0afc68c94d}{00061}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_d_q_r_network_manager_a9d8c8a6211810e6c0e103a0afc68c94d}{DQRNetworkManager::FriendPartyManagerGetSessionInfo}}(\textcolor{keywordtype}{int}\ idx,\ \doxymbox{\hyperlink{class_d_q_r_network_manager_1_1_session_search_result}{SessionSearchResult}}\ *searchResult)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00062}00062\ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00063}00063\ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\ idx\ <\ m\_sessionResultCount\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00064}00064\ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(\ (\ m\_GetFriendPartyThread\ ==\ \textcolor{keyword}{nullptr}\ )\ ||\ (\ !m\_GetFriendPartyThread-\/>isRunning())\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00066}00066\ \ \ \ \ \textcolor{comment}{//\ Need\ to\ make\ sure\ that\ copied\ data\ has\ independently\ allocated\ m\_extData,\ so\ both\ copies\ can\ be\ freed}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00067}00067\ \ \ \ \ *searchResult\ =\ m\_sessionSearchResults[idx];}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00068}00068\ \ \ \ \ searchResult-\/>\doxymbox{\hyperlink{class_d_q_r_network_manager_1_1_session_search_result_a3630c9192e46a664653ef412a2af627b}{m\_extData}}\ =\ \doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(\textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{_session_info_8h_a850ef119cb3409e27779abd984f14a2f}{GameSessionData}}));}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00069}00069\ \ \ \ \ memcpy(searchResult-\/>\doxymbox{\hyperlink{class_d_q_r_network_manager_1_1_session_search_result_a3630c9192e46a664653ef412a2af627b}{m\_extData}},\ m\_sessionSearchResults[idx].m\_extData,\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{_session_info_8h_a850ef119cb3409e27779abd984f14a2f}{GameSessionData}}));}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00070}00070\ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00072}00072\ \textcolor{keywordtype}{int}\ DQRNetworkManager::\_GetFriendsThreadProc(\textcolor{keywordtype}{void}*\ lpParameter)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00073}00073\ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00074}00074\ \ \ \ \ \doxymbox{\hyperlink{class_d_q_r_network_manager}{DQRNetworkManager}}\ *pDQR\ =\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_d_q_r_network_manager}{DQRNetworkManager}}\ *\textcolor{keyword}{>}(lpParameter);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00075}00075\ \ \ \ \ \textcolor{keywordflow}{return}\ pDQR-\/>GetFriendsThreadProc();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00076}00076\ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00078}00078\ \textcolor{comment}{//\ This\ is\ the\ main\ thread\ that\ is\ kicked\ off\ to\ find\ game\ sessions\ associated\ with\ our\ friends.\ We\ have\ to\ do\ this}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00079}00079\ \textcolor{comment}{//\ by\ finding\ parties\ associated\ with\ our\ friends,\ and\ from\ the\ parties\ get\ the\ assocated\ game\ session.}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00080}00080\ \textcolor{keywordtype}{int}\ DQRNetworkManager::GetFriendsThreadProc()}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00081}00081\ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00082}00082\ \ \ \ \ LogComment(L\textcolor{stringliteral}{"{}Starting\ GetFriendsThreadProc"{}});}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00083}00083\ \ \ \ \ WXS::User\string^\ primaryUser\ =\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___profile_8h_a027fde7e99d773afa28ec11d244459bf}{ProfileManager}}.\doxymbox{\hyperlink{class_c__4_j_profile_a9bf5500edfb7d06299f81c56dbbdfcaa}{GetUser}}(0);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00085}00085\ \ \ \ \ \textcolor{keywordflow}{if}(\ primaryUser\ ==\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00086}00086\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00088}00088\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00089}00089\ \ \ \ \ MXS::XboxLiveContext\string^\ primaryUserXboxLiveContext\ =\ ref\ \textcolor{keyword}{new}\ MXS::XboxLiveContext(primaryUser);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00090}00090\ \ \ \ \ \textcolor{keywordflow}{if}(\ primaryUserXboxLiveContext\ ==\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00091}00091\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00093}00093\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00095}00095\ \ \ \ \ MXSS::XboxSocialRelationshipResult\string^\ socialRelationshipResult\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00097}00097\ \ \ \ \ \textcolor{comment}{//\ First\ get\ our\ friends\ list\ (people\ we\ follow\ who\ may\ or\ may\ not\ follow\ us\ back),\ note\ we're\ requesting\ all\ friends}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00098}00098\ \ \ \ \ \textcolor{keyword}{auto}\ getSocialRelationshipsAsync\ =\ primaryUserXboxLiveContext-\/>SocialService-\/>GetSocialRelationshipsAsync(MXSS::SocialRelationship::All,\ 0,\ 1100);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00099}00099\ \ \ \ \ create\_task(getSocialRelationshipsAsync).then([\textcolor{keyword}{this},\&socialRelationshipResult](task<MXSS::XboxSocialRelationshipResult\string^>\ t)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00100}00100\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ socialRelationshipResult\ =\ t.get();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (Platform::COMException\string^\ ex)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ LogCommentWithError(\ L\textcolor{stringliteral}{"{}GetSocialRelationshipsAsync\ failed"{}},\ ex-\/>HResult\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00109}00109\ \ \ \ \ \})}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00110}00110\ \ \ \ \ .wait();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00111}00111\ \ \ \ \ \textcolor{keywordflow}{if}(\ socialRelationshipResult\ ==\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00112}00112\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00114}00114\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00116}00116\ \ \ \ \ IVector<Platform::String\string^>\string^\ friendXUIDs\ =\ ref\ \textcolor{keyword}{new}\ Platform::Collections::Vector<Platform::String\string^>;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00118}00118\ \ \ \ \ \textcolor{comment}{//\ Now\ construct\ a\ vector\ of\ these\ users,\ that\ follow\ us\ back\ -\/\ these\ are\ our\ "{}friends"{}}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00119}00119\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ socialRelationshipResult-\/>TotalCount;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00120}00120\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ MXSS::XboxSocialRelationship\string^\ relationship\ =\ socialRelationshipResult-\/>Items-\/>GetAt(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(relationship-\/>IsFollowingCaller)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ friendXUIDs-\/>Append(relationship-\/>XboxUserId);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00126}00126\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00128}00128\ \ \ \ \ \textcolor{comment}{//\ If\ we\ don't\ have\ any\ such\ friends,\ we're\ done}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00129}00129\ \ \ \ \ \textcolor{keywordflow}{if}(\ friendXUIDs-\/>Size\ ==\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00130}00130\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00132}00132\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00133}00133\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00134}00134\ \ \ \ \ \textcolor{comment}{//\ Now\ get\ party\ associations\ for\ these\ friends}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00135}00135\ \ \ \ \ \textcolor{keyword}{auto}\ getPartyAssociationsAsync\ =\ WXM::Party::GetUserPartyAssociationsAsync(primaryUser,\ friendXUIDs-\/>GetView()\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00137}00137\ \ \ \ \ IVectorView<WXM::UserPartyAssociation\string^>\string^\ partyResults\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00139}00139\ \ \ \ \ create\_task(getPartyAssociationsAsync).then([\textcolor{keyword}{this},\&partyResults](task<IVectorView<WXM::UserPartyAssociation\string^>\string^>\ t)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00140}00140\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00141}00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ partyResults\ =\ t.get();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (Platform::COMException\string^\ ex)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ LogCommentWithError(\ L\textcolor{stringliteral}{"{}getPartyAssociationsAsync\ failed"{}},\ ex-\/>HResult\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00149}00149\ \ \ \ \ \})}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00150}00150\ \ \ \ \ .wait();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00152}00152\ \ \ \ \ \textcolor{keywordflow}{if}(\ partyResults\ ==\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00153}00153\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00155}00155\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00157}00157\ \ \ \ \ \textcolor{keywordflow}{if}(\ partyResults-\/>Size\ ==\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00158}00158\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00160}00160\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00162}00162\ \ \ \ \ \textcolor{comment}{//\ Filter\ these\ parties\ by\ whether\ we\ have\ permission\ to\ see\ them\ online}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00163}00163\ \ \ \ \ partyResults\ =\ \doxymbox{\hyperlink{class_d_q_r_network_manager_af4d581b2dccd64dc1b793e1cfa373220}{FilterPartiesByPermission}}(primaryUserXboxLiveContext,\ partyResults);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00164}00164\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00166}00166\ \ \ \ \ \textcolor{comment}{//\ At\ this\ point,\ we\ have\ Party\ Ids\ for\ our\ friends.\ Now\ we\ need\ to\ get\ Party\ Views\ for\ each\ of\ these\ Ids.}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00168}00168\ \ \ \ \ LogComment(\textcolor{stringliteral}{"{}Parties\ found"{}});}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00169}00169\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00170}00170\ \ \ \ \ \textcolor{comment}{//\ Get\ party\ views\ for\ each\ of\ the\ user\ party\ associations\ that\ we\ have.\ These\ seem\ to\ be\ able\ to\ (individually)\ raise\ errors,\ so}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00171}00171\ \ \ \ \ \textcolor{comment}{//\ accumulate\ results\ into\ 2\ matched\ vectors\ declared\ below\ so\ that\ we\ can\ ignore\ any\ broken\ UserPartyAssociations\ from\ now}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00172}00172\ \ \ \ \ vector<WXM::PartyView\string^>\ partyViewVector;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00173}00173\ \ \ \ \ vector<WXM::UserPartyAssociation\string^>\ partyResultsVector;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00175}00175\ \ \ \ \ vector<task<void>>\ taskVector;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00176}00176\ \ \ \ \ \textcolor{keywordflow}{for\ each}(WXM::UserPartyAssociation\string^\ remoteParty\ \textcolor{keywordflow}{in}\ partyResults)\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00177}00177\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ asyncOp\ =\ WXM::Party::GetPartyViewByPartyIdAsync(\ primaryUser,\ remoteParty-\/>PartyId\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ task<WXM::PartyView\string^>\ asyncTask\ =\ create\_task(asyncOp);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ taskVector.push\_back(asyncTask.then([\textcolor{keyword}{this},\ \&partyViewVector,\ \&partyResultsVector,\ remoteParty]\ (task<WXM::PartyView\string^>\ t)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ try}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WXM::PartyView\string^\ partyView\ =\ t.get();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if(\ partyView\ !=\ nullptr\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ app.DebugPrintf(\textcolor{stringliteral}{"{}Got\ party\ view\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EnterCriticalSection(\&m\_csPartyViewVector);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ partyViewVector.push\_back(partyView);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ partyResultsVector.push\_back(remoteParty);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LeaveCriticalSection(\&m\_csPartyViewVector);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ catch\ (\ Platform::COMException\string^\ ex\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.\doxymbox{\hyperlink{class_c_minecraft_app_a434aa887323e85cbe668c7ecfa768ba2}{DebugPrintf}}(\textcolor{stringliteral}{"{}Getting\ party\ view\ error\ 0x\%x\(\backslash\)n"{}},ex-\/>HResult);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \}));}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00201}00201\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00202}00202\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keyword}{auto}\ it\ =\ taskVector.begin();\ it\ !=\ taskVector.end();\ it++\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00203}00203\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ it-\/>wait();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00205}00205\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00206}00206\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00207}00207\ \ \ \ \ \textcolor{keywordflow}{if}(\ partyViewVector.size()\ ==\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00208}00208\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00210}00210\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00212}00212\ \ \ \ \ \textcolor{comment}{//\ Filter\ the\ party\ view,\ and\ party\ results\ vector\ (partyResultsVector)\ this\ is\ matched\ to,\ to\ remove\ any\ that\ don't\ have\ game\ sessions\ -\/\ or\ game\ sessions\ that\ aren't\ this\ game}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00213}00213\ \ \ \ \ vector<WXM::PartyView\string^>\ partyViewVectorFiltered;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00214}00214\ \ \ \ \ vector<WXM::UserPartyAssociation\string^>\ partyResultsFiltered;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00215}00215\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00216}00216\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ partyViewVector.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00217}00217\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ WXM::PartyView\string^\ partyView\ =\ partyViewVector[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ partyView-\/>Joinability\ ==\ WXM::SessionJoinability::JoinableByFriends\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ partyView-\/>GameSession\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ partyView-\/>GameSession-\/>ServiceConfigurationId\ ==\ \doxymbox{\hyperlink{_durango___app_8h_a88d162715b18e8ef824eec9367c87907}{SERVICE\_CONFIG\_ID}}\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ partyViewVectorFiltered.push\_back(\ partyView\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ partyResultsFiltered.push\_back(\ partyResultsVector[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00231}00231\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00232}00232\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00233}00233\ \ \ \ \ \textcolor{comment}{//\ We\ now\ have\ matched\ vectors:}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00234}00234\ \ \ \ \ \textcolor{comment}{//\ }}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00235}00235\ \ \ \ \ \textcolor{comment}{//\ partyResultsFiltered}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00236}00236\ \ \ \ \ \textcolor{comment}{//\ partyViewVectorFiltered}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00237}00237\ \ \ \ \ \textcolor{comment}{//\ }}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00238}00238\ \ \ \ \ \textcolor{comment}{//\ and,\ from\ the\ party\ views,\ we\ can\ now\ attempt\ to\ get\ game\ sessions}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00239}00239\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00240}00240\ \ \ \ \ vector<MXSM::MultiplayerSession\string^>\ sessionVector;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00241}00241\ \ \ \ \ vector<WXM::PartyView\string^>\ partyViewVectorValid;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00242}00242\ \ \ \ \ vector<WXM::UserPartyAssociation\string^>\ partyResultsValid;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00244}00244\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ partyViewVectorFiltered.size();\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00245}00245\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00246}00246\ \ \ \ \ \ \ \ \ WXM::PartyView\string^\ partyView\ =\ partyViewVectorFiltered[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}];}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00247}00247\ \ \ \ \ \ \ \ \ Microsoft::Xbox::Services::Multiplayer::MultiplayerSessionReference\string^\ sessionRef\ =\ ConvertToMicrosoftXboxServicesMultiplayerSessionReference(partyView-\/>GameSession);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00248}00248\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00249}00249\ \ \ \ \ \ \ \ \ LogComment(L\textcolor{stringliteral}{"{}Party\ view\ vector\ "{}}\ +\ sessionRef-\/>SessionName\ +\ L\textcolor{stringliteral}{"{}\ "{}}\ +\ partyResultsFiltered[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>QueriedXboxUserIds-\/>GetAt(0));}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00251}00251\ \ \ \ \ \ \ \ \ MXSM::MultiplayerSession\string^\ session\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00252}00252\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ asyncOp\ =\ primaryUserXboxLiveContext-\/>MultiplayerService-\/>GetCurrentSessionAsync(\ sessionRef\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00253}00253\ \ \ \ \ \ \ \ \ create\_task(asyncOp).then([\&session]\ (task<MXSM::MultiplayerSession\string^>\ t)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00254}00254\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00255}00255\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ session\ =\ t.get();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (Platform::COMException\string^\ ex)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00262}00262\ \ \ \ \ \ \ \ \ \})}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00263}00263\ \ \ \ \ \ \ \ \ .wait();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00264}00264\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ session\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00265}00265\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ sessionVector.push\_back(session);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ partyViewVectorValid.push\_back(partyView);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ partyResultsValid.push\_back(partyResultsFiltered[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00269}00269\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00270}00270\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00271}00271\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00272}00272\ \ \ \ \ \textcolor{keywordflow}{if}(\ sessionVector.size()\ ==\ 0\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00273}00273\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00274}00274\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00275}00275\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00276}00276\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00277}00277\ \ \ \ \ \textcolor{comment}{//\ We\ now\ have\ matched\ vectors:}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00278}00278\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00279}00279\ \ \ \ \ \textcolor{comment}{//\ partyResultsValid}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00280}00280\ \ \ \ \ \textcolor{comment}{//\ partyViewVectorValid}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00281}00281\ \ \ \ \ \textcolor{comment}{//\ sessionVector}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00283}00283\ \ \ \ \ \textcolor{comment}{//\ The\ next\ stage\ is\ to\ resolve\ the\ display\ names\ for\ the\ XUIDs\ of\ all\ the\ players\ in\ each\ of\ the\ sessions.\ It\ is\ possible\ that}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00284}00284\ \ \ \ \ \textcolor{comment}{//\ a\ session\ won't\ have\ any\ XUIDs\ to\ resolve,\ which\ would\ make\ GetUserProfilesAsync\ unhappy,\ so\ we'll\ only\ be\ creating\ a\ task}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00285}00285\ \ \ \ \ \textcolor{comment}{//\ when\ there\ are\ members.\ Creating\ new\ matching\ arrays\ for\ party\ results\ and\ sessions,\ to\ match\ the\ results\ (we\ don't\ care\ about\ the\ party\ view\ anymore)}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00287}00287\ \ \ \ \ vector<task<IVectorView<MXSS::XboxUserProfile\string^>\string^>>\ nameResolveTaskVector;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00288}00288\ \ \ \ \ vector<IVectorView<MXSS::XboxUserProfile\string^>\string^>\ nameResolveVector;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00289}00289\ \ \ \ \ vector<MXSM::MultiplayerSession\string^>\ \ newSessionVector;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00290}00290\ \ \ \ \ vector<WXM::UserPartyAssociation\string^>\ newPartyVector;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00291}00291\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00292}00292\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ sessionVector.size();\ j++\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00293}00293\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00294}00294\ \ \ \ \ \ \ \ \ MXSM::MultiplayerSession\string^\ session\ =\ sessionVector[j];}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00295}00295\ \ \ \ \ \ \ \ \ IVector<Platform::String\string^>\string^\ memberXUIDs\ =\ ref\ \textcolor{keyword}{new}\ Platform::Collections::Vector<Platform::String\string^>;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ Windows::Data::Json::JsonArray\string^\ roomSyncArray\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \ \ \ \ Windows::Data::Json::JsonObject\string^\ customJson\ =\ Windows::Data::Json::JsonObject::Parse(session-\/>SessionProperties-\/>SessionCustomPropertiesJson);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ Windows::Data::Json::JsonValue\string^\ customValue\ =\ customJson-\/>GetNamedValue(L\textcolor{stringliteral}{"{}RoomSyncData"{}});}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ roomSyncArray\ =\ customValue-\/>GetArray();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ \ \ LogComment(\textcolor{stringliteral}{"{}Attempting\ to\ parse\ RoomSyncData"{}});}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ roomSyncArray-\/>Size;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LogComment(roomSyncArray-\/>GetAt(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})-\/>GetString());}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00308}00308\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00309}00309\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (Platform::COMException\string^\ ex)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00310}00310\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ LogCommentWithError(\ L\textcolor{stringliteral}{"{}Custom\ RoomSyncData\ Parse/GetNamedValue\ failed"{}},\ ex-\/>HResult\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00313}00313\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00314}00314\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00315}00315\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ roomSyncArray\ \&\&\ (\ roomSyncArray-\/>Size\ >\ 0\ )\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00316}00316\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ For\ each\ session,\ we\ want\ to\ order\ these\ XUIDs\ so\ the\ display\ name\ of\ the\ first\ one\ is\ what\ we\ will\ name\ the\ session\ by.\ Prioritise\ doing\ this\ by:}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (1)\ If\ the\ host\ player\ (indicated\ by\ having\ a\ small\ id\ of\ 0)\ is\ our\ friend,\ use\ that}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (2)\ Otherwise\ use\ anyone\ who\ is\ our\ friend}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00322}00322\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Default\ to\ true}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ friendsOfFriends\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00324}00324\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ hostIndexFound\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ friendIndexFound\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00327}00327\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ friendsOfFriends\ =\ IsSessionFriendsOfFriends(session);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00329}00329\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ roomSyncArray-\/>Size;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Platform::String\string^\ roomSyncXuid\ =\ roomSyncArray-\/>GetAt(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})-\/>GetString();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00333}00333\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Determine\ if\ this\ player\ is\ a\ friend}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ isFriend\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for\ each}(\ Platform::String\string^\ friendXUID\ \textcolor{keywordflow}{in}\ friendXUIDs\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00338}00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ friendXUID\ ==\ roomSyncXuid\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00339}00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00340}00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isFriend\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00344}00344\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ isHost\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ ==\ 0;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Store\ that\ what\ we\ found\ at\ this\ index\ if\ it\ is\ a\ friend,\ or\ a\ friend\ who\ is\ a\ host}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ isFriend\ \&\&\ (\ friendsOfFriends\ ||\ isHost\ )\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ friendIndexFound\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00351}00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ isHost\ )\ \textcolor{comment}{//\ Host\ is\ always\ in\ slot\ 0}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hostIndexFound\ =\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00357}00357\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Prefer\ to\ use\ index\ of\ host\ who\ is\ our\ friend}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bestIndex\ =\ friendIndexFound;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ hostIndexFound\ !=\ -\/1\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bestIndex\ =\ hostIndexFound;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00364}00364\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00365}00365\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ consider\ if\ we\ have\ at\ least\ found\ one\ friend\ in\ the\ list\ of\ players}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ bestIndex\ !=\ -\/1\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compile\ list\ of\ XUIDs\ to\ resolve\ with\ our\ specially\ chosen\ player\ as\ entry\ 0,\ then\ the\ rest}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memberXUIDs-\/>Append(roomSyncArray-\/>GetAt(bestIndex)-\/>GetString());}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00370}00370\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ roomSyncArray-\/>Size;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00371}00371\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00372}00372\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ !=\ bestIndex\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memberXUIDs-\/>Append(roomSyncArray-\/>GetAt(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})-\/>GetString());}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nameResolveTaskVector.push\_back(\ create\_task(\ primaryUserXboxLiveContext-\/>ProfileService-\/>GetUserProfilesAsync(\ memberXUIDs-\/>GetView()\ )\ )\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00378}00378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newSessionVector.push\_back(session);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00379}00379\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newPartyVector.push\_back(partyResultsValid[j]);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00380}00380\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00381}00381\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00382}00382\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00383}00383\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00384}00384\ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00385}00385\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00386}00386\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ joinTask\ =\ when\_all(\doxymbox{\hyperlink{json_8hpp_a10f838a4c23b8c04fa6d7d5af60768ab}{begin}}(nameResolveTaskVector),\ \doxymbox{\hyperlink{json_8hpp_a7e2cfb21be9900541239dfeb047c9312}{end}}(nameResolveTaskVector)\ ).then([\textcolor{keyword}{this},\ \&nameResolveVector](vector<IVectorView<MXSS::XboxUserProfile\string^>\string^>\ results)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00387}00387\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ nameResolveVector\ =\ results;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00389}00389\ \ \ \ \ \ \ \ \ \})}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00390}00390\ \ \ \ \ \ \ \ \ .wait();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00391}00391\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00392}00392\ \ \ \ \ \textcolor{keywordflow}{catch}(Platform::COMException\string^\ ex)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00393}00393\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00394}00394\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00395}00395\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00396}00396\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00397}00397\ \ \ \ \ \textcolor{comment}{//\ We\ now\ have\ matched\ vectors:}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00398}00398\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00399}00399\ \ \ \ \ \textcolor{comment}{//\ newPartyVector\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ contains\ the\ party\ Ids\ that\ we'll\ need\ should\ we\ wish\ to\ join}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00400}00400\ \ \ \ \ \textcolor{comment}{//\ nameResolveVector\ \ \ \ \ \ \ \ \ \ \ \ -\/\ contains\ vectors\ views\ of\ the\ names\ of\ the\ members\ of\ the\ session\ each\ of\ these\ parties\ is\ in}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00401}00401\ \ \ \ \ \textcolor{comment}{//\ newSessionVector\ \ \ \ \ \ \ \ \ \ \ \ \ -\/\ contains\ the\ session\ information\ itself\ associated\ with\ each\ of\ the\ parties}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00402}00402\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00403}00403\ \ \ \ \ \textcolor{comment}{//\ Construct\ the\ final\ result\ vector}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00404}00404\ \ \ \ \ m\_sessionResultCount\ =\ newSessionVector.size();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00405}00405\ \ \ \ \ m\_sessionSearchResults\ =\ \textcolor{keyword}{new}\ SessionSearchResult[m\_sessionResultCount];}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00406}00406\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ m\_sessionResultCount;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00407}00407\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00408}00408\ \ \ \ \ \ \ \ \ m\_sessionSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].m\_partyId\ =\ newPartyVector[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>PartyId-\/>Data();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00409}00409\ \ \ \ \ \ \ \ \ m\_sessionSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].m\_sessionName\ =\ newSessionVector[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>SessionReference-\/>SessionName-\/>Data();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00410}00410\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ nameResolveVector[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>Size;\ j++\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00411}00411\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00412}00412\ \ \ \ \ \ \ \ \ \ \ \ \ m\_sessionSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].m\_playerNames[j]\ =\ nameResolveVector[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>GetAt(j)-\/>GameDisplayName-\/>Data();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00413}00413\ \ \ \ \ \ \ \ \ \ \ \ \ m\_sessionSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].m\_playerXuids[j]\ =\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{class_player_u_i_d}{PlayerUID}}\textcolor{keyword}{>}(nameResolveVector[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>GetAt(j)-\/>XboxUserId-\/>Data());}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00414}00414\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00415}00415\ \ \ \ \ \ \ \ \ m\_sessionSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].m\_playerCount\ =\ nameResolveVector[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>Size;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00416}00416\ \ \ \ \ \ \ \ \ m\_sessionSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].m\_usedSlotCount\ =\ newSessionVector[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>Members-\/>Size;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00417}00417\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_sessionSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].m\_usedSlotCount\ >\ MAX\_ONLINE\_PLAYER\_COUNT\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00418}00418\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Don't\ think\ this\ could\ ever\ happen,\ but\ no\ harm\ in\ checking}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00420}00420\ \ \ \ \ \ \ \ \ \ \ \ \ m\_sessionSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].m\_usedSlotCount\ =\ MAX\_ONLINE\_PLAYER\_COUNT;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00421}00421\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00422}00422\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ m\_sessionSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].m\_usedSlotCount;\ j++\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00423}00423\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00424}00424\ \ \ \ \ \ \ \ \ \ \ \ \ m\_sessionSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].m\_sessionXuids[j]\ =\ wstring(\ newSessionVector[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}]-\/>Members-\/>GetAt(j)-\/>XboxUserId-\/>Data()\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00425}00425\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00426}00426\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00427}00427\ \ \ \ \ \ \ \ \ m\_sessionSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].m\_extData\ =\ \doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{_session_info_8h_a850ef119cb3409e27779abd984f14a2f}{GameSessionData}})\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00428}00428\ \ \ \ \ \ \ \ \ memset(\ m\_sessionSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].m\_extData,\ 0,\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{_session_info_8h_a850ef119cb3409e27779abd984f14a2f}{GameSessionData}})\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00429}00429\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00430}00430\ \ \ \ \ \ \ \ \ GetGameSessionData(newSessionVector[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}],\ m\_sessionSearchResults[\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}].m\_extData);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00431}00431\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00432}00432\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00433}00433\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00434}00434\ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00435}00435\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00436}00436\ \textcolor{comment}{//\ Filters\ list\ of\ parties\ based\ on\ online\ presence\ permission\ (whether\ the\ friend\ is\ set\ to\ invisible\ or\ not)}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00437}\doxymbox{\hyperlink{class_d_q_r_network_manager_af4d581b2dccd64dc1b793e1cfa373220}{00437}}\ IVectorView<WXM::UserPartyAssociation\string^>\string^\ \doxymbox{\hyperlink{class_d_q_r_network_manager_af4d581b2dccd64dc1b793e1cfa373220}{DQRNetworkManager::FilterPartiesByPermission}}(MXS::XboxLiveContext\ \string^context,\ IVectorView<WXM::UserPartyAssociation\string^>\string^\ partyResults)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00438}00438\ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00439}00439\ \ \ \ \ Platform::Collections::Vector<WXM::UserPartyAssociation\string^>\string^\ filteredPartyResults\ =\ ref\ \textcolor{keyword}{new}\ Platform::Collections::Vector<WXM::UserPartyAssociation\string^>();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00440}00440\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00441}00441\ \ \ \ \ \textcolor{comment}{//\ List\ of\ permissions\ we\ want}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00442}00442\ \ \ \ \ \textcolor{keyword}{auto}\ permissionIds\ =\ ref\ \textcolor{keyword}{new}\ Platform::Collections::Vector<Platform::String\string^>(1,\ ref\ \textcolor{keyword}{new}\ Platform::String(L\textcolor{stringliteral}{"{}ViewTargetPresence"{}}));\ \ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00443}00443\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00444}00444\ \ \ \ \ \textcolor{comment}{//\ List\ of\ target\ users}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00445}00445\ \ \ \ \ \textcolor{keyword}{auto}\ targetXboxUserIds\ =\ ref\ \textcolor{keyword}{new}\ Platform::Collections::Vector<Platform::String\string^>();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00446}00446\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ partyResults-\/>Size;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00447}00447\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00448}00448\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(partyResults-\/>GetAt(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})-\/>QueriedXboxUserIds-\/>Size\ >\ 0);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00449}00449\ \ \ \ \ \ \ \ \ targetXboxUserIds-\/>Append(\ partyResults-\/>GetAt(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})-\/>QueriedXboxUserIds-\/>GetAt(0)\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00450}00450\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00451}00451\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00452}00452\ \ \ \ \ \textcolor{comment}{//\ Check}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00453}00453\ \ \ \ \ \textcolor{keyword}{auto}\ checkPermissionsAsync\ =\ context-\/>PrivacyService-\/>CheckMultiplePermissionsWithMultipleTargetUsersAsync(permissionIds-\/>GetView(),\ targetXboxUserIds-\/>GetView());}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00454}00454\ \ \ \ \ create\_task(checkPermissionsAsync).then([\&partyResults,\ \&filteredPartyResults](task<IVectorView<MXS::Privacy::MultiplePermissionsCheckResult\string^>\string^>\ t)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00455}00455\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00456}00456\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00457}00457\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00458}00458\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ results\ =\ t.get();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00459}00459\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00460}00460\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ For\ each\ party,\ check\ to\ see\ if\ we\ have\ permission\ for\ the\ user}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00461}00461\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ partyResults-\/>Size;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00462}00462\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00463}00463\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ For\ each\ permissions\ result}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00464}00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ results-\/>Size;\ j++)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00466}00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ result\ =\ results-\/>GetAt(j);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00467}00467\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00468}00468\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ allowed\ to\ see\ this\ user\ AND\ it's\ the\ same\ user,\ add\ the\ party\ to\ the\ just}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00469}00469\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((result-\/>Items-\/>GetAt(0)-\/>IsAllowed)\ \&\&\ (partyResults-\/>GetAt(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}})-\/>QueriedXboxUserIds-\/>GetAt(0)\ ==\ result-\/>XboxUserId))}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00470}00470\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00471}00471\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ filteredPartyResults-\/>Append(partyResults-\/>GetAt(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}));}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00472}00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00473}00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00474}00474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00475}00475\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00476}00476\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00477}00477\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (Platform::COMException\string^\ ex)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00478}00478\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ LogCommentWithError(\ L\textcolor{stringliteral}{"{}CheckMultiplePermissionsWithMultipleTargetUsersAsync\ failed"{}},\ ex-\/>HResult\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00480}00480\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00481}00481\ \ \ \ \ \})}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00482}00482\ \ \ \ \ .wait();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00483}00483\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00484}00484\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}DQRNetworkManager::FilterPartiesByPermission:\ Removed\ \%i\ parties\ because\ of\ online\ presence\ permissions\(\backslash\)n"{}},\ partyResults-\/>Size\ -\/\ filteredPartyResults-\/>Size);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00485}00485\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00486}00486\ \ \ \ \ \textcolor{keywordflow}{return}\ filteredPartyResults-\/>GetView();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00487}00487\ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00488}00488\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00489}00489\ \textcolor{comment}{//\ Get\ all\ friends\ (list\ of\ XUIDs)\ syncronously\ from\ the\ service\ (slow,\ may\ take\ 300ms+),\ returns\ empty\ list\ if\ something\ goes\ wrong}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00490}\doxymbox{\hyperlink{class_d_q_r_network_manager_ad46d4c65f77d09140612ea94e27c91bb}{00490}}\ Platform::Collections::Vector<Platform::String\string^>\string^\ \doxymbox{\hyperlink{class_d_q_r_network_manager_ad46d4c65f77d09140612ea94e27c91bb}{DQRNetworkManager::GetFriends}}()}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00491}00491\ \{\ \ \ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00492}00492\ \ \ \ \ \textcolor{keyword}{auto}\ friends\ =\ ref\ \textcolor{keyword}{new}\ Platform::Collections::Vector<Platform::String\string^>;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00493}00493\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00494}00494\ \ \ \ \ \textcolor{keyword}{auto}\ primaryUser\ =\ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___profile_8h_a027fde7e99d773afa28ec11d244459bf}{ProfileManager}}.GetUser(0);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00495}00495\ \ \ \ \ \textcolor{keywordflow}{if}\ (primaryUser\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00496}00496\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00497}00497\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Return\ empty}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00498}00498\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ friends;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00499}00499\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00500}00500\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00501}00501\ \ \ \ \ \textcolor{keyword}{auto}\ xboxLiveContext\ =\ ref\ \textcolor{keyword}{new}\ MXS::XboxLiveContext(primaryUser);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00502}00502\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00503}00503\ \ \ \ \ \textcolor{comment}{//\ Request\ ALL\ friends\ because\ there's\ no\ other\ way\ to\ check\ friendships\ without\ using\ the\ REST\ API}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00504}00504\ \ \ \ \ \textcolor{keyword}{auto}\ getSocialRelationshipsAsync\ =\ xboxLiveContext-\/>SocialService-\/>GetSocialRelationshipsAsync(MXSS::SocialRelationship::All,\ 0,\ 1100);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00505}00505\ \ \ \ \ MXSS::XboxSocialRelationshipResult\string^\ socialRelationshipResult\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00506}00506\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00507}00507\ \ \ \ \ \textcolor{comment}{//\ First\ get\ our\ friends\ list\ (people\ we\ follow\ who\ may\ or\ may\ not\ follow\ us\ back)}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00508}00508\ \ \ \ \ Concurrency::create\_task(getSocialRelationshipsAsync).then([\&socialRelationshipResult](Concurrency::task<MXSS::XboxSocialRelationshipResult\string^>\ t)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00509}00509\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00510}00510\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00511}00511\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00512}00512\ \ \ \ \ \ \ \ \ \ \ \ \ socialRelationshipResult\ =\ t.get();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00513}00513\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00514}00514\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (Platform::COMException\string^\ ex)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00515}00515\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00516}00516\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}DQRNetworkManager::GetFriends:\ GetSocialRelationshipsAsync\ failed\ ()\(\backslash\)n"{}},\ ex-\/>HResult);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00517}00517\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00518}00518\ \ \ \ \ \})}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00519}00519\ \ \ \ \ .wait();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00520}00520\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00521}00521\ \ \ \ \ \textcolor{keywordflow}{if}\ (socialRelationshipResult\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00522}00522\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00523}00523\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Return\ empty}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00524}00524\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ friends;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00525}00525\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00526}00526\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00527}00527\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}DQRNetworkManager::GetFriends:\ Retrieved\ \%i\ relationships\(\backslash\)n"{}},\ socialRelationshipResult-\/>TotalCount);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00528}00528\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00529}00529\ \ \ \ \ \textcolor{comment}{//\ Now\ construct\ a\ vector\ of\ these\ users,\ that\ follow\ us\ back\ -\/\ these\ are\ our\ "{}friends"{}}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00530}00530\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ socialRelationshipResult-\/>TotalCount;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00531}00531\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00532}00532\ \ \ \ \ \ \ \ \ MXSS::XboxSocialRelationship\string^\ relationship\ =\ socialRelationshipResult-\/>Items-\/>GetAt(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}});}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00533}00533\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(relationship-\/>IsFollowingCaller)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00534}00534\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00535}00535\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}DQRNetworkManager::GetFriends:\ Found\ friend\ \(\backslash\)"{}\%ls\(\backslash\)"{}\(\backslash\)n"{}},\ relationship-\/>XboxUserId-\/>Data());}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00536}00536\ \ \ \ \ \ \ \ \ \ \ \ \ friends-\/>Append(relationship-\/>XboxUserId);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00537}00537\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00538}00538\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00539}00539\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00540}00540\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}DQRNetworkManager::GetFriends:\ Found\ \%i\ 2-\/way\ friendships\(\backslash\)n"{}},\ friends-\/>Size);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00541}00541\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00542}00542\ \ \ \ \ \textcolor{keywordflow}{return}\ friends;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00543}00543\ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00544}00544\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00545}00545\ \textcolor{comment}{//\ If\ data\ for\ game\ settings\ exists\ returns\ FriendsOfFriends\ value,\ otherwise\ returns\ true}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00546}00546\ \textcolor{keywordtype}{bool}\ DQRNetworkManager::IsSessionFriendsOfFriends(MXSM::MultiplayerSession\string^\ session)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00547}00547\ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00548}00548\ \ \ \ \ \textcolor{comment}{//\ Default\ to\ true,\ don't\ want\ to\ incorrectly\ prevent\ joining}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00549}00549\ \ \ \ \ \textcolor{keywordtype}{bool}\ friendsOfFriends\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00550}00550\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00551}00551\ \ \ \ \ \textcolor{comment}{//\ We\ retrieve\ the\ game\ session\ data\ later\ too,\ shouldn't\ really\ duplicate\ this}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00552}00552\ \ \ \ \ \textcolor{keywordtype}{void}\ *gameSessionData\ =\ \doxymbox{\hyperlink{gzguts_8h_adacbf80ddc99f9a9e0f6aa2bbf1fb0e9}{malloc}}(\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{_session_info_8h_a850ef119cb3409e27779abd984f14a2f}{GameSessionData}}));}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00553}00553\ \ \ \ \ memset(gameSessionData,\ 0,\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{_session_info_8h_a850ef119cb3409e27779abd984f14a2f}{GameSessionData}}));}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00554}00554\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00555}00555\ \ \ \ \ \textcolor{keywordtype}{bool}\ result\ =\ GetGameSessionData(session,\ gameSessionData);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00556}00556\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00557}00557\ \ \ \ \ \textcolor{keywordflow}{if}\ (result)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00558}00558\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00559}00559\ \ \ \ \ \ \ \ \ friendsOfFriends\ =\ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetGameHostOption(\textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{_session_info_8h_a850ef119cb3409e27779abd984f14a2f}{GameSessionData}}\ *\textcolor{keyword}{>}(gameSessionData)-\/>m\_uiGameHostSettings,\ \doxymbox{\hyperlink{_app__enums_8h_a3039f4892c1f252d62bfbc8aeab1fb7aa765ce1c3bfe2fde32fb1a5fb46cd2886}{eGameHostOption\_FriendsOfFriends}});}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00560}00560\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00561}00561\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00562}00562\ \ \ \ \ \doxymbox{\hyperlink{gzguts_8h_a6d9b026f3a32ae4cad5d108f9ee45986}{free}}(gameSessionData);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00563}00563\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00564}00564\ \ \ \ \ \textcolor{keywordflow}{return}\ friendsOfFriends;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00565}00565\ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00566}00566\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00567}00567\ \textcolor{comment}{//\ Parses\ custom\ json\ data\ from\ session\ and\ populates\ game\ session\ data\ param,\ return\ true\ if\ parse\ succeeded}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00568}00568\ \textcolor{keywordtype}{bool}\ DQRNetworkManager::GetGameSessionData(MXSM::MultiplayerSession\string^\ session,\ \textcolor{keywordtype}{void}\ *gameSessionData)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00569}00569\ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00570}00570\ \ \ \ \ Platform::String\ \string^gameSessionDataJson\ =\ session-\/>SessionProperties-\/>SessionCustomPropertiesJson;}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00571}00571\ \ \ \ \ \textcolor{keywordflow}{if}(\ gameSessionDataJson\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00572}00572\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00573}00573\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00574}00574\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00575}00575\ \ \ \ \ \ \ \ \ \ \ \ \ Windows::Data::Json::JsonObject\string^\ customParam\ =\ Windows::Data::Json::JsonObject::Parse(gameSessionDataJson);}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00576}00576\ \ \ \ \ \ \ \ \ \ \ \ \ Windows::Data::Json::JsonValue\string^\ customValue\ =\ customParam-\/>GetNamedValue(L\textcolor{stringliteral}{"{}GameSessionData"{}});}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00577}00577\ \ \ \ \ \ \ \ \ \ \ \ \ Platform::String\ \string^customValueString\ =\ customValue-\/>GetString();}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ customValueString\ )}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00579}00579\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00580}00580\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_common_2_leaderboards_2base64_8cpp_a70c8cda20425a7870ddfb58ff3cff5eb}{base64\_decode}}(\ customValueString,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(gameSessionData),\ \textcolor{keyword}{sizeof}(\doxymbox{\hyperlink{_session_info_8h_a850ef119cb3409e27779abd984f14a2f}{GameSessionData}})\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00581}00581\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00582}00582\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00583}00583\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00584}00584\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (Platform::COMException\string^\ ex)}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00585}00585\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00586}00586\ \ \ \ \ \ \ \ \ \ \ \ \ LogCommentWithError(\ L\textcolor{stringliteral}{"{}Custom\ GameSessionData\ parameter\ Parse/GetNamedValue\ failed"{}},\ ex-\/>HResult\ );}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00587}00587\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00588}00588\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00589}00589\ }
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00590}00590\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_d_q_r_network_manager___friend_sessions_8cpp_source_l00591}00591\ \}}
+
+\end{DoxyCode}

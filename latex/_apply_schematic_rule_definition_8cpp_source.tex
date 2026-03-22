@@ -1,0 +1,255 @@
+\doxysection{Apply\+Schematic\+Rule\+Definition.\+cpp}
+\hypertarget{_apply_schematic_rule_definition_8cpp_source}{}\label{_apply_schematic_rule_definition_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/GameRules/ApplySchematicRuleDefinition.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Common/GameRules/ApplySchematicRuleDefinition.cpp}}
+\doxymbox{\hyperlink{_apply_schematic_rule_definition_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00002}00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_helpers_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)StringHelpers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8phys_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.phys.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8dimension_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.dimension.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8chunk_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.chunk.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{net_8minecraft_8world_8level_8tile_8entity_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)net.minecraft.world.level.tile.entity.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_apply_schematic_rule_definition_8h}{ApplySchematicRuleDefinition.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_level_generation_options_8h}{LevelGenerationOptions.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_console_schematic_file_8h}{ConsoleSchematicFile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00012}\doxymbox{\hyperlink{class_apply_schematic_rule_definition_a3fa8b37fa15a47c46d1febadcf093c2b}{00012}}\ \doxymbox{\hyperlink{class_apply_schematic_rule_definition_a3fa8b37fa15a47c46d1febadcf093c2b}{ApplySchematicRuleDefinition::ApplySchematicRuleDefinition}}(\doxymbox{\hyperlink{class_level_generation_options}{LevelGenerationOptions}}\ *levelGenOptions)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00013}00013\ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00014}00014\ \ \ \ \ m\_levelGenOptions\ =\ levelGenOptions;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00015}00015\ \ \ \ \ m\_location\ =\ \doxymbox{\hyperlink{class_vec3_a651aa4709d4f0e5a6d79b21cc125032a}{Vec3::newPermanent}}(0,0,0);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00016}00016\ \ \ \ \ m\_locationBox\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00017}00017\ \ \ \ \ m\_totalBlocksChanged\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00018}00018\ \ \ \ \ m\_totalBlocksChangedLighting\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00019}00019\ \ \ \ \ m\_rotation\ =\ \doxymbox{\hyperlink{class_console_schematic_file_a60a4717387a3e3106fb69b99e9045643ac5dd4fee89f19fa7960ab5a8623f454f}{ConsoleSchematicFile::eSchematicRot\_0}};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00020}00020\ \ \ \ \ m\_completed\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00021}00021\ \ \ \ \ m\_dimension\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00022}00022\ \ \ \ \ m\_schematic\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00023}00023\ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00025}\doxymbox{\hyperlink{class_apply_schematic_rule_definition_afa883d02e6d74abd05be2decdbce74a0}{00025}}\ \doxymbox{\hyperlink{class_apply_schematic_rule_definition_afa883d02e6d74abd05be2decdbce74a0}{ApplySchematicRuleDefinition::\string~ApplySchematicRuleDefinition}}()}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00026}00026\ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00027}00027\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Deleting\ ApplySchematicRuleDefinition.\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00028}00028\ \ \ \ \ \textcolor{keywordflow}{if}(!m\_completed)\ m\_levelGenOptions-\/>releaseSchematicFile(m\_schematicName);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00029}00029\ \ \ \ \ m\_schematic\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00030}00030\ \ \ \ \ \textcolor{keyword}{delete}\ m\_location;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00031}00031\ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00033}\doxymbox{\hyperlink{class_apply_schematic_rule_definition_ae0f017fa481a6d7a8af98d76f22bed27}{00033}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_apply_schematic_rule_definition_ae0f017fa481a6d7a8af98d76f22bed27}{ApplySchematicRuleDefinition::writeAttributes}}(\doxymbox{\hyperlink{class_data_output_stream}{DataOutputStream}}\ *dos,\ \doxymbox{\hyperlink{_orbis_types_8h_a36cb3b01d81ffd844bbbfb54003e06ec}{UINT}}\ numAttrs)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00034}00034\ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00035}00035\ \ \ \ \ \doxymbox{\hyperlink{class_game_rule_definition_a769dc157b9603c87e8af6a4e603df05a}{GameRuleDefinition::writeAttributes}}(dos,\ numAttrs\ +\ 5);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00037}00037\ \ \ \ \ \doxymbox{\hyperlink{class_console_game_rules_a4e037c133ea197d1e867a005e3d463bf}{ConsoleGameRules::write}}(dos,\ \doxymbox{\hyperlink{class_console_game_rules_ad672e8a9fb48c83083cd292031c6ff48a46e6279e46f8a53d5b2d8a16800ab91a}{ConsoleGameRules::eGameRuleAttr\_filename}});}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00038}00038\ \ \ \ \ dos-\/>\doxymbox{\hyperlink{class_data_output_stream_ae7183e5667001dbf43fdeb15967acfaf}{writeUTF}}(m\_schematicName);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00039}00039\ \ \ \ \ \doxymbox{\hyperlink{class_console_game_rules_a4e037c133ea197d1e867a005e3d463bf}{ConsoleGameRules::write}}(dos,\ \doxymbox{\hyperlink{class_console_game_rules_ad672e8a9fb48c83083cd292031c6ff48a32d2a4aeccf1fc5ae2c89677a352b980}{ConsoleGameRules::eGameRuleAttr\_x}});}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00040}00040\ \ \ \ \ dos-\/>\doxymbox{\hyperlink{class_data_output_stream_ae7183e5667001dbf43fdeb15967acfaf}{writeUTF}}(std::to\_wstring(m\_location-\/>x));}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00041}00041\ \ \ \ \ \doxymbox{\hyperlink{class_console_game_rules_a4e037c133ea197d1e867a005e3d463bf}{ConsoleGameRules::write}}(dos,\ \doxymbox{\hyperlink{class_console_game_rules_ad672e8a9fb48c83083cd292031c6ff48ac931299e702a439112d4621ee8059a70}{ConsoleGameRules::eGameRuleAttr\_y}});}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00042}00042\ \ \ \ \ dos-\/>\doxymbox{\hyperlink{class_data_output_stream_ae7183e5667001dbf43fdeb15967acfaf}{writeUTF}}(std::to\_wstring(m\_location-\/>y));}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00043}00043\ \ \ \ \ \doxymbox{\hyperlink{class_console_game_rules_a4e037c133ea197d1e867a005e3d463bf}{ConsoleGameRules::write}}(dos,\ \doxymbox{\hyperlink{class_console_game_rules_ad672e8a9fb48c83083cd292031c6ff48a918f73b00fc5ee8d3fe81c677df66d78}{ConsoleGameRules::eGameRuleAttr\_z}});}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00044}00044\ \ \ \ \ dos-\/>\doxymbox{\hyperlink{class_data_output_stream_ae7183e5667001dbf43fdeb15967acfaf}{writeUTF}}(std::to\_wstring(m\_location-\/>z));}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00045}00045\ \ \ \ \ \doxymbox{\hyperlink{class_console_game_rules_a4e037c133ea197d1e867a005e3d463bf}{ConsoleGameRules::write}}(dos,\ \doxymbox{\hyperlink{class_console_game_rules_ad672e8a9fb48c83083cd292031c6ff48a24b7c04622272887be26f1b84631cf87}{ConsoleGameRules::eGameRuleAttr\_rot}});}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00047}00047\ \ \ \ \ \textcolor{keywordflow}{switch}\ (m\_rotation)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00048}00048\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00049}00049\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_console_schematic_file_a60a4717387a3e3106fb69b99e9045643ac5dd4fee89f19fa7960ab5a8623f454f}{ConsoleSchematicFile::eSchematicRot\_0}}:\ \ \ \ \ dos-\/>\doxymbox{\hyperlink{class_data_output_stream_ae7183e5667001dbf43fdeb15967acfaf}{writeUTF}}(L\textcolor{stringliteral}{"{}0"{}});\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00050}00050\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_console_schematic_file_a60a4717387a3e3106fb69b99e9045643a244fd4cd939a8668941e1c032bbfb102}{ConsoleSchematicFile::eSchematicRot\_90}}:\ \ \ \ dos-\/>\doxymbox{\hyperlink{class_data_output_stream_ae7183e5667001dbf43fdeb15967acfaf}{writeUTF}}(L\textcolor{stringliteral}{"{}90"{}});\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00051}00051\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_console_schematic_file_a60a4717387a3e3106fb69b99e9045643afe0daf2b23808eb2300425ed5398485a}{ConsoleSchematicFile::eSchematicRot\_180}}:\ \ \ dos-\/>\doxymbox{\hyperlink{class_data_output_stream_ae7183e5667001dbf43fdeb15967acfaf}{writeUTF}}(L\textcolor{stringliteral}{"{}180"{}});\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00052}00052\ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_console_schematic_file_a60a4717387a3e3106fb69b99e9045643a59a022734d575b5507fd233d3d702b03}{ConsoleSchematicFile::eSchematicRot\_270}}:\ \ \ dos-\/>\doxymbox{\hyperlink{class_data_output_stream_ae7183e5667001dbf43fdeb15967acfaf}{writeUTF}}(L\textcolor{stringliteral}{"{}270"{}});\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00053}00053\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00054}00054\ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00056}\doxymbox{\hyperlink{class_apply_schematic_rule_definition_a680f337de33f6db23864dfc4ef9ca71d}{00056}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_apply_schematic_rule_definition_a680f337de33f6db23864dfc4ef9ca71d}{ApplySchematicRuleDefinition::addAttribute}}(\textcolor{keyword}{const}\ wstring\ \&attributeName,\ \textcolor{keyword}{const}\ wstring\ \&attributeValue)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00057}00057\ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00058}00058\ \ \ \ \ \textcolor{keywordflow}{if}(attributeName.compare(L\textcolor{stringliteral}{"{}filename"{}})\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00059}00059\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ m\_schematicName\ =\ attributeValue;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00061}00061\ \ \ \ \ \ \ \ \ \textcolor{comment}{//app.DebugPrintf("{}ApplySchematicRuleDefinition:\ Adding\ parameter\ filename=\%s\(\backslash\)n"{},m\_schematicName.c\_str());}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!m\_schematicName.empty())}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_schematicName.substr(\ m\_schematicName.length()\ -\/\ 4,\ m\_schematicName.length()).compare(L\textcolor{stringliteral}{"{}.sch"{}})\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_schematicName.append(L\textcolor{stringliteral}{"{}.sch"{}});}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ m\_schematic\ =\ m\_levelGenOptions-\/>getSchematicFile(m\_schematicName);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00071}00071\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00072}00072\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(attributeName.compare(L\textcolor{stringliteral}{"{}x"{}})\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00073}00073\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ m\_location-\/>x\ =\ \doxymbox{\hyperlink{_string_helpers_8h_afad9ea67e6a1b711ffb637e5784ad793}{\_fromString<int>}}(attributeValue);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(abs(m\_location-\/>x))\%2\ !=\ 0)\ m\_location-\/>x\ -\/=1;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \textcolor{comment}{//app.DebugPrintf("{}ApplySchematicRuleDefinition:\ Adding\ parameter\ x=\%f\(\backslash\)n"{},m\_location-\/>x);}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00077}00077\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00078}00078\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(attributeName.compare(L\textcolor{stringliteral}{"{}y"{}})\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00079}00079\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ m\_location-\/>y\ =\ \doxymbox{\hyperlink{_string_helpers_8h_afad9ea67e6a1b711ffb637e5784ad793}{\_fromString<int>}}(attributeValue);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(abs(m\_location-\/>y))\%2\ !=\ 0)\ m\_location-\/>y\ -\/=\ 1;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_location-\/>y\ <\ 0)\ m\_location-\/>y\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ \textcolor{comment}{//app.DebugPrintf("{}ApplySchematicRuleDefinition:\ Adding\ parameter\ y=\%f\(\backslash\)n"{},m\_location-\/>y);}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00084}00084\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00085}00085\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(attributeName.compare(L\textcolor{stringliteral}{"{}z"{}})\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00086}00086\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ m\_location-\/>z\ =\ \doxymbox{\hyperlink{_string_helpers_8h_afad9ea67e6a1b711ffb637e5784ad793}{\_fromString<int>}}(attributeValue);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(abs(m\_location-\/>z))\%2\ !=\ 0)\ m\_location-\/>z\ -\/=\ 1;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{comment}{//app.DebugPrintf("{}ApplySchematicRuleDefinition:\ Adding\ parameter\ z=\%f\(\backslash\)n"{},m\_location-\/>z);}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00090}00090\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00091}00091\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(attributeName.compare(L\textcolor{stringliteral}{"{}rot"{}})\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00092}00092\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ degrees\ =\ \doxymbox{\hyperlink{_string_helpers_8h_afad9ea67e6a1b711ffb637e5784ad793}{\_fromString<int>}}(attributeValue);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(degrees\ <\ 0)\ degrees\ +=\ 360;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(degrees\ >=\ 360)\ degrees\ -\/=\ 360;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ quad\ =\ degrees/90;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ degrees\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(quad\ +\ 0.5f);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00099}00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}(degrees)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00100}00100\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 1:}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ m\_rotation\ =\ \doxymbox{\hyperlink{class_console_schematic_file_a60a4717387a3e3106fb69b99e9045643a244fd4cd939a8668941e1c032bbfb102}{ConsoleSchematicFile::eSchematicRot\_90}};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 2:}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ m\_rotation\ =\ \doxymbox{\hyperlink{class_console_schematic_file_a60a4717387a3e3106fb69b99e9045643afe0daf2b23808eb2300425ed5398485a}{ConsoleSchematicFile::eSchematicRot\_180}};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 3:}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 4:}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ m\_rotation\ =\ \doxymbox{\hyperlink{class_console_schematic_file_a60a4717387a3e3106fb69b99e9045643a59a022734d575b5507fd233d3d702b03}{ConsoleSchematicFile::eSchematicRot\_270}};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 0:}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ m\_rotation\ =\ \doxymbox{\hyperlink{class_console_schematic_file_a60a4717387a3e3106fb69b99e9045643ac5dd4fee89f19fa7960ab5a8623f454f}{ConsoleSchematicFile::eSchematicRot\_0}};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \textcolor{comment}{//app.DebugPrintf("{}ApplySchematicRuleDefinition:\ Adding\ parameter\ rot=\%d\(\backslash\)n"{},m\_rotation);}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00118}00118\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00119}00119\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(attributeName.compare(L\textcolor{stringliteral}{"{}dim"{}})\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00120}00120\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ m\_dimension\ =\ \doxymbox{\hyperlink{_string_helpers_8h_afad9ea67e6a1b711ffb637e5784ad793}{\_fromString<int>}}(attributeValue);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\_dimension\ >\ 1\ ||\ m\_dimension\ <\ -\/1)\ m\_dimension\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \textcolor{comment}{//app.DebugPrintf("{}ApplySchematicRuleDefinition:\ Adding\ parameter\ dimension=\%d\(\backslash\)n"{},m\_dimension);}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00124}00124\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00125}00125\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00126}00126\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_game_rule_definition_a8a6a6da766848d473adc78e67ef9d981}{GameRuleDefinition::addAttribute}}(attributeName,\ attributeValue);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00128}00128\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00129}00129\ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00131}00131\ \textcolor{keywordtype}{void}\ ApplySchematicRuleDefinition::updateLocationBox()}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00132}00132\ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00133}00133\ \ \ \ \ \textcolor{keywordflow}{if}(m\_schematic\ ==\ \textcolor{keyword}{nullptr})\ m\_schematic\ =\ m\_levelGenOptions-\/>\doxymbox{\hyperlink{class_level_generation_options_a635ed6c994d85565f4989ec28b89ba53}{getSchematicFile}}(m\_schematicName);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00135}00135\ \ \ \ \ m\_locationBox\ =\ \doxymbox{\hyperlink{class_a_a_b_b_a31537ee0e04ed4e6cc0b3706409ea549}{AABB::newPermanent}}(0,0,0,0,0,0);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00137}00137\ \ \ \ \ m\_locationBox-\/>\doxymbox{\hyperlink{class_a_a_b_b_af30bb973f2e9a9238b6a095936c80a50}{x0}}\ =\ m\_location-\/>\doxymbox{\hyperlink{class_vec3_ad1de31784f9099476ea9fe389ce79dea}{x}};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00138}00138\ \ \ \ \ m\_locationBox-\/>\doxymbox{\hyperlink{class_a_a_b_b_a9d4783d35614410750fc3a272ec4294e}{y0}}\ =\ m\_location-\/>\doxymbox{\hyperlink{class_vec3_a3f7a04fbd01d126678d0d243b3edd1bc}{y}};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00139}00139\ \ \ \ \ m\_locationBox-\/>\doxymbox{\hyperlink{class_a_a_b_b_aa112af47a32b7c46099550abe3fc45bc}{z0}}\ =\ m\_location-\/>\doxymbox{\hyperlink{class_vec3_a026f60dd196479ab2a26bb6408289f3a}{z}};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00140}00140\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00141}00141\ \ \ \ \ m\_locationBox-\/>\doxymbox{\hyperlink{class_a_a_b_b_af31d69615e89b90c844c0096dea8dc32}{y1}}\ =\ m\_location-\/>\doxymbox{\hyperlink{class_vec3_a3f7a04fbd01d126678d0d243b3edd1bc}{y}}\ +\ m\_schematic-\/>\doxymbox{\hyperlink{class_console_schematic_file_a4e551a2bee03a53aab643c10b5c9a269}{getYSize}}();}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00143}00143\ \ \ \ \ \textcolor{keywordflow}{switch}(m\_rotation)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00144}00144\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_console_schematic_file_a60a4717387a3e3106fb69b99e9045643a244fd4cd939a8668941e1c032bbfb102}{ConsoleSchematicFile::eSchematicRot\_90}}:}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_console_schematic_file_a60a4717387a3e3106fb69b99e9045643a59a022734d575b5507fd233d3d702b03}{ConsoleSchematicFile::eSchematicRot\_270}}:}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ m\_locationBox-\/>\doxymbox{\hyperlink{class_a_a_b_b_ac860c2572766fa19813d2b8e9e2c9a6e}{x1}}\ =\ m\_location-\/>\doxymbox{\hyperlink{class_vec3_ad1de31784f9099476ea9fe389ce79dea}{x}}\ +\ m\_schematic-\/>\doxymbox{\hyperlink{class_console_schematic_file_aac0a7e66ac3b64bdff9f53c3e22148f0}{getZSize}}();}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ m\_locationBox-\/>\doxymbox{\hyperlink{class_a_a_b_b_aa68be56002311c1a3689981499a7804a}{z1}}\ =\ m\_location-\/>\doxymbox{\hyperlink{class_vec3_a026f60dd196479ab2a26bb6408289f3a}{z}}\ +\ m\_schematic-\/>\doxymbox{\hyperlink{class_console_schematic_file_a18c24df2c4439198c1a9c68f53219534}{getXSize}}();}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_console_schematic_file_a60a4717387a3e3106fb69b99e9045643ac5dd4fee89f19fa7960ab5a8623f454f}{ConsoleSchematicFile::eSchematicRot\_0}}:}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \doxymbox{\hyperlink{class_console_schematic_file_a60a4717387a3e3106fb69b99e9045643afe0daf2b23808eb2300425ed5398485a}{ConsoleSchematicFile::eSchematicRot\_180}}:}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00152}00152\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ m\_locationBox-\/>\doxymbox{\hyperlink{class_a_a_b_b_ac860c2572766fa19813d2b8e9e2c9a6e}{x1}}\ =\ m\_location-\/>\doxymbox{\hyperlink{class_vec3_ad1de31784f9099476ea9fe389ce79dea}{x}}\ +\ m\_schematic-\/>\doxymbox{\hyperlink{class_console_schematic_file_a18c24df2c4439198c1a9c68f53219534}{getXSize}}();}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00154}00154\ \ \ \ \ \ \ \ \ m\_locationBox-\/>\doxymbox{\hyperlink{class_a_a_b_b_aa68be56002311c1a3689981499a7804a}{z1}}\ =\ m\_location-\/>\doxymbox{\hyperlink{class_vec3_a026f60dd196479ab2a26bb6408289f3a}{z}}\ +\ m\_schematic-\/>\doxymbox{\hyperlink{class_console_schematic_file_aac0a7e66ac3b64bdff9f53c3e22148f0}{getZSize}}();}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00156}00156\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00157}00157\ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00159}\doxymbox{\hyperlink{class_apply_schematic_rule_definition_a13692e1994cf442f8aa3ff846c581800}{00159}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_apply_schematic_rule_definition_a13692e1994cf442f8aa3ff846c581800}{ApplySchematicRuleDefinition::processSchematic}}(\doxymbox{\hyperlink{class_a_a_b_b}{AABB}}\ *chunkBox,\ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *chunk)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00160}00160\ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00161}00161\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_completed\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00162}00162\ \ \ \ \ \textcolor{keywordflow}{if}(chunk-\/>\doxymbox{\hyperlink{class_level_chunk_ac2d60c70188a5e737c1c6da7cba696b2}{level}}-\/>\doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}-\/>\doxymbox{\hyperlink{class_dimension_ab2a8a3e455fe5b4bcc3bdd93920352b0}{id}}\ !=\ m\_dimension)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00164}00164\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\ \textcolor{stringliteral}{"{}Processing\ ApplySchematicRuleDefinition"{}});}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00165}00165\ \ \ \ \ \textcolor{keywordflow}{if}(m\_schematic\ ==\ \textcolor{keyword}{nullptr})\ m\_schematic\ =\ m\_levelGenOptions-\/>getSchematicFile(m\_schematicName);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00167}00167\ \ \ \ \ \textcolor{keywordflow}{if}(m\_locationBox\ ==\ \textcolor{keyword}{nullptr})\ updateLocationBox();}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00168}00168\ \ \ \ \ \textcolor{keywordflow}{if}(chunkBox-\/>\doxymbox{\hyperlink{class_a_a_b_b_ac69d6614bcfef028dc1a80d0d7f504cb}{intersects}}(\ m\_locationBox\ ))}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00169}00169\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ m\_locationBox-\/>y1\ =\ min((\textcolor{keywordtype}{double})\doxymbox{\hyperlink{class_level_a64ac1a792e3476d67c2f3b6f9137428d}{Level::maxBuildHeight}},\ m\_locationBox-\/>y1\ );}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00171}00171\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00172}00172\ \textcolor{preprocessor}{\#ifdef\ \_DEBUG}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Applying\ schematic\ \%ls\ to\ chunk\ (\%d,\%d)\(\backslash\)n"{}},m\_schematicName.c\_str(),chunk-\/>\doxymbox{\hyperlink{class_level_chunk_ab97513901493932d99dc633b4cda0ca3}{x}},\ chunk-\/>\doxymbox{\hyperlink{class_level_chunk_a4ab41c303982875a736db12bfa6feb8f}{z}});}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00174}00174\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}Applying\ blocks\ and\ data"{}});}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ m\_totalBlocksChanged\ +=\ m\_schematic-\/>applyBlocksAndData(chunk,\ chunkBox,\ m\_locationBox,\ m\_rotation);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00178}00178\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ the\ tileEntities}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}Applying\ tile\ entities"{}});}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ m\_schematic-\/>applyTileEntities(chunk,\ chunkBox,\ m\_locationBox,\ m\_rotation);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00182}00182\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ This\ does\ not\ take\ into\ account\ things\ that\ go\ outside\ the\ bounds\ of\ the\ world}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ targetBlocks\ =\ (m\_locationBox-\/>x1\ -\/\ m\_locationBox-\/>x0)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ *\ (m\_locationBox-\/>y1\ -\/\ m\_locationBox-\/>y0)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ *\ (m\_locationBox-\/>z1\ -\/\ m\_locationBox-\/>z0);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (m\_totalBlocksChanged\ ==\ targetBlocks)\ \&\&\ (m\_totalBlocksChangedLighting\ ==\ targetBlocks)\ )}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ m\_completed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//m\_levelGenOptions-\/>releaseSchematicFile(m\_schematicName);}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//m\_schematic\ =\ nullptr;}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00194}00194\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00195}00195\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00196}00196\ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00198}\doxymbox{\hyperlink{class_apply_schematic_rule_definition_a51e917853a89e54844791b53b75ded8f}{00198}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_apply_schematic_rule_definition_a51e917853a89e54844791b53b75ded8f}{ApplySchematicRuleDefinition::processSchematicLighting}}(\doxymbox{\hyperlink{class_a_a_b_b}{AABB}}\ *chunkBox,\ \doxymbox{\hyperlink{class_level_chunk}{LevelChunk}}\ *chunk)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00199}00199\ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00200}00200\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_completed\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00201}00201\ \ \ \ \ \textcolor{keywordflow}{if}(chunk-\/>\doxymbox{\hyperlink{class_level_chunk_ac2d60c70188a5e737c1c6da7cba696b2}{level}}-\/>\doxymbox{\hyperlink{class_level_a9441ff9a437f179f29bbe2d3706fdea5}{dimension}}-\/>\doxymbox{\hyperlink{class_dimension_ab2a8a3e455fe5b4bcc3bdd93920352b0}{id}}\ !=\ m\_dimension)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00203}00203\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\ \textcolor{stringliteral}{"{}Processing\ ApplySchematicRuleDefinition\ (lighting)"{}});}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00204}00204\ \ \ \ \ \textcolor{keywordflow}{if}(m\_schematic\ ==\ \textcolor{keyword}{nullptr})\ m\_schematic\ =\ m\_levelGenOptions-\/>getSchematicFile(m\_schematicName);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00206}00206\ \ \ \ \ \textcolor{keywordflow}{if}(m\_locationBox\ ==\ \textcolor{keyword}{nullptr})\ updateLocationBox();}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00207}00207\ \ \ \ \ \textcolor{keywordflow}{if}(chunkBox-\/>\doxymbox{\hyperlink{class_a_a_b_b_ac69d6614bcfef028dc1a80d0d7f504cb}{intersects}}(\ m\_locationBox\ ))}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00208}00208\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ m\_locationBox-\/>y1\ =\ min((\textcolor{keywordtype}{double})\doxymbox{\hyperlink{class_level_a64ac1a792e3476d67c2f3b6f9137428d}{Level::maxBuildHeight}},\ m\_locationBox-\/>y1\ );}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00211}00211\ \textcolor{preprocessor}{\#ifdef\ \_DEBUG}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Applying\ schematic\ \%ls\ to\ chunk\ (\%d,\%d)\(\backslash\)n"{}},m\_schematicName.c\_str(),chunk-\/>\doxymbox{\hyperlink{class_level_chunk_ab97513901493932d99dc633b4cda0ca3}{x}},\ chunk-\/>\doxymbox{\hyperlink{class_level_chunk_a4ab41c303982875a736db12bfa6feb8f}{z}});}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00213}00213\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_af1347072c4bd43b3f473d3297c57f39f}{PIXBeginNamedEvent}}(0,\textcolor{stringliteral}{"{}Patching\ lighting"{}});}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ m\_totalBlocksChangedLighting\ +=\ m\_schematic-\/>applyLighting(chunk,\ chunkBox,\ m\_locationBox,\ m\_rotation);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00218}00218\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO\ This\ does\ not\ take\ into\ account\ things\ that\ go\ outside\ the\ bounds\ of\ the\ world}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ targetBlocks\ =\ (m\_locationBox-\/>x1\ -\/\ m\_locationBox-\/>x0)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ *\ (m\_locationBox-\/>y1\ -\/\ m\_locationBox-\/>y0)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ *\ (m\_locationBox-\/>z1\ -\/\ m\_locationBox-\/>z0);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ (m\_totalBlocksChanged\ ==\ targetBlocks)\ \&\&\ (m\_totalBlocksChangedLighting\ ==\ targetBlocks)\ )}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ m\_completed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//m\_levelGenOptions-\/>releaseSchematicFile(m\_schematicName);}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//m\_schematic\ =\ nullptr;}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00228}00228\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00229}00229\ \ \ \ \ \doxymbox{\hyperlink{_extrax64_stubs_8cpp_a30393bcf2da508a558d6b1b6933eae54}{PIXEndNamedEvent}}();}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00230}00230\ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00231}00231\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00232}\doxymbox{\hyperlink{class_apply_schematic_rule_definition_a8be1f3d9a9b7c3a6717e353684640fce}{00232}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_apply_schematic_rule_definition_a8be1f3d9a9b7c3a6717e353684640fce}{ApplySchematicRuleDefinition::checkIntersects}}(\textcolor{keywordtype}{int}\ x0,\ \textcolor{keywordtype}{int}\ y0,\ \textcolor{keywordtype}{int}\ z0,\ \textcolor{keywordtype}{int}\ x1,\ \textcolor{keywordtype}{int}\ y1,\ \textcolor{keywordtype}{int}\ z1)}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00233}00233\ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00234}00234\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_locationBox\ ==\ \textcolor{keyword}{nullptr}\ )\ updateLocationBox();}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00235}00235\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_locationBox-\/>intersects(x0,y0,z0,x1,y1,z1);}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00236}00236\ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00238}\doxymbox{\hyperlink{class_apply_schematic_rule_definition_adcb4ae480a07fb0864c5c86f0c5c558f}{00238}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_apply_schematic_rule_definition_adcb4ae480a07fb0864c5c86f0c5c558f}{ApplySchematicRuleDefinition::getMinY}}()}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00239}00239\ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00240}00240\ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_locationBox\ ==\ \textcolor{keyword}{nullptr}\ )\ updateLocationBox();}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00241}00241\ \ \ \ \ \textcolor{keywordflow}{return}\ m\_locationBox-\/>y0;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00242}00242\ \}}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00244}\doxymbox{\hyperlink{class_apply_schematic_rule_definition_a2538cfcb0bf178274cd147d0bf565db1}{00244}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_apply_schematic_rule_definition_a2538cfcb0bf178274cd147d0bf565db1}{ApplySchematicRuleDefinition::reset}}()}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00245}00245\ \{}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00246}00246\ \ \ \ \ m\_totalBlocksChanged\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00247}00247\ \ \ \ \ m\_totalBlocksChangedLighting\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00248}00248\ \ \ \ \ m\_completed\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_apply_schematic_rule_definition_8cpp_source_l00249}00249\ \}}
+
+\end{DoxyCode}

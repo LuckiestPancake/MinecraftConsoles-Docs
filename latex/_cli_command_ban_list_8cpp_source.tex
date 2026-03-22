@@ -1,0 +1,138 @@
+\doxysection{Cli\+Command\+Ban\+List.\+cpp}
+\hypertarget{_cli_command_ban_list_8cpp_source}{}\label{_cli_command_ban_list_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/Console/commands/ban-\/list/CliCommandBanList.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/Console/commands/ban-\/list/CliCommandBanList.cpp}}
+\doxymbox{\hyperlink{_cli_command_ban_list_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_cli_command_ban_list_8h}{CliCommandBanList.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_cli_engine_8h}{..\(\backslash\)..\(\backslash\)ServerCliEngine.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_cli_parser_8h}{..\(\backslash\)..\(\backslash\)ServerCliParser.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_access_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Access\(\backslash\)Access.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_utils_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Common\(\backslash\)StringUtils.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00010}00010\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00012}00012\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_server_runtime}{ServerRuntime}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00013}00013\ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00014}00014\ \ \ \ \ \textcolor{keyword}{namespace}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00015}00015\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00016}00016\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ AppendUniqueText(\textcolor{keyword}{const}\ std::string\ \&text,\ std::vector<std::string>\ *out)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00017}00017\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00018}00018\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (out\ ==\ \textcolor{keyword}{nullptr}\ ||\ text.empty())}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00019}00019\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00020}00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00021}00021\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00023}00023\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::find(out-\/>begin(),\ out-\/>end(),\ text)\ ==\ out-\/>end())}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00024}00024\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00025}00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out-\/>push\_back(text);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00027}00027\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00029}00029\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ CompareLowerAscii(\textcolor{keyword}{const}\ std::string\ \&left,\ \textcolor{keyword}{const}\ std::string\ \&right)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00030}00030\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a5659674ecf09348686afcee671932cce}{StringUtils::ToLowerAscii}}(left)\ <\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a5659674ecf09348686afcee671932cce}{StringUtils::ToLowerAscii}}(right);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ LogBannedPlayers(\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine}{ServerCliEngine}}\ *engine)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00035}00035\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<ServerRuntime::Access::BannedPlayerEntry>\ entries;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a1a6e96ad4c13538211472f0b13890a3b}{ServerRuntime::Access::SnapshotBannedPlayers}}(\&entries))}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>LogError(\textcolor{stringliteral}{"{}Failed\ to\ read\ banned\ players."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::string>\ names;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&entry\ :\ entries)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ AppendUniqueText(entry.name,\ \&names);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ std::sort(names.begin(),\ names.end(),\ CompareLowerAscii);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>LogInfo(\textcolor{stringliteral}{"{}There\ are\ "{}}\ +\ std::to\_string(names.size())\ +\ \textcolor{stringliteral}{"{}\ banned\ player(s)."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&name\ :\ names)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>LogInfo(\textcolor{stringliteral}{"{}\ \ "{}}\ +\ name);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00058}00058\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ LogBannedIps(\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine}{ServerCliEngine}}\ *engine)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<ServerRuntime::Access::BannedIpEntry>\ entries;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_ae62f8ae268e16cbc8c2233fad46e24ed}{ServerRuntime::Access::SnapshotBannedIps}}(\&entries))}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>LogError(\textcolor{stringliteral}{"{}Failed\ to\ read\ banned\ IPs."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::string>\ ips;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&entry\ :\ entries)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ AppendUniqueText(entry.ip,\ \&ips);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ std::sort(ips.begin(),\ ips.end(),\ CompareLowerAscii);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>LogInfo(\textcolor{stringliteral}{"{}There\ are\ "{}}\ +\ std::to\_string(ips.size())\ +\ \textcolor{stringliteral}{"{}\ banned\ IP(s)."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&ip\ :\ ips)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>LogInfo(\textcolor{stringliteral}{"{}\ \ "{}}\ +\ ip);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ LogAllBans(\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine}{ServerCliEngine}}\ *engine)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00083}00083\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!LogBannedPlayers(engine))}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Always\ print\ the\ IP\ snapshot\ as\ well\ so\ ban-\/ip\ entries\ are\ visible\ from\ the\ same\ command\ output.}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ LogBannedIps(engine);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00092}00092\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00094}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_list_a4873cfeb4f8c6012ae36012cb7a9a3c4}{00094}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_list_a4873cfeb4f8c6012ae36012cb7a9a3c4}{CliCommandBanList::Name}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00095}00095\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}banlist"{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00097}00097\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00099}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_list_a1b6ba38f9e6c22706c0690f9e5005734}{00099}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_list_a1b6ba38f9e6c22706c0690f9e5005734}{CliCommandBanList::Usage}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00100}00100\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}banlist"{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00102}00102\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00104}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_list_a952f1e221c2e989a74f6976a0daae735}{00104}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_list_a952f1e221c2e989a74f6976a0daae735}{CliCommandBanList::Description}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00105}00105\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}List\ all\ banned\ players\ and\ IPs."{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00107}00107\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00113}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_list_aeeb792080417c3ec5dc03ae03031ca28}{00113}}\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_list_aeeb792080417c3ec5dc03ae03031ca28}{CliCommandBanList::Execute}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_parsed_line}{ServerCliParsedLine}}\ \&\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}},\ \doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine}{ServerCliEngine}}\ *engine)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00114}00114\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens.size()\ >\ 1)}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(\textcolor{stringliteral}{"{}Usage:\ banlist"{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00119}00119\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00120}00120\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{namespace_server_runtime_1_1_access_a451d1c19b25ba7c801edebf805d1bb5e}{ServerRuntime::Access::IsInitialized}}())}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00121}00121\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(\textcolor{stringliteral}{"{}Access\ manager\ is\ not\ initialized."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ LogAllBans(engine);}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00127}00127\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00129}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_list_a715c85c54fb29fdff8802e4380eed05f}{00129}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_ban_list_a715c85c54fb29fdff8802e4380eed05f}{CliCommandBanList::Complete}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context}{ServerCliCompletionContext}}\ \&context,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine}{ServerCliEngine}}\ *engine,\ std::vector<std::string>\ *out)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00130}00130\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}})context;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}})engine;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}})out;}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00134}00134\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00135}00135\ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_ban_list_8cpp_source_l00136}00136\ }
+
+\end{DoxyCode}

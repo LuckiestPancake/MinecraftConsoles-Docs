@@ -1,0 +1,28 @@
+var class_damage_source =
+[
+    [ "DamageSource", "class_damage_source.html#aea89050f0cbc243037e19a2447678c9e", null ],
+    [ "~DamageSource", "class_damage_source.html#ab39a728dea288ded0bb3d210e4414167", null ],
+    [ "bypassArmor", "class_damage_source.html#a816edc46b4926c329a7516e489749586", null ],
+    [ "bypassInvul", "class_damage_source.html#aa33e273195f9dc05967a943dd41be064", null ],
+    [ "copy", "class_damage_source.html#a3f23ed454c6022a15abd1bc90caa8bdc", null ],
+    [ "equals", "class_damage_source.html#a81f91cc0a545e6aee9af291f3e3c2d1e", null ],
+    [ "getDeathMessagePacket", "class_damage_source.html#a5a620d8fe276eda5e0b5222b68a12afe", null ],
+    [ "getDirectEntity", "class_damage_source.html#ac3964a455e54b586f0a056412d078639", null ],
+    [ "getEntity", "class_damage_source.html#a21d279882a9f658847e0a3fba91c1a0d", null ],
+    [ "getFoodExhaustion", "class_damage_source.html#aa76fd5fa168cd3f39d9df5de5a2ef5e7", null ],
+    [ "getMsgId", "class_damage_source.html#aa594f40bd09bdf1d2ebf77e34f6d2d15", null ],
+    [ "isBypassArmor", "class_damage_source.html#afda851cbea6ee11645aceb3a685af9aa", null ],
+    [ "isBypassInvul", "class_damage_source.html#a44874724c2a220e3f8c9b2c0ff28d0c0", null ],
+    [ "isExplosion", "class_damage_source.html#a3ceecb070d77bf3521e91e31aa8728fe", null ],
+    [ "isFire", "class_damage_source.html#ab61e105946a25f18c043ba3bad000263", null ],
+    [ "isMagic", "class_damage_source.html#a5c313628b4a35bd14b0a3b55586360f9", null ],
+    [ "isProjectile", "class_damage_source.html#aed08bae509b77b40766dc65e25cfc92a", null ],
+    [ "scalesWithDifficulty", "class_damage_source.html#ab0f4380ec41a1795012d1f1bcb426a1a", null ],
+    [ "setExplosion", "class_damage_source.html#aa93ee44fd36e42f87a66e72475082ebb", null ],
+    [ "setIsFire", "class_damage_source.html#aed0dc5aa8d86852ee662161f0c1d2f7d", null ],
+    [ "setMagic", "class_damage_source.html#aff72506eabc8fdb2820b62067ba4007d", null ],
+    [ "setProjectile", "class_damage_source.html#ae52d09d728ddaa6973e373b0a2791687", null ],
+    [ "setScalesWithDifficulty", "class_damage_source.html#af62b91c88534dbbd1c10f66cb4479361", null ],
+    [ "m_msgId", "class_damage_source.html#ad0df26c55216706290b8ad0d869f1b6d", null ],
+    [ "m_msgWithItemId", "class_damage_source.html#abb97befd9e79d82664e2d622586bd316", null ]
+];

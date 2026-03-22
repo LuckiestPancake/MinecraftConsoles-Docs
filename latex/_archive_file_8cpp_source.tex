@@ -1,0 +1,217 @@
+\doxysection{Archive\+File.\+cpp}
+\hypertarget{_archive_file_8cpp_source}{}\label{_archive_file_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/ArchiveFile.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/ArchiveFile.cpp}}
+\doxymbox{\hyperlink{_archive_file_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_8_client_2stdafx_8h}{stdafx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_helpers_8h}{..\(\backslash\)Minecraft.World\(\backslash\)StringHelpers.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{compression_8h}{..\(\backslash\)Minecraft.World\(\backslash\)compression.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_archive_file_8h}{ArchiveFile.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00008}\doxymbox{\hyperlink{class_archive_file_afb8398fcb2e91dc707d1cc2efb20bc4f}{00008}}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_archive_file_afb8398fcb2e91dc707d1cc2efb20bc4f}{ArchiveFile::\_readHeader}}(\doxymbox{\hyperlink{class_data_input_stream}{DataInputStream}}\ *dis)}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00009}00009\ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00010}00010\ \ \ \ \ \textcolor{keywordtype}{int}\ numberOfFiles\ =\ dis-\/>\doxymbox{\hyperlink{class_data_input_stream_ac8fc70aad0ec1c9b1a79e8f24b037c5e}{readInt}}();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00012}00012\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ =\ 0;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}\ <\ numberOfFiles;\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a4db06351a4266f9d8068d0417d49db5e}{i}}++)}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00013}00013\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00014}00014\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_archive_file_ad2547f42690a2d799a20c9c6fbb3ae8d}{MetaData}}\ *meta\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_archive_file_ad2547f42690a2d799a20c9c6fbb3ae8d}{MetaData}}();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00015}00015\ \ \ \ \ \ \ \ \ meta-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_a6ad9e2993f77e93896d2d12260b05f4e}{filename}}\ =\ dis-\/>\doxymbox{\hyperlink{class_data_input_stream_a6aa44eaa808fa77b6a7047c1b4c69044}{readUTF}}();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00016}00016\ \ \ \ \ \ \ \ \ meta-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_a9a2c9a95020cfd0c0c0b9507e297838f}{ptr}}\ =\ dis-\/>\doxymbox{\hyperlink{class_data_input_stream_ac8fc70aad0ec1c9b1a79e8f24b037c5e}{readInt}}();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00017}00017\ \ \ \ \ \ \ \ \ meta-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_adad614094053697e7f3b82e8f1de8658}{filesize}}\ =\ dis-\/>\doxymbox{\hyperlink{class_data_input_stream_ac8fc70aad0ec1c9b1a79e8f24b037c5e}{readInt}}();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Filenames\ preceeded\ by\ an\ asterisk\ have\ been\ compressed.}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00020}00020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (meta-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_a6ad9e2993f77e93896d2d12260b05f4e}{filename}}[0]\ ==\ \textcolor{charliteral}{'*'})}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00021}00021\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00022}00022\ \ \ \ \ \ \ \ \ \ \ \ \ meta-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_a6ad9e2993f77e93896d2d12260b05f4e}{filename}}\ =\ meta-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_a6ad9e2993f77e93896d2d12260b05f4e}{filename}}.substr(1);}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00023}00023\ \ \ \ \ \ \ \ \ \ \ \ \ meta-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_a3c0d65ebb11b69cf73397005b02768e2}{isCompressed}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00024}00024\ \ \ \ \ \ \ \ \ \}\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00025}00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ meta-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_a3c0d65ebb11b69cf73397005b02768e2}{isCompressed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00027}00027\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_archive_file_ae36be16f331e4a4a4fc02867cfef6629}{m\_index}}.insert(\ pair<wstring,PMetaData>(meta-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_a6ad9e2993f77e93896d2d12260b05f4e}{filename}},meta)\ );}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00028}00028\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00029}00029\ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00031}\doxymbox{\hyperlink{class_archive_file_a133742f860e6514677a1fb5fd8148ea5}{00031}}\ \doxymbox{\hyperlink{class_archive_file_a133742f860e6514677a1fb5fd8148ea5}{ArchiveFile::ArchiveFile}}(\doxymbox{\hyperlink{class_file}{File}}\ file)}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00032}00032\ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00033}00033\ \ \ \ \ \doxymbox{\hyperlink{class_archive_file_a880a12aca997d4a4fec21c84912a6cc1}{m\_cachedData}}\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00034}00034\ \ \ \ \ \doxymbox{\hyperlink{class_archive_file_a4acbb72fb57ae91e94600f01e3f99c3e}{m\_sourcefile}}\ =\ file;}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00035}00035\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Loading\ archive\ file...\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00036}00036\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00037}00037\ \ \ \ \ \textcolor{keywordtype}{char}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}[256];}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00038}00038\ \ \ \ \ wcstombs(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\ file.\doxymbox{\hyperlink{class_file_ad334c95637801a1587b4a4e52555ce1d}{getPath}}().c\_str(),\ 256);}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00039}00039\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}archive\ file\ -\/\ \%s\(\backslash\)n"{}},\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}});}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00040}00040\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00042}00042\ \ \ \ \ \textcolor{keywordflow}{if}(!file.\doxymbox{\hyperlink{class_file_a53118ce36851cb1c6845a82f915fd8ba}{exists}}())}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00043}00043\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Failed\ to\ load\ archive\ file!\(\backslash\)n"{}});\textcolor{comment}{//,file.getPath());}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.FatalLoadError();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00046}00046\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00048}00048\ \ \ \ \ \doxymbox{\hyperlink{class_file_input_stream}{FileInputStream}}\ fis(file);}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00050}00050\ \textcolor{preprocessor}{\#if\ defined\ \_XBOX\_ONE\ ||\ defined\ \_\_ORBIS\_\_\ ||\ defined\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00051}00051\ \ \ \ \ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ readArray(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\textcolor{keyword}{>}(file.\doxymbox{\hyperlink{class_file_adcefaf14bf9aadaabc46e9c001b0ef33}{length}}()));}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00052}00052\ \ \ \ \ fis.\doxymbox{\hyperlink{class_file_input_stream_acccb98f63b084192fe437a5aaa59c5ac}{read}}(readArray,0,file.\doxymbox{\hyperlink{class_file_adcefaf14bf9aadaabc46e9c001b0ef33}{length}}());}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00054}00054\ \ \ \ \ \doxymbox{\hyperlink{class_byte_array_input_stream}{ByteArrayInputStream}}\ bais(readArray);}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00055}00055\ \ \ \ \ \doxymbox{\hyperlink{class_data_input_stream}{DataInputStream}}\ dis(\&bais);}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00057}00057\ \ \ \ \ \doxymbox{\hyperlink{class_archive_file_a880a12aca997d4a4fec21c84912a6cc1}{m\_cachedData}}\ =\ readArray.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}};}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00058}00058\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00059}00059\ \ \ \ \ \doxymbox{\hyperlink{class_data_input_stream}{DataInputStream}}\ dis(\&fis);}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00060}00060\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00062}00062\ \ \ \ \ \doxymbox{\hyperlink{class_archive_file_afb8398fcb2e91dc707d1cc2efb20bc4f}{\_readHeader}}(\&dis);}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00064}00064\ \ \ \ \ dis.\doxymbox{\hyperlink{class_data_input_stream_a6fb2cb9c2dfdaf89619e6a8266c2bbb0}{close}}();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00065}00065\ \ \ \ \ fis.\doxymbox{\hyperlink{class_file_input_stream_a55c7f51e43ea745054fbef93e16139d6}{close}}();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00066}00066\ \textcolor{preprocessor}{\#if\ defined\ \_XBOX\_ONE\ ||\ defined\ \_\_ORBIS\_\_\ ||\ defined\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00067}00067\ \ \ \ \ bais.\doxymbox{\hyperlink{class_byte_array_input_stream_a78c7871329cb078287eb5eaf8b90b2cb}{reset}}();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00068}00068\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00069}00069\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Finished\ loading\ archive\ file\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00070}00070\ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00072}\doxymbox{\hyperlink{class_archive_file_ac95115f4fcf771eafc22443a25363e2f}{00072}}\ \doxymbox{\hyperlink{class_archive_file_ac95115f4fcf771eafc22443a25363e2f}{ArchiveFile::\string~ArchiveFile}}()}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00073}00073\ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00074}00074\ \ \ \ \ \textcolor{keyword}{delete}\ \doxymbox{\hyperlink{class_archive_file_a880a12aca997d4a4fec21c84912a6cc1}{m\_cachedData}};}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00075}00075\ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00077}\doxymbox{\hyperlink{class_archive_file_a6635b21bfe09d4298522e8372ef45472}{00077}}\ vector<wstring>\ *\doxymbox{\hyperlink{class_archive_file_a6635b21bfe09d4298522e8372ef45472}{ArchiveFile::getFileList}}()}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00078}00078\ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00079}00079\ \ \ \ \ vector<wstring>\ *out\ =\ \textcolor{keyword}{new}\ vector<wstring>();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00080}00080\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{for}\ (\ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ it\ :\ \doxymbox{\hyperlink{class_archive_file_ae36be16f331e4a4a4fc02867cfef6629}{m\_index}}\ )}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00082}00082\ \ \ \ \ \ \ \ \ out-\/>push\_back(\ it.first\ );}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00084}00084\ \ \ \ \ \textcolor{keywordflow}{return}\ out;}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00085}00085\ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00087}\doxymbox{\hyperlink{class_archive_file_a89c41c8493a24ec9cfca8e5cd262aa01}{00087}}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_archive_file_a89c41c8493a24ec9cfca8e5cd262aa01}{ArchiveFile::hasFile}}(\textcolor{keyword}{const}\ wstring\ \&\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_ab3dcfdc100476f46b5ef0dd1dbb3337b}{filename}})}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00088}00088\ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00089}00089\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_archive_file_ae36be16f331e4a4a4fc02867cfef6629}{m\_index}}.find(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_ab3dcfdc100476f46b5ef0dd1dbb3337b}{filename}})\ !=\ \doxymbox{\hyperlink{class_archive_file_ae36be16f331e4a4a4fc02867cfef6629}{m\_index}}.end();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00090}00090\ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00092}\doxymbox{\hyperlink{class_archive_file_adcee8653e9b57e0bb63de50f232ced8d}{00092}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_archive_file_adcee8653e9b57e0bb63de50f232ced8d}{ArchiveFile::getFileSize}}(\textcolor{keyword}{const}\ wstring\ \&\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_ab3dcfdc100476f46b5ef0dd1dbb3337b}{filename}})}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00093}00093\ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00094}00094\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{class_archive_file_a89c41c8493a24ec9cfca8e5cd262aa01}{hasFile}}(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_ab3dcfdc100476f46b5ef0dd1dbb3337b}{filename}})\ ?\ \doxymbox{\hyperlink{class_archive_file_ae36be16f331e4a4a4fc02867cfef6629}{m\_index}}.at(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_ab3dcfdc100476f46b5ef0dd1dbb3337b}{filename}})-\/>filesize\ :\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00095}00095\ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00097}\doxymbox{\hyperlink{class_archive_file_a1e8d478e63513a3a99ecf66c39701e46}{00097}}\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ \doxymbox{\hyperlink{class_archive_file_a1e8d478e63513a3a99ecf66c39701e46}{ArchiveFile::getFile}}(\textcolor{keyword}{const}\ wstring\ \&\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_ab3dcfdc100476f46b5ef0dd1dbb3337b}{filename}})}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00098}00098\ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00099}00099\ \ \ \ \ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}\ out;}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00100}00100\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ \doxymbox{\hyperlink{class_archive_file_ae36be16f331e4a4a4fc02867cfef6629}{m\_index}}.find(\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_ab3dcfdc100476f46b5ef0dd1dbb3337b}{filename}});}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00102}00102\ \ \ \ \ \textcolor{keywordflow}{if}(it\ ==\ \doxymbox{\hyperlink{class_archive_file_ae36be16f331e4a4a4fc02867cfef6629}{m\_index}}.end())}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00103}00103\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Couldn't\ find\ file\ in\ archive\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Failed\ to\ find\ file\ '\%ls'\ in\ archive\(\backslash\)n"{}},\ \doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_ab3dcfdc100476f46b5ef0dd1dbb3337b}{filename}}.c\_str());}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00106}00106\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a836a58a917bc9dcc3256ceecb2717746}{\_\_debugbreak}}();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00108}00108\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.FatalLoadError();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00110}00110\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00111}00111\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00112}00112\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_archive_file_a9614ad4b2c1dd4e0915a593685a30664}{PMetaData}}\ data\ =\ it-\/>second;}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00115}00115\ \textcolor{preprocessor}{\#if\ defined\ \_XBOX\_ONE\ ||\ defined\ \_\_ORBIS\_\_\ ||\ defined\ \_WINDOWS64}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ out\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}(data-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_adad614094053697e7f3b82e8f1de8658}{filesize}}\ );}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00118}00118\ \ \ \ \ \ \ \ \ memcpy(\ out.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}},\ \doxymbox{\hyperlink{class_archive_file_a880a12aca997d4a4fec21c84912a6cc1}{m\_cachedData}}\ +\ data-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_a9a2c9a95020cfd0c0c0b9507e297838f}{ptr}},\ data-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_adad614094053697e7f3b82e8f1de8658}{filesize}}\ );}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00119}00119\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00121}00121\ \textcolor{preprocessor}{\#ifdef\ \_UNICODE}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00122}00122\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ hfile\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(\ \ \doxymbox{\hyperlink{class_archive_file_a4acbb72fb57ae91e94600f01e3f99c3e}{m\_sourcefile}}.getPath().c\_str(),\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ 0,}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a5047b61427c18bfd06bf21863306bd99}{OPEN\_EXISTING}},}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}},}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{nullptr}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00130}00130\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00131}00131\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Createfile\ archive\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00132}00132\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_aa8c0374618b33785ccb02f74bcfebc46}{HANDLE}}\ hfile\ =\ \doxymbox{\hyperlink{_orbis_stubs_8h_aecc8a7a9d9e24e9e1f82b5f76b3ea9da}{CreateFile}}(\ \ \doxymbox{\hyperlink{_string_helpers_8cpp_ab93c48c7e71b43540715af58c665d9db}{wstringtofilename}}(\doxymbox{\hyperlink{class_archive_file_a4acbb72fb57ae91e94600f01e3f99c3e}{m\_sourcefile}}.getPath()),\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a911c5eb0d303a067bfbf304139b90bec}{GENERIC\_READ}},}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ 0,}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00136}00136\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a5047b61427c18bfd06bf21863306bd99}{OPEN\_EXISTING}},}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00137}00137\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_ad4162fc04173d913c4a8c463aa93677a}{FILE\_ATTRIBUTE\_NORMAL}},}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00138}00138\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{nullptr}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00139}00139\ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00140}00140\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00142}00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hfile\ !=\ \doxymbox{\hyperlink{_orbis_stubs_8h_a5fdc7facea201bfce4ad308105f88d0c}{INVALID\_HANDLE\_VALUE}})}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00143}00143\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}hfile\ ok\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ ok\ =\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_aa9cb99a049eceed853344930ccf16e51}{SetFilePointer}}(\ \ hfile,}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_a9a2c9a95020cfd0c0c0b9507e297838f}{ptr}},}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{nullptr},}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8h_a1b6a16ca70fb99d4c13aeae1e7283680}{FILE\_BEGIN}}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ok\ !=\ \doxymbox{\hyperlink{_orbis_stubs_8h_a3242e600d18ba66007c0c24c04e701e2}{INVALID\_SET\_FILE\_POINTER}})}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a16ac278d310943f39816b8361f2dad64}{PBYTE}}\ \doxymbox{\hyperlink{_x_u_i___load_settings_8cpp_a78030e962cc00dba6915d328eb9146b7}{pbData}}\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{_orbis_types_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}[\ data-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_adad614094053697e7f3b82e8f1de8658}{filesize}}\ ];}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a798af1e30bc65f319c1a246cecf59e39}{DWORD}}\ bytesRead\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a050c65e107f0c828f856a231f4b4e788}{BOOL}}\ bSuccess\ =\ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a0283336b536ee747a7b1cb7834a389ef}{ReadFile}}(\ \ \ hfile,}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\doxymbox{\hyperlink{_orbis_types_8h_ab064840df4ab5a8cf90ddb963f94de34}{LPVOID}})\ \doxymbox{\hyperlink{_x_u_i___load_settings_8cpp_a78030e962cc00dba6915d328eb9146b7}{pbData}},}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_adad614094053697e7f3b82e8f1de8658}{filesize}},}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&bytesRead,}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{nullptr}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(bSuccess==\doxymbox{\hyperlink{stb__vorbis_8h_aa93f0eb578d23995850d61f7d61c55c1}{FALSE}})}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.FatalLoadError();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(bytesRead\ ==\ data-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_adad614094053697e7f3b82e8f1de8658}{filesize}});}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out\ =\ \doxymbox{\hyperlink{_array_with_length_8h_a2600c105828ae40ae5dd37348e07f3a0}{byteArray}}(\doxymbox{\hyperlink{_x_u_i___load_settings_8cpp_a78030e962cc00dba6915d328eb9146b7}{pbData}},\ data-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_adad614094053697e7f3b82e8f1de8658}{filesize}});}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.FatalLoadError();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a235df26c9ee719cb6c07ee55252f512e}{CloseHandle}}(hfile);}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}bad\ hfile\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.FatalLoadError();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00182}00182\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Compressed\ filenames\ are\ preceeded\ with\ an\ asterisk.}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ data-\/>\doxymbox{\hyperlink{struct_archive_file_1_1___meta_data_a3c0d65ebb11b69cf73397005b02768e2}{isCompressed}}\ \&\&\ out.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}}\ !=\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 4J-\/JEV:}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00188}00188\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ *\ If\ a\ compressed\ file\ is\ accessed\ before\ compression\ object\ is\ }}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00189}00189\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ *\ initialized\ it\ will\ crash\ here\ (Compression::getCompression).}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00190}00190\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_byte_array_input_stream}{ByteArrayInputStream}}\ bais(out);}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_data_input_stream}{DataInputStream}}\ dis(\&bais);}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ decompressedSize\ =\ dis.\doxymbox{\hyperlink{class_data_input_stream_ac8fc70aad0ec1c9b1a79e8f24b037c5e}{readInt}}();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ dis.\doxymbox{\hyperlink{class_data_input_stream_a6fb2cb9c2dfdaf89619e6a8266c2bbb0}{close}}();}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a16ac278d310943f39816b8361f2dad64}{PBYTE}}\ uncompressedBuffer\ =\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{_orbis_types_8h_a4ae1dab0fb4b072a66584546209e7d58}{BYTE}}[decompressedSize];}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_compression_af6097d4899c0d4d82bc10d14af4a583c}{Compression::getCompression}}()-\/>\doxymbox{\hyperlink{class_compression_a0c391dcfa84c4cb37cfcb69e9c6d458f}{Decompress}}(uncompressedBuffer,\ \&decompressedSize,\ out.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}}+4,\ out.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}}-\/4);}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ []\ out.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}};}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ out.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}}\ =\ uncompressedBuffer;}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ out.\doxymbox{\hyperlink{classarray_with_length_a49e56a97a0205a1ca9bca7e2696d8346}{length}}\ =\ decompressedSize;}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00205}00205\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00206}00206\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_2_assert_2assert_8h_ad92c940e7f2ef0d078d9326e942518e5}{assert}}(out.\doxymbox{\hyperlink{classarray_with_length_a48cdbcea8394dd576c6c7246e524a155}{data}}\ !=\ \textcolor{keyword}{nullptr});\ \textcolor{comment}{//\ THERE\ IS\ NO\ FILE\ WITH\ THIS\ NAME!}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00209}00209\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00211}00211\ \ \ \ \ \textcolor{keywordflow}{return}\ out;}
+\DoxyCodeLine{\Hypertarget{_archive_file_8cpp_source_l00212}00212\ \}}
+
+\end{DoxyCode}

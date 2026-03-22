@@ -1,0 +1,352 @@
+\doxysection{Application\+View.\+cpp}
+\hypertarget{_application_view_8cpp_source}{}\label{_application_view_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Durango/ApplicationView.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Client/Durango/ApplicationView.cpp}}
+\doxymbox{\hyperlink{_application_view_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00001}00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00002}00002\ \textcolor{comment}{//\ ApplicationView.cpp\ -\/}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00003}00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_application_view_8h}{ApplicationView.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_minecraft_server_8h}{MinecraftServer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00009}00009\ \textcolor{keyword}{using\ namespace\ }Windows::Foundation;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00010}00010\ \textcolor{keyword}{using\ namespace\ }Windows::ApplicationModel;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00011}00011\ \textcolor{keyword}{using\ namespace\ }Windows::ApplicationModel::Core;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00012}00012\ \textcolor{keyword}{using\ namespace\ }Windows::ApplicationModel::Activation;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00013}00013\ \textcolor{keyword}{using\ namespace\ }Windows::UI::Core;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00015}00015\ ApplicationView::ApplicationView()}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00016}00016\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00017}00017\ \ \ \ \ m\_activationComplete\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00018}00018\ \ \ \ \ m\_windowClosed\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00019}00019\ \ \ \ \ m\_inviteProcessed\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00020}00020\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00022}\doxymbox{\hyperlink{_application_view_8cpp_a24937a3f24adde0c672498b5d75d8526}{00022}}\ XALLOC\_ATTRIBUTES\ \doxymbox{\hyperlink{_application_view_8cpp_a24937a3f24adde0c672498b5d75d8526}{ExpandAllocAttributes}}(\ \doxymbox{\hyperlink{no__sal2_8h_aa74f89aa7d942f4a79ea12d7c9b763ef}{\_In\_}}\ \doxymbox{\hyperlink{_orbis_types_8h_a809ea910d819a37d7d3e8866b0a7566d}{LONGLONG}}\ dwAttributes\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00023}00023\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00024}00024\ \ \ \ \ XALLOC\_ATTRIBUTES\ attr;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00025}00025\ \ \ \ \ attr\ =\ *\textcolor{keyword}{static\_cast<}XALLOC\_ATTRIBUTES\ *\textcolor{keyword}{>}(\&dwAttributes);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00026}00026\ \ \ \ \ \textcolor{keywordflow}{return}\ attr;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00027}00027\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00029}\doxymbox{\hyperlink{_application_view_8cpp_acd701ec6bd644f8cbef712234df48656}{00029}}\ \doxymbox{\hyperlink{_orbis_types_8h_af8429def935ee9a571d3e6dfffc3e790}{SIZE\_T}}\ \doxymbox{\hyperlink{_application_view_8cpp_acd701ec6bd644f8cbef712234df48656}{totalTracked}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00030}\doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{00030}}\ unordered\_map<uintptr\_t,\ SIZE\_T>\ \doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00031}00031\ \textcolor{keyword}{static}\ \textcolor{keyword}{volatile}\ \textcolor{keywordtype}{bool}\ memDump\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00032}00032\ \textcolor{keyword}{static}\ \textcolor{keyword}{volatile}\ \textcolor{keywordtype}{bool}\ memReset\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00033}00033\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ memDumpInit\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00034}00034\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{_orbis_stubs_8h_a18c881c9602dbf86a11ec558ec2cc990}{CRITICAL\_SECTION}}\ memTrackCS;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00035}00035\ \textcolor{keyword}{static}\ \textcolor{keyword}{volatile}\ \doxymbox{\hyperlink{_orbis_types_8h_af8429def935ee9a571d3e6dfffc3e790}{SIZE\_T}}\ memSizeComp\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00036}00036\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ lastTrackTime\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00038}\doxymbox{\hyperlink{_application_view_8cpp_a6ade434bad7fb9b0eddb01f3d92ed8ac}{00038}}\ \doxymbox{\hyperlink{_orbis_types_8h_a2b5e00c0c5a5aa5199ba9f28ec3e8caa}{PVOID}}\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9aa60e1ead64be77ad551e745cbfd4d3}{WINAPI}}\ \doxymbox{\hyperlink{_application_view_8cpp_a6ade434bad7fb9b0eddb01f3d92ed8ac}{XMemAllocLog}}(\ \doxymbox{\hyperlink{no__sal2_8h_aa74f89aa7d942f4a79ea12d7c9b763ef}{\_In\_}}\ \doxymbox{\hyperlink{_orbis_types_8h_af8429def935ee9a571d3e6dfffc3e790}{SIZE\_T}}\ dwSize,\ \doxymbox{\hyperlink{no__sal2_8h_aa74f89aa7d942f4a79ea12d7c9b763ef}{\_In\_}}\ \doxymbox{\hyperlink{_orbis_types_8h_a381e47badd0a9ffc674513b22ee90284}{ULONGLONG}}\ dwAttributes\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00039}00039\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00040}00040\ \ \ \ \ \textcolor{keywordflow}{if}(\ !memDumpInit\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00041}00041\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_af41f87535f6c7854166e69f18e0c123a}{InitializeCriticalSection}}(\&memTrackCS);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ memDumpInit\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00044}00044\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00046}00046\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a2b5e00c0c5a5aa5199ba9f28ec3e8caa}{PVOID}}\ \ \ \ \ \ \ \ \ \ \ result\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ XMemAllocDefault(dwSize,dwAttributes);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00047}00047\ \ \ \ \ XALLOC\_ATTRIBUTES\ expanded\_attributes\ =\ \doxymbox{\hyperlink{_application_view_8cpp_a24937a3f24adde0c672498b5d75d8526}{ExpandAllocAttributes}}(dwAttributes);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00048}00048\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&memTrackCS);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00049}00049\ \ \ \ \ \doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}}[(uintptr\_t)result]\ =\ dwSize;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00050}00050\ \ \ \ \ \doxymbox{\hyperlink{_application_view_8cpp_acd701ec6bd644f8cbef712234df48656}{totalTracked}}\ +=\ dwSize;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00051}00051\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&memTrackCS);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00052}00052\ \textcolor{comment}{//\ \ app.DebugPrintf("{}XMemAllocLog\ \%p,\ Size:\ \%d,\ AllocatorId:\ 0x\%02x,\ ObjectType:\ 0x\%04x,\ PageSize:\ \%d,\ Alignment:\ \%d,\ MemoryType:\ \%d\(\backslash\)n"{},\ result,\ dwSize,\ expanded\_attributes.s.dwAllocatorId,\ expanded\_attributes.s.dwObjectType,\ expanded\_attributes.s.dwPageSize,\ expanded\_attributes.s.dwAlignment,\ expanded\_attributes.s.dwMemoryType\ \ );}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00053}00053\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00054}00054\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00056}\doxymbox{\hyperlink{_application_view_8cpp_afc683c1637dc87779c874e18553a66bf}{00056}}\ \doxymbox{\hyperlink{_orbis_types_8h_a7f319bfc2492a2136964194204e7a8cf}{VOID}}\ \doxymbox{\hyperlink{_orbis_stubs_8h_a9aa60e1ead64be77ad551e745cbfd4d3}{WINAPI}}\ \doxymbox{\hyperlink{_application_view_8cpp_afc683c1637dc87779c874e18553a66bf}{XMemFreeLog}}(\ \doxymbox{\hyperlink{no__sal2_8h_aa74f89aa7d942f4a79ea12d7c9b763ef}{\_In\_}}\ \doxymbox{\hyperlink{_orbis_types_8h_a2b5e00c0c5a5aa5199ba9f28ec3e8caa}{PVOID}}\ lpAddress,\ \doxymbox{\hyperlink{no__sal2_8h_aa74f89aa7d942f4a79ea12d7c9b763ef}{\_In\_}}\ \doxymbox{\hyperlink{_orbis_types_8h_a381e47badd0a9ffc674513b22ee90284}{ULONGLONG}}\ dwAttributes\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00057}00057\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00058}00058\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a48ebb92bfa432e6fbff532132172c323}{EnterCriticalSection}}(\&memTrackCS);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00059}00059\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ \doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}}.find((uintptr\_t)lpAddress);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00060}00060\ \ \ \ \ \textcolor{keywordflow}{if}(\ it\ !=\ \doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}}.end()\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00061}00061\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_application_view_8cpp_acd701ec6bd644f8cbef712234df48656}{totalTracked}}\ -\/=\ it-\/>second;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}}.erase(it);\ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00064}00064\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00065}00065\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a24da27eae2581fa17828580fb9ccc4d6}{LeaveCriticalSection}}(\&memTrackCS);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00066}00066\ \ \ \ \ XALLOC\_ATTRIBUTES\ expanded\_attributes\ =\ \doxymbox{\hyperlink{_application_view_8cpp_a24937a3f24adde0c672498b5d75d8526}{ExpandAllocAttributes}}(dwAttributes);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00067}00067\ \textcolor{comment}{//\ \ app.DebugPrintf("{}XMemFreeLog\ \%p,\ AllocatorId:\ 0x\%02x,\ ObjectType:\ 0x\%04x,\ PageSize:\ \%d,\ Alignment:\ \%d,\ MemoryType:\ \%d\(\backslash\)n"{},\ lpAddress,\ expanded\_attributes.s.dwAllocatorId,\ expanded\_attributes.s.dwObjectType,\ expanded\_attributes.s.dwPageSize,\ expanded\_attributes.s.dwAlignment,\ expanded\_attributes.s.dwMemoryType\ \ );}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00068}00068\ \ \ \ \ XMemFreeDefault(lpAddress,dwAttributes);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00070}00070\ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ currentTime\ =\ System::currentTimeMillis();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00071}00071\ \ \ \ \ \textcolor{keywordflow}{if}(\ (\ currentTime\ -\/\ lastTrackTime\ )\ >\ 1000\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00072}00072\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00073}00073\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Total\ memory\ tracked:\ \%d\(\backslash\)n"{}},\ \doxymbox{\hyperlink{_application_view_8cpp_acd701ec6bd644f8cbef712234df48656}{totalTracked}});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ lastTrackTime\ =\ currentTime;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00075}00075\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{if}(\ memReset\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00078}00078\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}}.clear();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00080}00080\ \ \ \ \ \ \ \ \ memReset\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00081}00081\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_application_view_8cpp_acd701ec6bd644f8cbef712234df48656}{totalTracked}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00082}00082\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00084}00084\ \ \ \ \ \textcolor{keywordflow}{if}(\ memDump\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00085}00085\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keyword}{auto}\ it\ =\ \doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}}.begin();\ it\ !=\ \doxymbox{\hyperlink{_application_view_8cpp_a6286be3ee1e47f9fc5a007015068f088}{tracker}}.end();\ it++\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}0x\%x\ :\ \%d\(\backslash\)n"{}},it-\/>first,it-\/>second);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00090}00090\ \ \ \ \ \ \ \ \ memDump\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00091}00091\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00092}00092\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00094}00094\ \textcolor{comment}{//\ Called\ by\ the\ system.\ \ Perform\ application\ initialization\ here,}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00095}00095\ \textcolor{comment}{//\ hooking\ application\ wide\ events,\ etc.}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00096}00096\ \textcolor{keywordtype}{void}\ ApplicationView::Initialize(CoreApplicationView\string^\ applicationView)}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00097}00097\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00098}00098\ \textcolor{comment}{//\ \ XMemSetAllocationHooks(\ \&XMemAllocLog,\ \&XMemFreeLog\ );}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00099}00099\ \ \ \ \ applicationView-\/>Activated\ +=\ ref\ \textcolor{keyword}{new}\ TypedEventHandler<CoreApplicationView\string^,\ IActivatedEventArgs\string^>(\textcolor{keyword}{this},\ \&ApplicationView::OnActivated);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00101}00101\ \ \ \ \ CoreApplication::Suspending\ +=\ ref\ \textcolor{keyword}{new}\ EventHandler<SuspendingEventArgs\string^>(\textcolor{keyword}{this},\ \&ApplicationView::OnSuspending);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00103}00103\ \ \ \ \ CoreApplication::Resuming\ +=\ ref\ \textcolor{keyword}{new}\ EventHandler<Platform::Object\string^>(\textcolor{keyword}{this},\ \&ApplicationView::OnResuming);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00105}00105\ \ \ \ \ CoreApplication::ResourceAvailabilityChanged\ +=\ ref\ \textcolor{keyword}{new}\ EventHandler<\ Platform::Object\string^\ >(\ \textcolor{keyword}{this},\ \&ApplicationView::OnResourceAvailabilityChanged\ );}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00106}00106\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00108}00108\ \textcolor{comment}{//\ Called\ when\ we\ are\ provided\ a\ window.}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00109}00109\ \textcolor{keywordtype}{void}\ ApplicationView::SetWindow(CoreWindow\string^\ window)}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00110}00110\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00111}00111\ \ \ \ \ window-\/>Closed\ +=\ ref\ \textcolor{keyword}{new}\ TypedEventHandler<CoreWindow\string^,\ CoreWindowEventArgs\string^>(\textcolor{keyword}{this},\ \&ApplicationView::OnWindowClosed);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00112}00112\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00114}00114\ \textcolor{comment}{//\ The\ purpose\ of\ this\ method\ is\ to\ get\ the\ application\ entry\ point.}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00115}00115\ \textcolor{keywordtype}{void}\ ApplicationView::Load(Platform::String\string^\ entryPoint)}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00116}00116\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00117}00117\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00119}00119\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_application_view_8cpp_abc1c9b12b604784097c750648fb58f15}{InitializeDurango}}(Windows::UI::Core::CoreWindow\string^\ window);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00120}00120\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_application_view_8cpp_ac5b3b5ea307527a8d3c5a9c502290b21}{oldWinMainInit}}();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00121}00121\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{_application_view_8cpp_ae22160d23f107a797ca4c58d9c086f85}{oldWinMainTick}}();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00123}00123\ \textcolor{comment}{//\ Called\ by\ the\ system\ after\ initialization\ is\ complete.\ \ This}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00124}00124\ \textcolor{comment}{//\ implements\ the\ traditional\ game\ loop}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00125}00125\ \textcolor{keywordtype}{void}\ ApplicationView::Run()}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00126}00126\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00127}00127\ \textcolor{comment}{//\ \ \ \ m\_game\ =\ ref\ new\ Game();}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00128}00128\ \ \ \ \ \doxymbox{\hyperlink{_application_view_8cpp_abc1c9b12b604784097c750648fb58f15}{InitializeDurango}}(CoreWindow::GetForCurrentThread());}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00129}00129\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00130}00130\ \ \ \ \ \textcolor{comment}{//\ Ensure\ we\ finish\ activation\ and\ let\ the\ system\ know\ we’re\ responsive}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00131}00131\ \ \ \ \ \textcolor{keywordflow}{while}\ (!m\_activationComplete)}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00132}00132\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00133}00133\ \ \ \ \ \ \ \ \ CoreWindow::GetForCurrentThread()-\/>Dispatcher-\/>ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00134}00134\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00136}00136\ \textcolor{preprocessor}{\#ifndef\ \_CONTENT\_PACKAGE}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00137}00137\ \ \ \ \ \textcolor{keywordtype}{char}\ \doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}}[256];}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00138}00138\ \ \ \ \ sprintf(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}},\textcolor{stringliteral}{"{}0x\%llx\ this\(\backslash\)n"{}},\textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00139}00139\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a6473fa6f7eb16d7c68193767f2eed266}{OutputDebugStringA}}(\doxymbox{\hyperlink{_durango_2_iggy_2gdraw_2gdraw__d3d1x__shared_8inl_a7a4bf1ada4088f36b28fd34cd5aeaa85}{buf}});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00140}00140\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00141}00141\ \ \ \ \ \doxymbox{\hyperlink{_application_view_8cpp_ac5b3b5ea307527a8d3c5a9c502290b21}{oldWinMainInit}}();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00144}00144\ \ \ \ \ \textcolor{keywordflow}{while}\ (!\doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.getShutdownFlag()\ \&\&\ !m\_windowClosed)}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00145}00145\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00146}00146\ \ \ \ \ \ \ \ \ CoreWindow::GetForCurrentThread()-\/>Dispatcher-\/>ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00148}00148\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_application_view_8cpp_ae22160d23f107a797ca4c58d9c086f85}{oldWinMainTick}}();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00149}00149\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00151}00151\ \ \ \ \ Windows::ApplicationModel::Core::CoreApplication::Exit();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00152}00152\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00153}00153\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00154}00154\ \textcolor{keywordtype}{void}\ ApplicationView::Uninitialize()}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00155}00155\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00156}00156\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00158}00158\ \textcolor{comment}{//\ Called\ when\ the\ application\ is\ activated.\ \ For\ now,\ there\ is\ just\ one\ activation}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00159}00159\ \textcolor{comment}{//\ kind\ -\/\ Launch.}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00160}00160\ \textcolor{keywordtype}{void}\ ApplicationView::OnActivated(CoreApplicationView\string^\ applicationView,\ IActivatedEventArgs\string^\ args)}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00161}00161\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00162}00162\ \ \ \ \ CoreWindow::GetForCurrentThread()-\/>Activate();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00163}00163\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00164}00164\ \ \ \ \ Windows::Xbox::Multiplayer::PartyConfig::SuppressGameSessionReadyToast\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00165}00165\ \ \ \ \ Windows::Xbox::Multiplayer::PartyConfig::SuppressGameSessionReadyToastMode\ =\ Windows::Xbox::Multiplayer::SuppressGameSessionReadyToastMode::Always;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00167}00167\ \ \ \ \ \textcolor{comment}{//\ On\ starting\ up\ the\ game\ for\ the\ first\ time,\ we'll\ get\ one\ kind\ of\ onActivated\ message\ through.\ This\ will\ also}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00168}00168\ \ \ \ \ \textcolor{comment}{//\ be\ called\ at\ other\ times\ though,\ so\ don't\ rely\ on\ it\ only\ happening\ once\ for\ anything}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00169}00169\ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_activationComplete\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00170}00170\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00171}00171\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (args-\/>Kind\ ==\ Windows::ApplicationModel::Activation::ActivationKind::Launch)}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00172}00172\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ get\ ActivationKind::Launch\ of\ we've\ just\ been\ started\ up\ from\ the\ user\ selecting\ us\ in\ the\ system\ UI,\ or\ if\ we\ are\ run\ normally\ from\ the\ debugger}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ ILaunchActivatedEventArgs\string^\ newArgs\ =\ \textcolor{keyword}{static\_cast<}\ ILaunchActivatedEventArgs\string^\textcolor{keyword}{>}(args);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00177}00177\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00178}00178\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (args-\/>Kind\ ==\ Windows::ApplicationModel::Activation::ActivationKind::Protocol)}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00179}00179\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ get\ Windows::ApplicationModel::Activation::ActivationKind::Protocol\ if\ we\ have\ been\ started\ from\ accepting\ a\ party\ invite\ (including\ joining\ an\ open\ party\ ourselves),\ or\ from\ a\ game\ session\ being\ ready}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ IProtocolActivatedEventArgs\string^\ proArgs\ =\ \textcolor{keyword}{static\_cast<}\ IProtocolActivatedEventArgs\string^\textcolor{keyword}{>}(args);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ Platform::String\string^\ uriType\ =\ proArgs-\/>Uri-\/>Host;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ uriType\ ==\ L\textcolor{stringliteral}{"{}partyInviteAccept"{}})}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_inviteProcessed\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_d_q_r_network_manager_a7d2ec1ff4fbf8b04e972dac2bb68238c}{DQRNetworkManager::SetPartyProcessJoinParty}}();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_d_q_r_network_manager_ab11c49ca02f29ef4912f5faf57eddb7e}{DQRNetworkManager::SetInviteReceivedFlag}}();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_inviteProcessed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ uriType\ ==\ L\textcolor{stringliteral}{"{}gameSessionReady"{}}\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Platform::String\string^\ uriCommand\ =\ ref\ \textcolor{keyword}{new}\ Platform::String(proArgs-\/>Uri-\/>RawUri-\/>Data());}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ uri\ =\ ref\ \textcolor{keyword}{new}\ Windows::Foundation::Uri(uriCommand);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WwwFormUrlDecoder\string^\ query\ =\ uri-\/>QueryParsed;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_d_q_r_network_manager_a3876f2d9e769057c8bb0a9f3eb78fa46}{DQRNetworkManager::SetPartyProcessJoinSession}}(0,query-\/>GetFirstValueByName(L\textcolor{stringliteral}{"{}sessionName"{}}),query-\/>GetFirstValueByName(L\textcolor{stringliteral}{"{}serviceConfigurationId"{}}),query-\/>GetFirstValueByName(L\textcolor{stringliteral}{"{}sessionTemplateName"{}}));}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00201}00201\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00203}00203\ \ \ \ \ \ \ \ \ m\_activationComplete\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00204}00204\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00205}00205\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00206}00206\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00207}00207\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ type\ of\ activation\ protocol\ can\ come\ in\ at\ any\ time\ during\ the\ game.\ Not\ sure\ of\ the\ best\ way\ to\ handle\ both\ this\ and\ gamesessionready\ events,\ so\ for\ now\ going\ to\ only\ process\ these}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00208}00208\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (1)\ once}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00209}00209\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (2)\ until\ the\ main\ menu\ is\ reached}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ To\ try\ and\ minimise\ any\ conflict\ of\ them\ coming\ in\ in\ the\ middle\ of\ the\ game\ when\ we\ are\ already\ handling\ this\ gamesessionready.}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00211}00211\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (args-\/>Kind\ ==\ Windows::ApplicationModel::Activation::ActivationKind::Protocol)}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00212}00212\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !\doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.HasReachedMainMenu()\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Accepting\ party\ invite\ after\ initial\ activation\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ get\ Windows::ApplicationModel::Activation::ActivationKind::Protocol\ if\ we\ have\ been\ started\ from\ accepting\ a\ party\ invite\ (including\ joining\ an\ open\ party\ ourselves),\ or\ from\ a\ game\ session\ being\ ready}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ IProtocolActivatedEventArgs\string^\ proArgs\ =\ \textcolor{keyword}{static\_cast<}\ IProtocolActivatedEventArgs\string^\textcolor{keyword}{>}(args);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00218}00218\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Platform::String\string^\ uriType\ =\ proArgs-\/>Uri-\/>Host;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ uriType\ ==\ L\textcolor{stringliteral}{"{}partyInviteAccept"{}})}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_inviteProcessed\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_d_q_r_network_manager_a7d2ec1ff4fbf8b04e972dac2bb68238c}{DQRNetworkManager::SetPartyProcessJoinParty}}();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_d_q_r_network_manager_ab11c49ca02f29ef4912f5faf57eddb7e}{DQRNetworkManager::SetInviteReceivedFlag}}();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_inviteProcessed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_d_q_r_network_manager_ab11c49ca02f29ef4912f5faf57eddb7e}{DQRNetworkManager::SetInviteReceivedFlag}}();\ \ \ \ \ \textcolor{comment}{//\ This\ just\ informs\ the\ network\ manager\ that\ an\ invite\ has\ been\ received,\ not\ to\ start\ processing\ it}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00234}00234\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00235}00235\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00236}00236\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00238}00238\ \textcolor{comment}{//\ Called\ when\ the\ application\ is\ suspending.}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00239}00239\ \textcolor{keywordtype}{void}\ ApplicationView::OnSuspending(Platform::Object\string^\ sender,\ SuspendingEventArgs\string^\ args)}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00240}00240\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00241}00241\ \ \ \ \ \textcolor{comment}{//\ TODO:\ Save\ game\ progress\ using\ the\ ConnectedStroage\ API.}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00242}00242\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\(\backslash\)n\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00243}00243\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Suspending!"{}});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00244}00244\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)n\(\backslash\)n\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#"{}});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00245}00245\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00246}00246\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ frequency\ of\ the\ timer}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00247}00247\ \ \ \ \ \doxymbox{\hyperlink{_orbis_types_8h_a9bf80943e02f031c99d510a40a6d52e6}{LARGE\_INTEGER}}\ qwTicksPerSec,\ qwTime,\ qwNewTime,\ qwDeltaTime;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00248}00248\ \ \ \ \ \textcolor{keywordtype}{float}\ fElapsedTime\ =\ 0.0f;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00249}00249\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a1f9d45b004e9b55ba94dcef2ea9004be}{QueryPerformanceFrequency}}(\ \&qwTicksPerSec\ );}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00250}00250\ \ \ \ \ \textcolor{keywordtype}{float}\ fSecsPerTick\ =\ 1.0f\ /\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(qwTicksPerSec.\doxymbox{\hyperlink{union___l_a_r_g_e___i_n_t_e_g_e_r_a34beb9c05c3a2982d57fc450cc934ae3}{QuadPart}});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00251}00251\ \ \ \ \ \textcolor{comment}{//\ Save\ the\ start\ time}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00252}00252\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a3b4728b70df60dc646ce578155a6a405}{QueryPerformanceCounter}}(\ \&qwTime\ );}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00253}00253\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00254}00254\ \ \ \ \ \textcolor{comment}{//\ Request\ deferral}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00255}00255\ \ \ \ \ SuspendingDeferral\string^\ deferral\ =\ args-\/>SuspendingOperation-\/>GetDeferral();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00256}00256\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00257}00257\ \ \ \ \ \doxymbox{\hyperlink{class_minecraft_server}{MinecraftServer}}\ *server\ =\ \doxymbox{\hyperlink{class_minecraft_server_ae8aa61b7338ea3b5616d347b47e29d53}{MinecraftServer::getInstance}}();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00258}00258\ \ \ \ \ \textcolor{keywordflow}{if}(server)}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00259}00259\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00260}00260\ \ \ \ \ \ \ \ \ server-\/>\doxymbox{\hyperlink{class_minecraft_server_a46f28d6f6feb43600adec01ab0a3efbe}{Suspend}}();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00261}00261\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00262}00262\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00263}00263\ \ \ \ \ \textcolor{comment}{//\ Start\ suspend\ process\ for\ libraries}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00264}00264\ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___storage_8h_a24a67ae8c928fe1f29f76167beeccd4b}{StorageManager}}.Suspend();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00265}00265\ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.Suspend();\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00267}00267\ \ \ \ \ \textcolor{comment}{//\ Wait\ for\ libraries\ to\ finish\ suspending}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00268}00268\ \ \ \ \ \textcolor{keywordflow}{while}(!\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___storage_8h_a24a67ae8c928fe1f29f76167beeccd4b}{StorageManager}}.Suspended()\ ||\ !\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.Suspended())}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00269}00269\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00270}00270\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a49ad8ff2c1f594703bf526d7f35aff4e}{Sleep}}(10);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00271}00271\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00273}00273\ \ \ \ \ deferral-\/>Complete();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00274}00274\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00275}00275\ \ \ \ \ \doxymbox{\hyperlink{_orbis_stubs_8cpp_a3b4728b70df60dc646ce578155a6a405}{QueryPerformanceCounter}}(\ \&qwNewTime\ );}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00276}00276\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00277}00277\ \ \ \ \ qwDeltaTime.\doxymbox{\hyperlink{union___l_a_r_g_e___i_n_t_e_g_e_r_a34beb9c05c3a2982d57fc450cc934ae3}{QuadPart}}\ =\ qwNewTime.\doxymbox{\hyperlink{union___l_a_r_g_e___i_n_t_e_g_e_r_a34beb9c05c3a2982d57fc450cc934ae3}{QuadPart}}\ -\/\ qwTime.\doxymbox{\hyperlink{union___l_a_r_g_e___i_n_t_e_g_e_r_a34beb9c05c3a2982d57fc450cc934ae3}{QuadPart}};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00278}00278\ \ \ \ \ fElapsedTime\ =\ fSecsPerTick\ *\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{_orbis_types_8h_a8d06b04c04132c6f7c0fcb08c6167455}{FLOAT}}\textcolor{keyword}{>}(qwDeltaTime.\doxymbox{\hyperlink{union___l_a_r_g_e___i_n_t_e_g_e_r_a34beb9c05c3a2982d57fc450cc934ae3}{QuadPart}});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00279}00279\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00280}00280\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Entire\ suspend\ process:\ Elapsed\ time\ \%f\(\backslash\)n"{}},\ fElapsedTime);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00281}00281\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00283}00283\ \textcolor{comment}{//\ Called\ when\ the\ application\ is\ resuming\ from\ suspended.}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00284}00284\ \textcolor{keywordtype}{void}\ ApplicationView::OnResuming(Platform::Object\string^\ sender,\ Platform::Object\string^\ args)}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00285}00285\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00286}00286\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\(\backslash\)n\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00287}00287\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}Resuming!"{}});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00288}00288\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)n\(\backslash\)n\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#"{}});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00289}00289\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00290}00290\ \ \ \ \ \textcolor{comment}{//\ Start\ resume\ process\ for\ libraries}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00291}00291\ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___render_8h_a9fd420f88c5d5768a990448f42a34eb2}{RenderManager}}.Resume();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00292}00292\ \ \ \ \ \doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___input_8h_a8329eaa5fd9651403b166853c3e68095}{InputManager}}.Resume();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00293}00293\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00294}00294\ \ \ \ \ \textcolor{comment}{//\ Switch\ to\ offline\ if\ we\ were\ in\ an\ online\ game}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00295}00295\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.IsLocalGame()\ \&\&\ \doxymbox{\hyperlink{_game_network_manager_8cpp_ab57827f8849a3ba2f935158f1dd2ff22}{g\_NetworkManager}}.IsInGameplay())}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00296}00296\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00297}00297\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Bit\ specific\ but\ we\ want\ to\ avoid\ switching\ to\ offline\ if\ the\ primary\ player\ has\ signed\ out\ }}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00298}00298\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (and\ AFAIK\ there's\ no\ other\ way\ to\ find\ out\ until\ a\ few\ ticks\ time)}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00299}00299\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.GetXuiAction(0)\ !=\ \doxymbox{\hyperlink{_app__enums_8h_a050a99d74e804c132cd44a92963d2fcca9bc6c967f2da4718280efbca4d87fc6a}{eAppAction\_PrimaryPlayerSignedOut}})}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00300}00300\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We've\ lost\ the\ party\ so\ switch\ to\ offline,\ previously\ we\ exited\ the\ world\ here\ but\ this\ seems\ friendlier}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.SetAction(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___profile_8h_a027fde7e99d773afa28ec11d244459bf}{ProfileManager}}.GetPrimaryPad(),\ \doxymbox{\hyperlink{_app__enums_8h_a050a99d74e804c132cd44a92963d2fcca3499844f0170cae19790218fc3588396}{eAppAction\_EthernetDisconnected}});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00303}00303\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00304}00304\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00306}00306\ \ \ \ \ \textcolor{comment}{//\ 4J-\/PB\ -\/\ clear\ all\ DLC\ info,\ and\ recheck,\ since\ someone\ may\ have\ suspended\ after\ starting\ a\ DLCinstall,\ and\ we\ won't\ have\ received\ any\ install/\ license\ change\ event}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00307}00307\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.ClearDLCInstalled();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00308}00308\ \ \ \ \ \doxymbox{\hyperlink{_u_i_8h_a6861ef78c9da318351102f66a26e8e87}{ui}}.HandleDLCInstalled(\doxymbox{\hyperlink{_durango_24_j_libs_2inc_24_j___profile_8h_a027fde7e99d773afa28ec11d244459bf}{ProfileManager}}.GetPrimaryPad());}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00309}00309\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00310}00310\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00311}00311\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00312}00312\ \textcolor{keywordtype}{void}\ ApplicationView::OnResourceAvailabilityChanged(\ Platform::Object\string^\ \textcolor{comment}{/*sender*/},\ Platform::Object\string^\ \textcolor{comment}{/*args*/}\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00313}00313\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00314}00314\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\(\backslash\)n\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00315}00315\ \ \ \ \ \textcolor{keywordflow}{if}(\ Windows::ApplicationModel::Core::CoreApplication::ResourceAvailability\ ==\ Windows::ApplicationModel::Core::ResourceAvailability::Full\ )}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00316}00316\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00317}00317\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\ \textcolor{stringliteral}{"{}Entered\ the\ 'Full\ Running'\ state."{}}\ );}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00318}00318\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00319}00319\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00320}00320\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00321}00321\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\ \textcolor{stringliteral}{"{}Entered\ the\ 'Constrained'\ PLM\ state."{}}\ );}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00322}00322\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00323}00323\ \ \ \ \ \doxymbox{\hyperlink{_durango___app_8cpp_acdb41a463107c6f4741c582b92bcdb0a}{app}}.DebugPrintf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)n\(\backslash\)n\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#"{}});}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00324}00324\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00325}00325\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00326}00326\ \textcolor{keywordtype}{void}\ ApplicationView::OnWindowClosed(CoreWindow\string^\ sender,\ CoreWindowEventArgs\string^\ args)}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00327}00327\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00328}00328\ \ \ \ \ m\_windowClosed\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00329}00329\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00330}00330\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00331}00331\ \textcolor{comment}{//\ Implements\ a\ IFrameworkView\ factory.}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00332}\doxymbox{\hyperlink{class_application_view_source_a3200a8b706dc280afe2b1ce6c653c042}{00332}}\ IFrameworkView\string^\ \doxymbox{\hyperlink{class_application_view_source_a3200a8b706dc280afe2b1ce6c653c042}{ApplicationViewSource::CreateView}}()}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00333}00333\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00334}00334\ \ \ \ \ \textcolor{keywordflow}{return}\ ref\ \textcolor{keyword}{new}\ ApplicationView();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00335}00335\ \}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00336}00336\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00337}00337\ \textcolor{comment}{//\ Application\ entry\ point}}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00338}00338\ [Platform::MTAThread]}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00339}\doxymbox{\hyperlink{_application_view_8cpp_a7099d6364756ad49d8413160485ada39}{00339}}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{_p_s_vita___minecraft_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}}(Platform::Array<Platform::String\string^>\string^)}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00340}00340\ \{}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00341}00341\ \ \ \ \ \textcolor{keyword}{auto}\ applicationViewSource\ =\ ref\ \textcolor{keyword}{new}\ \doxymbox{\hyperlink{class_application_view_source}{ApplicationViewSource}}();}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00342}00342\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00343}00343\ \ \ \ \ CoreApplication::Run(applicationViewSource);}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00344}00344\ }
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00345}00345\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_application_view_8cpp_source_l00346}00346\ \}}
+
+\end{DoxyCode}

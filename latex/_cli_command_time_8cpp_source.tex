@@ -1,0 +1,124 @@
+\doxysection{Cli\+Command\+Time.\+cpp}
+\hypertarget{_cli_command_time_8cpp_source}{}\label{_cli_command_time_8cpp_source}\index{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/Console/commands/time/CliCommandTime.cpp@{C:/Users/Administrator/Documents/GitHub/MinecraftConsoles/Minecraft.Server/Console/commands/time/CliCommandTime.cpp}}
+\doxymbox{\hyperlink{_cli_command_time_8cpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}stdafx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00003}00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_cli_command_time_8h}{CliCommandTime.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_cli_engine_8h}{..\(\backslash\)..\(\backslash\)ServerCliEngine.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00006}00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_server_cli_parser_8h}{..\(\backslash\)..\(\backslash\)ServerCliParser.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00007}00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_string_utils_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)Common\(\backslash\)StringUtils.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00008}00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_game_command_packet_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)GameCommandPacket.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00009}00009\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_time_command_8h}{..\(\backslash\)..\(\backslash\)..\(\backslash\)..\(\backslash\)Minecraft.World\(\backslash\)TimeCommand.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00011}00011\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_server_runtime}{ServerRuntime}}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00012}00012\ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00013}00013\ \ \ \ \ \textcolor{keyword}{namespace}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00014}00014\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00015}00015\ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *kTimeUsage\ =\ \textcolor{stringliteral}{"{}time\ <day|night|set\ day|set\ night>"{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00017}00017\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ TryResolveNightFlag(\textcolor{keyword}{const}\ std::vector<std::string>\ \&tokens,\ \textcolor{keywordtype}{bool}\ *outNight)}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00018}00018\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00019}00019\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (outNight\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00020}00020\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00021}00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00022}00022\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00024}00024\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{namespace_sentient_a6e9353b7ebb5caa365b8a1452b5ab231}{value}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00025}00025\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tokens.size()\ ==\ 2)}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_sentient_a6e9353b7ebb5caa365b8a1452b5ab231}{value}}\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a5659674ecf09348686afcee671932cce}{StringUtils::ToLowerAscii}}(tokens[1]);}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00028}00028\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (tokens.size()\ ==\ 3\ \&\&\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a5659674ecf09348686afcee671932cce}{StringUtils::ToLowerAscii}}(tokens[1])\ ==\ \textcolor{stringliteral}{"{}set"{}})}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00030}00030\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_sentient_a6e9353b7ebb5caa365b8a1452b5ab231}{value}}\ =\ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a5659674ecf09348686afcee671932cce}{StringUtils::ToLowerAscii}}(tokens[2]);}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (value\ ==\ \textcolor{stringliteral}{"{}day"{}})}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *outNight\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00041}00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (value\ ==\ \textcolor{stringliteral}{"{}night"{}})}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *outNight\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00050}00050\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00052}00052\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SuggestLiteral(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *candidate,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context}{ServerCliCompletionContext}}\ \&context,\ std::vector<std::string>\ *out)}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00053}00053\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (candidate\ ==\ \textcolor{keyword}{nullptr}\ ||\ out\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ text(candidate);}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a84f912b74a6297e89374bb71b850f5ae}{StringUtils::StartsWithIgnoreCase}}(text,\ context.prefix))}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ out-\/>push\_back(context.linePrefix\ +\ text);}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00064}00064\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00065}00065\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00067}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_time_a5775e9041cfc86c4dab9d35d92691392}{00067}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_time_a5775e9041cfc86c4dab9d35d92691392}{CliCommandTime::Name}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00068}00068\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00069}00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}time"{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00070}00070\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00072}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_time_a78bda226a9e85dbb4a12e5cdd33ea9c0}{00072}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_time_a78bda226a9e85dbb4a12e5cdd33ea9c0}{CliCommandTime::Usage}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00073}00073\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00074}00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ kTimeUsage;}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00075}00075\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00077}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_time_a2cb6bb163c6ebe701d7c2d0fe15497ee}{00077}}\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_time_a2cb6bb163c6ebe701d7c2d0fe15497ee}{CliCommandTime::Description}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00078}00078\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00079}00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}Set\ day\ or\ night\ via\ Minecraft.World\ command\ dispatcher."{}};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00080}00080\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00082}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_time_a30fa320bdbac1ebc9fc3bdcf37b1eb6c}{00082}}\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_time_a30fa320bdbac1ebc9fc3bdcf37b1eb6c}{CliCommandTime::Execute}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_parsed_line}{ServerCliParsedLine}}\ \&\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}},\ \doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine}{ServerCliEngine}}\ *engine)}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00083}00083\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00084}00084\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ night\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!TryResolveNightFlag(\doxymbox{\hyperlink{_durango_2_iggy_2include_2rr_core_8h_a7abed2959f5832a313974aaa33f70e2a}{line}}.tokens,\ \&night))}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00086}00086\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a285686f8116ea711475c51061146549d}{LogWarn}}(std::string(\textcolor{stringliteral}{"{}Usage:\ "{}})\ +\ kTimeUsage);}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00089}00089\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00091}00091\ \ \ \ \ \ \ \ \ std::shared\_ptr<GameCommandPacket>\ packet\ =\ \doxymbox{\hyperlink{class_time_command_a25caaf0426de8a69f13db9bdf48a4656}{TimeCommand::preparePacket}}(night);}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (packet\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00093}00093\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a5e5e9360a74eb94417493b56efcf9117}{LogError}}(\textcolor{stringliteral}{"{}Failed\ to\ build\ time\ command\ packet."{}});}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00096}00096\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00098}00098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ engine-\/>\doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine_a3663d88516a40ff990e36a4a95a0998c}{DispatchWorldCommand}}(packet-\/>command,\ packet-\/>data);}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00099}00099\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00101}\doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_time_a015e9ea9f930a56f90bed30e06d91b14}{00101}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_server_runtime_1_1_cli_command_time_a015e9ea9f930a56f90bed30e06d91b14}{CliCommandTime::Complete}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context}{ServerCliCompletionContext}}\ \&context,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_server_runtime_1_1_server_cli_engine}{ServerCliEngine}}\ *engine,\ std::vector<std::string>\ *out)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00102}00102\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00103}00103\ \ \ \ \ \ \ \ \ (\doxymbox{\hyperlink{_durango_2_miles_2include_2mss_8h_afed5b2f9cfdce0d76b8a9e307d336b91}{void}})engine;}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a4ed728c8b79bb6c56d93d9a341c9177f}{currentTokenIndex}}\ ==\ 1)}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00105}00105\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ SuggestLiteral(\textcolor{stringliteral}{"{}day"{}},\ context,\ out);}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ SuggestLiteral(\textcolor{stringliteral}{"{}night"{}},\ context,\ out);}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ SuggestLiteral(\textcolor{stringliteral}{"{}set"{}},\ context,\ out);}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00109}00109\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_a4ed728c8b79bb6c56d93d9a341c9177f}{currentTokenIndex}}\ ==\ 2\ \&\&}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_ab5158853af296f837220144c749c85f0}{parsed}}.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_parsed_line_acbc4a8e30d9bec2cdd82407852fd22b7}{tokens}}.size()\ >=\ 2\ \&\&}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_server_runtime_1_1_string_utils_a5659674ecf09348686afcee671932cce}{StringUtils::ToLowerAscii}}(context.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_completion_context_ab5158853af296f837220144c749c85f0}{parsed}}.\doxymbox{\hyperlink{struct_server_runtime_1_1_server_cli_parsed_line_acbc4a8e30d9bec2cdd82407852fd22b7}{tokens}}[1])\ ==\ \textcolor{stringliteral}{"{}set"{}})}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00113}00113\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ SuggestLiteral(\textcolor{stringliteral}{"{}day"{}},\ context,\ out);}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ SuggestLiteral(\textcolor{stringliteral}{"{}night"{}},\ context,\ out);}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00116}00116\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00117}00117\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_cli_command_time_8cpp_source_l00118}00118\ \}}
+
+\end{DoxyCode}
